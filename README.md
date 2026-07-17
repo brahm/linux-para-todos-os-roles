@@ -15,8 +15,8 @@ Os roteiros são organizados por **distribuição**, **objetivo** e **cenário d
 
 | Roteiro | Para quem é | Nível | Situação |
 |---|---|:---:|:---:|
-| Arch Linux em FakeRAID 0 | Máquinas com RAID configurado pela BIOS/UEFI e usuários dispostos a aprender bastante | 🧗 Avançado | 🚧 Rascunho |
-| Ubuntu LTS para desenvolvimento com IA local | Quem quer programar, usar contêineres e executar modelos locais com CPU ou GPU | 🥉 Intermediário | 👌 Pronto |
+| Arch Linux em FakeRAID 0 | Máquinas com RAID configurado pela BIOS/UEFI e usuários dispostos a aprender bastante | 👨‍🎓 Avançado | 🚧 Rascunho |
+| Ubuntu LTS para desenvolvimento com IA local | Quem quer programar, usar contêineres e executar modelos locais com CPU ou GPU | 🥉 Intermediário | 🚀 Pronto |
 | Servidor de arquivos com Samba | Casas e pequenos escritórios com clientes Linux, Windows ou macOS | 🌱 Iniciante | 📝 Planejado |
 | Servidor multimídia com Jellyfin | Quem deseja organizar e transmitir sua própria biblioteca de mídia | 🌱 Iniciante | 📝 Planejado |
 | Homelab com virtualização e contêineres | Quem quer aprender redes, serviços, VMs e automação em casa | 🥉 Intermediário | 📝 Planejado |
@@ -25,7 +25,7 @@ Os roteiros são organizados por **distribuição**, **objetivo** e **cenário d
 
 - 🌱 **Iniciante:** explicações passo a passo e pouca experiência prévia necessária.
 - 🥉 **Intermediário:** exige alguma familiaridade com terminal, discos, rede ou serviços.
-- 🧗 **Avançado:** envolve riscos maiores, recuperação manual ou hardware incomum. Não significa “proibido para iniciantes”; significa “prepare café e não pule etapas”.
+- 👨‍🎓 **Avançado:** envolve riscos maiores, recuperação manual ou hardware incomum. Não significa “proibido para iniciantes”; significa “prepare café e não pule etapas”.
 
 ## Qual roteiro combina comigo?
 
@@ -102,14 +102,14 @@ O que já tentei: ...
 
 Cole saídas como texto sempre que possível e **remova IPs públicos, nomes de usuário, tokens, chaves e outras informações sensíveis**.
 
-[!TIP]
+> [!TIP]
 > Documentação envelhece. Antes de seguir um roteiro, confira a versão testada e compare os pontos sensíveis com a fonte oficial mais recente.
 
 ## Aviso de responsabilidade
 
 Os roteiros são material educacional e podem conter erros ou não cobrir particularidades do seu equipamento. Você é responsável por revisar os comandos e manter backups. Em ambientes com dados importantes, valide primeiro em uma máquina de testes e consulte a documentação oficial.
 
-Se este repositório evitar que alguém execute `chmod -R 777 /` para “resolver rapidinho”, ele já terá prestado um grande serviço à humanidade. 🐧
+Se este repositório evitar que alguém execute `chmod -R 777 /` para “resolver rapidinho”, ele já terá prestado um grande serviço à humanidade.
 
 ---
 
