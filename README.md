@@ -1,4 +1,4 @@
-# 🐧 Linux para Todos os Rolês (linux install fest)
+# Linux para Todos os Rolês
 
 > Roteiros de instalação e pós-instalação Linux para transformar computadores comuns, servidores esquecidos e máquinas com ideias mirabolantes em ambientes úteis — preferencialmente sem invocar demônios no `GRUB`.
 
@@ -49,6 +49,7 @@ Os roteiros são organizados por **distribuição**, **objetivo** e **cenário d
 - **Caminho de recuperação:** alterações arriscadas devem vir acompanhadas de backup ou instruções de retorno quando isso for possível.
 - **Versões explícitas:** o guia deve informar em quais versões foi testado e quando ocorreu o último teste.
 - **Respeito ao iniciante:** ninguém nasce sabendo sair do Vim. Aliás, algumas pessoas experientes ainda negociam com ele.
+- **Escreva em "brasileiro":** até porque já tem material demais em inglês, mas sinta-se a vontade para traduzir este material para qualquer outro idioma.
 
 ## Como contribuir
 
