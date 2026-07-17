@@ -355,7 +355,7 @@ lsblk
 sudo cryptsetup luksDump /dev/nvme0n1p3 | head   # deve mostrar "Version: 2"
 
 # 3. Instale as ferramentas
-sudo apt install tpm2-tools
+sudo apt install tpm2-tools tpm2-tss
 
 # 4. (Recomendado) Gere uma chave de recuperação antes
 sudo systemd-cryptenroll --recovery-key /dev/nvme0n1p3
