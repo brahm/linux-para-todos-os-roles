@@ -31,8 +31,8 @@ jobs:
       # Só o site vai para o Pages; a documentação em Markdown fica no repositório.
       - name: Separar os arquivos do site
         run: |
-          mkdir _site
-          rsync -a --exclude '*.md' docs/ _site/
+          cp -r docs _site
+          find _site -name '*.md' -delete
           ls -R _site
 
       - uses: actions/configure-pages@v5
