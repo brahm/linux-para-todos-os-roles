@@ -1,0 +1,45 @@
+id: seguranca/firewall
+nome: Firewall
+descricao: Bloqueia conexões que chegam de fora e libera só o que o perfil pede, sem derrubar o SSH de quem está na rede local.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  perfil:
+    tipo: escolha
+    opcoes: [desktop, servidor-lan, tailscale]
+    rotulos:
+      desktop: Uso pessoal. Bloqueia tudo que chega; o SSH da rede local só fica liberado se já estiver ligado.
+      servidor-lan: Servidor da casa. Libera o SSH para a rede local; cada serviço depois libera a própria porta só para a rede local.
+      tailscale: Acessível pela VPN. Como o uso pessoal, e libera o que chega pela interface do Tailscale.
+    padrao: desktop
+    pergunta: Este computador é de uso pessoal, um servidor da casa ou fica acessível pela VPN?
+  rede_local:
+    tipo: cidr
+    padrao: auto
+    descricao: A rede da casa, como 192.168.0.0/24. "auto" descobre pela interface da rota padrão.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

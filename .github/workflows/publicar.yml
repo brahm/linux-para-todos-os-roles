@@ -1,0 +1,66 @@
+# Publica os binários do bora quando uma tag v* é criada.
+name: Publicar
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  compilar:
+    name: Binário ${{ matrix.arquitetura }}
+    strategy:
+      matrix:
+        include:
+          - arquitetura: x86_64
+            maquina: ubuntu-24.04
+          - arquitetura: aarch64
+            maquina: ubuntu-24.04-arm
+    runs-on: ${{ matrix.maquina }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rust com musl
+        run: |
+          rustup toolchain install stable --profile minimal --target ${{ matrix.arquitetura }}-unknown-linux-musl
+          rustup default stable
+      - name: Testes
+        run: cargo test --locked
+      - name: Compilar
+        run: |
+          cargo build --release --locked --target ${{ matrix.arquitetura }}-unknown-linux-musl
+          mkdir -p saida
+          cp target/${{ matrix.arquitetura }}-unknown-linux-musl/release/bora saida/bora-linux-${{ matrix.arquitetura }}
+          saida/bora-linux-${{ matrix.arquitetura }} versao
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bora-linux-${{ matrix.arquitetura }}
+          path: saida/bora-linux-${{ matrix.arquitetura }}
+
+  publicar:
+    name: Criar a versão
+    needs: compilar
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: saida
+          merge-multiple: true
+      - name: Somas de verificação
+        working-directory: saida
+        run: sha256sum bora-linux-* > SHA256SUMS && cat SHA256SUMS
+      - name: Publicar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" saida/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "bora $GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag

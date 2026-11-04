@@ -18,8 +18,22 @@ O projeto usa a licença [0BSD](LICENSE). Ao enviar uma contribuição, você co
 1. Teste numa máquina virtual ou num computador que possa ser formatado sem dor.
 2. Rode a receita duas vezes seguidas: a segunda vez não pode mudar nada (idempotência).
 3. Rode o `desfazer.sh` e confira que o sistema voltou ao estado anterior.
-4. Registre no `receita.yaml` a distro, a versão e a data do teste.
+4. Registre no `receita.yaml` a distro, a versão, a data e onde foi o teste (`vm`, `conteiner` ou `maquina`).
 5. Na descrição do pull request, diga o que foi testado, onde, e o que ainda falta validar.
+
+## Rodar os testes
+
+O `bora` é escrito em Rust, e as receitas são scripts bash. Com o [Rust](https://rustup.rs/) instalado:
+
+```sh
+cargo test                     # testes do bora, com um catálogo de mentira
+cargo run -- conferir          # confere o formato de todas as receitas e rolês
+shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh
+```
+
+Para testar uma receita mudada sem recompilar, aponte o `bora` para a pasta do repositório: `BORA_RAIZ=$PWD cargo run -- lista`.
+
+As receitas também rodam de verdade em contêineres com systemd, como explica [`testes/conteiner/README.md`](testes/conteiner/README.md). O GitHub Actions faz isso a cada pull request no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Um teste em contêiner é registrado com `onde: conteiner` e não substitui o teste numa máquina virtual.
 
 ## Regras para receitas
 

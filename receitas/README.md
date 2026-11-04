@@ -43,20 +43,29 @@ parametros:
   rede_local:
     tipo: cidr
     padrao: auto             # o bora descobre a rede local
+    descricao: A rede da casa, como 192.168.0.0/24.
 testes:
   - distro: ubuntu
     versao: "26.04"
     data: 2026-11-10
     por: nome-ou-usuario
+    onde: vm                 # vm | conteiner | maquina
     resultado: ok
 ```
+
+Os tipos de parâmetro são `escolha` (com `opcoes` e, se quiser, `rotulos` que explicam cada opção no menu), `booleano` (chega ao script como `sim` ou `nao`), `inteiro`, `texto`, `caminho` (absoluto) e `cidr` (só redes privadas, ou `auto`).
 
 ## Contrato dos scripts
 
 - Todos começam com `#!/usr/bin/env bash` e `set -euo pipefail`.
 - O `bora` roda os scripts a partir da pasta da receita, como root quando `precisa_root: true`.
 - Os parâmetros chegam como variáveis de ambiente com o prefixo `BORA_` e o nome em maiúsculas, por exemplo `BORA_PERFIL` e `BORA_REDE_LOCAL`.
-- O `bora` também informa `BORA_FAMILIA`, `BORA_DISTRO`, `BORA_VERSAO` e `BORA_ESTADO`, uma pasta onde a receita guarda o que precisa para desfazer (cópias de arquivos, lista de pacotes instalados).
+- O `bora` também informa `BORA_FAMILIA`, `BORA_DISTRO`, `BORA_VERSAO`, `BORA_BASE` (a distro de base, como `ubuntu-24.04`) e `BORA_ESTADO`, uma pasta onde a receita guarda o que precisa para desfazer (cópias de arquivos, lista de pacotes instalados).
+- O resto do ambiente é limpo: só passam `PATH`, as variáveis de idioma, `TERM` e as de proxy.
+- `BORA_LIB` aponta para o [`comum.sh`](comum.sh), com funções prontas: `instalar_pacotes` e `remover_pacotes_instalados` (que só removem o que a receita trouxe), `guardar_arquivo`, `escrever_arquivo` e `restaurar_arquivos`, `habilitar_unidade` e `desabilitar_unidades_habilitadas`, além de `msg`, `aviso`, `falha` e `conferir`. Carregue com `source "$BORA_LIB"`.
+- O `bora` guarda uma cópia da receita junto com cada aplicação, e o desfazer usa essa cópia, mesmo que a receita mude depois.
+- Antes de um `rm` com variável, use a forma `"${VARIAVEL:?}/arquivo"`, para que uma variável vazia nunca vire `rm /arquivo`.
+- Além do bash e das ferramentas básicas, as receitas podem usar `python3`, que vem em todas as distros suportadas.
 - Se existir `aplicar.<familia>.sh` para a família da máquina, o `bora` usa esse no lugar do `aplicar.sh`. Vale o mesmo para `verificar`, `testar` e `desfazer`.
 
 | Script | Código de saída |
@@ -73,6 +82,7 @@ testes:
 - Nenhuma receita abre porta para a internet.
 - Nenhuma receita guarda senha, token ou chave no repositório.
 - Mensagens em português do Brasil.
+- Sem perguntas no meio do script: tudo que a receita precisa chega pelos parâmetros.
 
 ## `LEIAME.md`
 

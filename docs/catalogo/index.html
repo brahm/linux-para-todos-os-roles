@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rolês e receitas · Linux para todos os rolês</title>
+  <meta name="description" content="Os rolês da primeira versão e as receitas do bora, cada um com o passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/">
+  <link rel="icon" href="../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Rolês e receitas">
+  <meta property="og:description" content="Os rolês da primeira versão e as receitas do bora, cada um com o passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../estilo.css">
+  <link rel="stylesheet" href="../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../#o-que-e">O que é</a>
+        <a href="../catalogo/" aria-current="page">Rolês e receitas</a>
+        <a href="../#como-funciona">Como funciona</a>
+        <a href="../#status">Status</a>
+        <a href="../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Início</a></li>
+            <li aria-current="page">Rolês e receitas</li>
+          </ol>
+          <h1>Rolês e receitas</h1>
+          <p class="lema">Um <strong>rolê</strong> é o que você quer fazer com o computador. Ele é feito de <strong>receitas</strong>: mudanças pequenas que o <code>bora</code> sabe verificar, aplicar, testar e desfazer.</p>
+          <div class="fichas">
+            <span class="ficha">7 rolês na primeira versão</span>
+            <span class="ficha feito">3 receitas prontas</span>
+            <span class="ficha planejado">21 planejadas</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#roles">Ver os rolês</a>
+            <a class="botao secundario" href="#receitas">Ver as receitas</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra ciclo" viewBox="0 0 500 220" role="img" aria-labelledby="ci-t">
+            <title id="ci-t">As quatro etapas de toda receita: verificar, aplicar, testar e, quando você pedir, desfazer.</title>
+            <path d="M70 110 C70 40, 190 40, 190 110 C190 40, 310 40, 310 110 C310 40, 430 40, 430 110" class="traco tracejado"/>
+            <path d="M430 150 C 430 200, 70 200, 70 150" class="traco tracejado" style="stroke:var(--text-2);opacity:.6"/>
+            <text x="250" y="212" font-size="12.5" text-anchor="middle" class="t2">desfazer volta pelo mesmo caminho, na ordem contrária</text>
+            <g class="no" style="--i:0">
+              <circle cx="70" cy="110" r="36" fill="var(--azul-soft)" />
+              <svg x="54" y="94" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--azul)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg>
+              <text x="70" y="166" font-size="14" font-weight="600" text-anchor="middle">Verificar</text>
+            </g><g class="no" style="--i:1">
+              <circle cx="190" cy="110" r="36" fill="var(--accent-soft)" />
+              <svg x="174" y="94" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--link)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              <text x="190" y="166" font-size="14" font-weight="600" text-anchor="middle">Aplicar</text>
+            </g><g class="no" style="--i:2">
+              <circle cx="310" cy="110" r="36" fill="var(--ok-soft)" />
+              <svg x="294" y="94" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg>
+              <text x="310" y="166" font-size="14" font-weight="600" text-anchor="middle">Testar</text>
+            </g><g class="no" style="--i:3">
+              <circle cx="430" cy="110" r="36" fill="var(--surface-2)" />
+              <svg x="414" y="94" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+              <text x="430" y="166" font-size="14" font-weight="600" text-anchor="middle">Desfazer</text>
+            </g>
+            <circle r="7" class="bolinha laranja"/>
+          </svg>
+          <figcaption>Toda receita passa por essas etapas, na mesma ordem. Cada página de receita mostra o que acontece em cada uma.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Rolês</p>
+        <h2>Sete rolês para começar</h2>
+        <p>Cada página mostra o que o rolê faz e o que ele não faz, as receitas, o passo a passo e os porquês. O <code>bora</code> mostra no menu só os rolês que cabem na sua máquina.</p>
+      </div>
+      <div class="grade">
+        <a class="cartao role revelar" href="roles/pronto-para-estudar.html">
+          <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
+          <h3>Pronto para estudar e trabalhar</h3>
+          <p>O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</p>
+          <div class="rodape"><span class="num">01</span><span class="ficha agora">Em construção · 3 de 6 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="ficha planejado">Planejado · 2 de 6 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/comecar-a-programar.html">
+          <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
+          <h3>Começar a programar</h3>
+          <p>Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.</p>
+          <div class="rodape"><span class="num">03</span><span class="ficha planejado">Planejado · 1 de 6 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/vibecodar.html">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="ficha planejado">Planejado · 1 de 9 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/pasta-compartilhada.html">
+          <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
+          <h3>Pasta compartilhada da casa</h3>
+          <p>Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir.</p>
+          <div class="rodape"><span class="num">05</span><span class="ficha planejado">Planejado · 3 de 4 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/filmes-e-series.html">
+          <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/></svg></span>
+          <h3>Filmes e séries da casa</h3>
+          <p>O Jellyfin servindo os seus filmes e séries para a TV e os celulares, apenas na rede local.</p>
+          <div class="rodape"><span class="num">06</span><span class="ficha planejado">Planejado · 3 de 4 prontas</span></div>
+        </a>
+        <a class="cartao role revelar" href="roles/acessar-de-fora.html">
+          <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M12 12.3v3.2"/></svg></span>
+          <h3>Acessar de fora sem abrir portas</h3>
+          <p>Os seus aparelhos numa rede privada, para abrir a pasta da casa ou o Jellyfin da rua, sem mexer no roteador.</p>
+          <div class="rodape"><span class="num">07</span><span class="ficha planejado">Planejado · 2 de 4 prontas</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="receitas" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Receitas</p>
+        <h2>As receitas, por área</h2>
+        <p>As prontas têm uma página com o passo a passo, ilustrado. As planejadas aparecem com o rolê em que vão entrar; os ids delas são provisórios.</p>
+      </div>
+      <div class="receitas-area">
+        <div class="area">
+          <h3>Base <code>base/</code></h3>
+          <ol class="estacoes">
+          <li><a class="cartao estacao revelar" href="receitas/base-atualizar.html">
+            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-13.7 5.6"/><path d="M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.7 2.8v3.8h-3.8"/><path d="M6.3 21.2v-3.8h3.8"/></svg></span>
+            <span><strong>Sistema atualizado</strong><span class="d">Atualiza os programas e liga as atualizações automáticas de segurança. <code>base/atualizar</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Sistema <code>sistema/</code></h3>
+          <ol class="estacoes">
+          <li><a class="cartao estacao revelar" href="receitas/sistema-snapshot.html">
+            <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7l1.5-3h4l1.5 3"/><circle cx="12" cy="13.5" r="3.6"/></svg></span>
+            <span><strong>Snapshot do sistema</strong><span class="d">Fotos diárias e semanais do sistema, para voltar no tempo se algo quebrar. <code>sistema/snapshot</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/></svg></span>
+            <span><strong>Backup da pasta pessoal</strong><span class="d">Uma cópia dos seus arquivos num disco externo, todo dia. Entra em: Pronto para estudar e trabalhar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg></span>
+            <span><strong>Serviços desnecessários desligados</strong><span class="d">Desliga o que a máquina não usa, como Bluetooth sem placa de Bluetooth. Entra em: Dar vida nova a uma máquina antiga.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2.5V5M15 2.5V5M9 19v2.5M15 19v2.5M2.5 9H5M2.5 15H5M19 9h2.5M19 15h2.5"/></svg></span>
+            <span><strong>Memória comprimida</strong><span class="d">Usa zram para caber mais programas abertos em pouca memória. Entra em: Dar vida nova a uma máquina antiga.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Segurança <code>seguranca/</code></h3>
+          <ol class="estacoes">
+          <li><a class="cartao estacao revelar" href="receitas/seguranca-firewall.html">
+            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><path d="M5.3 10.2h13.4M6.2 14.6h11.6M12 5.8v4.4M9 10.2v4.4M15 10.2v4.4M12 14.6v4.6"/></svg></span>
+            <span><strong>Firewall</strong><span class="d">Bloqueia o que chega de fora e libera só o que o perfil pede. <code>seguranca/firewall</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5M8 10.5l2 2 3.5-3.5"/></svg></span>
+            <span><strong>Verificação de segredos</strong><span class="d">O gitleaks confere cada commit, para nenhuma chave ir parar no GitHub. Entra em: Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Desktop <code>desktop/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18M6 6.3h.01M8.5 6.3h.01"/></svg></span>
+            <span><strong>Ambiente leve</strong><span class="d">Um ambiente gráfico leve ao lado do atual, escolhido na tela de login. Entra em: Dar vida nova a uma máquina antiga.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/></svg></span>
+            <span><strong>Codecs de áudio e vídeo</strong><span class="d">Para tocar MP3, MP4 e os vídeos que vêm do celular. Entra em: Pronto para estudar e trabalhar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span>
+            <span><strong>Flatpak e Flathub</strong><span class="d">A loja de aplicativos que funciona igual em qualquer distro. Entra em: Pronto para estudar e trabalhar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5S14.5 17.9 12 20.5C9.5 17.9 8.4 15.1 8.4 12S9.5 6.1 12 3.5z"/></svg></span>
+            <span><strong>Navegador enxuto</strong><span class="d">Um navegador que gasta menos memória, com bloqueio de anúncios. Entra em: Dar vida nova a uma máquina antiga.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Programação <code>dev/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3z"/><path d="M14.5 6.5L17 4l3 3-2.5 2.5"/></svg></span>
+            <span><strong>Ferramentas de compilação</strong><span class="d">Compilador, make e o que mais os pacotes de programação pedem. Entra em: Começar a programar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M6 8.2v7.6M8 7.2c4.5 1 7.6 2.2 8 3.2"/></svg></span>
+            <span><strong>Git</strong><span class="d">Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab. Entra em: Começar a programar, Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z"/><path d="M12 8v8M9 10.5l3-2.5 3 2.5"/></svg></span>
+            <span><strong>Node.js</strong><span class="d">A versão LTS do Node.js, com npm, sem precisar de sudo. Entra em: Começar a programar, Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5c-4 0-4 1.8-4 3V9h4.5v1H6.2C4.2 10 3 11.5 3 14s1.2 4 3.2 4H8v-2.5c0-1.5 1.2-2.5 2.6-2.5h3c1.4 0 2.4-1 2.4-2.4V6.5c0-1.7-1.5-3-4-3z"/><path d="M12 20.5c4 0 4-1.8 4-3V15h-4.5v-1h6.3c2 0 3.2-1.5 3.2-4s-1.2-4-3.2-4H16"/></svg></span>
+            <span><strong>Python com ambientes virtuais</strong><span class="d">Python para projetos, sem mexer no Python que a distro usa. Entra em: Começar a programar, Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Contêineres <code>containers/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 8.5L12 4l8.5 4.5v7L12 20l-8.5-4.5z"/><path d="M8 6.3l8.5 4.5"/></svg></span>
+            <span><strong>Caixa de areia para os agentes</strong><span class="d">Os agentes rodam num contêiner, sem acesso ao sistema todo. Entra em: Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="11" rx="1.5"/><path d="M7 8v11M11 8v11M15 8v11M3 5h18"/></svg></span>
+            <span><strong>Contêineres com Podman</strong><span class="d">Contêineres que rodam sem permissão de administrador. Entra em: Começar a programar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>IA <code>ia/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16.2h5"/><circle cx="12" cy="3.5" r="1"/></svg></span>
+            <span><strong>Agentes de IA no terminal</strong><span class="d">Claude Code, Codex, Copilot CLI, OpenCode e outros, pelos instaladores oficiais. Entra em: Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16.5 6.5l2.5 2.5M14 9l2 2"/></svg></span>
+            <span><strong>Chaves de API guardadas</strong><span class="d">Um lugar para as chaves, com permissão só do dono. Entra em: Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16.2h5"/><circle cx="12" cy="3.5" r="1"/></svg></span>
+            <span><strong>IA local com Ollama</strong><span class="d">Modelos de IA rodando no próprio computador, se ele aguentar. Entra em: Vibecodar.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Serviços da casa <code>servicos/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/></svg></span>
+            <span><strong>Servidor Jellyfin</strong><span class="d">Filmes e séries para a TV e os celulares da casa. Entra em: Filmes e séries da casa.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
+            <span><strong>Compartilhamento Samba</strong><span class="d">Uma pasta que Windows, Mac, Linux e celulares abrem pela rede. Entra em: Pasta compartilhada da casa.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+        <div class="area">
+          <h3>Rede <code>rede/</code></h3>
+          <ol class="estacoes">
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M12 12.3v3.2"/></svg></span>
+            <span><strong>Tailscale</strong><span class="d">Uma rede privada entre os seus aparelhos, sem abrir portas. Entra em: Acessar de fora sem abrir portas.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          <li><div class="cartao estacao planejada">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7v4M12 11l-6 5.3M12 11l6 5.3"/></svg></span>
+            <span><strong>Teste de CGNAT</strong><span class="d">Mostra se a sua internet está atrás de CGNAT, e por que isso não importa com a VPN. Entra em: Acessar de fora sem abrir portas.</span></span>
+            <span class="ficha planejado">Planejada</span>
+          </div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-ler" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como ler</p>
+        <h2>O que cada página traz</h2>
+      </div>
+      <div class="principios">
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><strong>O que faz e o que não faz.</strong><span>Os limites ficam tão claros quanto o que a receita entrega.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></svg><div><strong>O passo a passo.</strong><span>O que o <code>bora</code> confere e muda em cada etapa.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M10 9a2 2 0 1 1 2.6 1.9c-.4.2-.6.5-.6.9v.4M12 15.5h.01"/></svg><div><strong>Os porquês.</strong><span>Por que esse jeito, e não outro.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg><div><strong>Os comandos para conferir.</strong><span>Para ver com os próprios olhos, sem mudar nada.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><div><strong>Como desfazer.</strong><span>O que volta, o que fica e por quê.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><div><strong>Um jeito de pedir mais.</strong><span>No fim de cada página, os pedidos viram issues no GitHub.</span></div></div>
+      </div>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=3-novo-role.yml&amp;title=Rol%C3%AA%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span>
+          <h3>Propor um rolê</h3>
+          <p>Conte o objetivo em linguagem de gente, para quem ele serve e em que máquina você pensou.</p>
+          <span class="seta">Propor</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=Pedido%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso</h3>
+          <p>Algo novo num rolê ou numa receita que já existe, ou outra distro.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como a página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

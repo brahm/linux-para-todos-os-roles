@@ -1,0 +1,36 @@
+id: base/atualizar
+nome: Sistema atualizado
+descricao: Atualiza os programas instalados e liga as atualizações automáticas de segurança.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  automaticas:
+    tipo: booleano
+    padrao: true
+    pergunta: Instalar as atualizações de segurança sozinho, todo dia?
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

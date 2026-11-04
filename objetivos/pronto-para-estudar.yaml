@@ -1,0 +1,19 @@
+id: pronto-para-estudar
+nome: Pronto para estudar e trabalhar
+descricao: O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.
+para_quem: [curiosos, estudantes]
+status: planejado
+hardware_minimo:
+  ram_gb: 2
+  disco_livre_gb: 20
+familias: [ubuntu, debian]
+receitas:
+  - id: base/atualizar
+  - id: seguranca/firewall
+    perfil: desktop
+  - id: sistema/snapshot
+  - id: desktop/codecs
+  - id: desktop/flatpak
+  - id: sistema/backup-pessoal
+pronto_quando: O bora diz que tudo está aplicado, um vídeo comum toca e o Timeshift mostra o primeiro snapshot.
+como_desfazer: O bora desfaz as receitas na ordem contrária e remove só o que ele mesmo instalou.

@@ -1,0 +1,48 @@
+id: sistema/snapshot
+nome: Snapshot do sistema
+descricao: Configura o Timeshift para guardar fotos diárias e semanais do sistema, que permitem voltar no tempo se algo quebrar.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada
+parametros:
+  dispositivo:
+    tipo: texto
+    padrao: auto
+    descricao: Onde guardar os snapshots. "auto" usa a própria partição do sistema; também aceita um dispositivo como /dev/sdb1.
+  diarios:
+    tipo: inteiro
+    padrao: 5
+    descricao: Quantos snapshots diários manter.
+  semanais:
+    tipo: inteiro
+    padrao: 3
+    descricao: Quantos snapshots semanais manter.
+  criar_agora:
+    tipo: booleano
+    padrao: true
+    descricao: Criar o primeiro snapshot logo depois de configurar.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

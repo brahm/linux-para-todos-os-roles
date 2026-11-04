@@ -1,0 +1,249 @@
+/* Linux para todos os rolês: páginas do catálogo (rolês e receitas).
+   Usa as variáveis e os componentes de ../estilo.css. */
+
+:root {
+  --nao: #c01c28;
+  --nao-soft: #fde8e8;
+  --azul: #1c71d8;
+  --azul-soft: #e5effb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nao: #ff7b63;
+    --nao-soft: rgba(246, 97, 81, 0.14);
+    --azul: #78aeed;
+    --azul-soft: rgba(120, 174, 237, 0.14);
+  }
+}
+
+/* Abertura das páginas internas */
+.abertura.interna .largura { padding-block: 40px 56px; grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); }
+@media (max-width: 920px) { .abertura.interna .largura { grid-template-columns: minmax(0, 1fr); padding-block: 28px 44px; } }
+.abertura.interna h1 { font-size: clamp(38px, 5.4vw, 60px); margin-top: 18px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.abertura.interna h1 .ladrilho { width: 72px; height: 72px; border-radius: 18px; }
+.abertura.interna h1 .ladrilho svg { width: 40px; height: 40px; }
+.abertura.interna .lema { max-width: 40ch; }
+.migalhas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 14.5px; font-weight: 600; }
+.migalhas li { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+.migalhas li + li::before { content: "›"; color: var(--text-2); opacity: 0.7; }
+.migalhas a { color: var(--text-2); text-decoration: none; }
+.migalhas a:hover { color: var(--link); text-decoration: underline; }
+.fichas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.ficha code { background: none; padding: 0; font-size: 12.5px; }
+.ficha.risco-baixo { background: var(--ok-soft); color: var(--ok); }
+.ficha.risco-medio { background: var(--accent-soft); color: var(--link); }
+.ficha.risco-alto { background: var(--nao-soft); color: var(--nao); }
+.ficha.testada::before { content: "✓"; }
+
+/* Palco: o quadro onde ficam as ilustrações */
+.palco { position: relative; background: var(--surface); border-radius: 20px; box-shadow: var(--shadow); padding: 18px; overflow: hidden; }
+.palco svg.ilustra { width: 100%; height: auto; overflow: visible; }
+.palco figcaption, .legenda-palco { margin: 10px 4px 0; font-size: 14px; color: var(--text-2); }
+.ilustra text { font-family: var(--font); fill: var(--text); }
+.ilustra .t2 { fill: var(--text-2); }
+.ilustra .mono { font-family: var(--mono); }
+.ilustra .caixa-svg { fill: var(--surface-2); stroke: var(--line); }
+.ilustra .traco { stroke: var(--text-2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ilustra .tracejado { stroke-dasharray: 5 6; }
+.ilustra .laranja { fill: var(--accent); }
+.ilustra .verde { fill: var(--ok); }
+.ilustra .vermelho { fill: var(--nao); }
+.ilustra .azul { fill: var(--azul); }
+.ilustra .fundo { fill: var(--surface); }
+
+/* Botões de alternância (perfis, cenários) */
+.alternar { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 99px; background: var(--surface-2); margin-bottom: 14px; }
+.alternar button { font: inherit; font-size: 14.5px; font-weight: 600; border: 0; border-radius: 99px; padding: 7px 14px; background: transparent; color: var(--text-2); cursor: pointer; }
+.alternar button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.alternar button:hover { color: var(--text); }
+
+/* Faz / não faz */
+.faz-nao { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 760px) { .faz-nao { grid-template-columns: 1fr; } }
+.faz-nao .cartao { padding: 26px; }
+.faz-nao h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.faz-nao h3 .marca-icone { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; }
+.faz .marca-icone { background: var(--ok-soft); color: var(--ok); }
+.nao-faz .marca-icone { background: var(--nao-soft); color: var(--nao); }
+.faz-nao ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.faz-nao li { position: relative; padding-left: 28px; color: var(--text-2); }
+.faz-nao li strong { color: var(--text); }
+.faz-nao li::before { position: absolute; left: 0; top: 0; font-weight: 700; }
+.faz li::before { content: "✓"; color: var(--ok); }
+.nao-faz li::before { content: "✕"; color: var(--nao); }
+
+/* Passo a passo: o ciclo verificar → aplicar → testar → desfazer */
+.etapas { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: etapa; }
+.etapa { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 20px; padding-bottom: 30px; }
+.etapa::before { content: ""; position: absolute; left: 27px; top: 56px; bottom: 0; border-left: 2px dashed var(--line); }
+.etapa:last-child::before { display: none; }
+.etapa .marco { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; background: var(--accent-soft); color: var(--link); font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.etapa .marco svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.etapa.verde .marco { background: var(--ok-soft); color: var(--ok); }
+.etapa.azul .marco { background: var(--azul-soft); color: var(--azul); }
+.etapa.cinza .marco { background: var(--surface-2); color: var(--text-2); }
+.etapa .corpo { padding-top: 4px; }
+.etapa h3 { font-size: 21px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.etapa h3 small { font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--text-2); letter-spacing: 0; }
+.etapa p { margin: 8px 0 0; color: var(--text-2); }
+.etapa ul { margin: 8px 0 0; padding-left: 20px; color: var(--text-2); }
+.etapa li + li { margin-top: 4px; }
+
+/* Revelação ao rolar */
+.js .revelar { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.js .revelar.visivel { opacity: 1; transform: none; }
+
+/* Terminal que se escreve sozinho */
+.janela.replay pre { min-height: 4em; }
+.js .janela.replay pre .l { display: block; opacity: 0; }
+.js .janela.replay pre .l.ok { opacity: 1; }
+.janela pre .l { display: block; }
+.janela .v { color: #8ff0a4; }
+.janela .a { color: #f8e45c; }
+.janela .x { color: #ff7b63; }
+.janela .bar { color: #77767b; }
+.replay-controles { display: flex; justify-content: flex-end; margin-top: 10px; }
+.botao-mini { font: inherit; font-size: 14px; font-weight: 600; border: 0; border-radius: 99px; padding: 6px 14px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.botao-mini:hover { box-shadow: var(--shadow-hover); }
+.botao-mini svg { width: 14px; height: 14px; }
+
+/* Porquês */
+.porques { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.porque { padding: 22px 24px; }
+.porque h3 { font-size: 18px; position: relative; padding-left: 36px; }
+.porque h3::before { content: "?"; position: absolute; left: 0; top: -2px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--link); font-size: 15px; }
+.porque p { margin: 10px 0 0; color: var(--text-2); font-size: 15.5px; }
+
+/* Tabelas */
+.tabela-envolta { overflow-x: auto; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+table.tabela { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.tabela th, .tabela td { text-align: left; padding: 12px 16px; vertical-align: top; }
+.tabela thead th { font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); font-weight: 600; border-bottom: 1px solid var(--line); }
+.tabela tbody tr + tr td { border-top: 1px solid var(--line); }
+.tabela td:first-child code { white-space: nowrap; }
+.tabela td { color: var(--text-2); }
+.tabela td strong, .tabela td:first-child { color: var(--text); }
+
+/* Comandos para conferir */
+.comandos-conferir { display: grid; gap: 12px; }
+.comando { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 16px 18px; }
+.comando code { background: none; padding: 0; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.comando span { color: var(--text-2); font-size: 15px; }
+
+/* Famílias e testes */
+.familias { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.familia { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.familia strong { font-weight: 600; }
+.nivel { font-size: 13px; font-weight: 600; padding: 2px 10px; border-radius: 99px; width: fit-content; background: var(--surface-2); color: var(--text-2); }
+.nivel.testada { background: var(--ok-soft); color: var(--ok); }
+.nivel.planejada::before { content: "○ "; }
+.nivel.nao-se-aplica { background: transparent; color: var(--text-2); border: 1px dashed var(--line); }
+
+/* Lista de receitas de um rolê: estações da trilha */
+.estacoes { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.estacao { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 18px; color: inherit; text-decoration: none; }
+a.estacao { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+a.estacao:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.estacao .ladrilho { width: 48px; height: 48px; border-radius: 13px; }
+.estacao .ladrilho svg { width: 26px; height: 26px; }
+.estacao strong { display: block; font-weight: 600; }
+.estacao span.d { display: block; color: var(--text-2); font-size: 15px; line-height: 1.45; }
+.estacao code { font-size: 13px; }
+.estacao.planejada .ladrilho { filter: grayscale(1); opacity: 0.55; }
+@media (max-width: 560px) { .estacao { grid-template-columns: 40px minmax(0, 1fr); } .estacao .ficha { grid-column: 2; justify-self: start; } .estacao .ladrilho { width: 40px; height: 40px; } }
+
+/* Grade de receitas no catálogo */
+.receitas-area { display: grid; gap: 28px; }
+.area h3 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.area h3 code { font-size: 15px; color: var(--text-2); }
+
+/* Grade de rolês com links */
+a.role { color: inherit; text-decoration: none; }
+a.role h3 { color: var(--text); }
+.role .vai { color: var(--link); font-weight: 600; font-size: 15px; }
+.role .rodape .ficha { white-space: normal; text-align: right; }
+
+/* Pedidos no fim da página */
+.pedidos { margin-top: 88px; }
+.pedidos .cartao.convite { min-height: 100%; }
+
+/* Animações das ilustrações. Só rodam com a classe .anima, que o JS põe quando a figura aparece. */
+@keyframes passo-trilha { 0% { opacity: 0; transform: scale(0.6); } 40% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes surgir { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes some { to { opacity: 0; transform: translateY(10px); } }
+@keyframes pulso { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes girar { to { transform: rotate(360deg); } }
+@keyframes piscar-suave { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.ilustra .gira { transform-box: fill-box; transform-origin: center; }
+.anima .ilustra .gira { animation: girar 2.4s linear infinite; }
+.ilustra .pulsa { transform-box: fill-box; transform-origin: center; }
+.anima .ilustra .pulsa { animation: pulso 2.2s ease-in-out infinite; }
+
+/* Pacotes ganhando versão nova (base/atualizar) */
+.pacote .velha, .pacote .nova { transition: opacity 0.4s; }
+.js .pacote .nova { opacity: 0; }
+.js .pacote .barra-p { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; }
+.anima .pacote .barra-p { animation: encher 1.1s ease-out forwards; animation-delay: calc(var(--i) * 0.45s + 0.3s); }
+.anima .pacote .velha { animation: some 0.3s forwards; animation-delay: calc(var(--i) * 0.45s + 1.3s); }
+.anima .pacote .nova { animation: surgir 0.35s forwards; animation-delay: calc(var(--i) * 0.45s + 1.4s); }
+@keyframes encher { to { transform: scaleX(1); } }
+.js .dia .escudo { opacity: 0; }
+.anima .dia .escudo { animation: passo-trilha 0.5s forwards; animation-delay: calc(var(--i) * 0.28s + 2.6s); transform-box: fill-box; transform-origin: center; }
+
+/* Linha do tempo de snapshots (sistema/snapshot) */
+.js .foto { opacity: 0; }
+.anima .foto { animation: passo-trilha 0.45s forwards; animation-delay: calc(var(--i) * 0.32s + 0.2s); transform-box: fill-box; transform-origin: center; }
+.anima .foto.vence { animation: passo-trilha 0.45s forwards, apagar 0.6s forwards; animation-delay: calc(var(--i) * 0.32s + 0.2s), 3.4s; }
+@keyframes apagar { to { opacity: 0.18; } }
+.js .volta { opacity: 0; }
+.anima .volta { animation: surgir 0.6s forwards; animation-delay: 4.2s; }
+.js .volta-seta { stroke-dasharray: 400; stroke-dashoffset: 400; }
+.anima .volta-seta { animation: desenhar 1.3s ease-in-out forwards; animation-delay: 4.3s; }
+@keyframes desenhar { to { stroke-dashoffset: 0; } }
+
+/* Firewall: pacotes de rede */
+.pacote-rede { transition: opacity 0.3s; }
+.js .pacote-rede circle { opacity: 0; }
+.anima .pacote-rede circle { animation: viajar 3.2s ease-in-out infinite; animation-delay: var(--d, 0s); opacity: 1; }
+@keyframes viajar {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+.anima .pacote-rede.barrado circle { animation-name: viajar-barrado; }
+@keyframes viajar-barrado {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  70% { offset-distance: 100%; opacity: 1; transform: scale(1); }
+  85% { offset-distance: 100%; opacity: 1; transform: scale(1.6); }
+  100% { offset-distance: 100%; opacity: 0; transform: scale(0.4); }
+}
+.regra-off { opacity: 0.25; }
+.perfil-oculto { display: none; }
+
+/* Trilha do rolê: pegadas passando pelas receitas */
+.js .trilha-role .pe { opacity: 0; }
+.anima .trilha-role .pe { animation: passo-trilha 0.4s forwards; animation-delay: calc(var(--i) * 0.16s); transform-box: fill-box; transform-origin: center; }
+.js .trilha-role .parada { opacity: 0.35; }
+.anima .trilha-role .parada { animation: acender 0.4s forwards; animation-delay: calc(var(--i) * 0.16s); }
+@keyframes acender { to { opacity: 1; } }
+
+/* Ciclo de uma receita, no catálogo */
+.js .ciclo .no { opacity: 0.35; }
+.anima .ciclo .no { animation: acender 0.5s forwards; animation-delay: calc(var(--i) * 0.7s + 0.2s); }
+.ciclo .bolinha { offset-path: path("M 70 110 C 70 40, 190 40, 190 110 C 190 40, 310 40, 310 110 C 310 40, 430 40, 430 110"); }
+.js .ciclo .bolinha { opacity: 0; }
+.anima .ciclo .bolinha { animation: viajar 2.8s ease-in-out forwards; animation-delay: 0.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .revelar { opacity: 1; transform: none; }
+  .js .janela.replay pre .l { opacity: 1; }
+  .js .pacote .nova, .js .dia .escudo, .js .foto, .js .volta, .js .trilha-role .pe, .js .trilha-role .parada, .js .ciclo .no { opacity: 1; }
+  .js .pacote .velha { opacity: 0; }
+  .js .pacote .barra-p { transform: none; }
+  .js .volta-seta { stroke-dashoffset: 0; }
+  .js .foto.vence { opacity: 0.18; }
+  .js .pacote-rede circle, .js .ciclo .bolinha { opacity: 0; }
+}

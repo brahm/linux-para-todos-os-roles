@@ -1,0 +1,34 @@
+name: Pedir uma receita nova
+description: Uma mudança que o bora ainda não sabe fazer, como instalar e configurar um programa.
+title: "Receita: "
+labels: [receita-nova]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Uma receita é a menor mudança que o `bora` aplica, e sabe verificar, aplicar, testar e desfazer. O formato está em [`receitas/README.md`](https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/README.md).
+  - type: textarea
+    id: o-que
+    attributes:
+      label: O que a receita faz
+      placeholder: Instala o Syncthing e deixa a pasta Documentos sincronizada com o celular.
+    validations:
+      required: true
+  - type: input
+    id: role
+    attributes:
+      label: Em que rolê ela entra
+      description: Se souber. Pode ser um rolê que ainda não existe.
+  - type: textarea
+    id: porque
+    attributes:
+      label: Para que você precisa disso
+  - type: textarea
+    id: como
+    attributes:
+      label: Como você faz isso hoje, na mão
+      description: Comandos, tutoriais ou documentação oficial que você usa. Remova senhas, tokens e IPs públicos.
+  - type: input
+    id: distro
+    attributes:
+      label: Distro e versão

@@ -1,0 +1,45 @@
+name: Pedir um recurso
+description: Algo novo num rolê ou numa receita que já existe, como uma opção, outra distro ou uma explicação melhor.
+title: "Pedido: "
+labels: [pedido]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por pedir! Conte o que você quer em linguagem de gente. Não precisa saber como fazer.
+  - type: input
+    id: onde
+    attributes:
+      label: Rolê ou receita
+      description: O id que aparece na página, como `seguranca/firewall` ou `pronto-para-estudar`.
+      placeholder: seguranca/firewall
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Que tipo de pedido é
+      options:
+        - Uma opção ou um comportamento novo
+        - Funcionar em outra distro
+        - Uma explicação melhor no site ou no LEIAME
+        - Outra coisa
+    validations:
+      required: true
+  - type: textarea
+    id: pedido
+    attributes:
+      label: O que você quer
+      placeholder: Queria que o firewall também liberasse o KDE Connect na rede local.
+    validations:
+      required: true
+  - type: textarea
+    id: porque
+    attributes:
+      label: Para que você precisa disso
+      description: O motivo ajuda a achar o melhor jeito, que às vezes é outro.
+  - type: input
+    id: distro
+    attributes:
+      label: Distro e versão
+      placeholder: Ubuntu 24.04, Linux Mint 22, Debian 13...

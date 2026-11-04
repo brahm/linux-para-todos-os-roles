@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snapshot do sistema · Linux para todos os rolês</title>
+  <meta name="description" content="Snapshot do sistema, receita do bora: Fotos diárias e semanais do sistema, para voltar no tempo se algo quebrar. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/sistema-snapshot.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Snapshot do sistema">
+  <meta property="og:description" content="Snapshot do sistema, receita do bora: Fotos diárias e semanais do sistema, para voltar no tempo se algo quebrar. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/sistema-snapshot.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Snapshot do sistema</li>
+          </ol>
+          <h1><span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7l1.5-3h4l1.5 3"/><circle cx="12" cy="13.5" r="3.6"/></svg></span><span>Snapshot do sistema</span></h1>
+          <p class="lema">Configura o Timeshift para guardar fotos diárias e semanais do sistema, que permitem voltar no tempo se algo quebrar.</p>
+          <div class="fichas">
+            <span class="ficha"><code>sistema/snapshot</code></span>
+            <span class="ficha risco-medio">Risco médio</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/sistema/snapshot">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="is-t">
+            <title id="is-t">Uma linha do tempo: o Timeshift tira uma foto por dia e uma por semana, apaga as mais velhas para manter 5 diárias e 3 semanais, e no dia em que algo quebra, uma seta volta o sistema para a foto de ontem.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Diários</text><text x="82" y="28" font-size="13" class="t2">guarda os 5 mais novos</text>
+            <path d="M20 66H460" class="traco tracejado"/>
+            <g class="foto vence" style="--i:0">
+              <circle cx="48" cy="66" r="17" class="azul"/>
+              <rect x="39.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="48" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="48" y="100" font-size="12" text-anchor="middle" class="t2">qua</text>
+            </g><g class="foto vence" style="--i:1">
+              <circle cx="108" cy="66" r="17" class="azul"/>
+              <rect x="99.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="108" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="108" y="100" font-size="12" text-anchor="middle" class="t2">qui</text>
+            </g><g class="foto" style="--i:2">
+              <circle cx="168" cy="66" r="17" class="azul"/>
+              <rect x="159.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="168" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="168" y="100" font-size="12" text-anchor="middle" class="t2">sex</text>
+            </g><g class="foto" style="--i:3">
+              <circle cx="228" cy="66" r="17" class="azul"/>
+              <rect x="219.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="228" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="228" y="100" font-size="12" text-anchor="middle" class="t2">sáb</text>
+            </g><g class="foto" style="--i:4">
+              <circle cx="288" cy="66" r="17" class="azul"/>
+              <rect x="279.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="288" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="288" y="100" font-size="12" text-anchor="middle" class="t2">dom</text>
+            </g><g class="foto" style="--i:5">
+              <circle cx="348" cy="66" r="17" class="azul"/>
+              <rect x="339.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="348" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="348" y="100" font-size="12" text-anchor="middle" class="t2">seg</text>
+            </g><g class="foto" style="--i:6">
+              <circle cx="408" cy="66" r="17" class="azul"/>
+              <rect x="399.5" y="61.24" width="17" height="11.22" rx="2.04" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="408" cy="66.85" r="3.4000000000000004" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="408" y="100" font-size="12" text-anchor="middle" class="t2">ter</text>
+            </g>
+            <text x="20" y="136" font-size="14" font-weight="600">Semanais</text><text x="96" y="136" font-size="13" class="t2">guarda os 3 mais novos</text>
+            <path d="M20 176H460" class="traco tracejado"/>
+            <g class="foto vence" style="--i:7">
+              <circle cx="70" cy="176" r="21" class="laranja"/>
+              <rect x="59.5" y="170.12" width="21" height="13.860000000000001" rx="2.52" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="70" cy="177.05" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="70" y="214" font-size="12" text-anchor="middle" class="t2">4 sem.</text>
+            </g><g class="foto" style="--i:8">
+              <circle cx="180" cy="176" r="21" class="laranja"/>
+              <rect x="169.5" y="170.12" width="21" height="13.860000000000001" rx="2.52" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="180" cy="177.05" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="180" y="214" font-size="12" text-anchor="middle" class="t2">3 sem.</text>
+            </g><g class="foto" style="--i:9">
+              <circle cx="290" cy="176" r="21" class="laranja"/>
+              <rect x="279.5" y="170.12" width="21" height="13.860000000000001" rx="2.52" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="290" cy="177.05" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="290" y="214" font-size="12" text-anchor="middle" class="t2">2 sem.</text>
+            </g><g class="foto" style="--i:10">
+              <circle cx="400" cy="176" r="21" class="laranja"/>
+              <rect x="389.5" y="170.12" width="21" height="13.860000000000001" rx="2.52" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="400" cy="177.05" r="4.2" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <text x="400" y="214" font-size="12" text-anchor="middle" class="t2">1 sem.</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <path d="M440 262l-9 16h7l-5 14 14-19h-8l6-11z" class="laranja"/>
+              <text x="40" y="266" font-size="14" font-weight="600">Hoje, uma atualização quebrou o som.</text>
+              <text x="40" y="290" font-size="13" class="t2">Você volta o sistema para a foto de ontem:</text>
+              <text x="40" y="314" font-size="13.5" class="mono" font-weight="600">sudo timeshift --restore</text>
+            </g>
+            <path class="volta-seta" d="M430 238 C 425 150, 390 112, 356 90" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+            <path class="volta" d="M354 102l1-13 12 3" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <figcaption>Com o padrão de 5 diários e 3 semanais, as fotos mais velhas vão sendo apagadas sozinhas, e o disco não enche.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Instala e configura o Timeshift</strong>, a ferramenta de snapshot que as distros da família Ubuntu e Debian recomendam.</li>
+            <li><strong>Guarda uma foto por dia e uma por semana</strong> dos arquivos do sistema, e apaga as mais velhas sozinha.</li>
+            <li><strong>Cria o primeiro snapshot</strong> logo depois de configurar.</li>
+            <li><strong>Faz o bora tirar uma foto antes de cada plano</strong>, daqui em diante.</li>
+            <li><strong>Usa o modo btrfs</strong> quando a raiz é btrfs com o subvolume <code>@</code>, que é instantâneo.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não guarda os seus arquivos pessoais: <code>/home</code> e <code>/root</code> ficam de fora de propósito. Para eles, existe o backup da pasta pessoal.</li>
+            <li>Não copia nada para outro disco, a não ser que você escolha um em <code>dispositivo</code>.</li>
+            <li>Não serve como backup se o disco do computador morrer, porque as fotos ficam no mesmo disco.</li>
+            <li>Não roda se houver menos de 10 GB livres: para antes de mudar qualquer coisa.</li>
+            <li>Não se aplica ao Fedora imutável, que já volta versões do sistema do jeito dele.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se o Timeshift está instalado, se o <code>timeshift.json</code> tem o disco, o modo e os agendamentos certos, e se o <code>bora-snapshot.timer</code> está ligado. Se estiver tudo certo, pula a receita.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Descobre onde guardar: com <code>auto</code>, a própria partição do sistema.</li><li>Para, sem mudar nada, se houver menos de 10 GB livres ou se a raiz for btrfs sem o subvolume <code>@</code>.</li><li>Instala o <code>timeshift</code> sem os pacotes recomendados.</li><li>Escreve <code>/etc/timeshift/timeshift.json</code> com o disco, o modo, 5 diários, 3 semanais e o que fica de fora.</li><li>Cria o <code>bora-snapshot.timer</code>, que de hora em hora pergunta ao Timeshift se uma foto venceu.</li><li>Cria o primeiro snapshot. Na primeira vez, o Timeshift copia o sistema inteiro: de 5 a 30 minutos. As seguintes copiam só o que mudou.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere que o programa está instalado, que a configuração está certa, que o <code>timeshift --list</code> consegue montar o disco e listar as fotos, que o agendamento está ligado e que existe pelo menos um snapshot.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Desliga e remove o timer, apaga o snapshot que esta receita criou, volta o <code>timeshift.json</code> ao que era e remove o Timeshift, se foi ela que instalou. Fotos criadas depois ficam guardadas, e a receita diz onde estão, para você decidir.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="duas revelar" style="margin-top:20px">
+        <div class="cartao"><h3>Entra na foto</h3><p>Os arquivos do sistema: <code>/etc</code> (as configurações), <code>/usr</code> (os programas), <code>/boot</code> (o kernel), <code>/var</code> e o resto da raiz.</p><p>Voltar uma foto desfaz uma atualização com defeito, um driver que não sobe ou uma configuração que deu errado.</p></div>
+        <div class="cartao"><h3>Fica de fora</h3><p>As pastas pessoais em <code>/home</code> e a pasta do <code>root</code>.</p><p>Assim, voltar o sistema nunca apaga o trabalho que você fez depois da foto. O outro lado: os seus arquivos precisam de um backup de verdade, em outro disco.</p></div>
+      </div>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt e do Timeshift, com o disco de teste trocado por um disco comum.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Snapshot do sistema: instala o Timeshift, escreve a configuração e o timer, cria o primeiro snapshot e confere os testes.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo bora aplicar plano.yaml</span></span><span class="l ">&nbsp;</span><span class="l "><span class="c">[2/3] Snapshot do sistema</span></span><span class="l "><span class="bar">  │</span> Os snapshots vão para /dev/sda2 (ext4, modo rsync).</span><span class="l "><span class="bar">  │</span> Instalando: timeshift</span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /etc/timeshift/timeshift.json</span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /etc/systemd/system/bora-snapshot.timer</span><span class="l "><span class="bar">  │</span> Criando o primeiro snapshot. Na primeira vez, o Timeshift copia o sistema inteiro e pode levar de 5 a 30 minutos.</span><span class="l "><span class="bar">  │</span> <span class="d">Creating new snapshot...(RSYNC)</span></span><span class="l "><span class="bar">  │</span> <span class="d">RSYNC Snapshot saved successfully (19s)</span></span><span class="l "><span class="bar">  │</span> Pronto. O Timeshift vai guardar 5 snapshots diários e 3 semanais.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> agendamento ligado (bora-snapshot.timer)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> existe pelo menos um snapshot</span><span class="l "><span class="v">✓</span> Snapshot do sistema: aplicada e testada</span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo timeshift --list</span></span><span class="l "><span class="d">Num     Name                 Tags  Description</span></span><span class="l ">0    &gt;  2026-11-04_20-56-56  O</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que snapshot, se cada receita sabe se desfazer?</h3><p>Há coisas que nenhuma receita controla: uma atualização com defeito, um driver que não sobe, uma configuração que você mudou na mão. O snapshot é a rede de segurança para esses casos.</p></article>
+        <article class="cartao porque revelar"><h3>Por que um timer do systemd, e não o cron?</h3><p>O Timeshift só agenda pelo cron quando é configurado pelo aplicativo. Como aqui a configuração vai direto no arquivo, o agendamento fica com o systemd, que toda distro suportada já usa.</p></article>
+        <article class="cartao porque revelar"><h3>Por que sem os pacotes recomendados?</h3><p>Num desktop, eles já estão instalados. Num servidor, seriam centenas de pacotes gráficos que o Timeshift não usa para nada.</p></article>
+        <article class="cartao porque revelar"><h3>Por que 10 GB livres?</h3><p>A primeira foto copia o sistema inteiro, e as seguintes precisam de espaço para o que muda. Com menos que isso, o disco pode encher no meio do caminho, o que é pior do que não ter foto.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>timeshift</strong><span>Instalado sem os pacotes recomendados, se ainda não estiver.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/timeshift/timeshift.json</strong><span>O UUID do disco, o modo (rsync ou btrfs), 5 diários, 3 semanais e <code>/root/**</code> e <code>/home/*/**</code> de fora.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg><span class="txt"><strong>bora-snapshot.service e bora-snapshot.timer</strong><span>Em <code>/etc/systemd/system</code>. De hora em hora, rodam <code>timeshift --check</code>, que só cria uma foto quando uma vence.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.6"/></svg><span class="txt"><strong>O primeiro snapshot</strong><span>Em <code>/timeshift</code> na partição escolhida. É o único que o desfazer apaga.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>dispositivo</code></td><td><code>auto</code></td><td>Onde guardar os snapshots. "auto" usa a própria partição do sistema; também aceita um dispositivo como /dev/sdb1.</td></tr><tr><td><code>diarios</code></td><td><code>5</code></td><td>Quantos snapshots diários manter.</td></tr><tr><td><code>semanais</code></td><td><code>3</code></td><td>Quantos snapshots semanais manter.</td></tr><tr><td><code>criar_agora</code></td><td><code>sim</code></td><td>Criar o primeiro snapshot logo depois de configurar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas sistema/snapshot -p sistema/snapshot.criar_agora=nao</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos que o teste roda</h2>
+        <p>E os que você vai usar no dia em que precisar voltar.</p>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>sudo timeshift --list</code><span>Lista os snapshots guardados, com data e tipo.</span></div>
+        <div class="cartao comando revelar"><code>systemctl list-timers bora-snapshot.timer</code><span>Mostra quando o agendamento roda de novo.</span></div>
+        <div class="cartao comando revelar"><code>cat /etc/timeshift/timeshift.json</code><span>A configuração que a receita escreveu.</span></div>
+        <div class="cartao comando revelar"><code>sudo timeshift --restore</code><span>Volta o sistema para um snapshot. Também dá para usar o aplicativo Timeshift, no menu.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel nao-se-aplica">Não se aplica</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr><tr><td>Debian 13</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/pronto-para-estudar.html">
+          <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
+          <h3>Pronto para estudar e trabalhar</h3>
+          <p>O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</p>
+          <div class="rodape"><span class="num">01</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/pasta-compartilhada.html">
+          <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
+          <h3>Pasta compartilhada da casa</h3>
+          <p>Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir.</p>
+          <div class="rodape"><span class="num">05</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/filmes-e-series.html">
+          <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/></svg></span>
+          <h3>Filmes e séries da casa</h3>
+          <p>O Jellyfin servindo os seus filmes e séries para a TV e os celulares, apenas na rede local.</p>
+          <div class="rodape"><span class="num">06</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://github.com/linuxmint/timeshift"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Timeshift</strong><span>Repositório do Linux Mint</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Manual do systemd.timer</strong><span>Como funcionam os agendamentos do systemd</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/sistema/snapshot/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bsistema/snapshot%5D%20&amp;onde=sistema/snapshot">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bsistema/snapshot%5D%20Funcionar%20em%20&amp;onde=sistema/snapshot">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20sistema/snapshot&amp;onde=sistema/snapshot">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/sistema/snapshot/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
