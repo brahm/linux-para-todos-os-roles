@@ -40,3 +40,9 @@ testes:
     por: testes-automaticos
     onde: conteiner
     resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-04
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
