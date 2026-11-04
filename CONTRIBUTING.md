@@ -1,0 +1,44 @@
+# Como contribuir
+
+Contribuições são bem-vindas, inclusive de quem começou ontem. Muitas vezes, quem acabou de passar por um problema é quem melhor explica a solução.
+
+## Licença das contribuições
+
+O projeto usa a licença [0BSD](LICENSE). Ao enviar uma contribuição, você concorda que ela seja distribuída sob a mesma licença. Na prática, isso significa que qualquer pessoa pode copiar, modificar e usar o que você escreveu, sem pedir e sem citar.
+
+## Formas de ajudar
+
+- **Propor um rolê:** abra uma issue descrevendo o objetivo em linguagem de gente ("quero que este PC vire o lugar das fotos da família"), para quem ele serve e em que máquina você pensou.
+- **Escrever ou melhorar uma receita:** siga o formato descrito em [`receitas/README.md`](receitas/README.md).
+- **Testar:** rodar uma receita numa distro em que ela ainda não foi testada e registrar o resultado é uma das contribuições mais valiosas.
+- **Revisar textos:** se uma explicação ficou confusa para você, ela vai ficar confusa para outras pessoas.
+
+## Antes de abrir um pull request
+
+1. Teste numa máquina virtual ou num computador que possa ser formatado sem dor.
+2. Rode a receita duas vezes seguidas: a segunda vez não pode mudar nada (idempotência).
+3. Rode o `desfazer.sh` e confira que o sistema voltou ao estado anterior.
+4. Registre no `receita.yaml` a distro, a versão e a data do teste.
+5. Na descrição do pull request, diga o que foi testado, onde, e o que ainda falta validar.
+
+## Regras para receitas
+
+- Nada de pacotes do AUR. Use os repositórios oficiais da distro ou Flatpak.
+- Nada de `curl ... | sh`, exceto instaladores oficiais listados e conferidos pelo projeto.
+- Nenhuma receita abre porta para a internet. Acesso de fora só por VPN.
+- Nenhuma receita pede ou guarda senha, token ou chave dentro do repositório.
+- Mensagens para o usuário em português do Brasil.
+
+## Ao relatar um problema
+
+Evite só "não funciona". Prefira:
+
+```text
+Distro e versão: ...
+Rolê ou receita: ...
+O que eu esperava: ...
+O que aconteceu: ...
+Saída do bora diag: ...
+```
+
+Remova IPs públicos, nomes de usuário, tokens e chaves antes de colar qualquer saída.
