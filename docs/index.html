@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linux para todos os rolês</title>
+  <meta name="description" content="Um catálogo de rolês para computadores com Linux e o bora, uma ferramenta de terminal que leva você até eles com passos testados e um jeito de voltar atrás.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/">
+  <link rel="icon" href="imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="imagens/icone-256.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Linux para todos os rolês">
+  <meta property="og:description" content="A IA te passa os comandos. O bora te leva até o rolê, com passos testados e um jeito de voltar atrás.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Logotipo de Linux para todos os rolês: uma pegada de pinguim laranja ao lado do nome.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="estilo.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <!-- Símbolos reutilizados: a pegada da marca (marca/icones/.../br.com.brahm.Bora-symbolic.svg) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="#" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="#o-que-e">O que é</a>
+        <a href="#roles">Rolês</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#status">Status</a>
+        <a href="#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura">
+      <svg class="trilha" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <use href="#pegada" style="--i:0" x="-54.3" y="522.9" width="40" height="40" transform="rotate(108.4 -34.3 542.9)"/>
+      <use href="#pegada" style="--i:1" x="43.8" y="585.0" width="40" height="40" transform="rotate(100.6 63.8 605.0)"/>
+      <use href="#pegada" style="--i:2" x="161.6" y="564.0" width="40" height="40" transform="rotate(94.5 181.6 584.0)"/>
+      <use href="#pegada" style="--i:3" x="275.4" y="604.2" width="40" height="40" transform="rotate(89.8 295.4 624.2)"/>
+      <use href="#pegada" style="--i:4" x="387.5" y="564.0" width="40" height="40" transform="rotate(86.0 407.5 584.0)"/>
+      <use href="#pegada" style="--i:5" x="498.8" y="589.3" width="40" height="40" transform="rotate(82.9 518.8 609.3)"/>
+      <use href="#pegada" style="--i:6" x="591.8" y="539.1" width="40" height="40" transform="rotate(80.1 611.8 559.1)"/>
+      <use href="#pegada" style="--i:7" x="683.9" y="557.6" width="40" height="40" transform="rotate(77.5 703.9 577.6)"/>
+      <use href="#pegada" style="--i:8" x="764.0" y="495.0" width="40" height="40" transform="rotate(71.4 784.0 515.0)"/>
+      <use href="#pegada" style="--i:9" x="857.8" y="497.8" width="40" height="40" transform="rotate(66.6 877.8 517.8)"/>
+      <use href="#pegada" style="--i:10" x="922.6" y="424.7" width="40" height="40" transform="rotate(59.3 942.6 444.7)"/>
+      <use href="#pegada" style="--i:11" x="1021.7" y="398.5" width="40" height="40" transform="rotate(49.8 1041.7 418.5)"/>
+      <use href="#pegada" style="--i:12" x="1068.2" y="299.6" width="40" height="40" transform="rotate(38.9 1088.2 319.6)"/>
+      <use href="#pegada" style="--i:13" x="1161.0" y="223.3" width="40" height="40" transform="rotate(27.8 1181.0 243.3)"/>
+      <use href="#pegada" style="--i:14" x="1178.2" y="87.1" width="40" height="40" transform="rotate(17.5 1198.2 107.1)"/>
+      <use href="#pegada" style="--i:15" x="1247.8" y="-57.3" width="40" height="40" transform="rotate(8.7 1267.8 -37.3)"/>
+      </svg>
+      <div class="largura">
+        <div>
+          <a class="selo" href="#status"><span class="ponto" aria-hidden="true"></span>Recomeço em andamento: ainda não há nada para instalar</a>
+          <h1 class="titulo-logo">
+            <svg aria-hidden="true"><use href="#pegada"/></svg>
+            <span>Linux para todos os <span class="rol">rolês</span></span>
+          </h1>
+          <p class="lema">A IA te passa os comandos. <strong>O <code>bora</code> te leva até o rolê</strong>, com passos testados e um jeito de voltar atrás.</p>
+          <div class="acoes">
+            <a class="botao principal" href="https://github.com/brahm/linux-para-todos-os-roles">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Acompanhar no GitHub
+            </a>
+            <a class="botao secundario" href="#bora-junto">Como ajudar</a>
+          </div>
+        </div>
+        <figure style="margin:0">
+          <div class="janela" role="img" aria-label="Prévia de uma sessão do bora no terminal: o comando bora abre um menu com os sete rolês da primeira versão.">
+            <div class="barra" aria-hidden="true">bora (prévia)<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="p">você@computador:~$</span> <span class="c">bora</span>
+
+  <span class="o">Bora!</span> O que vamos fazer com este computador?
+  <span class="d">Ubuntu 26.04 LTS · 8 GB de memória · 120 GB livres</span>
+
+<span class="sel">  <span class="o">❯</span> 1  Pronto para estudar e trabalhar</span>
+    2  Dar vida nova a uma máquina antiga
+    3  Começar a programar
+    4  Vibecodar
+    5  Pasta compartilhada da casa
+    6  Filmes e séries da casa
+    7  Acessar de fora sem abrir portas
+
+  <span class="d">↑↓ escolher · Enter continuar · q sair</span> <span class="cursor"></span></pre>
+          </div>
+          <figcaption class="legenda"><svg aria-hidden="true"><use href="#pegada"/></svg>Prévia de como vai funcionar. O <code>bora</code> ainda está no papel: os formatos vêm primeiro.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="o-que-e" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>O que é</p>
+        <h2>Você acabou de instalar o Linux. E agora?</h2>
+        <p>Linux para todos os rolês é duas coisas, feitas para andar juntas.</p>
+      </div>
+      <div class="duas">
+        <article class="cartao">
+          <span class="ladrilho l-laranja" style="--c1:#ffa348;--c2:#ff7800" aria-hidden="true"><svg viewBox="0 0 16 16" style="fill:currentColor;stroke:none;transform:rotate(-14deg)"><use href="#pegada"/></svg></span>
+          <h3>Um catálogo de rolês</h3>
+          <p>Um rolê é um objetivo concreto para o computador, dito em linguagem de gente: “pronto para estudar e trabalhar”, “dar vida nova a uma máquina antiga”, “pasta compartilhada da casa”.</p>
+          <p>Cada rolê diz para quem serve, em que máquina cabe, o que pergunta, que receitas usa, como saber que deu certo e como desfazer.</p>
+        </article>
+        <article class="cartao">
+          <img src="imagens/icone.svg" alt="" width="64" height="64">
+          <h3>O <code>bora</code>, que leva você até lá</h3>
+          <p>Uma ferramenta de terminal que aplica o rolê escolhido com receitas testadas. Cada receita sabe verificar, aplicar, testar e desfazer o que muda.</p>
+          <ul class="lista-pontos">
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Funciona sozinho, sem conta, sem cartão e sem IA.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Com IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada como administrador.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Rolês da primeira versão</p>
+        <h2>Sete rolês para começar</h2>
+        <p>O <code>bora</code> mostra no menu só os rolês que cabem na sua máquina e na família da sua distro.</p>
+      </div>
+      <div class="grade">
+        <article class="cartao role">
+          <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
+          <h3>Pronto para estudar e trabalhar</h3>
+          <p>Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal.</p>
+          <div class="rodape"><span class="num">01</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados.</p>
+          <div class="rodape"><span class="num">02</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
+          <h3>Começar a programar</h3>
+          <p>Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis: web e Python.</p>
+          <div class="rodape"><span class="num">03</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Tudo do “Começar a programar”, mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional.</p>
+          <div class="rodape"><span class="num">04</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
+          <h3>Pasta compartilhada da casa</h3>
+          <p>Uma pasta que os outros computadores da casa conseguem abrir, com Samba, apenas na rede local.</p>
+          <div class="rodape"><span class="num">05</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/></svg></span>
+          <h3>Filmes e séries da casa</h3>
+          <p>Jellyfin servindo os filmes e séries para a TV e os celulares, apenas na rede local.</p>
+          <div class="rodape"><span class="num">06</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+        <article class="cartao role">
+          <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M12 12.3v3.2"/></svg></span>
+          <h3>Acessar de fora sem abrir portas</h3>
+          <p>Tailscale, com um teste que mostra se a conexão está atrás de CGNAT e por que isso não importa com a VPN.</p>
+          <div class="rodape"><span class="num">07</span><span class="ficha planejado">Planejado</span></div>
+        </article>
+      </div>
+      <p class="nota">Ideias para depois: bloqueador de anúncios da casa, fotos da família, backup da família, IA local, dual boot e ajustes brasileiros, como a cedilha no teclado internacional e o programa do IRPF. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/objetivos/README.md">Ver o formato de um rolê</a>.</p>
+    </section>
+
+    <section id="como-funciona" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como vai funcionar</p>
+        <h2>Um motor, três portas</h2>
+        <p>O motor é o mesmo para todo mundo: rolês, receitas testadas e o <code>bora</code>. Muda só a porta por onde você entra.</p>
+      </div>
+      <div class="portas">
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">1</span><h3>Menus</h3></div>
+          <p>O <code>bora</code> pergunta o rolê, faz as perguntas necessárias, mostra o plano e aplica. No modo <code>--passo-a-passo</code>, explica cada etapa antes de rodar.</p>
+          <p class="precisa">Precisa de: <strong>só o <code>bora</code></strong></p>
+        </article>
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">2</span><h3>Pergunta pronta</h3></div>
+          <p>Travou? O <code>bora ajuda</code> gera um texto com o diagnóstico, sem dados sensíveis, a etapa e o erro, para colar em qualquer chat de IA, gratuito ou pago.</p>
+          <p class="precisa">Precisa de: <strong>qualquer chat</strong></p>
+        </article>
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">3</span><h3>Agente</h3></div>
+          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI e OpenCode, leem a skill do <code>bora</code>, conversam com você e escrevem o plano. O <code>bora</code> valida, e quem aplica é você.</p>
+          <p class="precisa">Precisa de: <strong>um agente que leia skills</strong></p>
+        </article>
+      </div>
+
+      <div class="bloco">
+        <h3>Os comandos</h3>
+        <ul class="caixa comandos">
+          <li class="linha"><code>bora</code><span>abre o menu de rolês</span></li>
+          <li class="linha"><code>bora diag</code><span>descobre distro, memória, disco, rede e placa de vídeo</span></li>
+          <li class="linha"><code>bora ajuda</code><span>monta uma pergunta pronta para colar em qualquer chat de IA</span></li>
+          <li class="linha"><code>sudo bora aplicar plano.yaml</code><span>aplica o plano, receita por receita, com snapshot antes</span></li>
+          <li class="linha"><code>bora desfazer</code><span>volta atrás</span></li>
+        </ul>
+      </div>
+
+      <div class="bloco">
+        <h3>Para quem</h3>
+        <div class="publicos">
+          <article class="cartao publico">
+            <span class="convite-ic bolha-p" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></svg></span>
+            <h3>Curiosos</h3>
+            <p>Máquina antiga ou doada, sem plano pago de nada. Menus e pergunta pronta, custo zero.</p>
+          </article>
+          <article class="cartao publico">
+            <span class="convite-ic bolha-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.3c3.2 2.3 7.8 2.3 11 0v-4.3M21.5 9.5v5"/></svg></span>
+            <h3>Estudantes</h3>
+            <p>Notebook comum e vontade de aprender. Modo passo a passo, e agentes gratuitos quando quiserem.</p>
+          </article>
+          <article class="cartao publico">
+            <span class="convite-ic bolha-p" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.8"/><path d="M8 7.3h.01M8 16.8h.01M12 7.3h4M12 16.8h4"/></svg></span>
+            <h3>Entusiastas</h3>
+            <p>Várias máquinas e planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com <code>ssh</code>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="status" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Status do desenvolvimento</p>
+        <h2>Onde a gente está na trilha</h2>
+        <p>O projeto recomeçou do zero em novembro de 2026. Primeiro vêm os formatos e a marca; depois, o código. Nada aqui tem data marcada: cada passo sai quando estiver testado.</p>
+      </div>
+      <div class="status-grade">
+        <ol class="passos">
+          <li class="passo feito">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Recomeço e formatos <span class="ficha feito">Feito</span></h3>
+              <p>README novo, licença 0BSD e os formatos de <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/objetivos/README.md">rolê</a>, de <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/README.md">receita</a> e de <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/familias/README.md">família de distro</a>, com as <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">decisões</a> registradas.</p>
+            </div>
+          </li>
+          <li class="passo feito">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Marca e site <span class="ficha feito">Feito</span></h3>
+              <p>Logotipo, ícone do aplicativo, paleta e esta página. Tudo na pasta <a href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/marca"><code>marca/</code></a>.</p>
+            </div>
+          </li>
+          <li class="passo agora">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3><code>bora</code> v0 e as três primeiras receitas <span class="voce-esta-aqui">Próximo passo</span></h3>
+              <p>Diagnóstico, menus, plano, aplicar, desfazer, registro e snapshot. As receitas <code>base/atualizar</code>, <code>sistema/snapshot</code> e <code>seguranca/firewall</code>, testadas no Ubuntu 26.04, no Ubuntu 24.04 e no Debian 13.</p>
+            </div>
+          </li>
+          <li class="passo">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Primeira versão útil</h3>
+              <p>Rolês 1 a 4 no Ubuntu, Linux Mint, Pop!_OS, Zorin OS e Debian. A pergunta pronta, o modo passo a passo, o roteiro para escolher e instalar a distro, e o site gerado a partir das receitas.</p>
+            </div>
+          </li>
+          <li class="passo">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>A casa, o Fedora e os agentes</h3>
+              <p>Rolês 5, 6 e 7. Fedora e Nobara. A skill para agentes de IA, um instalador único e testes automáticos em contêineres.</p>
+            </div>
+          </li>
+          <li class="passo">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Arch e Fedora imutável</h3>
+              <p>Arch, CachyOS, EndeavourOS e Manjaro. Bazzite, Silverblue, Kinoite, Bluefin e Aurora, com receitas próprias para Flatpak, contêineres e toolbox.</p>
+            </div>
+          </li>
+          <li class="passo">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Comunidade</h3>
+              <p>openSUSE mantido pela comunidade, formulários para relatar máquinas reais e pedir receitas, e os rolês da segunda versão.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="lateral">
+          <div class="cartao">
+            <h3>Distros, em ondas</h3>
+            <div class="ondas">
+              <div class="onda"><span class="n">1</span><div><strong>Ubuntu e Debian</strong><span>Ubuntu LTS, Linux Mint, Pop!_OS, Zorin OS e Debian</span></div></div>
+              <div class="onda"><span class="n">2</span><div><strong>Fedora</strong><span>Fedora e Nobara</span></div></div>
+              <div class="onda"><span class="n">3</span><div><strong>Arch e Fedora imutável</strong><span>CachyOS, EndeavourOS, Manjaro, Arch, Bazzite, Silverblue, Kinoite, Bluefin e Aurora</span></div></div>
+              <div class="onda"><span class="n">4</span><div><strong>openSUSE</strong><span>Tumbleweed e Leap, pela comunidade</span></div></div>
+            </div>
+            <p class="fora">Ficam de fora máquinas de 32 bits, distros sem systemd por padrão, o NixOS e o SteamOS. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/familias/README.md">Por quê</a>.</p>
+          </div>
+          <div class="cartao atividade" aria-live="polite">
+            <h3>Últimas mudanças</h3>
+            <ol id="commits" hidden></ol>
+            <p class="vazio" id="commits-vazio">O histórico completo está no GitHub.</p>
+            <a class="mais" href="https://github.com/brahm/linux-para-todos-os-roles/commits/main/">Ver todo o histórico</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="principios" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Princípios</p>
+        <h2>O que não muda</h2>
+      </div>
+      <div class="principios">
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg><div><strong>Funciona sem IA.</strong><span>A IA acelera, mas nunca é requisito.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg><div><strong>A IA nunca executa com privilégio.</strong><span>No máximo, escreve e valida um plano.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></svg><div><strong>Só receitas do catálogo.</strong><span>O <code>bora</code> não roda comando livre.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><div><strong>Toda mudança tem volta.</strong><span>Snapshot antes de aplicar, e cada receita sabe se desfazer.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><path d="M9 12l2 2 4-4"/></svg><div><strong>Nada exposto à internet.</strong><span>Acesso de fora só por VPN.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9"/></svg><div><strong>Testado de verdade.</strong><span>Cada receita diz em que distro e em que data foi testada.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5h15a1 1 0 0 1 1 1v9.5a1 1 0 0 1-1 1H10l-4.5 3.5v-3.5h-1a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg><div><strong>Em português do Brasil.</strong><span>Para quem está começando e para quem já sabe sair do Vim.</span></div></div>
+      </div>
+    </section>
+
+    <section id="bora-junto" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora junto</p>
+        <h2>Como ajudar</h2>
+        <p>Contribuições são bem-vindas, inclusive de quem começou ontem. Muitas vezes, quem acabou de passar por um problema é quem melhor explica a solução.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?title=Rol%C3%AA%3A%20&amp;body=%2A%2AO%20que%20eu%20quero%20que%20o%20computador%20fa%C3%A7a%3A%2A%2A%0A%0A%0A%2A%2APara%20quem%20serve%2A%2A%20%28curiosos%2C%20estudantes%2C%20entusiastas%29%3A%0A%0A%0A%2A%2AEm%20que%20m%C3%A1quina%20eu%20pensei%3A%2A%2A%0A%0A">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span>
+          <h3>Propor um rolê</h3>
+          <p>Conte o objetivo em linguagem de gente, para quem ele serve e em que máquina você pensou.</p>
+          <span class="seta">Abrir uma issue</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/README.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Escrever uma receita</h3>
+          <p>Verificar, aplicar, testar e desfazer, em bash legível, com um <code>LEIAME.md</code> que explica o porquê.</p>
+          <span class="seta">Ver o formato</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4M9 10.3l2 2 4-4"/></svg></span>
+          <h3>Testar numa distro</h3>
+          <p>Rodar uma receita numa distro em que ela ainda não foi testada, e registrar o resultado, é das ajudas mais valiosas.</p>
+          <span class="seta">Ver como testar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10.5h16M4 15h8"/><path d="M14.5 18l2 2 4-4.5"/></svg></span>
+          <h3>Revisar textos</h3>
+          <p>Se uma explicação ficou confusa para você, ela vai ficar confusa para outras pessoas. Sugira um jeito melhor.</p>
+          <span class="seta">Abrir o repositório</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?title=Problema%3A%20&amp;body=Distro%20e%20vers%C3%A3o%3A%20%0ARol%C3%AA%20ou%20receita%3A%20%0AO%20que%20eu%20esperava%3A%20%0AO%20que%20aconteceu%3A%20%0ASa%C3%ADda%20do%20bora%20diag%3A%20%0A%0A%3C%21--%20Remova%20IPs%20p%C3%BAblicos%2C%20nomes%20de%20usu%C3%A1rio%2C%20tokens%20e%20chaves%20antes%20de%20colar%20qualquer%20sa%C3%ADda.%20--%3E%0A">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>A issue já vem com o roteiro: distro, rolê, o que você esperava e o que aconteceu.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 6h11l3 3-3 3H5z"/></svg></span>
+          <h3>Entender as decisões</h3>
+          <p>Por que sem AUR, por que só systemd, por que 0BSD. Cada decisão tem o seu porquê registrado.</p>
+          <span class="seta">Ler as decisões</span>
+        </a>
+      </div>
+
+      <div class="bloco">
+        <h3>Para ler antes</h3>
+        <ul class="caixa">
+          <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Como contribuir</strong><span>Licença das contribuições, o que testar antes do pull request e as regras das receitas</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+          <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/issues"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="1.6"/></svg><span class="txt"><strong>Issues abertas</strong><span>Ideias, pedidos e problemas em discussão</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+          <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/pulls"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M6 8.2v7.6M18 15.8V9a3 3 0 0 0-3-3h-4"/><path d="M13 3.8L10.8 6 13 8.2"/></svg><span class="txt"><strong>Pull requests</strong><span>O que está sendo feito agora</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+          <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/marca"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="8.8" cy="10" r="1.2"/><circle cx="12.5" cy="7.8" r="1.2"/><circle cx="15.8" cy="10.6" r="1.2"/><path d="M12 20.5c-1.6 0-2.4-1-2.4-2.2 0-1.5 1.5-1.8 1.5-3.1"/></svg><span class="txt"><strong>Marca</strong><span>Logotipo, ícone, paleta e regras de uso</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+          <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v17M5 7.5h14M7.5 7.5l-3 6.5a3 3 0 0 0 6 0zM16.5 7.5l-3 6.5a3 3 0 0 0 6 0zM8 20.5h8"/></svg><span class="txt"><strong>Licença 0BSD</strong><span>Na prática, domínio público: copie, modifique e use como quiser</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="faixa">
+      <svg class="trilha" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <use href="#pegada" style="--i:0" x="-63.5" y="273.9" width="30" height="30" transform="rotate(52.6 -48.5 288.9)"/>
+      <use href="#pegada" style="--i:1" x="32.4" y="247.3" width="30" height="30" transform="rotate(63.9 47.4 262.3)"/>
+      <use href="#pegada" style="--i:2" x="108.7" y="188.4" width="30" height="30" transform="rotate(74.0 123.7 203.4)"/>
+      <use href="#pegada" style="--i:3" x="205.4" y="196.8" width="30" height="30" transform="rotate(82.1 220.4 211.8)"/>
+      <use href="#pegada" style="--i:4" x="297.9" y="160.8" width="30" height="30" transform="rotate(87.7 312.9 175.8)"/>
+      <use href="#pegada" style="--i:5" x="396.7" y="188.1" width="30" height="30" transform="rotate(91.1 411.7 203.1)"/>
+      <use href="#pegada" style="--i:6" x="499.0" y="163.7" width="30" height="30" transform="rotate(92.5 514.0 178.7)"/>
+      <use href="#pegada" style="--i:7" x="601.7" y="196.1" width="30" height="30" transform="rotate(92.1 616.7 211.1)"/>
+      <use href="#pegada" style="--i:8" x="707.8" y="170.3" width="30" height="30" transform="rotate(89.9 722.8 185.3)"/>
+      <use href="#pegada" style="--i:9" x="815.8" y="194.8" width="30" height="30" transform="rotate(86.1 830.8 209.8)"/>
+      <use href="#pegada" style="--i:10" x="920.3" y="154.6" width="30" height="30" transform="rotate(80.6 935.3 169.6)"/>
+      <use href="#pegada" style="--i:11" x="1034.5" y="157.2" width="30" height="30" transform="rotate(73.6 1049.5 172.2)"/>
+      <use href="#pegada" style="--i:12" x="1132.4" y="91.0" width="30" height="30" transform="rotate(65.5 1147.4 106.0)"/>
+      <use href="#pegada" style="--i:13" x="1252.6" y="56.7" width="30" height="30" transform="rotate(56.9 1267.6 71.7)"/>
+      </svg>
+      <div class="largura">
+        <div>
+          <h2>O melhor rolê é o que a gente faz junto.</h2>
+          <p>O projeto está no começo, que é a melhor hora para chegar: dá para opinar nos formatos antes de virarem código.</p>
+        </div>
+        <a class="botao escuro" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Bora pro GitHub
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="#"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/marca">Marca</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

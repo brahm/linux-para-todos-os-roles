@@ -1,9 +1,18 @@
-# Linux para todos os rolês
+<div align="center">
 
-> A IA te passa os comandos. O `bora` te leva até o rolê, com passos testados e um jeito de voltar atrás.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="marca/logotipo/logotipo-horizontal-escuro.svg">
+  <img alt="Linux para todos os rolês" src="marca/logotipo/logotipo-horizontal.svg" width="560">
+</picture>
+
+**A IA te passa os comandos. O `bora` te leva até o rolê, com passos testados e um jeito de voltar atrás.**
+
+[Site](https://brahm.github.io/linux-para-todos-os-roles/) · [Rolês](objetivos/README.md) · [Status](https://brahm.github.io/linux-para-todos-os-roles/#status) · [Como contribuir](CONTRIBUTING.md) · [Decisões](docs/decisoes.md)
+
+</div>
 
 > [!NOTE]
-> **Recomeço em andamento.** O projeto está sendo reconstruído do zero. Ainda não há nada para instalar; por enquanto, este repositório guarda a proposta e os formatos que vão guiar o código.
+> **Recomeço em andamento.** O projeto está sendo reconstruído do zero. Ainda não há nada para instalar; por enquanto, este repositório guarda a proposta e os formatos que vão guiar o código. O próximo passo é o `bora` v0, com as três primeiras receitas. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
 
 ## O que é
 
@@ -17,6 +26,8 @@ Você acabou de instalar o Linux. E agora?
 O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acesso a uma IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada com privilégio de administrador.
 
 ## Como vai funcionar
+
+<img align="right" src="marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg" width="112" alt="Ícone do bora: duas pegadas de pinguim brancas sobre um quadrado laranja">
 
 ```text
 bora                           abre o menu de rolês
@@ -76,6 +87,10 @@ Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, 
 - **Em português do Brasil,** para quem está começando e para quem já sabe sair do Vim.
 
 As decisões tomadas até aqui, com o porquê de cada uma, estão em [`docs/decisoes.md`](docs/decisoes.md).
+
+## Marca
+
+A marca são pegadas de pinguim: o pinguim é o Linux, e a pegada é o rolê e também os passos testados que o `bora` segue, um de cada vez. O logotipo, o ícone do aplicativo, a paleta e as regras de uso estão em [`marca/`](marca/README.md).
 
 ## Licença
 
