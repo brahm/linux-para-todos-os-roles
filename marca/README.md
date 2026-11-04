@@ -49,10 +49,11 @@ Inter Display, peso Bold, com espaçamento levemente fechado. A Inter é livre (
 
 ## Identificador do aplicativo
 
-Flatpak, AppStream e os arquivos `.desktop` exigem um identificador em DNS reverso, e os arquivos de ícone precisam ter exatamente esse nome. Os arquivos usam **`br.com.brahm.Bora`**, a partir do domínio do mantenedor.
+Flatpak, AppStream e os arquivos `.desktop` exigem um identificador em DNS reverso, e os arquivos de ícone precisam ter exatamente esse nome. Os arquivos usam **`br.com.brahm.Bora`**, a partir do domínio brahm.com.br, decidido em novembro de 2026.
 
-- Se preferir um identificador do GitHub, a regra do Flathub é `io.github.<usuário>.<repositório>`, com hífens trocados por sublinhados: `io.github.brahm.linux_para_todos_os_roles`. O último componente precisa ser o nome do repositório, então `io.github.brahm.Bora` só valeria se existisse um repositório `brahm/Bora`.
-- O identificador vira permanente depois de publicado no Flathub. Vale decidir antes do primeiro envio.
+- O domínio serve só de espaço de nomes. O Flatpak será distribuído por conta própria, como bundle ou repositório hospedado no GitHub, e não pelo Flathub, então não há verificação de domínio nem regra de nome de repositório a cumprir.
+- O id diferencia maiúsculas e precisa ser idêntico nos ícones, no `.desktop`, no `<id>` do metainfo e no nome D-Bus do aplicativo. O `Bora` em CamelCase segue a convenção dos aplicativos GNOME; o comando no terminal continua `bora`.
+- Mantenha o id estável desde a primeira versão: as atualizações de Flatpak e o GNOME Software reconhecem o aplicativo pelo id.
 - Para trocar, renomeie os dois arquivos de ícone, ou rode o gerador com `APP_ID=novo.id python3 marca/ferramentas/gen.py marca`.
 
 ## Como o aplicativo usa os ícones
@@ -70,7 +71,7 @@ Terminal=false
 Categories=System;Utility;
 ```
 
-No metainfo (`br.com.brahm.Bora.metainfo.xml`), o `<id>` precisa ser o mesmo identificador. Para testar sem instalar nada:
+No metainfo (`br.com.brahm.Bora.metainfo.xml`), o `<id>` precisa ser o mesmo identificador. No Flatpak, o `flatpak-builder` exporta sozinho os ícones de `/app/share/icons/hicolor/` cujo nome começa com o id, junto com o `.desktop` e o metainfo. É isso que faz o ícone aparecer no menu e no GNOME Software mesmo instalando por um bundle `.flatpak` ou por um repositório `.flatpakrepo` hospedado no GitHub. Para testar sem instalar nada:
 
 ```sh
 cp -r marca/icones/hicolor ~/.local/share/icons/
