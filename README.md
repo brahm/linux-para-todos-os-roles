@@ -1,6 +1,6 @@
 # Linux para Todos os Rolês
 
-> Roteiros de instalação e pós-instalação Linux para transformar computadores comuns, servidores esquecidos e máquinas com ideias mirabolantes em ambientes úteis — preferencialmente sem invocar demônios no `GRUB`.
+> Roteiros de instalação e pós-instalação Linux para transformar computadores comuns, servidores esquecidos e máquinas velhas em ferramentas úteis, com ideias mirabolantes  — preferencialmente sem invocar demônios no `GRUB`.
 
 Este repositório reúne guias **didáticos, reproduzíveis e amigáveis para iniciantes**. A proposta não é apenas entregar uma parede de comandos para copiar e colar: cada roteiro explica **o que será feito, por que aquilo é necessário, como conferir se funcionou e como voltar atrás quando possível**.
 
