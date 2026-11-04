@@ -9,7 +9,10 @@ Esta pasta guarda a documentação do projeto e o site publicado no GitHub Pages
 | `404.html` | A página de "não encontrado" |
 | `imagens/` | Ícone e imagem social, copiados de [`marca/`](../marca/README.md) |
 | `fontes/` | A Inter em WOFF2, só com os caracteres do português, sob a [SIL OFL 1.1](fontes/OFL.txt) |
-| `.nojekyll` | Diz ao GitHub Pages para publicar os arquivos como estão, sem passar pelo Jekyll |
+
+## Como é publicado
+
+O workflow [`site.yml`](../.github/workflows/site.yml) publica a pasta no GitHub Pages a cada mudança em `docs/` na `main`. Ele envia só os arquivos do site: os `.md` desta pasta ficam no repositório. Também dá para publicar à mão em Actions, Site, Run workflow.
 
 ## Como ver localmente
 

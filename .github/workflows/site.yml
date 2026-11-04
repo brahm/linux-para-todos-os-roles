@@ -1,0 +1,45 @@
+# Publica o site (a pasta docs/) no GitHub Pages a cada mudança na main.
+# Em Settings → Pages, a origem precisa estar em "GitHub Actions".
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Só o site vai para o Pages; a documentação em Markdown fica no repositório.
+      - name: Separar os arquivos do site
+        run: |
+          mkdir _site
+          rsync -a --exclude '*.md' docs/ _site/
+          ls -R _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
