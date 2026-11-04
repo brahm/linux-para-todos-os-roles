@@ -1,116 +1,101 @@
-# Linux para Todos os Rolês
+<div align="center">
 
-> Roteiros de instalação e pós-instalação Linux para transformar computadores comuns, servidores esquecidos e máquinas velhas em ferramentas úteis, com ideias mirabolantes  — preferencialmente sem invocar demônios no `GRUB`.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="marca/logotipo/logotipo-horizontal-escuro.svg">
+  <img alt="Linux para todos os rolês" src="marca/logotipo/logotipo-horizontal.svg" width="560">
+</picture>
 
-Este repositório reúne guias **didáticos, reproduzíveis e amigáveis para iniciantes**. A proposta não é apenas entregar uma parede de comandos para copiar e colar: cada roteiro explica **o que será feito, por que aquilo é necessário, como conferir se funcionou e como voltar atrás quando possível**.
+**A IA te passa os comandos. O `bora` te leva até o rolê, com passos testados e um jeito de voltar atrás.**
 
-Aqui você vai encontrar desde roteiros de instalações de desktop para trabalho e estudo até servidores domésticos, laboratórios de virtualização e casos mais exóticos, como Arch Linux em máquinas cujos discos formam um FakeRAID (também chamado de *firmware RAID* ou *host RAID*, é o RAID configurado no firmware da placa-mãe, mas processado em grande parte pelo computador e pelo sistema operacional).
+[Site](https://brahm.github.io/linux-para-todos-os-roles/) · [Rolês](objetivos/README.md) · [Status](https://brahm.github.io/linux-para-todos-os-roles/#status) · [Como contribuir](CONTRIBUTING.md) · [Decisões](docs/decisoes.md)
 
-> [!IMPORTANT]
-> Linux dá liberdade. Liberdade inclui a possibilidade de formatar o disco errado com muita eficiência. Leia o roteiro inteiro antes de começar e faça backup dos seus arquivos.
+</div>
 
-## O que você encontrará por aqui
+> [!NOTE]
+> **Recomeço em andamento.** O projeto está sendo reconstruído do zero. Ainda não há nada para instalar; por enquanto, este repositório guarda a proposta e os formatos que vão guiar o código. O próximo passo é o `bora` v0, com as três primeiras receitas. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
 
-Os roteiros são organizados por **distribuição**, **objetivo** e **cenário de hardware**. Entre os guias planejados estão:
+## O que é
 
-| Roteiro | Para quem é | Nível | Situação |
-|---|---|:---:|:---:|
-| Arch Linux em FakeRAID 0 | Máquinas com RAID configurado pela BIOS/UEFI e usuários dispostos a aprender bastante | 👨‍🎓 Avançado | 🚧 Rascunho |
-| Ubuntu LTS para desenvolvimento com IA local | Quem quer programar, usar contêineres e executar modelos locais com CPU ou GPU | 🥉 Intermediário | 🚀 Pronto |
-| Servidor de arquivos com Samba | Casas e pequenos escritórios com clientes Linux, Windows ou macOS | 🌱 Iniciante | 📝 Planejado |
-| Servidor multimídia com Jellyfin | Quem deseja organizar e transmitir sua própria biblioteca de mídia | 🌱 Iniciante | 📝 Planejado |
-| Homelab com virtualização e contêineres | Quem quer aprender redes, serviços, VMs e automação em casa | 🥉 Intermediário | 📝 Planejado |
+Você acabou de instalar o Linux. E agora?
 
-### Legenda de dificuldade
+**Linux para todos os rolês** é duas coisas:
 
-- 🌱 **Iniciante:** explicações passo a passo e pouca experiência prévia necessária.
-- 🥉 **Intermediário:** exige alguma familiaridade com terminal, discos, rede ou serviços.
-- 👨‍🎓 **Avançado:** envolve riscos maiores, recuperação manual ou hardware incomum. Não significa “proibido para iniciantes”; significa “prepare café e não pule etapas”.
+- um catálogo de **rolês**, que são objetivos concretos para um computador com Linux: "pronto para estudar e trabalhar", "dar vida nova a uma máquina antiga", "pasta compartilhada da casa";
+- o **`bora`**, uma ferramenta de terminal que leva você até o rolê escolhido, com receitas testadas que sabem verificar, aplicar, testar e desfazer cada mudança.
 
-## Qual roteiro combina comigo?
+O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acesso a uma IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada com privilégio de administrador.
 
-| Quero... | Bom ponto de partida | Por quê? |
-|---|---|---|
-| Um computador para estudar, programar e experimentar IA | **Ubuntu LTS para IA local** | Oferece uma base previsível, ampla documentação e bom suporte às ferramentas de contêiner e GPU. |
-| Compartilhar pastas na rede de casa | **Servidor de arquivos com Samba** | O Samba usa o protocolo SMB e conversa bem com computadores Windows e Linux. |
-| Assistir à minha biblioteca de mídia em vários dispositivos | **Servidor multimídia com Jellyfin** | O Jellyfin organiza e transmite mídia por uma interface web e aplicativos clientes. |
-| Criar VMs, redes e serviços para aprender | **Homelab** | Permite quebrar ambientes virtuais sem necessariamente quebrar o computador da família. “Necessariamente” é a palavra tranquilizadora. |
-| Entender cada peça do sistema | **Arch Linux** | A instalação manual é uma excelente aula prática — e também uma excelente forma de descobrir quantas coisas acontecem antes da tela de login. |
-| Manter um servidor simples e estável | **Debian enxuto** | É uma base conservadora e adequada para serviços que não precisam de novidades toda terça-feira. |
+## Como vai funcionar
 
-
-## Princípios do projeto
-
-- **Ensinar antes de automatizar:** scripts são úteis, mas o leitor deve saber o que eles alteram.
-- **Fontes oficiais primeiro:** documentação da distribuição e do projeto tem prioridade sobre receitas antigas encontradas em fóruns.
-- **Comandos verificáveis:** cada etapa importante deve incluir uma forma de conferir o resultado.
-- **Segurança por padrão:** nada de senha `admin123`, serviço exposto à internet “só para testar” ou permissão `777` distribuída como confete.
-- **Segredos fora do Git:** senhas, tokens, chaves privadas e arquivos `.env` reais não devem entrar no repositório.
-- **Caminho de recuperação:** alterações arriscadas devem vir acompanhadas de backup ou instruções de retorno quando isso for possível.
-- **Versões explícitas:** o guia deve informar em quais versões foi testado e quando ocorreu o último teste.
-- **Respeito ao iniciante:** ninguém nasce sabendo sair do Vim. Aliás, algumas pessoas experientes ainda negociam com ele.
-- **Escreva em "brasileiro":** até porque já tem material demais em inglês, mas sinta-se a vontade para traduzir este material para qualquer outro idioma.
-
-## Como contribuir
-
-Contribuições são bem-vindas, inclusive de quem começou ontem. Às vezes, a melhor pessoa para notar uma explicação confusa é justamente quem ainda não decorou todos os atalhos.
-
-1. Procure uma *issue* existente ou abra uma descrevendo o cenário.
-2. Informe distribuição, versão, arquitetura e hardware relevante.
-3. Crie ou atualize o roteiro seguindo o formato abaixo.
-4. Teste em uma máquina virtual ou equipamento que possa ser recuperado.
-5. Abra um *pull request* explicando o que foi testado e o que ainda precisa de validação.
-
-## Formato recomendado para cada guia
-
-Ao criar um roteiro, use este cabeçalho:
-
-```markdown
-# Nome do roteiro
-
-- Distribuição e versão testada:
-- Arquitetura:
-- Firmware: BIOS ou UEFI
-- Hardware relevante:
-- Nível de dificuldade:
-- Tempo estimado:
-- Data do último teste:
-- Resultado esperado:
-```
-
-Inclua também:
-
-- uma lista de pré-requisitos;
-- avisos antes de comandos destrutivos;
-- explicação de variáveis e valores que o leitor precisa substituir;
-- saída esperada dos testes mais importantes;
-- problemas conhecidos;
-- fontes consultadas;
-- instruções de atualização e remoção, quando aplicáveis.
-
-Ao relatar um problema, evite apenas “não funciona”. Prefira algo como:
+<img align="right" src="marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg" width="112" alt="Ícone do bora: duas pegadas de pinguim brancas sobre um quadrado laranja">
 
 ```text
-Distribuição: Ubuntu LTS
-Arquitetura: amd64
-Etapa do guia: instalação do serviço
-Comando executado: ...
-Resultado esperado: ...
-Mensagem de erro: ...
-O que já tentei: ...
+bora                           abre o menu de rolês
+bora diag                      descobre distro, memória, disco, rede e placa de vídeo
+bora ajuda                     monta uma pergunta pronta para colar em qualquer chat de IA
+sudo bora aplicar plano.yaml   aplica o plano, receita por receita, com snapshot antes
+bora desfazer                  volta atrás
 ```
 
-Cole saídas como texto sempre que possível e **remova IPs públicos, nomes de usuário, tokens, chaves e outras informações sensíveis**.
+Há três jeitos de usar:
 
-> [!TIP]
-> Documentação envelhece. Antes de seguir um roteiro, confira a versão testada e compare os pontos sensíveis com a fonte oficial mais recente.
+| Porta | Como funciona | Precisa de |
+|---|---|---|
+| **Menus** | O `bora` pergunta o rolê, faz as perguntas necessárias, mostra o plano e aplica. No modo `--passo-a-passo`, explica cada etapa antes de rodar. | Só o `bora` |
+| **Pergunta pronta** | Travou? `bora ajuda` gera um texto com o diagnóstico (sem dados sensíveis), a etapa e o erro, para colar em qualquer chat de IA, gratuito ou pago. | Qualquer chat |
+| **Agente** | Agentes de terminal (Claude Code, Codex, Copilot CLI, OpenCode e outros) leem a skill do `bora`, conversam com você e escrevem o plano. O `bora` valida o plano, e quem aplica é você. | Um agente que leia skills |
 
-## Aviso de responsabilidade
+## Para quem
 
-Os roteiros são material educacional e podem conter erros ou não cobrir particularidades do seu equipamento. Você é responsável por revisar os comandos e manter backups. Em ambientes com dados importantes, valide primeiro em uma máquina de testes e consulte a documentação oficial.
+- **Curiosos:** máquina antiga ou doada, sem plano pago de nada. Menus e pergunta pronta, custo zero.
+- **Estudantes:** notebook comum, vontade de aprender. Modo passo a passo, e agentes gratuitos quando quiserem.
+- **Entusiastas:** várias máquinas, planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com `ssh maquina sudo bora aplicar plano.yaml`.
 
-Se este repositório evitar que alguém execute `chmod -R 777 /` para “resolver rapidinho”, ele já terá prestado um grande serviço à humanidade.
+## Rolês da primeira versão
 
----
+1. Pronto para estudar e trabalhar
+2. Dar vida nova a uma máquina antiga
+3. Começar a programar
+4. Vibecodar
+5. Pasta compartilhada da casa
+6. Filmes e séries da casa
+7. Acessar de fora sem abrir portas
 
-**Gostou da proposta?** Acompanhe o projeto, sugira novos cenários e contribua com testes. Quanto mais hardware esquisito for documentado, menos gente precisará descobrir sozinha, às três da manhã, por que o sistema parou no initramfs.
+Os detalhes estão em [`objetivos/`](objetivos/README.md).
+
+## Distros
+
+As distros são agrupadas por família e entram em ondas:
+
+| Onda | Família | Distros |
+|:-:|---|---|
+| 1 | Ubuntu e Debian | Ubuntu LTS, Linux Mint, Pop!_OS, Zorin OS, Debian |
+| 2 | Fedora | Fedora, Nobara |
+| 3 | Arch e Fedora imutável | CachyOS, EndeavourOS, Manjaro, Arch, Bazzite, Silverblue, Kinoite, Bluefin, Aurora |
+| 4 | openSUSE (pela comunidade) | Tumbleweed, Leap |
+
+Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, Slackware, Gentoo, Void, Alpine) e distros com outro modelo de sistema (NixOS, SteamOS). Os detalhes estão em [`familias/`](familias/README.md).
+
+## Princípios
+
+- **Funciona sem IA.** A IA acelera, mas nunca é requisito.
+- **A IA nunca executa com privilégio.** No máximo, escreve e valida um plano.
+- **Só receitas do catálogo.** O `bora` não roda comando livre.
+- **Toda mudança tem volta.** Snapshot antes de aplicar, e cada receita sabe se desfazer.
+- **Nada exposto à internet.** Acesso de fora só por VPN.
+- **Testado de verdade.** Cada receita diz em que distro e em que data foi testada.
+- **Em português do Brasil,** para quem está começando e para quem já sabe sair do Vim.
+
+As decisões tomadas até aqui, com o porquê de cada uma, estão em [`docs/decisoes.md`](docs/decisoes.md).
+
+## Marca
+
+A marca são pegadas de pinguim: o pinguim é o Linux, e a pegada é o rolê e também os passos testados que o `bora` segue, um de cada vez. O logotipo, o ícone do aplicativo, a paleta e as regras de uso estão em [`marca/`](marca/README.md).
+
+## Licença
+
+[0BSD](LICENSE). Na prática, é domínio público: copie, modifique e use como quiser, sem pedir e sem citar.
+
+## Contribuir
+
+Veja o [`CONTRIBUTING.md`](CONTRIBUTING.md).

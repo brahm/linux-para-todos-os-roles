@@ -91,7 +91,9 @@ O GitHub troca a imagem conforme o tema da pessoa:
 </picture>
 ```
 
-O `png/icone-512.png` serve de avatar e para lojas que pedem PNG. A imagem social do repositório (1280×640 px) pode ser montada com o logotipo horizontal sobre fundo branco ou `#241f31`.
+O `png/icone-512.png` serve de avatar e para lojas que pedem PNG. O `png/imagem-social.png` (1280×640 px) é a imagem social: o logotipo horizontal sobre o fundo claro do site, com uma trilha de pegadas. Ela é a prévia do site quando o link é compartilhado e pode ser enviada como imagem social do repositório, em Settings, General, Social preview.
+
+O site do projeto, em [`docs/`](../docs/README.md), usa cópias do ícone e da imagem social.
 
 ## Regras de uso
 
@@ -108,11 +110,13 @@ Tudo é gerado por código, então um ajuste na pegada ou na paleta se propaga p
 python3 -m pip install fonttools uharfbuzz      # ou os pacotes da distro
 python3 marca/ferramentas/gen.py marca            # SVGs
 python3 marca/ferramentas/export.py marca         # PNGs; precisa de Node.js e do Playwright com Chromium
+node marca/ferramentas/social.js marca            # imagem social; também precisa do Playwright
 ```
 
 - `ferramentas/pegada.py` desenha a pegada (três dedos com membrana) como um único caminho SVG, em qualquer escala e rotação.
 - `ferramentas/texto.py` converte texto em contornos com HarfBuzz (kerning correto) e fontTools.
-- `ferramentas/gen.py` monta o ícone, o simbólico e os logotipos. A variável `INTER_DIR` aponta para a pasta da Inter (padrão: `/usr/share/fonts/opentype/inter`).
+- `ferramentas/gen.py` monta o ícone, o simbólico e os logotipos.
+- `ferramentas/social.js` monta a imagem social a partir do logotipo e da pegada. A variável `INTER_DIR` aponta para a pasta da Inter (padrão: `/usr/share/fonts/opentype/inter`).
 
 ## Licença
 
