@@ -12,7 +12,7 @@
 </div>
 
 > [!NOTE]
-> **Recomeço em andamento.** O projeto está sendo reconstruído do zero. Ainda não há nada para instalar; por enquanto, este repositório guarda a proposta e os formatos que vão guiar o código. O próximo passo é o `bora` v0, com as três primeiras receitas. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
+> **Versão 0, para testar.** O `bora` já aplica, testa e desfaz três receitas no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13: sistema atualizado, snapshot do sistema e firewall. Elas passaram nos testes automáticos em contêiner, mas ainda não foram testadas numa máquina virtual nem num computador de verdade. Use numa máquina que possa ser formatada sem dor. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
 
 ## O que é
 
@@ -25,7 +25,7 @@ Você acabou de instalar o Linux. E agora?
 
 O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acesso a uma IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada com privilégio de administrador.
 
-## Como vai funcionar
+## Como funciona
 
 <img align="right" src="marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg" width="112" alt="Ícone do bora: duas pegadas de pinguim brancas sobre um quadrado laranja">
 
@@ -37,7 +37,20 @@ sudo bora aplicar plano.yaml   aplica o plano, receita por receita, com snapshot
 bora desfazer                  volta atrás
 ```
 
-Há três jeitos de usar:
+## Experimentar
+
+O `bora` é um arquivo só, para computadores de 64 bits (x86_64 ou aarch64). Baixe o da sua máquina na [página de versões](https://github.com/brahm/linux-para-todos-os-roles/releases), junto com o `SHA256SUMS`, e confira antes de rodar:
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+chmod +x bora-linux-x86_64
+./bora-linux-x86_64 diag      # não muda nada, só mostra o que encontrou
+sudo ./bora-linux-x86_64      # abre o menu
+```
+
+O `bora` guarda o que fez em `/var/lib/bora` e o registro em `/var/log/bora/bora.log`. Para voltar atrás, use `sudo ./bora-linux-x86_64 desfazer`.
+
+## Três jeitos de usar
 
 | Porta | Como funciona | Precisa de |
 |---|---|---|

@@ -1,0 +1,6 @@
+NAME="elementary OS"
+ID=elementary
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="elementary OS 8.1"
+VERSION_ID="8.1"
+UBUNTU_CODENAME=noble

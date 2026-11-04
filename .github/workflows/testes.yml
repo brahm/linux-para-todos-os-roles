@@ -1,0 +1,75 @@
+# Testa o bora e as receitas a cada push e pull request.
+name: Testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  unidade:
+    name: Testes do bora e shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt,clippy
+          rustup default stable
+      - name: Formatação
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Testes do bora
+        run: cargo test
+      - name: Catálogo
+        run: cargo run --quiet -- conferir
+      - name: shellcheck
+        run: shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh testes/conteiner/*.sh
+
+  binario:
+    name: Binário estático
+    needs: unidade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rust com musl
+        run: |
+          rustup toolchain install stable --profile minimal --target x86_64-unknown-linux-musl
+          rustup default stable
+      - name: Compilar
+        run: cargo build --release --locked --target x86_64-unknown-linux-musl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bora-x86_64
+          path: target/x86_64-unknown-linux-musl/release/bora
+          retention-days: 7
+
+  receitas:
+    name: Receitas em ${{ matrix.imagem }}
+    needs: binario
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        imagem: ["ubuntu:24.04", "ubuntu:26.04", "debian:13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: bora-x86_64
+          path: binario
+      - run: chmod +x binario/bora
+      - name: Montar a imagem de teste
+        run: docker build -t bora-teste --build-arg IMAGEM=${{ matrix.imagem }} testes/conteiner
+      - name: Aplicar, aplicar de novo e desfazer
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/rodar.sh
+      - name: Cenários do firewall
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/cenarios.sh
