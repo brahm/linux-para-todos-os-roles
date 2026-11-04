@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema atualizado · Linux para todos os rolês</title>
+  <meta name="description" content="Sistema atualizado, receita do bora: Atualiza os programas e liga as atualizações automáticas de segurança. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/base-atualizar.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Sistema atualizado">
+  <meta property="og:description" content="Sistema atualizado, receita do bora: Atualiza os programas e liga as atualizações automáticas de segurança. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/base-atualizar.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Sistema atualizado</li>
+          </ol>
+          <h1><span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-13.7 5.6"/><path d="M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.7 2.8v3.8h-3.8"/><path d="M6.3 21.2v-3.8h3.8"/></svg></span><span>Sistema atualizado</span></h1>
+          <p class="lema">Atualiza os programas instalados e liga as atualizações automáticas de segurança.</p>
+          <div class="fichas">
+            <span class="ficha"><code>base/atualizar</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/base/atualizar">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ia-t">
+            <title id="ia-t">Quatro pacotes ganham a versão nova, um depois do outro, e uma semana de atualizações automáticas vai sendo marcada dia a dia.</title>
+            <text x="20" y="26" class="mono t2" font-size="13">sudo apt-get upgrade --with-new-pkgs</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="44" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="68" font-size="14" font-weight="600" class="mono">firefox</text>
+              <rect x="200" y="59" width="130" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="200" y="59" width="130" height="8" rx="4"/>
+              <text x="346" y="68" font-size="13" class="mono t2 velha">132.0</text>
+              <text x="346" y="68" font-size="13" class="mono nova" fill="var(--ok)" style="fill:var(--ok)">133.0 ✓</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <rect x="20" y="90" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="114" font-size="14" font-weight="600" class="mono">openssl</text>
+              <rect x="200" y="105" width="130" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="200" y="105" width="130" height="8" rx="4"/>
+              <text x="346" y="114" font-size="13" class="mono t2 velha">3.0.13</text>
+              <text x="346" y="114" font-size="13" class="mono nova" fill="var(--ok)" style="fill:var(--ok)">3.0.15 ✓</text>
+            </g>
+            <g class="pacote" style="--i:2">
+              <rect x="20" y="136" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="160" font-size="14" font-weight="600" class="mono">linux-image</text>
+              <rect x="200" y="151" width="130" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="200" y="151" width="130" height="8" rx="4"/>
+              <text x="346" y="160" font-size="13" class="mono t2 velha">6.8.0-45</text>
+              <text x="346" y="160" font-size="13" class="mono nova" fill="var(--ok)" style="fill:var(--ok)">6.8.0-48 ✓</text>
+            </g>
+            <g class="pacote" style="--i:3">
+              <rect x="20" y="182" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="206" font-size="14" font-weight="600" class="mono">libc6</text>
+              <rect x="200" y="197" width="130" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="200" y="197" width="130" height="8" rx="4"/>
+              <text x="346" y="206" font-size="13" class="mono t2 velha">2.39-0.8</text>
+              <text x="346" y="206" font-size="13" class="mono nova" fill="var(--ok)" style="fill:var(--ok)">2.39-0.8.3 ✓</text>
+            </g>
+            <text x="20" y="252" font-size="14" font-weight="600">Depois, as correções de segurança chegam sozinhas:</text>
+            <g class="dia" style="--i:0">
+              <rect x="20" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="47.5" y="286" font-size="12.5" text-anchor="middle" class="t2">seg</text>
+              <path class="escudo verde" d="M47.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M42.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:1">
+              <rect x="83" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="110.5" y="286" font-size="12.5" text-anchor="middle" class="t2">ter</text>
+              <path class="escudo verde" d="M110.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M105.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:2">
+              <rect x="146" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="173.5" y="286" font-size="12.5" text-anchor="middle" class="t2">qua</text>
+              <path class="escudo verde" d="M173.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M168.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:3">
+              <rect x="209" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="236.5" y="286" font-size="12.5" text-anchor="middle" class="t2">qui</text>
+              <path class="escudo verde" d="M236.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M231.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:4">
+              <rect x="272" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="299.5" y="286" font-size="12.5" text-anchor="middle" class="t2">sex</text>
+              <path class="escudo verde" d="M299.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M294.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:5">
+              <rect x="335" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="362.5" y="286" font-size="12.5" text-anchor="middle" class="t2">sáb</text>
+              <path class="escudo verde" d="M362.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M357.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="dia" style="--i:6">
+              <rect x="398" y="266" width="55" height="62" rx="10" class="caixa-svg"/>
+              <text x="425.5" y="286" font-size="12.5" text-anchor="middle" class="t2">dom</text>
+              <path class="escudo verde" d="M425.5 294l10 4.2v6.6c0 5.7-4.1 10-10 12.7-5.9-2.7-10-7-10-12.7v-6.6z"/>
+              <path class="escudo" d="M420.5 306l3.5 3.5 6.5-6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            
+          </svg>
+          <figcaption>Ilustração com versões de exemplo. No seu computador, a lista é a dos pacotes que estiverem atrasados.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Atualiza a lista de pacotes</strong> e todos os programas instalados pelo apt.</li>
+            <li><strong>Instala dependências novas</strong> que uma atualização pedir, como um kernel novo.</li>
+            <li><strong>Termina instalações que ficaram pela metade</strong>, com <code>dpkg --configure -a</code>.</li>
+            <li><strong>Liga as atualizações automáticas de segurança</strong>, que passam a ser instaladas sozinhas todo dia.</li>
+            <li><strong>Avisa quando é preciso reiniciar</strong> para usar o kernel novo.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não remove nenhum pacote. Remoções ficam para você decidir.</li>
+            <li>Não troca a versão da distro, por exemplo do Ubuntu 24.04 para o 26.04.</li>
+            <li>Não atualiza aplicativos Flatpak ou Snap; só os pacotes do apt.</li>
+            <li>Não reinicia o computador por você.</li>
+            <li>Não volta versões ao desfazer: o apt não sabe fazer isso. Para isso existe o snapshot.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>Toda receita passa pelas mesmas quatro etapas. Esta é a sequência exata, com o que cada uma confere.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Antes de mudar qualquer coisa, o <code>bora</code> pergunta à receita se há algo a fazer. Ela responde que sim se:</p><ul><li>a lista de pacotes não foi atualizada nas últimas 6 horas;</li><li>há pacotes instalados pela metade;</li><li>a simulação <code>apt-get -s upgrade</code> mostra pacotes para atualizar;</li><li>as atualizações automáticas estão desligadas.</li></ul><p>Se nada disso acontece, o <code>bora</code> pula a receita e diz que ela já estava aplicada.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Roda <code>dpkg --configure -a</code> se algo ficou pela metade.</li><li>Roda <code>apt-get update</code> e <code>apt-get upgrade --with-new-pkgs</code>.</li><li>Instala o <code>unattended-upgrades</code>, se ainda não estiver instalado.</li><li>Liga as duas opções em <code>/etc/apt/apt.conf.d/20auto-upgrades</code>, só se elas ainda não estiverem ligadas.</li><li>Habilita os timers <code>apt-daily.timer</code> e <code>apt-daily-upgrade.timer</code>.</li></ul><p>No Ubuntu, quase tudo isso já vem ligado; aí a receita só atualiza os pacotes.</p>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>A receita confere quatro coisas e imprime cada uma: nenhum pacote pela metade, nenhum pacote para atualizar, o <code>unattended-upgrades</code> instalado e as duas opções valendo <code>1</code>. Pacotes retidos de propósito pela distro, como as atualizações em fases do Ubuntu, não contam.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Volta o <code>20auto-upgrades</code> ao que era, desabilita os timers que a receita habilitou e remove o <code>unattended-upgrades</code>, se foi ela que instalou. As versões novas dos pacotes ficam: para voltar a elas, use o snapshot criado antes do plano.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>Montada com as mensagens reais do bora e da receita, num Ubuntu 26.04. O número de pacotes muda de máquina para máquina.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Sistema atualizado: cria um snapshot, atualiza os pacotes, instala o unattended-upgrades e confere quatro testes, todos ok.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo bora plano --receitas base/atualizar</span></span><span class="l "><span class="v">✓</span> Plano salvo em plano.yaml. Para aplicar: sudo bora aplicar plano.yaml</span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo bora aplicar plano.yaml</span></span><span class="l ">&nbsp;</span><span class="l "><span class="c">Aplicando o plano (20261104-205625)</span></span><span class="l ">Criando um snapshot do sistema antes de mudar qualquer coisa.</span><span class="l "><span class="v">✓</span> Snapshot criado: timeshift, 2026-11-04 20:56</span><span class="l ">&nbsp;</span><span class="l "><span class="c">[1/1] Sistema atualizado</span></span><span class="l "><span class="bar">  │</span> Atualizando a lista de pacotes.</span><span class="l "><span class="bar">  │</span> <span class="d">Hit:1 http://security.ubuntu.com/ubuntu resolute-security InRelease</span></span><span class="l "><span class="bar">  │</span> Atualizando 23 pacote(s). Isso pode levar alguns minutos.</span><span class="l "><span class="bar">  │</span> Instalando: unattended-upgrades</span><span class="l "><span class="bar">  │</span> As atualizações automáticas de segurança já estavam ligadas.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> nenhum pacote instalado pela metade (dpkg --audit)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> nenhum pacote para atualizar (apt-get -s upgrade)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> unattended-upgrades instalado</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> atualizações automáticas ligadas (apt-config dump)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Sistema atualizado: aplicada e testada</span><span class="l ">&nbsp;</span><span class="l "><span class="v">✓</span> Pronto. O plano foi aplicado e cada receita passou no teste.</span><span class="l ">  Para voltar atrás: sudo bora desfazer</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que atualizar antes de tudo?</h3><p>A maioria dos problemas de segurança é corrigida por atualizações que já existem, mas ainda não foram instaladas. E um computador recém-instalado costuma estar semanas atrás, porque a imagem de instalação foi gerada antes.</p></article>
+        <article class="cartao porque revelar"><h3>Por que <code>--with-new-pkgs</code>?</h3><p>O <code>upgrade</code> comum deixa de lado as atualizações que pedem um pacote novo, como um kernel novo. Com essa opção, elas entram. E, diferente do <code>dist-upgrade</code>, ela nunca remove pacotes.</p></article>
+        <article class="cartao porque revelar"><h3>O que as atualizações automáticas instalam?</h3><p>Só o que vem dos repositórios de segurança da distro. Elas não trocam a versão da distro e não instalam programas novos, então o computador não muda de cara de um dia para o outro.</p></article>
+        <article class="cartao porque revelar"><h3>Por que o desfazer não volta as versões?</h3><p>O apt não guarda as versões antigas dos pacotes, e voltar uma versão de segurança deixaria o computador vulnerável de novo. Se uma atualização trouxer problema, o snapshot volta o sistema inteiro.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>Pacotes atualizados</strong><span>Todos os que o apt tiver para atualizar, mais as dependências novas. Nenhum é removido.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>unattended-upgrades</strong><span>Instalado só se ainda não estiver. É ele que instala as atualizações de segurança sozinho.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/apt/apt.conf.d/20auto-upgrades</strong><span>Liga <code>APT::Periodic::Update-Package-Lists</code> e <code>APT::Periodic::Unattended-Upgrade</code>, se ainda não estiverem ligadas.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg><span class="txt"><strong>apt-daily.timer e apt-daily-upgrade.timer</strong><span>Os agendamentos do systemd que buscam e instalam as atualizações. Se um estiver mascarado, a receita só avisa.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>automaticas</code></td><td><code>sim</code></td><td>Instalar as atualizações de segurança sozinho, todo dia?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas base/atualizar -p base/atualizar.automaticas=nao</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos que o teste roda</h2>
+        <p>Rode no terminal para ver com os próprios olhos. Nenhum deles muda nada.</p>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>dpkg --audit</code><span>Lista pacotes instalados pela metade. Não pode mostrar nada.</span></div>
+        <div class="cartao comando revelar"><code>apt-get -s upgrade --with-new-pkgs</code><span>Simula a atualização. Não pode sobrar nenhum pacote para atualizar.</span></div>
+        <div class="cartao comando revelar"><code>apt-config dump | grep Periodic</code><span>Mostra as opções das atualizações automáticas. As duas precisam valer "1".</span></div>
+        <div class="cartao comando revelar"><code>systemctl list-timers 'apt-daily*'</code><span>Mostra quando as atualizações vão rodar de novo.</span></div>
+        <div class="cartao comando revelar"><code>ls /var/run/reboot-required</code><span>Se o arquivo existir, reinicie quando puder para usar o kernel novo.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr><tr><td>Debian 13</td><td>Contêiner (teste automático)</td><td>04/11/2026</td><td>Passou</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/pronto-para-estudar.html">
+          <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
+          <h3>Pronto para estudar e trabalhar</h3>
+          <p>O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</p>
+          <div class="rodape"><span class="num">01</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/comecar-a-programar.html">
+          <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
+          <h3>Começar a programar</h3>
+          <p>Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.</p>
+          <div class="rodape"><span class="num">03</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/vibecodar.html">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/pasta-compartilhada.html">
+          <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
+          <h3>Pasta compartilhada da casa</h3>
+          <p>Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir.</p>
+          <div class="rodape"><span class="num">05</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/filmes-e-series.html">
+          <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/></svg></span>
+          <h3>Filmes e séries da casa</h3>
+          <p>O Jellyfin servindo os seus filmes e séries para a TV e os celulares, apenas na rede local.</p>
+          <div class="rodape"><span class="num">06</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/acessar-de-fora.html">
+          <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M12 12.3v3.2"/></svg></span>
+          <h3>Acessar de fora sem abrir portas</h3>
+          <p>Os seus aparelhos numa rede privada, para abrir a pasta da casa ou o Jellyfin da rua, sem mexer no roteador.</p>
+          <div class="rodape"><span class="num">07</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://documentation.ubuntu.com/server/how-to/software/automatic-updates/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Atualizações automáticas</strong><span>Documentação do Ubuntu Server</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://wiki.debian.org/UnattendedUpgrades"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>UnattendedUpgrades</strong><span>Wiki do Debian</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://manpages.debian.org/trixie/apt/apt-get.8.en.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Manual do apt-get</strong><span>A opção --with-new-pkgs</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/base/atualizar/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bbase/atualizar%5D%20&amp;onde=base/atualizar">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bbase/atualizar%5D%20Funcionar%20em%20&amp;onde=base/atualizar">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20base/atualizar&amp;onde=base/atualizar">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/base/atualizar/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

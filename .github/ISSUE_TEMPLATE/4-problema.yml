@@ -1,0 +1,37 @@
+name: Relatar um problema
+description: Algo no bora, num rolê ou numa receita não funcionou como esperado.
+title: "Problema: "
+labels: [problema]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de colar qualquer saída, remova IPs públicos, nomes de usuário, tokens e chaves. O `bora ajuda` já faz isso por você.
+  - type: input
+    id: distro
+    attributes:
+      label: Distro e versão
+    validations:
+      required: true
+  - type: input
+    id: onde
+    attributes:
+      label: Rolê ou receita
+      placeholder: sistema/snapshot
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que eu esperava
+    validations:
+      required: true
+  - type: textarea
+    id: aconteceu
+    attributes:
+      label: O que aconteceu
+    validations:
+      required: true
+  - type: textarea
+    id: saida
+    attributes:
+      label: Saída do bora ajuda ou do bora diag
+      render: text

@@ -1,0 +1,31 @@
+name: Propor um rolê
+description: Um objetivo novo para o computador, dito em linguagem de gente.
+title: "Rolê: "
+labels: [role-novo]
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: O que eu quero que o computador faça
+      placeholder: Quero que este PC vire o lugar das fotos da família.
+    validations:
+      required: true
+  - type: dropdown
+    id: para-quem
+    attributes:
+      label: Para quem serve
+      multiple: true
+      options:
+        - Curiosos
+        - Estudantes
+        - Entusiastas
+  - type: textarea
+    id: maquina
+    attributes:
+      label: Em que máquina eu pensei
+      placeholder: Um notebook de 2015 com 4 GB de memória, ligado o dia todo.
+  - type: textarea
+    id: pronto
+    attributes:
+      label: Como eu sei que deu certo
+      placeholder: O celular de todo mundo manda as fotos sozinho, e elas aparecem no navegador da TV.

@@ -7,6 +7,7 @@ Esta pasta guarda a documentação do projeto e o site publicado no GitHub Pages
 | [`decisoes.md`](decisoes.md) | As decisões que definem o projeto, com o porquê de cada uma |
 | `index.html`, `estilo.css` e `site.js` | A página inicial do site |
 | `404.html` | A página de "não encontrado" |
+| `catalogo/` | Rolês e receitas: a página do catálogo, uma página por receita pronta e uma por rolê, com `catalogo.css` e `catalogo.js` |
 | `imagens/` | Ícone e imagem social, copiados de [`marca/`](../marca/README.md) |
 | `fontes/` | A Inter em WOFF2, só com os caracteres do português, sob a [SIL OFL 1.1](fontes/OFL.txt) |
 
@@ -31,4 +32,17 @@ e abra <http://localhost:8000>. A lista de últimas mudanças vem da API públic
 - **Marca:** o ícone e a imagem social vêm de `marca/`. Se a marca mudar, copie de novo `marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg` para `imagens/icone.svg`, `marca/png/icone-256.png` para `imagens/icone-256.png` e `marca/png/imagem-social.png` para `imagens/imagem-social.png`.
 - **Domínio próprio:** a `404.html` usa caminhos absolutos começando em `/linux-para-todos-os-roles/`. Se o site ganhar um domínio próprio, troque esse prefixo por `/`, e ajuste também os endereços completos no `<head>` do `index.html`.
 
-Mais adiante, a proposta é gerar parte do site a partir dos rolês e das receitas. Até lá, a página é escrita à mão.
+## O catálogo
+
+As páginas em `catalogo/` são geradas por [`ferramentas/catalogo/gerar.py`](../ferramentas/catalogo/gerar.py), que lê os `receita.yaml` (parâmetros, famílias e registro de testes) e os textos em `ferramentas/catalogo/dados.py` (rolês e receitas planejadas) e `receitas.py` (o passo a passo e as ilustrações de cada receita pronta). Depois de mudar uma receita ou um rolê, gere de novo e confira:
+
+```sh
+python3 ferramentas/catalogo/gerar.py      # precisa do PyYAML (pacote python3-yaml)
+python3 -m http.server -d docs 8000
+```
+
+As ilustrações são SVG com animações em CSS. O `catalogo.js` só as dispara quando aparecem na tela, faz o terminal se escrever sozinho e troca os perfis do firewall. Sem JavaScript, ou com "reduzir movimento" ligado no sistema, tudo aparece parado e completo.
+
+Os links "Falta alguma coisa?" no fim de cada página abrem os formulários de [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE), já preenchidos com o rolê ou a receita.
+
+A página inicial ainda é escrita à mão.
