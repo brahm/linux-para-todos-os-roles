@@ -1,0 +1,48 @@
+id: sistema/backup-pessoal
+nome: Backup da pasta pessoal
+descricao: Copia a pasta pessoal de cada pessoa para um disco externo, todo dia e sempre que o disco é conectado, guardando as últimas versões.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  destino:
+    tipo: texto
+    padrao: auto
+    pergunta: Em que disco externo guardar a cópia? "auto" usa o disco USB conectado agora; ou informe a partição, como /dev/sdb1.
+  usuarios:
+    tipo: texto
+    padrao: auto
+    descricao: De quem copiar a pasta pessoal, com os nomes separados por vírgula. "auto" copia a de todas as pessoas com conta neste computador.
+  manter:
+    tipo: inteiro
+    padrao: 7
+    descricao: Quantas versões guardar. Com uma cópia por dia, 7 dá para voltar uma semana.
+  fazer_agora:
+    tipo: booleano
+    padrao: true
+    descricao: Fazer a primeira cópia logo depois de configurar, se o disco estiver conectado.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

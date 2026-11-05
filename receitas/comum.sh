@@ -83,43 +83,58 @@ instalar_pacotes() {
 # Pacotes que o apt removeria junto com os dados (simulação, sem mudar nada).
 _removeria() { LC_ALL=C apt-get -s purge "$@" 2>/dev/null | awk '/^Purg |^Remv / {print $2}' | sort -u; }
 
+# Pacotes essenciais ou protegidos do sistema nunca saem, mesmo que tenham
+# entrado junto com a receita.
+_do_sistema() {
+    case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
+        yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
+    esac
+    return 1
+}
+
 # Remove o que instalar_pacotes trouxe, inclusive as dependências, sem levar
 # junto nada que já existia antes ou que outro programa passou a usar depois.
+# Um pacote fica se removê-lo levaria junto algum pacote que não veio com a
+# receita; aí ficam também as dependências dele, porque o apt confere tudo
+# junto antes de remover.
 remover_pacotes_instalados() {
     exigir_apt
     [ -s "$BORA_ESTADO/pacotes-novos" ] || return 0
-    local novos restantes=() p extras
+    local novos p extras remover=() ficam=() tentativa
     novos=$(sort -u "$BORA_ESTADO/pacotes-novos")
+    fora() { comm -23 <(_removeria "$@") <(printf '%s\n' "$novos") | sed '/^$/d'; }
     while read -r p; do
-        if [ -z "$p" ] || ! pacote_instalado "$p"; then continue; fi
-        # Pacotes essenciais ou protegidos do sistema nunca saem, mesmo que
-        # tenham entrado junto com a receita.
-        case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$p" 2>/dev/null)" in
-            yes\ * | *\ yes\ * | *\ required | *\ important) continue ;;
-        esac
-        restantes+=("$p")
+        if [ -z "$p" ] || ! pacote_instalado "$p" || _do_sistema "$p"; then continue; fi
+        remover+=("$p")
     done <<<"$novos"
-    if [ "${#restantes[@]}" -gt 0 ]; then
-        extras=$(comm -23 <(_removeria "${restantes[@]}") <(printf '%s\n' "$novos") | sed '/^$/d')
-        if [ -z "$extras" ]; then
-            msg "Removendo o que a receita instalou: ${restantes[*]}"
-            apt_get purge -y -q "${restantes[@]}"
-        else
-            # Algum programa instalado depois depende do que a receita trouxe.
-            # Remove só os pacotes pedidos que não levam nada de fora junto.
-            aviso "outros programas passaram a depender de parte do que a receita instalou; essa parte fica: $(tr '\n' ' ' <<<"$extras")"
-            local pedidos=()
-            while read -r p; do
-                if [ -z "$p" ] || ! pacote_instalado "$p"; then continue; fi
-                if [ -z "$(comm -23 <(_removeria "$p") <(printf '%s\n' "$novos") | sed '/^$/d')" ]; then
-                    pedidos+=("$p")
-                fi
-            done <"$BORA_ESTADO/pacotes-pedidos"
-            if [ "${#pedidos[@]}" -gt 0 ]; then
-                msg "Removendo: ${pedidos[*]}"
-                apt_get purge -y -q "${pedidos[@]}"
-            fi
-        fi
+    # O caso comum: nada de fora depende do que a receita trouxe, e tudo sai
+    # de uma vez. Senão, cada pacote é conferido sozinho, o que é mais lento.
+    if [ "${#remover[@]}" -gt 0 ] && [ -n "$(fora "${remover[@]}")" ]; then
+        local todos=("${remover[@]}")
+        remover=()
+        for p in "${todos[@]}"; do
+            if [ -n "$(fora "$p")" ]; then ficam+=("$p"); else remover+=("$p"); fi
+        done
+    fi
+    # Removidos juntos, dois pacotes podem levar algo que nenhum levaria sozinho
+    # (uma dependência do tipo "este ou aquele"). Nesse caso, fica o que puxa isso.
+    for tentativa in 1 2 3; do
+        [ "${#remover[@]}" -gt 0 ] || break
+        extras=$(fora "${remover[@]}")
+        [ -n "$extras" ] || break
+        local resto=()
+        for p in "${remover[@]}"; do
+            if [ -n "$(comm -12 <(_removeria "$p") <(printf '%s\n' "$extras"))" ]; then ficam+=("$p"); else resto+=("$p"); fi
+        done
+        remover=("${resto[@]}")
+        [ "$tentativa" -lt 3 ] || remover=()
+    done
+    if [ "${#remover[@]}" -gt 0 ]; then
+        msg "Removendo o que a receita instalou: ${remover[*]}"
+        apt_get purge -y -q "${remover[@]}"
+    fi
+    if [ "${#ficam[@]}" -gt 0 ]; then
+        aviso "estes pacotes vieram com a receita, mas ficam, porque outros programas passaram a usá-los: ${ficam[*]}"
     fi
     rm -f "$BORA_ESTADO/pacotes-pedidos" "$BORA_ESTADO/pacotes-novos"
 }

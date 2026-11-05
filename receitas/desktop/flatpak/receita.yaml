@@ -1,0 +1,36 @@
+id: desktop/flatpak
+nome: Flatpak e Flathub
+descricao: Instala o Flatpak e liga o Flathub, a loja de aplicativos que funciona igual em qualquer distro.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada
+parametros:
+  integrar_loja:
+    tipo: booleano
+    padrao: true
+    descricao: Mostrar os aplicativos do Flathub na loja de aplicativos que já estiver instalada (GNOME Software ou Discover).
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-05
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

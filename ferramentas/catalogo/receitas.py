@@ -65,6 +65,8 @@ def mudancas(lista):
 
 
 def parametros(rid, r):
+    if not r.get("parametros"):
+        return f'''      <p class="nota revelar">Esta receita não tem parâmetros: ela faz sempre a mesma coisa, em qualquer máquina. No menu, o <code>bora</code> não pergunta nada; num script ou num agente, basta <code>bora plano --receitas {rid}</code>.</p>'''
     linhas = []
     for nome, p in (r.get("parametros") or {}).items():
         padrao = p.get("padrao")
@@ -538,8 +540,306 @@ def pagina_firewall():
     return "\n\n".join(corpo)
 
 
+# ---------------------------------------------------------------- desktop/codecs
+
+def _linha_troca(i, nome, antes, depois, y0=44, passo=46):
+    y = y0 + i * passo
+    return f'''<g class="pacote" style="--i:{i}">
+              <rect x="20" y="{y}" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="{y + 24}" font-size="14" font-weight="600" class="mono">{nome}</text>
+              <rect x="190" y="{y + 15}" width="110" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="190" y="{y + 15}" width="110" height="8" rx="4"/>
+              <text x="316" y="{y + 24}" font-size="13" class="t2 velha">{antes}</text>
+              <text x="316" y="{y + 24}" font-size="13" class="nova" style="fill:var(--ok)">{depois} ✓</text>
+            </g>
+            '''
+
+
+ILUSTRA_CODECS = '''          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ic-t">
+            <title id="ic-t">Quatro arquivos que não tocavam, um vídeo do celular, uma música, um filme e uma aula gravada, passam a tocar um depois do outro, e o player mostra o vídeo rodando.</title>
+            <text x="20" y="26" font-size="14" font-weight="600">Antes, o player só mostrava um erro:</text>
+            ''' + "".join(_linha_troca(i, n, "não toca", "toca") for i, n in enumerate(["celular.mp4", "musica.mp3", "filme.mkv", "aula.wmv"])) + '''<g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <rect x="40" y="252" width="100" height="60" rx="8" class="azul"/>
+              <path d="M82 270v24l20-12z" fill="#fff"/>
+              <text x="160" y="272" font-size="14" font-weight="600">Os players do GNOME, do KDE e do Xfce</text>
+              <text x="160" y="296" font-size="13" class="t2">usam o GStreamer: um conjunto de plugins</text>
+              <text x="160" y="316" font-size="13" class="t2">resolve todos de uma vez.</text>
+            </g>
+          </svg>'''
+
+
+def pagina_codecs():
+    rid = "desktop/codecs"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_CODECS, "Os nomes dos arquivos são exemplos. O teste da receita confere os plugins de cada formato.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Instala os plugins do GStreamer</strong> que tocam MP4, MKV, WebM, MP3, WMV e o áudio AC-3 dos filmes.",
+         "<strong>Toca os vídeos do celular</strong>, que vêm em H.264 ou H.265, com os decodificadores do FFmpeg.",
+         "<strong>Vale para todos os players</strong> que usam o GStreamer, e para o navegador ler os mesmos formatos.",
+         "<strong>Usa só os repositórios oficiais</strong> da distro, sem nenhum repositório de fora."],
+        ["Não instala nenhum player novo: usa o que veio com o seu ambiente gráfico.",
+         "Não instala as fontes da Microsoft, que pedem para aceitar uma licença e são baixadas de fora dos repositórios.",
+         "Não troca a <code>libavcodec</code> pela <code>libavcodec-extra</code>, que só acrescenta codificadores e mexe num pacote que outros programas usam.",
+         "Não toca DVD com proteção contra cópia nem vídeo de serviços de streaming."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Confere se os quatro pacotes estão instalados: <code>gstreamer1.0-libav</code>, <code>-plugins-good</code>, <code>-plugins-bad</code> e <code>-plugins-ugly</code>. Se estiverem, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Atualiza a lista de pacotes, se ela tiver mais de uma hora.</li><li>Confere se cada pacote existe nos repositórios configurados. No Ubuntu, eles ficam no <code>universe</code>; se ele estiver desligado, a receita para e explica como ligar.</li><li>Instala os quatro pacotes, com as dependências, e anota tudo o que entrou.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere os quatro pacotes e os arquivos dos plugins principais, cada um com o que ele toca: <code>libav</code> (H.264, H.265, AAC), <code>isomp4</code> (MP4), <code>matroska</code> (MKV), <code>mpg123</code> (MP3), <code>videoparsersbad</code> (H.264 dentro do arquivo), <code>asf</code> (WMV) e <code>a52dec</code> (AC-3).</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Remove só o que a receita instalou, com as dependências que vieram junto. Se outro programa passou a precisar de algum desses pacotes, ele fica, e a receita avisa.</p>"),
+    ])))
+    corpo.append(f'''    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[4/6] Codecs de áudio e vídeo</span>'),
+        ("", '<span class="bar">  │</span> Instalando: gstreamer1.0-libav gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly'),
+        ("", '<span class="bar">  │</span> <span class="d">Setting up gstreamer1.0-plugins-ugly:amd64 (1.28.2-1) ...</span>'),
+        ("", '<span class="bar">  │</span> Pronto. Feche e abra de novo o player de vídeo ou o navegador para eles verem os codecs novos.'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> H.264, H.265 e AAC (vídeos do celular e da internet) (plugin libav do GStreamer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> arquivos MP4 e MOV (plugin isomp4 do GStreamer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> arquivos MKV e WebM (plugin matroska do GStreamer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> música em MP3 (plugin mpg123 do GStreamer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> arquivos WMV e WMA (plugin asf do GStreamer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> áudio AC-3 (Dolby Digital) de filmes e DVDs (plugin a52dec do GStreamer)'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Codecs de áudio e vídeo: aplicada e testada'),
+    ], "Terminal mostrando o bora aplicar a receita Codecs de áudio e vídeo: instala os quatro pacotes do GStreamer e confere um plugin para cada formato, todos ok.")}
+      </figure>
+    </section>''')
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Por que a distro não traz isso?", "Alguns desses formatos são cobertos por patentes em certos países. As distros deixam os codecs fora da instalação padrão e a escolha para você. No Brasil, usar esses codecs em casa é o comum."),
+        ("Por que GStreamer, e não só instalar o VLC?", "O VLC é ótimo e traz os próprios codecs, mas só ele toca. Com os plugins do GStreamer, o player que já veio com o sistema, as miniaturas do gerenciador de arquivos e outros programas passam a entender os mesmos formatos. Se você preferir o VLC, ele está no Flathub."),
+        ("Por que não o <code>ubuntu-restricted-extras</code>?", "Ele traz junto as fontes da Microsoft, que param a instalação para pedir que você aceite uma licença e são baixadas de fora dos repositórios. Uma receita não pode parar para perguntar nada no meio."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("pacote", "gstreamer1.0-libav", "Os decodificadores do FFmpeg: H.264, H.265, AAC e quase tudo o que vem da internet."),
+        ("pacote", "gstreamer1.0-plugins-good", "MP4, MKV, WebM, MP3 e FLAC."),
+        ("pacote", "gstreamer1.0-plugins-bad", "Os analisadores que separam o vídeo de dentro do arquivo, e formatos menos comuns."),
+        ("pacote", "gstreamer1.0-plugins-ugly", "WMV, WMA, AC-3 e DVD sem proteção."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "Nenhum deles muda nada.", comandos([
+        ("dpkg -l 'gstreamer1.0-*'", "Lista os pacotes do GStreamer instalados."),
+        ("gst-inspect-1.0 avdec_h264", "Mostra o decodificador de H.264. Precisa do pacote <code>gstreamer1.0-tools</code>."),
+        ("gst-play-1.0 video.mp4", "Toca um vídeo direto do terminal, pelo GStreamer. Também vem no <code>gstreamer1.0-tools</code>."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("Restricted formats", "Documentação do Ubuntu", "https://help.ubuntu.com/community/RestrictedFormats"),
+        ("Multimedia codecs", "Wiki do Debian", "https://wiki.debian.org/MultimediaCodecs"),
+        ("Plugins do GStreamer", "A lista oficial, com o que cada um toca", "https://gstreamer.freedesktop.org/documentation/plugins_doc.html"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+# ---------------------------------------------------------------- desktop/flatpak
+
+ILUSTRA_FLATPAK = '''          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="if-t">
+            <title id="if-t">Quatro aplicativos de estudo e trabalho saem da versão congelada da distro para a versão mais nova do Flathub, e cada um roda numa caixa isolada, separada do sistema.</title>
+            <text x="20" y="26" font-size="14" font-weight="600">Os mesmos aplicativos, direto do Flathub:</text>
+            ''' + "".join(_linha_troca(i, n, "da distro", "a mais nova") for i, n in enumerate(["LibreOffice", "GIMP", "OBS Studio", "Anki"])) + '''<g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <rect x="40" y="254" width="56" height="56" rx="10" fill="none" stroke="var(--azul)" stroke-width="2.4" stroke-dasharray="5 4"/>
+              <rect x="54" y="268" width="28" height="28" rx="6" class="azul"/>
+              <text x="116" y="272" font-size="14" font-weight="600">Cada aplicativo roda na própria caixa,</text>
+              <text x="116" y="296" font-size="13" class="t2">com as permissões que declarou. Instalar ou</text>
+              <text x="116" y="316" font-size="13" class="t2">remover um nunca mexe nos pacotes do sistema.</text>
+            </g>
+          </svg>'''
+
+
+def pagina_flatpak():
+    rid = "desktop/flatpak"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_FLATPAK, "Ilustração. A receita só liga o Flathub: os aplicativos você escolhe na loja ou no terminal.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Instala o Flatpak</strong>, o formato de aplicativos que funciona igual em qualquer distro.",
+         "<strong>Liga o Flathub para o sistema todo</strong>, pelo endereço oficial e com a assinatura de cada aplicativo conferida.",
+         "<strong>Põe o Flathub na loja de aplicativos</strong>, se ela for o GNOME Software ou o Discover.",
+         "<strong>Respeita o que já existe:</strong> no Linux Mint, que já vem com o Flathub, só confere."],
+        ["Não instala nenhum aplicativo: você escolhe na loja ou no terminal.",
+         "Não remove o Snap do Ubuntu. O Flatpak entra ao lado.",
+         "Não muda a App Center do Ubuntu, que só mostra Snaps.",
+         "Não mexe num repositório <code>flathub</code> que alguém já configurou de outro jeito: para e explica.",
+         "Não remove o Flathub no desfazer se você já instalou aplicativos por ele."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Confere se o pacote <code>flatpak</code> está instalado, se o <code>flathub</code> aparece em <code>flatpak remotes --system</code> com o endereço oficial e, com <code>integrar_loja</code>, se o plugin da loja está instalado. Se estiver tudo certo, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Instala o <code>flatpak</code> e, se a loja for o GNOME Software ou o Discover, o plugin dela.</li><li>Se já houver um <code>flathub</code> com outro endereço ou desativado, para sem mudar nada.</li><li>Roda <code>flatpak remote-add --system --if-not-exists flathub</code> com o arquivo oficial do Flathub, que traz o endereço e a chave que confere as assinaturas.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere que o Flatpak responde, que o Flathub está configurado com o endereço oficial e sem <code>no-gpg-verify</code>, que o <code>/etc/profile.d/flatpak.sh</code> existe (é ele que põe os aplicativos no menu a cada login) e que o plugin da loja está instalado.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Remove o Flathub, se foi a receita que o ligou, e os pacotes que ela instalou. Se você já instalou aplicativos pelo Flathub, nada sai: a receita avisa quais são e explica como tirar tudo à mão.</p>"),
+    ])))
+    corpo.append(f'''    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt, e o primeiro aplicativo instalado depois.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[5/6] Flatpak e Flathub</span>'),
+        ("", '<span class="bar">  │</span> Instalando: flatpak'),
+        ("", '<span class="bar">  │</span> <span class="d">Setting up flatpak (1.16.6-1) ...</span>'),
+        ("", '<span class="bar">  │</span> Ligando o Flathub.'),
+        ("", '<span class="bar">  │</span> Pronto. Os atalhos dos aplicativos do Flathub aparecem no menu depois que você sair e entrar de novo na sessão.'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> Flatpak instalado (flatpak --version)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> Flathub configurado para o sistema todo (flatpak remotes)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o Flathub confere a assinatura dos aplicativos'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> os aplicativos aparecem no menu depois do login'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Flatpak e Flathub: aplicada e testada'),
+        ("cmd", P + '<span class="c">flatpak install flathub org.libreoffice.LibreOffice</span>'),
+    ], "Terminal mostrando o bora aplicar a receita Flatpak e Flathub: instala o Flatpak, liga o Flathub e confere quatro testes, todos ok. Depois, um comando instala o LibreOffice pelo Flathub.")}
+      </figure>
+    </section>''')
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Por que Flatpak, se a distro já tem os programas?", "Os pacotes da distro ficam congelados na versão em que ela saiu. Num Ubuntu LTS ou num Debian, isso pode ser um, dois ou três anos de atraso. No Flathub, muitos aplicativos são publicados pelos próprios autores, na versão mais nova."),
+        ("Por que para o sistema todo, e não só para você?", "Com <code>--system</code>, os aplicativos ficam em <code>/var/lib/flatpak</code> e servem para todas as pessoas do computador, sem baixar tudo de novo para cada uma."),
+        ("E o Snap do Ubuntu?", "Fica. O Snap e o Flatpak convivem, e a receita não tira nada do sistema. Remover o Snap é uma decisão maior, com outras consequências, e merece uma receita própria."),
+        ("É seguro?", "O Flathub confere a assinatura de cada aplicativo baixado, e cada um roda isolado, com as permissões que declarou. Na página de cada aplicativo, o Flathub mostra quem publicou e quais permissões ele pede."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("pacote", "flatpak", "Instalado se ainda não estiver, com as dependências."),
+        ("pacote", "gnome-software-plugin-flatpak ou plasma-discover-backend-flatpak", "Só se a loja correspondente estiver instalada e <code>integrar_loja</code> for sim."),
+        ("arquivo", "O repositório flathub", "Em <code>/var/lib/flatpak/repo</code>, com o endereço <code>https://dl.flathub.org/repo/</code> e a chave pública do Flathub."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos que o teste roda", "E os que você vai usar no dia a dia.", comandos([
+        ("flatpak remotes --show-details", "Lista os repositórios do Flatpak, com o endereço de cada um."),
+        ("flatpak search anki", "Procura um aplicativo no Flathub."),
+        ("flatpak install flathub org.libreoffice.LibreOffice", "Instala um aplicativo. O nome completo aparece na página dele no Flathub."),
+        ("flatpak update", "Atualiza todos os aplicativos do Flatpak."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("Configurar o Flathub no Ubuntu", "Flathub", "https://flathub.org/setup/Ubuntu"),
+        ("Configurar o Flathub no Debian", "Flathub", "https://flathub.org/setup/Debian"),
+        ("flatpak remote-add", "Documentação do Flatpak", "https://docs.flatpak.org/en/latest/flatpak-command-reference.html#flatpak-remote-add"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+# ---------------------------------------------------------------- sistema/backup-pessoal
+
+ILUSTRA_BACKUP = '''          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ib-t">
+            <title id="ib-t">Uma linha do tempo de cópias da pasta pessoal num disco externo: uma por dia, guardando as 7 mais novas e apagando a mais velha, e no dia em que um trabalho é apagado sem querer, uma seta busca a cópia de ontem no disco.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Uma cópia por dia</text><text x="148" y="28" font-size="13" class="t2">guarda as 7 mais novas</text>
+            <path d="M20 70H460" class="traco tracejado"/>
+            ''' + "".join(_foto(42 + i * 56, 70, 16, i, i == 0, d, "laranja") for i, d in enumerate(["ter", "qua", "qui", "sex", "sáb", "dom", "seg", "ter"])) + '''
+            <rect x="20" y="128" width="440" height="80" rx="14" class="caixa-svg"/>
+            <rect x="40" y="146" width="44" height="44" rx="8" class="azul"/>
+            <circle cx="62" cy="168" r="9" fill="none" stroke="#fff" stroke-width="2"/>
+            <text x="100" y="164" font-size="14" font-weight="600">O disco externo guarda as cópias</text>
+            <text x="100" y="188" font-size="13" class="t2">O que não mudou não ocupa espaço de novo.</text>
+            <g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <text x="40" y="266" font-size="14" font-weight="600">Hoje, o trabalho de história sumiu.</text>
+              <text x="40" y="290" font-size="13" class="t2">Conecte o disco e copie de volta, da cópia de ontem:</text>
+              <text x="40" y="314" font-size="13" class="mono" font-weight="600">bora-backup/…/você/2026-11-09_…/</text>
+            </g>
+            <path class="volta-seta" d="M430 238 C 430 160, 420 120, 400 92" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+            <path class="volta" d="M394 104l5-13 11 6" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>'''
+
+
+def pagina_backup():
+    rid = "sistema/backup-pessoal"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_BACKUP, "Com o padrão de 7 versões, a cópia mais velha é apagada sozinha a cada cópia nova, e o disco não enche.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Copia a pasta pessoal</strong> de cada pessoa do computador para um disco externo.",
+         "<strong>Uma vez por dia e logo que o disco é conectado</strong>, sem você lembrar.",
+         "<strong>Guarda as últimas versões</strong> (7, por padrão), para buscar um arquivo como ele estava há alguns dias.",
+         "<strong>Cada cópia é uma pasta comum</strong>, que abre em qualquer computador com Linux, sem programa especial.",
+         "<strong>Não repete o que não mudou:</strong> as versões compartilham os arquivos iguais, então sete costumam ocupar pouco mais do que uma."],
+        ["Não formata disco nenhum. O disco precisa estar em ext4, xfs ou btrfs; em exFAT, NTFS ou FAT, a receita para e explica.",
+         "Não manda nada para a nuvem: a cópia fica num disco seu.",
+         "Não criptografa a cópia. Guarde o disco num lugar seguro, ou use um disco criptografado.",
+         "Não copia o sistema: para isso existe o snapshot.",
+         "Não apaga as cópias do disco quando você desfaz: são os seus arquivos."])))
+    onde = '''      <div class="duas revelar" style="margin-top:20px">
+        <div class="cartao"><h3>Onde ficam as cópias</h3><p>Em <code>bora-backup/&lt;computador&gt;/&lt;pessoa&gt;/</code> no disco externo, uma pasta por data, e um atalho <code>ultimo</code> para a mais nova.</p><p>Cada pessoa só consegue abrir a própria pasta.</p></div>
+        <div class="cartao"><h3>Fica de fora</h3><p>O <code>.cache</code>, a lixeira e os caches dos aplicativos Flatpak e Snap, que os programas refazem sozinhos.</p><p>Discos e pastas montados dentro da pasta pessoal também ficam de fora.</p></div>
+      </div>'''
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Confere se o <code>rsync</code> está instalado, se a configuração aponta para o disco e as pessoas do plano, se o programa e as unidades do systemd estão no lugar e ligados e, com o disco conectado, se cada pessoa já tem uma cópia completa. Se estiver tudo certo, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Descobre o disco: com <code>auto</code>, o único disco USB conectado com um sistema de arquivos do Linux.</li><li>Para, sem mudar nada, se não houver disco, se houver mais de um, se ele estiver em exFAT, NTFS ou FAT, ou se for a partição do próprio sistema.</li><li>Instala o <code>rsync</code>.</li><li>Escreve <code>/etc/bora/backup-pessoal.conf</code> e o programa <code>/usr/local/lib/bora/backup-pessoal</code>.</li><li>Cria o timer que roda de hora em hora e só copia se a última cópia tiver mais de 20 horas, e a unidade que roda quando o disco é conectado.</li><li>Faz a primeira cópia. Ela copia tudo e pode demorar; as seguintes copiam só o que mudou.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere o <code>rsync</code>, o programa e a configuração, os dois gatilhos ligados e, com o disco conectado, que cada pessoa tem uma cópia completa. Para isso, monta o disco só para leitura, se ele não estiver montado.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Desliga e remove as unidades do systemd, apaga a configuração e o programa e remove o <code>rsync</code>, se foi a receita que o instalou. As cópias no disco externo continuam lá, e a receita diz onde.</p>"),
+    ]) + "\n" + onde))
+    corpo.append(f'''    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, com o disco de teste trocado por um disco USB comum.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[6/6] Backup da pasta pessoal</span>'),
+        ("", '<span class="bar">  │</span> As cópias vão para /dev/sdb1 (ext4, UUID 737d257f-b139-4c78-bb36-94917984426d).'),
+        ("", '<span class="bar">  │</span> Pastas pessoais copiadas: ana'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/bora/backup-pessoal.conf'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /usr/local/lib/bora/backup-pessoal'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/systemd/system/bora-backup-pessoal.timer'),
+        ("", '<span class="bar">  │</span> Fazendo a primeira cópia. Ela copia tudo e pode demorar; as próximas copiam só o que mudou.'),
+        ("", '<span class="bar">  │</span> ana: copiando /home/ana para /media/ana/BACKUP/bora-backup/notebook/ana/2026-11-05_012104'),
+        ("", '<span class="bar">  │</span> ana: pronto. 1 cópia(s) guardada(s).'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> agendamento diário ligado (bora-backup-pessoal.timer)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> backup ao conectar o disco ligado (bora-backup-pessoal-conectar.service)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> ana tem 1 cópia(s), a última em 2026-11-05_012104'),
+        ("", '<span class="v">✓</span> Backup da pasta pessoal: aplicada e testada'),
+    ], "Terminal mostrando o bora aplicar a receita Backup da pasta pessoal: escolhe o disco USB, instala o programa e os agendamentos, faz a primeira cópia e confere os testes.")}
+      </figure>
+    </section>''')
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Por que backup, se já tem snapshot?", "O snapshot fica no mesmo disco do computador e deixa as pastas pessoais de fora de propósito. Se o disco morrer, o notebook for roubado ou um arquivo for apagado sem querer, só uma cópia em outro disco salva o trabalho."),
+        ("Por que uma pasta comum, e não um arquivo de backup?", "Para recuperar um arquivo sem aprender programa nenhum: conecte o disco, abra a pasta da data e copie. E a cópia abre em qualquer computador com Linux, mesmo sem o <code>bora</code>."),
+        ("Por que exigir ext4?", "As versões compartilham os arquivos que não mudaram por hardlinks, e guardam o dono e as permissões de cada arquivo. exFAT, NTFS e FAT não guardam isso, e sete versões ocupariam sete vezes o espaço. Formatar apagaria o que está no disco, então o <code>bora</code> nunca faz isso por você."),
+        ("Por que rodar ao conectar o disco?", "Num notebook, o disco externo quase nunca está conectado na hora marcada. Rodando ao conectar, basta plugar o disco de vez em quando para a cópia acontecer."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("pacote", "rsync", "Instalado se ainda não estiver. É ele que copia só o que mudou."),
+        ("arquivo", "/etc/bora/backup-pessoal.conf", "O UUID do disco, o nome do computador, as pessoas copiadas e quantas versões manter."),
+        ("arquivo", "/usr/local/lib/bora/backup-pessoal", "O programa do backup. Também dá para rodar na mão, com <code>--agora</code>."),
+        ("relogio", "bora-backup-pessoal.timer", "De hora em hora, copia se o disco estiver conectado e a última cópia tiver mais de 20 horas."),
+        ("servico", "bora-backup-pessoal-conectar.service", "Roda quando o disco é conectado, depois de esperar a sessão gráfica montá-lo."),
+        ("copia", "As cópias", "No disco externo, em <code>bora-backup/</code>. O desfazer não apaga."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "E os que você vai usar no dia em que precisar de um arquivo de volta.", comandos([
+        ("systemctl list-timers bora-backup-pessoal.timer", "Mostra quando o backup confere de novo se a cópia venceu."),
+        ("journalctl -u bora-backup-pessoal -u bora-backup-pessoal-conectar", "Mostra o que aconteceu nas últimas cópias."),
+        ("sudo /usr/local/lib/bora/backup-pessoal --agora", "Faz uma cópia na hora, com o disco conectado."),
+        ("sudo /usr/local/lib/bora/backup-pessoal --conferir", "Confere se cada pessoa tem uma cópia completa, sem copiar nada."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("Manual do rsync", "As opções --link-dest e --one-file-system", "https://download.samba.org/pub/rsync/rsync.1"),
+        ("Manual do systemd.device", "Unidades que rodam quando um disco aparece", "https://www.freedesktop.org/software/systemd/man/latest/systemd.device.html"),
+        ("BackupAndRecovery", "Wiki do Debian", "https://wiki.debian.org/BackupAndRecovery"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+
 PAGINAS = {
     "base/atualizar": pagina_atualizar,
     "sistema/snapshot": pagina_snapshot,
     "seguranca/firewall": pagina_firewall,
+    "desktop/codecs": pagina_codecs,
+    "desktop/flatpak": pagina_flatpak,
+    "sistema/backup-pessoal": pagina_backup,
 }
