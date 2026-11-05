@@ -30,8 +30,10 @@ UUID=$(sed -n 's/^UUID=//p' "$CONFIG" | tr -d '"')
 COMPUTADOR=$(sed -n 's/^COMPUTADOR=//p' "$CONFIG" | tr -d '"')
 USUARIOS=$(sed -n 's/^USUARIOS=//p' "$CONFIG" | tr -d '"')
 MANTER=$(sed -n 's/^MANTER=//p' "$CONFIG" | tr -d '"')
-[ -n "$UUID" ] && [ -n "$COMPUTADOR" ] && [ -n "$USUARIOS" ] || falha "$CONFIG está incompleto"
-[[ "$MANTER" =~ ^[0-9]+$ ]] && [ "$MANTER" -ge 1 ] || MANTER=7
+if [ -z "$UUID" ] || [ -z "$COMPUTADOR" ] || [ -z "$USUARIOS" ]; then
+    falha "$CONFIG está incompleto"
+fi
+if ! [[ "$MANTER" =~ ^[1-9][0-9]*$ ]]; then MANTER=7; fi
 
 # Uma cópia de cada vez.
 exec 9>/run/bora-backup-pessoal.lock

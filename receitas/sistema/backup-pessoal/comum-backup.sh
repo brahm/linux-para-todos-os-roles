@@ -51,7 +51,8 @@ descobrir_destino() {
     if [ "$alvo" = auto ] && [ -n "$(valor_da_config UUID)" ]; then
         uuid=$(valor_da_config UUID)
         dev=$(achar_disco "$uuid" || true)
-        tipo=$( [ -n "$dev" ] && blkid -c /dev/null -o value -s TYPE "$dev" || true)
+        tipo=
+        if [ -n "$dev" ]; then tipo=$(blkid -c /dev/null -o value -s TYPE "$dev" || true); fi
         printf '%s %s %s\n' "${dev:--}" "$uuid" "${tipo:--}"
         return 0
     fi
