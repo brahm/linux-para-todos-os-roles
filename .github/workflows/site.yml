@@ -22,6 +22,7 @@ concurrency:
 jobs:
   publicar:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -43,3 +44,8 @@ jobs:
 
       - id: deploy
         uses: actions/deploy-pages@v4
+        with:
+          # O Pages às vezes passa de 10 minutos em "updating_pages". Com o tempo
+          # padrão, o deploy desiste e cancela a publicação, e o site fica na
+          # versão anterior. Meia hora dá folga para o GitHub terminar.
+          timeout: 1800000
