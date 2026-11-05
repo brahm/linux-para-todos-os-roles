@@ -105,8 +105,17 @@ remover_pacotes_instalados() {
     fora() { comm -23 <(_removeria "$@") <(printf '%s\n' "$novos") | sed '/^$/d'; }
     while read -r p; do
         if [ -z "$p" ] || ! pacote_instalado "$p" || _do_sistema "$p"; then continue; fi
-        if [ -n "$(fora "$p")" ]; then ficam+=("$p"); else remover+=("$p"); fi
+        remover+=("$p")
     done <<<"$novos"
+    # O caso comum: nada de fora depende do que a receita trouxe, e tudo sai
+    # de uma vez. Senão, cada pacote é conferido sozinho, o que é mais lento.
+    if [ "${#remover[@]}" -gt 0 ] && [ -n "$(fora "${remover[@]}")" ]; then
+        local todos=("${remover[@]}")
+        remover=()
+        for p in "${todos[@]}"; do
+            if [ -n "$(fora "$p")" ]; then ficam+=("$p"); else remover+=("$p"); fi
+        done
+    fi
     # Removidos juntos, dois pacotes podem levar algo que nenhum levaria sozinho
     # (uma dependência do tipo "este ou aquele"). Nesse caso, fica o que puxa isso.
     for tentativa in 1 2 3; do

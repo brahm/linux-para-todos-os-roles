@@ -73,12 +73,25 @@ bora desfazer --sem-perguntar
 
 etapa "Conferir que voltou"
 # Pacotes essenciais ou de prioridade required/important nunca são removidos
-# (um desktop de verdade já os tem); a comparação ignora os que sobraram assim.
+# (um desktop de verdade já os tem), nem as dependências deles; a comparação
+# ignora os que sobraram assim.
+do_sistema() {
+    case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
+        yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
+    esac
+    return 1
+}
+sistema_depende() {
+    local r
+    while read -r r; do
+        if [ "$r" != "$1" ] && do_sistema "$r"; then return 0; fi
+    done < <(LC_ALL=C apt-get -s purge "$1" 2>/dev/null | awk '/^Purg |^Remv / {print $2}')
+    return 1
+}
 pacotes | while read -r p; do
     if ! grep -qxF "$p" /tmp/pacotes-antes; then
-        case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$p")" in
-            yes\ * | *\ yes\ * | *\ required | *\ important) echo "(mantido por ser do sistema: $p)" >&2; continue ;;
-        esac
+        if do_sistema "$p"; then echo "(mantido por ser do sistema: $p)" >&2; continue; fi
+        if sistema_depende "$p"; then echo "(mantido porque um pacote do sistema depende dele: $p)" >&2; continue; fi
     fi
     echo "$p"
 done >/tmp/pacotes-depois
