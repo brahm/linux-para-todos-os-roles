@@ -92,6 +92,7 @@ if bora aplicar /tmp/fat.yaml --sem-perguntar --sem-snapshot >/tmp/saida-fat 2>&
     falhou "aceitou um disco em FAT"
 fi
 cat /tmp/saida-fat
+grep -q "não guarda hardlinks" /tmp/saida-fat || falhou "a mensagem não explica o motivo"
 grep -q "não formata discos" /tmp/saida-fat || falhou "a mensagem não explica o que fazer"
 [ ! -e /etc/bora/backup-pessoal.conf ] || falhou "configurou mesmo recusando o disco"
 echo "ok: o bora recusou o disco em FAT e explicou por quê"

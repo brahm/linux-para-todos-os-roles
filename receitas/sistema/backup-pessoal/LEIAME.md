@@ -27,7 +27,7 @@ Com `destino: auto` (o padrão), a receita usa o único disco USB conectado que 
 A receita para sem mudar nada se:
 
 - não houver disco externo conectado, ou houver mais de um (aí informe qual no parâmetro `destino`, como `/dev/sdb1`);
-- o disco usar exFAT, NTFS ou FAT, como a maioria dos discos e pendrives vendidos. Esses sistemas não guardam dono, permissões nem hardlinks. O `bora` não formata discos: copie o que houver no disco para outro lugar, formate em ext4 pelo aplicativo Discos e rode de novo;
+- o disco usar exFAT, NTFS ou FAT, como a maioria dos discos e pendrives vendidos. A receita explica o motivo na hora: esses sistemas não guardam hardlinks (cada versão ocuparia uma cópia inteira), não guardam dono nem permissões (o que voltasse do backup viria errado) e se corrompem com mais facilidade se o disco for puxado no meio da cópia. O `bora` não formata discos, porque formatar apaga o que está neles: copie o que houver no disco para outro lugar, formate em ext4 pelo aplicativo Discos e rode de novo;
 - a partição informada for a do próprio sistema.
 
 ### Onde ficam as cópias

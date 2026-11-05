@@ -24,6 +24,16 @@ valor_da_config() {
 
 fs_linux() { [[ " $FS_LINUX " == *" $1 "* ]]; }
 
+# Para a receita explicando por que um disco em exFAT, NTFS ou FAT não serve.
+recusar_fs() {
+    local disco=$1 tipo=$2
+    falha "$disco usa $tipo, que não serve para este backup:
+  - não guarda hardlinks, então cada versão ocuparia o espaço de uma cópia inteira da pasta pessoal;
+  - não guarda o dono nem as permissões dos arquivos, e o que voltasse do backup viria errado (a chave do ~/.ssh e os scripts, por exemplo, param de funcionar);
+  - não tem journal, e se corrompe com mais facilidade se o disco for desconectado no meio da cópia.
+O bora não formata discos, porque formatar apaga o que está neles. Para usar este disco: copie o que houver nele para outro lugar, formate em ext4 pelo aplicativo Discos e rode de novo."
+}
+
 # Partições de discos USB ou removíveis, uma por linha: "caminho tipo".
 particoes_externas() {
     lsblk -J -p -o PATH,TYPE,FSTYPE,TRAN,HOTPLUG,RM,MOUNTPOINT 2>/dev/null | python3 -c '
@@ -57,17 +67,17 @@ descobrir_destino() {
         return 0
     fi
     if [ "$alvo" = auto ]; then
-        local linux=() outros=() caminho fs
+        local linux=() outros=() tipos_outros=() caminho fs
         while read -r caminho fs; do
             [ -n "$caminho" ] || continue
-            if fs_linux "$fs"; then linux+=("$caminho"); else outros+=("$caminho ($fs)"); fi
+            if fs_linux "$fs"; then linux+=("$caminho"); else outros+=("$caminho"); tipos_outros+=("$fs"); fi
         done < <(particoes_externas)
         if [ "${#linux[@]}" -eq 1 ]; then
             dev=${linux[0]}
         elif [ "${#linux[@]}" -gt 1 ]; then
             falha "há mais de um disco externo conectado (${linux[*]}); informe qual usar no parâmetro destino"
         elif [ "${#outros[@]}" -gt 0 ]; then
-            falha "o disco externo conectado (${outros[*]}) não usa um sistema de arquivos do Linux. O bora não formata discos: para usar este disco, copie o que houver nele para outro lugar, formate em ext4 (pelo aplicativo Discos) e rode de novo"
+            recusar_fs "o disco externo conectado (${outros[0]})" "${tipos_outros[0]}"
         else
             falha "não encontrei nenhum disco externo conectado; conecte o disco e rode de novo, ou informe a partição no parâmetro destino"
         fi
@@ -81,7 +91,7 @@ descobrir_destino() {
     uuid=$(blkid -c /dev/null -o value -s UUID "$dev" || true)
     tipo=$(blkid -c /dev/null -o value -s TYPE "$dev" || true)
     [ -n "$uuid" ] || falha "a partição $dev não tem sistema de arquivos (ou não tem UUID)"
-    fs_linux "$tipo" || falha "$dev usa $tipo; o backup precisa de um sistema de arquivos do Linux, como ext4, para guardar as versões sem ocupar espaço repetido. O bora não formata discos"
+    fs_linux "$tipo" || recusar_fs "$dev" "$tipo"
     local d
     for d in / /home /boot; do
         if [ "$(findmnt -n -o SOURCE --target "$d" 2>/dev/null | sed 's/\[.*\]$//')" = "$dev" ]; then
