@@ -73,3 +73,5 @@ jobs:
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/rodar.sh
       - name: Cenários do firewall
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/cenarios.sh
+      - name: Cenários do backup da pasta pessoal
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/backup.sh

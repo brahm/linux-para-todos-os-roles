@@ -31,7 +31,7 @@ RECEITAS = {
     "rede/teste-cgnat": ("Teste de CGNAT", "rede", "l-grafite", "Mostra se a sua internet está atrás de CGNAT, e por que isso não importa com a VPN."),
 }
 
-PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall"]
+PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/codecs", "desktop/flatpak", "sistema/backup-pessoal"]
 
 AREAS = {
     "base": "Base",
@@ -78,8 +78,8 @@ ROLES = [
         "nome": "Pronto para estudar e trabalhar",
         "resumo": "O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.",
         "para_quem": ["curiosos", "estudantes"],
-        "hardware": "2 GB de memória e 20 GB livres",
-        "status": "em-construcao",
+        "hardware": "2 GB de memória, 20 GB livres e um disco externo",
+        "status": "rascunho",
         "receitas": [("base/atualizar", ""), ("seguranca/firewall", "perfil desktop"), ("sistema/snapshot", ""),
                      ("desktop/codecs", ""), ("desktop/flatpak", ""), ("sistema/backup-pessoal", "")],
         "faz": [
@@ -94,6 +94,7 @@ ROLES = [
             "Não troca a sua distro nem o seu ambiente gráfico.",
             "Não instala programas que você não pediu, como suíte de escritório ou jogos.",
             "Não manda nada para a nuvem: o backup vai para um disco seu.",
+            "Não formata disco nenhum: o disco externo do backup precisa estar em ext4, e o rolê explica como deixar ele assim.",
             "Não abre nenhuma porta para a internet.",
         ],
         "porques": [
@@ -102,9 +103,9 @@ ROLES = [
             ("Por que firewall num notebook de casa?", "Porque o notebook não fica só em casa. Numa rede de café, de faculdade ou de aeroporto, qualquer pessoa conectada pode tentar falar com as portas que os programas abrem sem avisar."),
             ("Por que Flatpak?", "Os aplicativos do Flathub chegam na versão mais nova sem esperar a próxima versão da distro, e rodam isolados do sistema. Os pacotes da distro continuam lá."),
         ],
-        "pronto_quando": "O bora diz que tudo está aplicado, um vídeo comum toca e o Timeshift mostra o primeiro snapshot.",
+        "pronto_quando": "O bora diz que tudo está aplicado, um vídeo comum toca, o Timeshift mostra o primeiro snapshot e o disco externo tem a primeira cópia da pasta pessoal.",
         "como_desfazer": "O bora desfaz as receitas na ordem contrária e remove só o que ele mesmo instalou.",
-        "perguntas": [],
+        "perguntas": ["Instalar as atualizações de segurança sozinho, todo dia? (o padrão é sim)", "Em que disco externo guardar a cópia da pasta pessoal? (o padrão usa o disco USB conectado)"],
     },
     {
         "id": "maquina-antiga", "num": "02", "icone": "broto", "cor": "l-verde",

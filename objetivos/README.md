@@ -53,7 +53,7 @@ Campos:
 
 | # | Rolê | O que inclui | Status |
 |:-:|---|---|---|
-| 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | planejado |
+| 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | rascunho |
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | planejado |
 | 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | planejado |
 | 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional | planejado |

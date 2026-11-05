@@ -32,3 +32,16 @@ Registro das decisões que definem o projeto, com o porquê de cada uma. Quando 
 | O snapshot usa o Timeshift, com um timer próprio do systemd | O Timeshift é o que as distros da onda 1 já recomendam, e o timer evita depender do cron |
 | O firewall usa o ufw e guarda uma cópia de `/etc/ufw` antes de mudar | Volta exatamente às regras que a pessoa já tinha |
 | Os testes têm três níveis: contêiner, máquina virtual e máquina de verdade | O contêiner testa a cada mudança, mas não tem kernel, disco nem rede reais. Uma receita só é recomendada sem ressalva depois de passar numa máquina virtual |
+
+## 5 de novembro de 2026: rolê "Pronto para estudar e trabalhar"
+
+| Decisão | Por quê |
+|---|---|
+| O prompt de copiloto para colar em chats gratuitos virou o `bora ajuda`, que já saiu no v0 | A proposta consolidada trocou o prompt fixo por uma pergunta montada com o diagnóstico da máquina, a etapa e o erro, que serve para qualquer chat, gratuito ou pago |
+| Os codecs são os plugins do GStreamer (`libav`, `good`, `bad` e `ugly`), sem o `ubuntu-restricted-extras` e sem a `libavcodec-extra` | Os players dos ambientes gráficos usam o GStreamer. O `ubuntu-restricted-extras` para a instalação para pedir que se aceite a licença das fontes da Microsoft, baixadas de fora dos repositórios, e a `libavcodec-extra` só acrescenta codificadores, trocando um pacote que outros programas usam |
+| O Flatpak liga o Flathub para o sistema todo e não remove o Snap | Os aplicativos servem para todas as pessoas do computador, e remover o Snap é uma decisão maior, para uma receita própria |
+| O desfazer do Flatpak não remove o Flathub se houver aplicativos instalados por ele | Remover deixaria esses aplicativos sem atualização |
+| O backup da pasta pessoal usa rsync com hardlinks, numa pasta comum do disco externo | Recuperar um arquivo é abrir a pasta da data e copiar, em qualquer computador com Linux, sem programa especial. As versões não repetem o que não mudou |
+| O backup só aceita disco em ext4, xfs ou btrfs, e o `bora` nunca formata disco | exFAT, NTFS e FAT não guardam dono, permissões nem hardlinks. Formatar apagaria o que está no disco, e isso é decisão da pessoa |
+| O backup roda de hora em hora (copiando se a última cópia tiver mais de 20 horas) e ao conectar o disco | Num notebook, o disco externo quase nunca está conectado na hora marcada |
+| O desfazer do backup nunca apaga as cópias do disco | São os arquivos da pessoa |

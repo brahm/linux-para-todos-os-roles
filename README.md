@@ -12,7 +12,7 @@
 </div>
 
 > [!NOTE]
-> **Versão 0, para testar.** O `bora` já aplica, testa e desfaz três receitas no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13: sistema atualizado, snapshot do sistema e firewall. Elas passaram nos testes automáticos em contêiner, mas ainda não foram testadas numa máquina virtual nem num computador de verdade. Use numa máquina que possa ser formatada sem dor. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
+> **Versão 0, para testar.** O `bora` já leva o computador até o primeiro rolê, "Pronto para estudar e trabalhar", no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. São seis receitas que ele aplica, testa e desfaz: sistema atualizado, firewall, snapshot do sistema, codecs de áudio e vídeo, Flatpak e Flathub e backup da pasta pessoal num disco externo. Elas passaram nos testes automáticos em contêiner, mas ainda não foram testadas numa máquina virtual nem num computador de verdade. Use numa máquina que possa ser formatada sem dor. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
 
 ## O que é
 

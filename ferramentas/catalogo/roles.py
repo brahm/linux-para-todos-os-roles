@@ -90,6 +90,8 @@ def estacoes(r):
 def status_ficha(r):
     prontas = sum(1 for rid, _ in r["receitas"] if rid in PRONTAS)
     total = len(r["receitas"])
+    if prontas == total:
+        return f'<span class="ficha agora">Para testar · {total} de {total} receitas prontas</span>'
     if r["status"] == "em-construcao":
         return f'<span class="ficha agora">Em construção · {prontas} de {total} prontas</span>'
     if prontas:
@@ -123,7 +125,7 @@ def pagina_role(r):
         </div>
         <figure class="palco" style="margin:0" data-anima>
 {trilha(r)}
-          <figcaption>Cada parada é uma receita, aplicada nesta ordem. As tracejadas ainda não existem.</figcaption>
+          <figcaption>Cada parada é uma receita, aplicada nesta ordem.{"" if len(prontas) == len(r["receitas"]) else " As tracejadas ainda não existem."}</figcaption>
         </figure>
       </div>
     </div>''']
@@ -131,6 +133,9 @@ def pagina_role(r):
     if r["status"] == "planejado":
         aviso = ("Este rolê ainda está no papel. As receitas tracejadas não existem, e os detalhes podem mudar."
                  + (f" As receitas prontas ({', '.join(RECEITAS[x][0] for x in prontas)}) já funcionam hoje, como receitas avulsas no menu do <code>bora</code>." if prontas else ""))
+    elif len(prontas) == len(r["receitas"]):
+        aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
+                 "Elas passaram nos testes automáticos em contêiner, mas ainda não numa máquina virtual nem num computador de verdade. Use numa máquina que possa ser formatada sem dor.")
     else:
         aviso = (f"Faltam {len(r['receitas']) - len(prontas)} receitas para este rolê aparecer completo no menu. "
                  f"As {len(prontas)} prontas já funcionam hoje, como receitas avulsas no menu do <code>bora</code>.")
@@ -161,26 +166,31 @@ def pagina_role(r):
 
     if rid == "pronto-para-estudar":
         corpo.append(f'''    <section class="largura" aria-label="O menu de verdade">
-{cabeca("No terminal", "O menu, hoje", "Enquanto faltam receitas, o rolê aparece como em construção, e as receitas prontas ficam em “Receitas avulsas”. Esta é a saída de verdade do bora 0.1.")}
+{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz as duas perguntas que precisa e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora, encurtada nas descrições.")}
       <figure style="margin:0">
 {janela("sudo bora", [
             ("cmd", P + '<span class="c">sudo bora</span>'),
-            ("", '<span class="c">bora 0.1.0 · Linux para todos os rolês</span>'),
+            ("", '<span class="c">bora 0.2.0 · Linux para todos os rolês</span>'),
             ("", '<span class="d">Ubuntu 26.04.1 LTS, família ubuntu, 8 GB de RAM, 120 GB livres</span>'),
             ("", ""),
             ("", 'O que você quer fazer com este computador?'),
-            ("", '   1. Pronto para estudar e trabalhar  <span class="d">(em construção: faltam as receitas desktop/codecs, desktop/flatpak, sistema/backup-pessoal)</span>'),
+            ("", '   1. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</span>'),
             ("", '   2. Receitas avulsas  <span class="d">escolher uma ou mais receitas do catálogo</span>'),
             ("", '   3. Ver o diagnóstico completo'),
             ("", '   4. Desfazer a última aplicação'),
             ("", '   5. Montar uma pergunta para a IA  <span class="d">bora ajuda</span>'),
             ("", '   6. Sair'),
-            ("cmd", 'Número: <span class="c">2</span>'),
-            ("", 'Quais receitas?'),
-            ("", '   1. Sistema atualizado'),
-            ("", '   2. Firewall'),
-            ("", '   3. Snapshot do sistema'),
-            ("cmd", 'Números separados por espaço (Enter para voltar): <span class="c">1 2 3</span>'),
+            ("cmd", 'Número: <span class="c">1</span>'),
+            ("", 'Sistema atualizado: Instalar as atualizações de segurança sozinho, todo dia? [S/n] <span class="c">s</span>'),
+            ("", 'Backup da pasta pessoal: Em que disco externo guardar a cópia? "auto" usa o disco USB conectado agora; ou informe a partição, como /dev/sdb1. [auto]: <span class="c">auto</span>'),
+            ("", ""),
+            ("", 'Plano: pronto-para-estudar'),
+            ("", '  1. Sistema atualizado'),
+            ("", '  2. Firewall · risco médio  <span class="d">perfil=desktop</span>'),
+            ("", '  3. Snapshot do sistema · risco médio'),
+            ("", '  4. Codecs de áudio e vídeo'),
+            ("", '  5. Flatpak e Flathub'),
+            ("", '  6. Backup da pasta pessoal · risco médio  <span class="d">destino=auto, manter=7</span>'),
             ("", ""),
             ("", 'O que fazer com o plano?'),
             ("", '   1. Aplicar agora  <span class="d">pede a senha de administrador</span>'),
@@ -188,7 +198,7 @@ def pagina_role(r):
             ("", '   3. Salvar para depois  <span class="d">para revisar, versionar ou aplicar em outra máquina</span>'),
             ("", '   4. Voltar'),
             ("", 'Número [1]: <span class="cursor"></span>'),
-        ], "Terminal mostrando o menu do bora: o rolê Pronto para estudar e trabalhar aparece em construção, e as três receitas prontas são escolhidas em Receitas avulsas.")}
+        ], "Terminal mostrando o menu do bora: o rolê Pronto para estudar e trabalhar é escolhido, o bora faz duas perguntas e mostra o plano com as seis receitas.")}
       </figure>
     </section>''')
 
