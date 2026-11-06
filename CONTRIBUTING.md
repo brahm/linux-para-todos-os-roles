@@ -56,3 +56,7 @@ Saída do bora diag: ...
 ```
 
 Remova IPs públicos, nomes de usuário, tokens e chaves antes de colar qualquer saída.
+
+## Publicar uma versão
+
+Suba o `version` do `Cargo.toml` (e o `Cargo.lock`, com `cargo check`) no mesmo pull request da mudança. Quando ele entra na `main`, o workflow [`publicar.yml`](.github/workflows/publicar.yml) vê que a versão ainda não tem tag, compila os binários, cria a tag `vX.Y.Z` e a página da versão com o `SHA256SUMS`. Ninguém precisa rodar `git tag` na própria máquina. Para publicar de novo à mão, use Actions, Publicar, Run workflow na `main`. O projeto segue em 0.x até o Brahm decidir que chegou a hora da 1.0.0.
