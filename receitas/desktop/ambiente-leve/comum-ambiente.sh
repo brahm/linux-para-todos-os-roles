@@ -31,7 +31,26 @@ pacotes_do_ambiente() {
     # O servidor gráfico: os desktops novos usam Wayland e podem não ter o Xorg.
     command -v Xorg >/dev/null || pacote_instalado xserver-xorg || echo xserver-xorg
     # Sem o applet, não dá para escolher a rede Wi-Fi fora do GNOME e do KDE.
-    if pacote_instalado network-manager; then echo network-manager-applet; fi
+    # O nome mudou: network-manager-applet nas versões novas, network-manager-gnome no Ubuntu 24.04.
+    if pacote_instalado network-manager; then primeiro_disponivel network-manager-applet network-manager-gnome; fi
+}
+
+# O primeiro pacote da lista que já está instalado ou, senão, que existe nos repositórios.
+primeiro_disponivel() {
+    local p
+    for p in "$@"; do
+        if pacote_instalado "$p"; then
+            echo "$p"
+            return 0
+        fi
+    done
+    for p in "$@"; do
+        if [ -n "$(apt-cache policy "$p" 2>/dev/null | awk '/Candidate:/ && $2 != "(none)" {print $2}')" ]; then
+            echo "$p"
+            return 0
+        fi
+    done
+    echo "$1"
 }
 
 programa_da_sessao() {

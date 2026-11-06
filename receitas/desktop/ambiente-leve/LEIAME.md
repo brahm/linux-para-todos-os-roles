@@ -16,7 +16,7 @@ O ambiente novo fica ao lado do antigo para você testar sem perder nada: os seu
 
 - Com `ambiente: xfce` (o padrão), instala `xfce4`, `xfce4-terminal`, `xfce4-notifyd`, `xfce4-power-manager`, `xfce4-screensaver`, `mate-polkit` e `tango-icon-theme`.
 - Com `ambiente: lxqt`, instala `lxqt-core`, `qterminal`, `openbox`, `lxqt-powermanagement`, `pavucontrol-qt` e `xscreensaver`.
-- Nos dois, instala o `xserver-xorg` se o computador ainda não tiver o Xorg (os desktops novos usam Wayland e podem vir sem ele) e, com o NetworkManager, o `network-manager-applet`, para escolher a rede Wi-Fi.
+- Nos dois, instala o `xserver-xorg` se o computador ainda não tiver o Xorg (os desktops novos usam Wayland e podem vir sem ele) e, com o NetworkManager, o `network-manager-applet` (`network-manager-gnome` no Ubuntu 24.04), para escolher a rede Wi-Fi.
 - Instala sem os pacotes recomendados (`--no-install-recommends`). Assim não vem junto outra tela de login, que mudaria o jeito de entrar no computador, nem jogos e programas que você não pediu.
 - Com `entrar_no_leve: sim`, grava `Session` e `XSession` em `/var/lib/AccountsService/users/<pessoa>`, para cada pessoa do computador. É daí que o GDM e o LightDM tiram a sessão que abre por padrão. O SDDM, do KDE, guarda a última sessão escolhida por conta própria: nele, escolha o ambiente uma vez na tela de login.
 
