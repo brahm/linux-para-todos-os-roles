@@ -223,6 +223,27 @@ pub fn ultima_desfazivel() -> Option<Execucao> {
         .find(|e| !["desfeita", "sem-mudancas"].contains(&e.dados.situacao.as_str()))
 }
 
+/// A pessoa que chamou o bora: quem rodou o sudo, ou o próprio usuário, se
+/// não for root. Vazio quando o bora foi aberto direto como root.
+fn pessoa() -> String {
+    let valida = |v: &str| !v.is_empty() && v != "root" && !v.contains(['/', ':', '\n']);
+    if let Ok(v) = std::env::var("SUDO_USER")
+        && valida(&v)
+    {
+        return v;
+    }
+    if !e_root() {
+        for var in ["USER", "LOGNAME"] {
+            if let Ok(v) = std::env::var(var)
+                && valida(&v)
+            {
+                return v;
+            }
+        }
+    }
+    String::new()
+}
+
 fn ambiente(
     params: &[(String, Valor)],
     familia: &str,
@@ -256,6 +277,7 @@ fn ambiente(
         ),
         ("BORA_ESTADO".into(), estado.display().to_string()),
         ("BORA_LIB".into(), lib.display().to_string()),
+        ("BORA_PESSOA".into(), pessoa()),
     ]);
     for (nome, valor) in params {
         env.push((

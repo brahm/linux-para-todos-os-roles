@@ -1,0 +1,36 @@
+id: containers/podman
+nome: Contêineres com Podman
+descricao: Instala o Podman, que roda contêineres na sua conta, sem permissão de administrador, e acha as imagens do Docker Hub pelo nome curto.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai rodar os contêineres. "auto" é quem rodou o bora com sudo.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

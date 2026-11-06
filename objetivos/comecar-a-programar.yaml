@@ -1,0 +1,28 @@
+id: comecar-a-programar
+nome: Começar a programar
+descricao: Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.
+para_quem: [estudantes, entusiastas]
+status: rascunho
+hardware_minimo:
+  ram_gb: 4
+  disco_livre_gb: 20
+familias: [ubuntu, debian]
+perguntas:
+  - id: perfil
+    texto: Por onde você quer começar?
+    opcoes: [python, web]
+    rotulos:
+      python: Python, para dados, automação e ciência.
+      web: Web, com JavaScript e Node.js.
+    padrao: python
+receitas:
+  - id: base/atualizar
+  - id: dev/git
+  - id: dev/compilacao
+  - id: dev/python
+    quando: {perfil: python}
+  - id: dev/node
+    quando: {perfil: web}
+  - id: containers/podman
+pronto_quando: Um projeto de exemplo é criado e versionado no Git, roda num ambiente virtual do Python ou no Node.js, e "podman run --rm hello-world" mostra a mensagem do contêiner de teste.
+como_desfazer: O bora remove o que instalou e volta a configuração do Git ao que era. Os seus projetos e a chave SSH ficam onde estão.

@@ -44,10 +44,31 @@ Campos:
 | `status` | `planejado` (só a ideia), `rascunho` (receitas escritas, sem teste) ou `testado` |
 | `hardware_minimo` | O `bora diag` esconde o rolê se a máquina não atender |
 | `familias` | Famílias de distro em que o rolê funciona (ver [`familias/`](../familias/README.md)) |
-| `perguntas` | O que o `bora` pergunta antes de montar o plano; as respostas entram nos parâmetros como `{id}` |
-| `receitas` | As receitas aplicadas, em ordem, com seus parâmetros |
+| `perguntas` | O que o `bora` pergunta antes de montar o plano; as respostas entram nos parâmetros como `{id}`. Com `opcoes` (e, se quiser, `rotulos`), a pergunta vira um menu, e a resposta precisa ser uma das opções |
+| `receitas` | As receitas aplicadas, em ordem, com seus parâmetros. Com `quando: {pergunta: resposta}`, a receita só entra no plano quando a resposta for aquela |
 | `pronto_quando` | Um teste que qualquer pessoa consegue fazer para saber que deu certo |
 | `como_desfazer` | O que o `bora desfazer` faz, em uma frase |
+
+Um rolê com perfis, como o "Começar a programar", faz uma pergunta com opções e usa `quando` nas receitas que dependem dela:
+
+```yaml
+perguntas:
+  - id: perfil
+    texto: Por onde você quer começar?
+    opcoes: [python, web]
+    rotulos:
+      python: Python, para dados, automação e ciência.
+      web: Web, com JavaScript e Node.js.
+    padrao: python
+receitas:
+  - id: dev/git
+  - id: dev/python
+    quando: {perfil: python}
+  - id: dev/node
+    quando: {perfil: web}
+```
+
+Na linha de comando, a resposta vai com `-r`: `bora plano comecar-a-programar -r perfil=web`.
 
 ## Rolês da primeira versão
 
@@ -55,7 +76,7 @@ Campos:
 |:-:|---|---|---|
 | 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | rascunho |
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | rascunho |
-| 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | planejado |
+| 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | rascunho |
 | 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional | planejado |
 | 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |

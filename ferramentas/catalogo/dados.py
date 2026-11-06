@@ -18,8 +18,8 @@ RECEITAS = {
     "dev/git": ("Git", "git", "l-vermelho", "Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab."),
     "dev/compilacao": ("Ferramentas de compilação", "ferramenta", "l-grafite", "Compilador, make e o que mais os pacotes de programação pedem."),
     "dev/python": ("Python com ambientes virtuais", "python", "l-azul", "Python para projetos, sem mexer no Python que a distro usa."),
-    "dev/node": ("Node.js", "node", "l-verde", "A versão LTS do Node.js, com npm, sem precisar de sudo."),
-    "containers/podman": ("Contêineres com Podman", "conteiner", "l-roxo", "Contêineres que rodam sem permissão de administrador."),
+    "dev/node": ("Node.js", "node", "l-verde", "O Node.js LTS oficial, com o npm instalando sem sudo."),
+    "containers/podman": ("Contêineres com Podman", "conteiner", "l-roxo", "Contêineres que rodam na sua conta, sem permissão de administrador."),
     "ia/agentes": ("Agentes de IA no terminal", "robo", "l-roxo", "Claude Code, Codex, Copilot CLI, OpenCode e outros, pelos instaladores oficiais."),
     "ia/chaves-de-api": ("Chaves de API guardadas", "chave", "l-amarelo", "Um lugar para as chaves, com permissão só do dono."),
     "seguranca/segredos": ("Verificação de segredos", "lupa", "l-vermelho", "O gitleaks confere cada commit, para nenhuma chave ir parar no GitHub."),
@@ -32,7 +32,8 @@ RECEITAS = {
 }
 
 PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/codecs", "desktop/flatpak", "sistema/backup-pessoal",
-           "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos"]
+           "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos",
+           "dev/git", "dev/compilacao", "dev/python", "dev/node", "containers/podman"]
 
 AREAS = {
     "base": "Base",
@@ -146,16 +147,16 @@ ROLES = [
         "nome": "Começar a programar",
         "resumo": "Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.",
         "para_quem": ["estudantes", "entusiastas"],
-        "hardware": "4 GB de memória e 30 GB livres",
-        "status": "planejado",
+        "hardware": "4 GB de memória e 20 GB livres",
+        "status": "rascunho",
         "receitas": [("base/atualizar", ""), ("dev/git", ""), ("dev/compilacao", ""), ("dev/python", "perfil Python"),
                      ("dev/node", "perfil web"), ("containers/podman", "")],
         "faz": [
             "<strong>Configura o Git</strong> com seu nome e seu e-mail, e cria uma chave SSH para o GitHub ou o GitLab.",
             "<strong>Instala as ferramentas de compilação</strong> que muitos pacotes de Python e de Node.js pedem na instalação.",
             "<strong>Prepara o Python para projetos</strong>, com ambientes virtuais, sem mexer no Python que a distro usa.",
-            "<strong>Instala o Node.js LTS</strong> no seu usuário, para o npm funcionar sem sudo.",
-            "<strong>Liga os contêineres com Podman</strong>, que rodam sem permissão de administrador.",
+            "<strong>Instala o Node.js LTS oficial</strong>, conferido pela soma SHA256, com o <code>npm install -g</code> funcionando sem sudo.",
+            "<strong>Liga os contêineres com Podman</strong>, que rodam na sua conta, sem permissão de administrador, e acham as imagens do Docker Hub pelo nome curto.",
         ],
         "nao_faz": [
             "Não escolhe um editor por você. Use o que quiser; o rolê Vibecodar pergunta qual instalar.",
@@ -166,11 +167,12 @@ ROLES = [
         "porques": [
             ("Por que ambientes virtuais?", "A distro usa o próprio Python para funcionar. Instalar pacotes nele pode quebrar programas do sistema, e por isso as distros novas já bloqueiam o pip global. Cada projeto ganha o seu ambiente."),
             ("Por que Podman, e não Docker?", "O Podman roda contêineres no seu usuário, sem um serviço como root por trás, e aceita os mesmos comandos do Docker na maioria dos casos."),
-            ("Por que dois perfis?", "Quem vai para web precisa de Node.js; quem vai para dados e automação precisa de Python. Instalar só o que você vai usar deixa o computador mais simples de entender."),
+            ("Por que dois perfis?", "Quem vai para web precisa de Node.js; quem vai para dados e automação precisa de Python. Instalar só o que você vai usar deixa o computador mais simples de entender. Para ter os dois, aplique o rolê de novo com o outro perfil."),
+            ("Por que o Node.js de nodejs.org, e não o da distro?", "No Ubuntu 24.04 e nas derivadas, o Node.js da distro é a versão 18, que já saiu de suporte e não roda as ferramentas de hoje, como o Vite. O bora instala a versão LTS que o projeto testou, igual em todas as distros, e só se o arquivo baixado bater com a soma SHA256 gravada na receita."),
         ],
-        "pronto_quando": "Um projeto de exemplo é criado, versionado no Git, roda em Python ou em Node.js, e um contêiner de teste sobe.",
-        "como_desfazer": "O bora remove o que instalou e volta a configuração do Git. Os seus projetos e a chave SSH ficam onde estão.",
-        "perguntas": ["Qual perfil: web (Node.js) ou Python?", "Que nome e que e-mail vão nos seus commits?"],
+        "pronto_quando": "Um projeto de exemplo é criado e versionado no Git, roda num ambiente virtual do Python ou no Node.js, e <code>podman run --rm hello-world</code> mostra a mensagem do contêiner de teste.",
+        "como_desfazer": "O bora remove o que instalou e volta a configuração do Git ao que era. Os seus projetos e a chave SSH ficam onde estão.",
+        "perguntas": ["Por onde você quer começar: Python ou web, com Node.js? (o padrão é Python)", "Que nome vai nos seus commits? (o padrão mantém o que já estiver no Git, ou usa o nome da sua conta)", "Que e-mail vai nos seus commits? Use o mesmo da sua conta no GitHub ou no GitLab."],
     },
     {
         "id": "vibecodar", "num": "04", "icone": "brilho", "cor": "l-roxo",
