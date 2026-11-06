@@ -1,19 +1,66 @@
-# Publica os binários do bora quando uma tag v* é criada.
+# Publica os binários do bora quando a versão muda.
+#
+# A versão sai do Cargo.toml. Quando um push na main traz uma versão que ainda
+# não tem tag (por exemplo, o merge de um pull request que sobe de 0.4.0 para
+# 0.5.0), este workflow compila, cria a tag vX.Y.Z e a página da versão, tudo
+# aqui no GitHub. Não é preciso rodar git tag na máquina de ninguém.
+#
+# Também dá para publicar à mão em Actions, Publicar, Run workflow, e uma tag
+# v* enviada do jeito antigo continua funcionando.
 name: Publicar
 
 on:
   push:
+    branches: [main]
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  versao:
+    name: Ver se há versão nova
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.ver.outputs.tag }}
+      publicar: ${{ steps.ver.outputs.publicar }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: ver
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          versao=$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml | head -n 1)
+          tag="v$versao"
+          if [ "$GITHUB_REF_TYPE" = tag ] && [ "$GITHUB_REF_NAME" != "$tag" ]; then
+            echo "::error::A tag $GITHUB_REF_NAME não bate com a versão $versao do Cargo.toml."
+            exit 1
+          fi
+          if [ "$GITHUB_REF_TYPE" = branch ] && [ "$GITHUB_REF_NAME" != main ]; then
+            echo "Só a main publica versões. Nada a fazer em $GITHUB_REF_NAME."
+            publicar=false
+          elif gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "A versão $tag já foi publicada. Nada a fazer."
+            publicar=false
+          else
+            echo "A versão $tag ainda não existe e vai ser publicada."
+            publicar=true
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "publicar=$publicar" >> "$GITHUB_OUTPUT"
+
   compilar:
     name: Binário ${{ matrix.arquitetura }}
+    needs: versao
+    if: needs.versao.outputs.publicar == 'true'
     strategy:
       matrix:
         include:
@@ -43,7 +90,7 @@ jobs:
 
   publicar:
     name: Criar a versão
-    needs: compilar
+    needs: [versao, compilar]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -58,9 +105,11 @@ jobs:
       - name: Publicar
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.versao.outputs.tag }}
+        # Se a tag ainda não existe, o gh cria no commit que está sendo publicado.
         run: |
-          gh release create "$GITHUB_REF_NAME" saida/* \
+          gh release create "$TAG" saida/* \
             --repo "$GITHUB_REPOSITORY" \
-            --title "bora $GITHUB_REF_NAME" \
-            --generate-notes \
-            --verify-tag
+            --target "$GITHUB_SHA" \
+            --title "bora $TAG" \
+            --generate-notes
