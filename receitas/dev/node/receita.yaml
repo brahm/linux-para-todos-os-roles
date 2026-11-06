@@ -15,3 +15,22 @@ parametros:
     tipo: texto
     padrao: auto
     descricao: A conta que vai programar, para a pasta ~/.local/bin, onde o npm põe os programas instalados com -g. "auto" é quem rodou o bora com sudo.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
