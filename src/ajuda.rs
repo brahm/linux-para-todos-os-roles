@@ -159,6 +159,15 @@ pub fn montar(d: &Diag, pergunta: Option<&str>) -> String {
             d.sistema.sistema_de_arquivos_raiz.as_deref().unwrap_or("?")
         ),
         format!(
+            "- disco do sistema: {}; zram: {}",
+            match d.hardware.disco_do_sistema.as_deref() {
+                Some("ssd") => "SSD",
+                Some("hdd") => "disco rígido",
+                _ => "não identificado",
+            },
+            d.ja_tem.zram_gb.map(|g| format!("ligado, {g} GB")).unwrap_or_else(|| "desligado".into())
+        ),
+        format!(
             "- vídeo: {}",
             if d.hardware.video.is_empty() { "não identificado".into() } else { d.hardware.video.join(", ") }
         ),

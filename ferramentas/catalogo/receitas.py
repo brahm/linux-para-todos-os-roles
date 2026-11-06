@@ -835,6 +835,384 @@ def pagina_backup():
 
 
 
+# ---------------------------------------------------------------- sistema/zram
+
+ILUSTRA_ZRAM = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iz-t">
+            <title id="iz-t">Duas barras de memória. Sem zram, a memória enche e o que sobra vai para o disco rígido, que é lento. Com zram, as páginas paradas ficam comprimidas na própria memória, ocupando um terço do espaço, e sobra lugar para mais abas.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Sem zram</text><text x="94" y="28" font-size="13" class="t2">a memória enche e vai para o disco</text>
+            <rect x="20" y="42" width="300" height="44" rx="10" class="caixa-svg"/>
+            """ + "".join(f'<rect x="{26 + i * 49}" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:{0.55 + 0.07 * i}"/>' for i in range(6)) + """
+            <path d="M330 64h44" class="traco"/><path d="M366 58l8 6-8 6" class="traco"/>
+            <rect x="384" y="42" width="76" height="44" rx="10" class="vermelho" style="opacity:.85"/>
+            <text x="422" y="69" font-size="12.5" font-weight="600" text-anchor="middle" style="fill:#fff">disco</text>
+            <text x="20" y="108" font-size="13" class="t2">O disco rígido é centenas de vezes mais lento que a memória: tudo trava.</text>
+            <text x="20" y="160" font-size="14" font-weight="600">Com zram</text><text x="96" y="160" font-size="13" class="t2">o que está parado fica comprimido</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="174" width="300" height="44" rx="10" class="caixa-svg"/>
+              """ + "".join(f'<rect x="{26 + i * 49}" y="180" width="43" height="32" rx="6" class="laranja" style="opacity:{0.55 + 0.07 * i}"/>' for i in range(3)) + """
+              """ + "".join(f'<rect x="{173 + i * 17}" y="180" width="13" height="32" rx="4" class="azul"/>' for i in range(3)) + """
+              <text x="290" y="201" font-size="12.5" text-anchor="middle" class="t2">livre</text>
+            </g>
+            <text x="20" y="242" font-size="13" class="t2">As barras azuis são as mesmas páginas, comprimidas com zstd a um terço.</text>
+            <g class="volta">
+              <rect x="20" y="262" width="440" height="66" rx="14" class="caixa-svg"/>
+              <text x="40" y="290" font-size="14" font-weight="600">A swap no disco continua lá, como reserva.</text>
+              <text x="40" y="312" font-size="13" class="t2">O kernel só usa ela quando o zram enche.</text>
+            </g>
+          </svg>"""
+
+
+def pagina_zram():
+    rid = "sistema/zram"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_ZRAM, "Ilustração. A compressão real depende do que está na memória; um terço é o comum com zstd.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Liga uma swap comprimida na memória</strong>, o zram, com até metade da memória e no máximo 8 GB.",
+         "<strong>Comprime com zstd</strong>, que costuma reduzir as páginas a um terço do tamanho.",
+         "<strong>Passa na frente da swap no disco</strong>, com prioridade 100: o disco só é usado quando o zram enche.",
+         "<strong>Ajusta o kernel para o zram</strong>, como o Fedora e o Pop!_OS já fazem.",
+         "<strong>Liga na hora</strong>, sem precisar reiniciar, e a cada boot."],
+        ["Não apaga a swap que já existe no disco.",
+         "Não mexe num zram que já existia, do <code>zram-tools</code>, do <code>zram-config</code> ou de outra configuração: só confere.",
+         "Não reserva memória: o zram começa vazio e só cresce quando a memória aperta.",
+         "Não faz milagre com 1 GB: abaixo de 2 GB, até o ambiente leve aperta."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Se o computador já tem zram configurado por outro programa, a receita diz qual e não mexe em nada. Senão, confere se o <code>systemd-zram-generator</code> está instalado, se os dois arquivos de configuração estão como a receita escreve e se o <code>/dev/zram0</code> está ligado como swap.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere o gerador, os dois arquivos, e que o <code>/dev/zram0</code> aparece em <code>/proc/swaps</code> com prioridade 100 e comprimindo com zstd.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Desliga o zram (o que estava nele volta para a memória), apaga os dois arquivos, volta os ajustes do kernel aos valores de antes e remove o pacote, se foi a receita que o instalou. Se faltar memória para desligar na hora, o zram sai no próximo reinício.</p>"),
+    ])))
+    corpo.append(f"""    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "Montada com as mensagens da receita numa máquina com systemd, encurtada nas linhas do apt. A saída do zramctl é um exemplo, de uma máquina com 4 GB.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[3/6] Memória comprimida (zram)</span>'),
+        ("", '<span class="bar">  │</span> Instalando: systemd-zram-generator'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/systemd/zram-generator.conf'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/sysctl.d/99-bora-zram.conf'),
+        ("", '<span class="bar">  │</span> Ligando o zram.'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> gerador do zram instalado (systemd-zram-generator)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> configuração do zram (/etc/systemd/zram-generator.conf)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> ajustes do kernel para o zram (/etc/sysctl.d/99-bora-zram.conf)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> zram ligado como swap (swapon --show)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o zram comprime com zstd (zramctl)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o kernel usa o zram antes da swap no disco (prioridade 100)'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Memória comprimida (zram): aplicada e testada'),
+        ("cmd", P + '<span class="c">zramctl</span>'),
+        ("", 'NAME       ALGORITHM DISKSIZE  DATA  COMPR TOTAL STREAMS MOUNTPOINT'),
+        ("", '/dev/zram0 zstd           1.9G  612M  187M  196M       2 [SWAP]'),
+    ], "Terminal mostrando o bora aplicar a receita Memória comprimida: instala o gerador do zram, escreve a configuração, liga o zram e confere seis testes. Depois, o zramctl mostra 612 MB de memória guardados em 196 MB.")}
+      </figure>
+    </section>""")
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Por que zram, e não mais swap no disco?", "Num disco rígido, ler e gravar uma página leva milissegundos; comprimir e descomprimir na memória leva microssegundos. É a diferença entre o mouse travar e a máquina seguir respondendo."),
+        ("Por que metade da memória?", "É o tamanho máximo, e não o que o zram ocupa de saída. Com a compressão de um terço, metade da memória em zram guarda páginas que ocupariam 1,5 vez a memória inteira. É o padrão do Debian e perto do que o Fedora usa."),
+        ("O que são os ajustes do kernel?", "Por padrão, o kernel evita trocar, pensando num disco lento. Com o zram, trocar é barato, então <code>vm.swappiness = 180</code> deixa o kernel comprimir cedo, antes de a memória ficar apertada, e <code>vm.page-cluster = 0</code> faz ele ler uma página por vez, em vez de oito."),
+        ("E se a distro já tiver zram?", "O Pop!_OS e algumas outras já ligam zram. A receita encontra a configuração que existe, diz de onde ela vem e não mexe em nada."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("pacote", "systemd-zram-generator", "Instalado se ainda não estiver. Cria o <code>/dev/zram0</code> a cada boot."),
+        ("arquivo", "/etc/systemd/zram-generator.conf", "Tamanho de até 50% da memória (no máximo 8 GB), zstd e prioridade 100."),
+        ("arquivo", "/etc/sysctl.d/99-bora-zram.conf", "<code>vm.swappiness</code>, <code>vm.watermark_boost_factor</code>, <code>vm.watermark_scale_factor</code> e <code>vm.page-cluster</code>."),
+        ("servico", "systemd-zram-setup@zram0.service e dev-zram0.swap", "As unidades que o gerador cria: uma prepara o zram, a outra liga como swap."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "", comandos([
+        ("zramctl", "Mostra o tamanho do zram, quanto ele guarda (DATA) e quanto isso ocupa comprimido (TOTAL)."),
+        ("swapon --show", "Lista as swaps com a prioridade de cada uma: o zram com 100, o disco abaixo."),
+        ("free -h", "A linha Swap soma o zram e a swap no disco."),
+        ("bora diag", "Mostra a memória comprimida ligada, e se o disco do sistema é SSD ou disco rígido."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("zram-generator.conf(5)", "As opções do gerador do systemd", "https://github.com/systemd/zram-generator/blob/main/man/zram-generator.conf.md"),
+        ("Zram", "ArchWiki, com os ajustes do kernel", "https://wiki.archlinux.org/title/Zram"),
+        ("zram", "Documentação do kernel", "https://docs.kernel.org/admin-guide/blockdev/zram.html"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+# ---------------------------------------------------------------- desktop/ambiente-leve
+
+def _janela_svg(x, nome, memoria, cor, barra_y):
+    return f"""<g>
+              <rect x="{x}" y="44" width="210" height="150" rx="12" class="caixa-svg"/>
+              <rect x="{x}" y="{barra_y}" width="210" height="22" rx="0" class="{cor}" style="opacity:.9"/>
+              <rect x="{x + 16}" y="{70 if barra_y > 100 else 84}" width="90" height="56" rx="6" class="fundo" stroke="var(--line)"/>
+              <rect x="{x + 116}" y="{70 if barra_y > 100 else 84}" width="78" height="40" rx="6" class="fundo" stroke="var(--line)"/>
+              <text x="{x + 105}" y="222" font-size="14" font-weight="600" text-anchor="middle">{nome}</text>
+              <text x="{x + 105}" y="242" font-size="13" text-anchor="middle" class="t2">{memoria}</text>
+            </g>"""
+
+
+ILUSTRA_AMBIENTE = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iam-t">
+            <title id="iam-t">Duas áreas de trabalho lado a lado: a de antes, que gasta uns 1,5 GB de memória, e o Xfce, que gasta uns 500 MB. Embaixo, a tela de login mostra as duas opções de sessão, e a pessoa escolhe qual abrir.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Os dois ficam instalados, lado a lado</text>
+            """ + _janela_svg(20, "O ambiente de antes", "uns 1,5 GB de memória", "azul", 44) + """
+            """ + _janela_svg(250, "Xfce ou LXQt", "de 400 a 600 MB", "laranja", 172) + """
+            <g class="volta">
+              <rect x="20" y="262" width="440" height="66" rx="14" class="caixa-svg"/>
+              <text x="40" y="288" font-size="14" font-weight="600">Na tela de login, você escolhe:</text>
+              <rect x="40" y="298" width="120" height="22" rx="11" class="fundo" stroke="var(--line)"/>
+              <text x="100" y="314" font-size="12.5" text-anchor="middle">Ubuntu</text>
+              <rect x="170" y="298" width="120" height="22" rx="11" class="laranja"/>
+              <text x="230" y="314" font-size="12.5" text-anchor="middle" font-weight="600" style="fill:#fff">Xfce Session</text>
+            </g>
+          </svg>"""
+
+
+def pagina_ambiente():
+    rid = "desktop/ambiente-leve"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_AMBIENTE, "Ilustração. O consumo de memória é aproximado e muda com os programas abertos.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Instala o Xfce ou o LXQt</strong>, os ambientes leves mais usados, dos repositórios oficiais.",
+         "<strong>Fica ao lado do ambiente atual</strong>: você escolhe qual abrir na tela de login.",
+         "<strong>Traz o essencial para o dia a dia</strong>: terminal, notificações, bateria, bloqueio de tela, a rede Wi-Fi e a janela que pede a senha de administrador.",
+         "<strong>Pode virar o padrão</strong>, com <code>entrar_no_leve</code>, para cada pessoa do computador."],
+        ["Não remove o ambiente que você já tem, nem os seus programas e configurações.",
+         "Não troca a tela de login: instala sem os pacotes recomendados, que trariam outra.",
+         "Não instala jogos, protetores de tela e programas que você não pediu.",
+         "Não desfaz com você dentro do ambiente leve: pede para sair dessa sessão primeiro."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Confere se cada pacote do ambiente escolhido está instalado e, com <code>entrar_no_leve</code>, se cada pessoa já entra nele por padrão. Se estiver tudo certo, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Instala os pacotes do ambiente com <code>--no-install-recommends</code>.</li><li>Instala o Xorg, se o computador não tiver, e o applet de rede, se ele usar o NetworkManager.</li><li>Com <code>entrar_no_leve</code>, grava a sessão de cada pessoa em <code>/var/lib/AccountsService/users</code>, guardando antes uma cópia.</li><li>Explica como escolher o ambiente na tela de login.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere os pacotes, o arquivo que põe o ambiente na tela de login (<code>/usr/share/xsessions/xfce.desktop</code> ou <code>lxqt.desktop</code>), o programa que abre a sessão e o Xorg e, com <code>entrar_no_leve</code>, a sessão gravada de cada pessoa.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Volta os arquivos do AccountsService ao que eram e remove os pacotes que a receita instalou, com as dependências que vieram junto. Se alguém estiver dentro do ambiente leve, para antes de mudar qualquer coisa.</p>"),
+    ])))
+    corpo.append(f"""    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, com o Xfce e <code>entrar_no_leve: sim</code>, encurtada nas linhas do apt.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[4/6] Ambiente gráfico leve</span>'),
+        ("", '<span class="bar">  │</span> Instalando: xfce4 xfce4-terminal xfce4-notifyd xfce4-power-manager xfce4-screensaver mate-polkit tango-icon-theme network-manager-applet'),
+        ("", '<span class="bar">  │</span> <span class="d">0 upgraded, 265 newly installed, 0 to remove and 0 not upgraded.</span>'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /var/lib/AccountsService/users/ana'),
+        ("", '<span class="bar">  │</span> ana passa a entrar no Xfce por padrão.'),
+        ("", '<span class="bar">  │</span> Pronto. Na próxima vez que você entrar, o Xfce abre direto. O ambiente antigo continua na tela de login.'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> pacote xfce4 instalado'),
+        ("", '<span class="bar">  │</span> <span class="d">…</span>'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o Xfce aparece na tela de login (/usr/share/xsessions/xfce.desktop)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o programa que abre a sessão existe (startxfce4)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> servidor gráfico instalado (Xorg)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> ana entra no Xfce por padrão (/var/lib/AccountsService/users/ana)'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Ambiente gráfico leve: aplicada e testada'),
+    ], "Terminal mostrando o bora aplicar a receita Ambiente gráfico leve: instala o Xfce, faz ele abrir por padrão para a pessoa do computador e confere os testes.")}
+      </figure>
+    </section>""")
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Xfce ou LXQt?", "O Xfce é o mais completo dos leves, com o jeito de sempre: menu, barra de tarefas e ícones na área de trabalho. É o padrão. O LXQt gasta ainda menos, e é a escolha para 2 GB de memória ou menos."),
+        ("Por que ao lado, e não no lugar?", "Para testar sem perder nada. Se não gostar, escolha o antigo na tela de login. Os seus arquivos e programas são os mesmos nos dois."),
+        ("Por que sem os recomendados?", "Junto com o Xfce, o apt recomenda outra tela de login, o LightDM, que trocaria a que você já tem e mudaria o jeito de entrar no computador. Também viriam programas que pesam. A receita escolhe à mão o que faz falta."),
+        ("E o Wayland?", "O Xfce e o LXQt rodam no Xorg, que é o que funciona melhor com placas de vídeo antigas. Se o computador veio só com Wayland, a receita instala o Xorg junto."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("pacote", "xfce4 e companhia, ou lxqt-core e companhia", "O ambiente, o terminal, as notificações, a bateria, o bloqueio de tela e a janela da senha de administrador."),
+        ("pacote", "xserver-xorg e network-manager-applet", "Só se faltarem: o Xorg, e o applet para escolher a rede Wi-Fi."),
+        ("arquivo", "/var/lib/AccountsService/users/&lt;pessoa&gt;", "Só com <code>entrar_no_leve</code>: a sessão que abre por padrão. O GDM e o LightDM leem daqui."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "", comandos([
+        ("ls /usr/share/xsessions", "Lista as sessões que aparecem na tela de login."),
+        ("sudo cat /var/lib/AccountsService/users/$USER", "Mostra a sessão que abre por padrão para você."),
+        ("free -h", "Abra no ambiente antigo e no leve, com os mesmos programas, e compare a memória usada."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("Xfce", "Wiki do Debian", "https://wiki.debian.org/Xfce"),
+        ("LXQt", "Wiki do Debian", "https://wiki.debian.org/LXQt"),
+        ("Documentação do Xfce", "docs.xfce.org", "https://docs.xfce.org/"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+# ---------------------------------------------------------------- desktop/navegador-leve
+
+ILUSTRA_NAVEGADOR = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="in-t">
+            <title id="in-t">Quatro coisas que pesam no Firefox de uma máquina antiga mudam, uma depois da outra: os anúncios passam a ser bloqueados, as abas paradas saem da memória quando ela acaba, a sessão é gravada no disco a cada minuto em vez de a cada 15 segundos, e a telemetria é desligada.</title>
+            <text x="20" y="26" font-size="14" font-weight="600">O mesmo Firefox, com menos peso:</text>
+            """ + "".join(_linha_troca(i, n, a, d) for i, (n, a, d) in enumerate([("anúncios", "carregam", "bloqueados"), ("abas paradas", "na memória", "descarregam"), ("sessão no disco", "a cada 15 s", "a cada 60 s"), ("telemetria", "ligada", "desligada")])) + """<g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <rect x="40" y="254" width="56" height="56" rx="12" class="vermelho"/>
+              <path d="M68 266l14 6v8c0 8-6 13-14 17-8-4-14-9-14-17v-8z" fill="#fff"/>
+              <text x="114" y="276" font-size="14" font-weight="600">uBlock Origin</text>
+              <text x="114" y="298" font-size="13" class="t2">Baixado da loja da Mozilla na primeira vez</text>
+              <text x="114" y="316" font-size="13" class="t2">que o Firefox abrir, e atualizado sozinho.</text>
+            </g>
+          </svg>"""
+
+
+def pagina_navegador():
+    rid = "desktop/navegador-leve"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_NAVEGADOR, "Ilustração. As mudanças valem para o Firefox da distro, inclusive o Snap do Ubuntu.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Instala o uBlock Origin</strong>, o bloqueador de anúncios mais usado, pela loja oficial da Mozilla.",
+         "<strong>Tira da memória as abas paradas</strong> quando ela acaba. Elas recarregam quando você clica.",
+         "<strong>Abre mais rápido</strong>: as abas da última vez só carregam quando você clica nelas.",
+         "<strong>Grava menos no disco</strong>: a sessão é salva a cada minuto, e não a cada 15 segundos.",
+         "<strong>Desliga a telemetria, os estudos e os atalhos patrocinados</strong> da página inicial."],
+        ["Não troca de navegador: os seus favoritos, senhas e extensões continuam lá.",
+         "Não instala o Firefox. Se ele não estiver instalado, as configurações ficam prontas para quando ele for.",
+         "Não trava as preferências: você muda qualquer uma em <code>about:config</code>.",
+         "Não mexe no Firefox do Flatpak, que não lê o arquivo de políticas: a receita avisa se encontrar um.",
+         "Não tira nada de um <code>policies.json</code> que já existia: só acrescenta."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Confere se <code>/etc/firefox/policies/policies.json</code> já tem cada política e preferência da receita, com os mesmos valores. Se tiver, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Se o arquivo de políticas existir e não for um JSON válido, para e explica: o Firefox também não consegue ler.</li><li>Guarda uma cópia do arquivo e junta a ele as políticas da receita, sem tirar nada.</li><li>Avisa se o Firefox não estiver instalado, ou se for o do Flatpak.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere que o arquivo é um JSON válido, que tem todas as políticas e preferências da receita e, com <code>bloquear_anuncios</code>, o uBlock Origin.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Volta o <code>policies.json</code> ao que era, ou apaga, se foi a receita que criou. O uBlock Origin, se já tiver sido instalado, fica como uma extensão comum, que você remove em <code>about:addons</code>.</p>"),
+    ])))
+    corpo.append(f"""    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[5/6] Navegador enxuto</span>'),
+        ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/firefox/policies/policies.json'),
+        ("", '<span class="bar">  │</span> Pronto. Feche e abra o Firefox para valer. O uBlock Origin é baixado da loja de extensões da Mozilla na primeira vez que ele abrir.'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o arquivo de políticas é um JSON que o Firefox lê (/etc/firefox/policies/policies.json)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> telemetria, estudos e atalhos patrocinados desligados'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> abas paradas saem da memória quando ela acaba (browser.tabs.unloadOnLowMemory)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> o uBlock Origin é instalado na próxima vez que o Firefox abrir'),
+        ("", '<span class="bar">  │</span> Para ver no Firefox: abra about:policies e confira a lista de políticas ativas.'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Navegador enxuto: aplicada e testada'),
+    ], "Terminal mostrando o bora aplicar a receita Navegador enxuto: escreve as políticas do Firefox e confere quatro testes, todos ok.")}
+      </figure>
+    </section>""")
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Por que bloquear anúncios?", "Numa página de notícias comum, os anúncios e os rastreadores são boa parte do que é baixado e do processador gasto. Bloqueados, a página carrega mais rápido, gasta menos memória e fica mais segura."),
+        ("Por que o Firefox, e não outro navegador?", "Ele já vem no Ubuntu, no Mint e no Debian, então nada muda para quem usa. E é dos poucos em que o uBlock Origin completo ainda funciona: nos navegadores baseados no Chromium, só a versão limitada."),
+        ("Por que pela loja da Mozilla, e não por um pacote?", "O uBlock Origin precisa de atualizações frequentes para acompanhar os sites. Pela loja oficial da Mozilla, ele se atualiza sozinho, no Firefox do Snap e no do apt. O pacote do Debian demora a chegar e não serve para o Snap."),
+        ("Por que um arquivo de políticas?", "É o jeito oficial de configurar o Firefox para o computador todo, para todas as pessoas, sem mexer no perfil de ninguém. Em <code>about:policies</code>, o próprio Firefox mostra o que está valendo."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("arquivo", "/etc/firefox/policies/policies.json", "Criado, ou completado se já existir. O Firefox lê daqui em qualquer distro, inclusive o Snap do Ubuntu."),
+        ("escudo", "uBlock Origin", "Com <code>bloquear_anuncios</code>, instalado pelo próprio Firefox na primeira vez que ele abrir."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "No Firefox, digite na barra de endereços:", comandos([
+        ("about:policies", "Lista as políticas ativas e mostra se alguma tem erro."),
+        ("about:addons", "Mostra o uBlock Origin, depois da primeira abertura."),
+        ("about:unloads", "Mostra as abas na ordem em que o Firefox descarrega quando a memória acaba."),
+        ("about:processes", "Mostra quanta memória e processador cada aba está usando."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("Políticas do Firefox", "Mozilla, a lista completa", "https://mozilla.github.io/policy-templates/"),
+        ("uBlock Origin", "O projeto, no GitHub", "https://github.com/gorhill/uBlock"),
+        ("Descarregar abas para economizar memória", "Suporte da Mozilla", "https://support.mozilla.org/kb/unload-inactive-tabs-save-system-memory-firefox"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+# ---------------------------------------------------------------- sistema/servicos-enxutos
+
+ILUSTRA_SERVICOS = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="is-t">
+            <title id="is-t">Três serviços que ligavam no boot sem ter o que fazer são desligados, um depois do outro: o Bluetooth numa máquina sem Bluetooth, o ModemManager sem modem de celular, e a espera pela rede no boot.</title>
+            <text x="20" y="26" font-size="14" font-weight="600">Só sai o que a máquina não tem:</text>
+            """ + "".join(_linha_troca(i, n, a, d) for i, (n, a, d) in enumerate([("bluetooth", "ligado", "desligado"), ("ModemManager", "ligado", "desligado"), ("wait-online", "boot espera", "não espera")])) + """<g class="volta">
+              <rect x="20" y="190" width="440" height="138" rx="14" class="caixa-svg"/>
+              <text x="40" y="220" font-size="14" font-weight="600">Antes de desligar, a receita confere:</text>
+              <text x="40" y="246" font-size="13" class="t2">• nenhuma placa em /sys/class/bluetooth</text>
+              <text x="40" y="270" font-size="13" class="t2">• nenhum modem 3G, 4G ou 5G</text>
+              <text x="40" y="294" font-size="13" class="t2">• nenhuma pasta da rede no /etc/fstab</text>
+              <text x="40" y="318" font-size="13" class="t2">Impressão, som e atualizações não são mexidos.</text>
+            </g>
+          </svg>"""
+
+
+def pagina_servicos():
+    rid = "sistema/servicos-enxutos"
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ILUSTRA_SERVICOS, "Ilustração. Numa máquina com Bluetooth ou modem, esses serviços continuam ligados.")]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(
+        ["<strong>Desliga o Bluetooth</strong> se a máquina não tiver placa de Bluetooth.",
+         "<strong>Desliga o ModemManager</strong> se ela não tiver modem de celular.",
+         "<strong>Faz o boot parar de esperar a rede</strong>, se nada no <code>/etc/fstab</code> precisar dela.",
+         "<strong>Confere antes de cada um</strong>: só sai o que a máquina comprovadamente não usa."],
+        ["Não mexe na impressão, no som, nas atualizações automáticas nem na busca de arquivos.",
+         "Não remove nenhum pacote: os serviços continuam instalados.",
+         "Não usa <code>mask</code>: um <code>systemctl enable --now</code> liga qualquer um de volta.",
+         "Não liga de novo sozinho se você conectar um adaptador Bluetooth depois: para isso, desfaça ou ligue à mão."])))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?",
+         "<p>Monta a lista do que esta máquina não usa (Bluetooth sem placa, ModemManager sem modem, espera da rede sem pastas da rede) e confere se algum desses serviços está habilitado. Se nenhum estiver, pula a receita.</p>"),
+        ("aplicar", "", "Aplicar", "faz a mudança",
+         "<ul><li>Roda <code>systemctl disable --now</code> em cada serviço da lista que estiver habilitado.</li><li>Anota cada um, para o desfazer ligar exatamente esses de volta.</li></ul>"),
+        ("testar", "verde", "Testar", "funcionou?",
+         "<p>Confere, com <code>systemctl is-enabled</code> e <code>systemctl is-active</code>, que nenhum serviço da lista liga no boot nem está rodando.</p>"),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir",
+         "<p>Liga de novo, com <code>systemctl enable --now</code>, os serviços que a receita desligou, e só eles.</p>"),
+    ])))
+    corpo.append(f"""    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, num computador sem Bluetooth e sem modem.")}
+      <figure style="margin:0">
+{janela("bora aplicar", [
+        ("", '<span class="c">[6/6] Serviços enxutos</span>'),
+        ("", '<span class="bar">  │</span> Desligado: bluetooth.service (este computador não tem Bluetooth).'),
+        ("", '<span class="bar">  │</span> Desligado: ModemManager.service (este computador não tem modem de celular).'),
+        ("", '<span class="bar">  │</span> Desligado: NetworkManager-wait-online.service (o boot não precisa esperar a rede conectar).'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> bluetooth.service não liga no boot (este computador não tem Bluetooth)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> ModemManager.service não liga no boot (este computador não tem modem de celular)'),
+        ("", '<span class="bar">  │</span> <span class="v">ok:</span> NetworkManager-wait-online.service não liga no boot (o boot não precisa esperar a rede conectar)'),
+        ("", '<span class="bar">  │</span> Tudo conferido.'),
+        ("", '<span class="v">✓</span> Serviços enxutos: aplicada e testada'),
+    ], "Terminal mostrando o bora aplicar a receita Serviços enxutos: desliga o Bluetooth, o ModemManager e a espera da rede no boot, e confere que nenhum dos três liga mais.")}
+      </figure>
+    </section>""")
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques([
+        ("Faz diferença mesmo?", "Numa máquina nova, quase nada. Numa de 2 GB com disco rígido, cada serviço que não sobe é um programa a menos para ler do disco no boot e um pouco menos de memória ocupada. A espera da rede é a que mais se nota: com Wi-Fi, ela pode segurar o boot por vários segundos."),
+        ("Por que só esses três?", "São os que dá para saber, de fora, que a máquina não usa: não há placa, não há modem, não há pasta da rede. Impressão, som e busca de arquivos dependem do que você faz, e desligar errado quebraria algo sem aviso."),
+        ("Por que disable, e não mask?", "Com <code>mask</code>, o serviço não liga nem se alguém pedir, e isso confunde quem tenta usar depois. Com <code>disable</code>, ele só não sobe no boot, e volta com um comando."),
+    ])))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
+        ("servico", "bluetooth.service", "Desabilitado só se não houver nenhuma placa em <code>/sys/class/bluetooth</code>."),
+        ("servico", "ModemManager.service", "Desabilitado só se não houver modem de celular."),
+        ("servico", "NetworkManager-wait-online.service", "Desabilitado se o <code>/etc/fstab</code> não montar pastas da rede e <code>esperar_rede</code> for não."),
+    ])))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "", comandos([
+        ("systemctl list-unit-files --state=enabled", "Lista o que liga no boot."),
+        ("systemd-analyze blame", "Mostra quanto tempo cada serviço levou no último boot."),
+        ("systemd-analyze", "Mostra quanto o boot levou, no total."),
+        ("sudo systemctl enable --now bluetooth", "Liga o Bluetooth de volta, se um dia você conectar um adaptador."),
+    ])))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
+        ("systemctl(1)", "Manual do systemd", "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"),
+        ("Serviços que esperam a rede", "systemd.io", "https://systemd.io/NETWORK_ONLINE/"),
+        ("Melhorar o boot", "ArchWiki", "https://wiki.archlinux.org/title/Improving_performance/Boot_process"),
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
+    ])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
 PAGINAS = {
     "base/atualizar": pagina_atualizar,
     "sistema/snapshot": pagina_snapshot,
@@ -842,4 +1220,8 @@ PAGINAS = {
     "desktop/codecs": pagina_codecs,
     "desktop/flatpak": pagina_flatpak,
     "sistema/backup-pessoal": pagina_backup,
+    "sistema/zram": pagina_zram,
+    "desktop/ambiente-leve": pagina_ambiente,
+    "desktop/navegador-leve": pagina_navegador,
+    "sistema/servicos-enxutos": pagina_servicos,
 }

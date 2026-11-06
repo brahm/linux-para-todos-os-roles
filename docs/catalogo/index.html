@@ -65,8 +65,8 @@
           <p class="lema">Um <strong>rolê</strong> é o que você quer fazer com o computador. Ele é feito de <strong>receitas</strong>: mudanças pequenas que o <code>bora</code> sabe verificar, aplicar, testar e desfazer.</p>
           <div class="fichas">
             <span class="ficha">7 rolês na primeira versão</span>
-            <span class="ficha feito">6 receitas prontas</span>
-            <span class="ficha planejado">18 planejadas</span>
+            <span class="ficha feito">10 receitas prontas</span>
+            <span class="ficha planejado">14 planejadas</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#roles">Ver os rolês</a>
@@ -120,7 +120,7 @@
           <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
           <h3>Dar vida nova a uma máquina antiga</h3>
           <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
-          <div class="rodape"><span class="num">02</span><span class="ficha planejado">Planejado · 2 de 6 prontas</span></div>
+          <div class="rodape"><span class="num">02</span><span class="ficha agora">Para testar · 6 de 6 receitas prontas</span></div>
         </a>
         <a class="cartao role revelar" href="roles/comecar-a-programar.html">
           <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
@@ -180,21 +180,21 @@
             <span><strong>Backup da pasta pessoal</strong><span class="d">Uma cópia dos seus arquivos num disco externo, todo dia. <code>sistema/backup-pessoal</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/sistema-servicos-enxutos.html">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg></span>
+            <span><strong>Serviços enxutos</strong><span class="d">Desliga o que a máquina não usa, como Bluetooth sem placa de Bluetooth. <code>sistema/servicos-enxutos</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           <li><a class="cartao estacao revelar" href="receitas/sistema-snapshot.html">
             <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7l1.5-3h4l1.5 3"/><circle cx="12" cy="13.5" r="3.6"/></svg></span>
             <span><strong>Snapshot do sistema</strong><span class="d">Fotos diárias e semanais do sistema, para voltar no tempo se algo quebrar. <code>sistema/snapshot</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
-          <li><div class="cartao estacao planejada">
-            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg></span>
-            <span><strong>Serviços desnecessários desligados</strong><span class="d">Desliga o que a máquina não usa, como Bluetooth sem placa de Bluetooth. Entra em: Dar vida nova a uma máquina antiga.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
-          <li><div class="cartao estacao planejada">
+          <li><a class="cartao estacao revelar" href="receitas/sistema-zram.html">
             <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2.5V5M15 2.5V5M9 19v2.5M15 19v2.5M2.5 9H5M2.5 15H5M19 9h2.5M19 15h2.5"/></svg></span>
-            <span><strong>Memória comprimida</strong><span class="d">Usa zram para caber mais programas abertos em pouca memória. Entra em: Dar vida nova a uma máquina antiga.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
+            <span><strong>Memória comprimida</strong><span class="d">Usa zram para caber mais programas abertos em pouca memória. <code>sistema/zram</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           </ol>
         </div>
         <div class="area">
@@ -215,6 +215,11 @@
         <div class="area">
           <h3>Desktop <code>desktop/</code></h3>
           <ol class="estacoes">
+          <li><a class="cartao estacao revelar" href="receitas/desktop-ambiente-leve.html">
+            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18M6 6.3h.01M8.5 6.3h.01"/></svg></span>
+            <span><strong>Ambiente leve</strong><span class="d">Um ambiente gráfico leve ao lado do atual, escolhido na tela de login. <code>desktop/ambiente-leve</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           <li><a class="cartao estacao revelar" href="receitas/desktop-codecs.html">
             <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/></svg></span>
             <span><strong>Codecs de áudio e vídeo</strong><span class="d">Para tocar MP3, MP4 e os vídeos que vêm do celular. <code>desktop/codecs</code></span></span>
@@ -225,16 +230,11 @@
             <span><strong>Flatpak e Flathub</strong><span class="d">A loja de aplicativos que funciona igual em qualquer distro. <code>desktop/flatpak</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
-          <li><div class="cartao estacao planejada">
-            <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18M6 6.3h.01M8.5 6.3h.01"/></svg></span>
-            <span><strong>Ambiente leve</strong><span class="d">Um ambiente gráfico leve ao lado do atual, escolhido na tela de login. Entra em: Dar vida nova a uma máquina antiga.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
-          <li><div class="cartao estacao planejada">
+          <li><a class="cartao estacao revelar" href="receitas/desktop-navegador-leve.html">
             <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5S14.5 17.9 12 20.5C9.5 17.9 8.4 15.1 8.4 12S9.5 6.1 12 3.5z"/></svg></span>
-            <span><strong>Navegador enxuto</strong><span class="d">Um navegador que gasta menos memória, com bloqueio de anúncios. Entra em: Dar vida nova a uma máquina antiga.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
+            <span><strong>Navegador enxuto</strong><span class="d">O Firefox com bloqueio de anúncios e sem o que pesa à toa. <code>desktop/navegador-leve</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           </ol>
         </div>
         <div class="area">

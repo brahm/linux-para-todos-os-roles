@@ -1,0 +1,36 @@
+id: sistema/zram
+nome: Memória comprimida (zram)
+descricao: Liga o zram, uma área de troca comprimida na própria memória, para caber mais abas e programas antes de a máquina engasgar.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: nao-se-aplica
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada
+parametros:
+  porcentagem:
+    tipo: inteiro
+    padrao: 50
+    descricao: Até quanto da memória o zram pode ocupar, em porcentagem (de 10 a 100). O limite é sempre de 8 GB.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

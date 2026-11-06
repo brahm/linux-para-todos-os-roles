@@ -1,0 +1,44 @@
+id: desktop/ambiente-leve
+nome: Ambiente gráfico leve
+descricao: Instala o Xfce ou o LXQt ao lado do ambiente que você já tem, para escolher na tela de login.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada
+parametros:
+  ambiente:
+    tipo: escolha
+    opcoes: [xfce, lxqt]
+    rotulos:
+      xfce: Xfce. Leve, completo e com cara de sempre; o mais fácil para quem vem do Windows.
+      lxqt: LXQt. Ainda mais leve, para máquinas com 2 GB de memória ou menos.
+    padrao: xfce
+    pergunta: Qual ambiente leve você quer?
+  entrar_no_leve:
+    tipo: booleano
+    padrao: false
+    pergunta: Passar a entrar no ambiente leve por padrão? Com não, ele só aparece como opção na tela de login.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

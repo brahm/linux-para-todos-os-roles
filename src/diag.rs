@@ -255,6 +255,8 @@ pub struct Hardware {
     pub processador: Processador,
     pub ram_gb: Option<f64>,
     pub disco_livre_gb: Option<f64>,
+    /// "ssd" ou "hdd", pelo disco onde está a raiz.
+    pub disco_do_sistema: Option<String>,
     pub video: Vec<String>,
 }
 
@@ -267,6 +269,8 @@ pub struct Rede {
 pub struct JaTem {
     pub snapshot: Option<String>,
     pub firewall: Option<String>,
+    /// Tamanho total das swaps em zram, em GB.
+    pub zram_gb: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -313,6 +317,61 @@ fn sistema_de_arquivos_raiz() -> Option<String> {
             (p.len() >= 3 && p[1] == "/").then(|| p[2].to_string())
         })
         .next_back()
+}
+
+/// O dispositivo de bloco por trás da raiz, como "sda2" ou "dm-0".
+fn dispositivo_da_raiz() -> Option<String> {
+    let texto = fs::read_to_string("/proc/self/mountinfo").ok()?;
+    let linha = texto
+        .lines()
+        .rfind(|l| l.split_whitespace().nth(4) == Some("/"))?;
+    // O major:minor é o terceiro campo; /sys/dev/block/<major:minor> leva ao disco.
+    let num = linha.split_whitespace().nth(2)?;
+    let alvo = fs::read_link(format!("/sys/dev/block/{num}")).ok()?;
+    Some(alvo.file_name()?.to_string_lossy().to_string())
+}
+
+/// Se um dispositivo de bloco gira (disco rígido), seguindo partições e
+/// camadas como LVM e criptografia até o disco de verdade.
+fn gira(nome: &str, fundo: u8) -> Option<bool> {
+    if fundo > 4 {
+        return None;
+    }
+    let base = Path::new("/sys/class/block").join(nome);
+    let escravos: Vec<String> = fs::read_dir(base.join("slaves"))
+        .map(|d| {
+            d.filter_map(|e| e.ok())
+                .map(|e| e.file_name().to_string_lossy().to_string())
+                .collect()
+        })
+        .unwrap_or_default();
+    if !escravos.is_empty() {
+        let r: Vec<bool> = escravos.iter().filter_map(|e| gira(e, fundo + 1)).collect();
+        return (!r.is_empty()).then(|| r.iter().any(|&g| g));
+    }
+    let disco = if base.join("partition").exists() {
+        fs::canonicalize(&base).ok()?.parent()?.to_path_buf()
+    } else {
+        base
+    };
+    let v = fs::read_to_string(disco.join("queue/rotational")).ok()?;
+    Some(v.trim() == "1")
+}
+
+fn disco_do_sistema() -> Option<String> {
+    let nome = dispositivo_da_raiz()?;
+    gira(&nome, 0).map(|g| if g { "hdd" } else { "ssd" }.to_string())
+}
+
+/// Soma as swaps em zram de /proc/swaps.
+pub fn zram_de(swaps: &str) -> Option<f64> {
+    let kb: f64 = swaps
+        .lines()
+        .skip(1)
+        .filter(|l| l.starts_with("/dev/zram"))
+        .filter_map(|l| l.split_whitespace().nth(2)?.parse::<f64>().ok())
+        .sum();
+    (kb > 0.0).then(|| arred(kb / 1024.0 / 1024.0))
 }
 
 fn processador() -> Processador {
@@ -510,6 +569,7 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
             processador: processador(),
             ram_gb: memoria_gb(),
             disco_livre_gb: disco_livre_gb("/"),
+            disco_do_sistema: disco_do_sistema(),
             video: placas_de_video(),
         },
         rede: Rede {
@@ -518,6 +578,9 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
         ja_tem: JaTem {
             snapshot: crate::snapshot::ferramenta().map(str::to_string),
             firewall: firewall(),
+            zram_gb: fs::read_to_string("/proc/swaps")
+                .ok()
+                .and_then(|t| zram_de(&t)),
         },
         suportada: problemas.is_empty(),
         problemas,
@@ -602,6 +665,15 @@ pub fn formatar(d: &Diag) -> String {
             num(d.hardware.disco_livre_gb)
         ),
         format!(
+            "  disco do sistema: {}",
+            match d.hardware.disco_do_sistema.as_deref() {
+                Some("ssd") => "SSD",
+                Some("hdd") =>
+                    "disco rígido (trocar por um SSD é o que mais deixa uma máquina antiga rápida)",
+                _ => "não identificado",
+            }
+        ),
+        format!(
             "  vídeo: {}",
             if d.hardware.video.is_empty() {
                 "não identificado".into()
@@ -618,6 +690,13 @@ pub fn formatar(d: &Diag) -> String {
         format!(
             "  firewall: {}",
             d.ja_tem.firewall.as_deref().unwrap_or("não instalado")
+        ),
+        format!(
+            "  memória comprimida (zram): {}",
+            match d.ja_tem.zram_gb {
+                Some(gb) => format!("ligada, até {} GB", num(Some(gb))),
+                None => "desligada".into(),
+            }
         ),
         format!(
             "  rede: {}",
@@ -717,12 +796,27 @@ mod testes {
     }
 
     #[test]
+    fn zram_em_proc_swaps() {
+        let swaps = "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n\
+/dev/sda3                               partition\t2097148\t\t0\t\t-2\n\
+/dev/zram0                              partition\t4194300\t\t1024\t\t100\n";
+        assert_eq!(zram_de(swaps), Some(4.0));
+        assert_eq!(
+            zram_de("Filename Type Size Used Priority\n/dev/sda3 partition 2097148 0 -2\n"),
+            None
+        );
+    }
+
+    #[test]
     fn coletar_e_formatar() {
         let p = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("testes/os-release/kali");
         let d = coletar(Some(&p));
         assert_eq!(d.distro.familia.as_deref(), Some("debian"));
         assert!(d.avisos.iter().any(|a| a.contains("derivada")));
         assert!(d.avisos.iter().any(|a| a.contains("não foi testada")));
-        assert!(formatar(&d).contains("Distro"));
+        let texto = formatar(&d);
+        assert!(texto.contains("Distro"));
+        assert!(texto.contains("memória comprimida (zram)"));
+        assert!(texto.contains("disco do sistema"));
     }
 }

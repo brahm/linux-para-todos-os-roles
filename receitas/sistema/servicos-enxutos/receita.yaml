@@ -1,0 +1,36 @@
+id: sistema/servicos-enxutos
+nome: Serviços enxutos
+descricao: Desliga os serviços que este computador não usa, como o Bluetooth numa máquina sem Bluetooth, e faz o boot parar de esperar a rede.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  esperar_rede:
+    tipo: booleano
+    padrao: false
+    pergunta: Manter o boot esperando a rede conectar? Só faz falta em quem monta pastas da rede ao ligar.
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
