@@ -16,7 +16,7 @@ fi
 restaurar_arquivos
 if systemd_rodando && [ -f "$BORA_ESTADO/sysctl-antes" ]; then
     while IFS= read -r linha; do
-        [ -n "${linha#*=}" ] && sysctl -q -w "$linha" || true
+        if [ -n "${linha#*=}" ]; then sysctl -q -w "$linha" || true; fi
     done <"$BORA_ESTADO/sysctl-antes"
 fi
 rm -f "$BORA_ESTADO/sysctl-antes"
