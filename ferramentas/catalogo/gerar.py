@@ -6,6 +6,7 @@ from comum import pagina, DOCS
 from dados import ROLES, PRONTAS, RECEITAS
 from receitas import PAGINAS
 from roles import pagina_role, pagina_catalogo
+import distro
 
 saida = DOCS + "catalogo/"
 os.makedirs(saida + "receitas", exist_ok=True)
@@ -29,3 +30,12 @@ for r in ROLES:
     escrever(rel, pagina(raiz="../../", caminho="catalogo/" + rel, titulo=r["nome"],
         descricao=f"{r['nome']}, rolê do Linux para todos os rolês: {r['resumo']}",
         corpo=pagina_role(r)))
+
+# Escolher e instalar a distro, fora do catálogo: docs/distro/
+os.makedirs(DOCS + "distro", exist_ok=True)
+open(DOCS + "distro/index.html", "w", encoding="utf-8").write(pagina(
+    raiz="../", caminho="distro/", titulo="Escolher e instalar a distro",
+    descricao="Três perguntas para escolher a distro Linux certa para você e para a sua máquina, e o caminho do pendrive até o primeiro bora diag.",
+    corpo=distro.corpo(), ativo="distro",
+    extra_head='\n  <link rel="stylesheet" href="distro.css">\n  <script src="distro.js" defer></script>'))
+print("escrito ../distro/index.html")

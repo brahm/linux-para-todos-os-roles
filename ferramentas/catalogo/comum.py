@@ -110,8 +110,8 @@ def bloco_pedidos(onde, nome, extra_titulo, outra_distro=True, editar=None):
     </section>'''
 
 
-def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo"):
-    """raiz: prefixo relativo até docs/ (por exemplo, "../../")."""
+def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo", extra_head=""):
+    """raiz: prefixo relativo até docs/ (por exemplo, "../../"). extra_head: CSS e JS próprios da página."""
     url = SITE + caminho
     cat = f"{raiz}catalogo/"
     return f'''<!doctype html>
@@ -139,7 +139,7 @@ def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo"):
   <link rel="stylesheet" href="{raiz}estilo.css">
   <link rel="stylesheet" href="{cat}catalogo.css">
   <script>document.documentElement.classList.add("js")</script>
-  <script src="{cat}catalogo.js" defer></script>
+  <script src="{cat}catalogo.js" defer></script>{extra_head}
 </head>
 <body>
 {SIMBOLOS}
@@ -154,6 +154,7 @@ def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo"):
       </a>
       <nav aria-label="Seções">
         <a href="{raiz}#o-que-e">O que é</a>
+        <a href="{raiz}distro/"{' aria-current="page"' if ativo == "distro" else ""}>Escolher a distro</a>
         <a href="{cat}"{' aria-current="page"' if ativo == "inicio" else ""}>Rolês e receitas</a>
         <a href="{raiz}#como-funciona">Como funciona</a>
         <a href="{raiz}#status">Status</a>
@@ -177,6 +178,7 @@ def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo"):
         <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
       </div>
       <nav aria-label="Rodapé">
+        <a href="{raiz}distro/">Escolher a distro</a>
         <a href="{cat}">Rolês e receitas</a>
         <a href="{REPO}">Repositório</a>
         <a href="{REPO}/blob/main/CONTRIBUTING.md">Como contribuir</a>
