@@ -1,0 +1,90 @@
+/* Linux para todos os rolês: página "Escolher e instalar a distro".
+   Usa as variáveis e os componentes de ../estilo.css e ../catalogo/catalogo.css. */
+
+.ficha.herdada { background: var(--azul-soft); color: var(--azul); }
+.ficha.herdada::before { content: "↳"; }
+
+/* Ilustração do caminho */
+.caminho-distro .parada .traco { stroke-width: 1.6; }
+
+/* Questionário */
+.questionario { padding: 28px; display: grid; gap: 28px; }
+.q-ajuda { margin: 0; color: var(--text-2); font-size: 15.5px; }
+.questionario fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.questionario legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-bottom: 14px; font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: -0.015em; }
+.questionario legend .n { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--accent-soft); color: var(--link); font-size: 16px; }
+.opcoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.opcao { position: relative; display: flex; cursor: pointer; }
+.opcao input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opcao-caixa { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 12px; background: var(--surface-2); border: 2px solid transparent; transition: border-color 0.15s, background-color 0.15s, transform 0.15s; }
+.opcao-caixa svg { width: 26px; height: 26px; margin-bottom: 6px; color: var(--text-2); fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.opcao-caixa strong { font-weight: 600; line-height: 1.3; }
+.opcao-caixa span { color: var(--text-2); font-size: 14.5px; line-height: 1.45; }
+.opcao:hover .opcao-caixa { border-color: var(--line); transform: translateY(-1px); }
+.opcao input:focus-visible + .opcao-caixa { outline: 3px solid color-mix(in srgb, var(--accent) 70%, transparent); outline-offset: 2px; }
+.opcao input:checked + .opcao-caixa { border-color: var(--accent); background: var(--accent-soft); }
+.opcao input:checked + .opcao-caixa svg { color: var(--link); }
+
+/* Resultado */
+.resultado { border-top: 1px solid var(--line); padding-top: 24px; }
+.resultado-vazio { margin: 0; color: var(--text-2); }
+.js .sem-js { display: none; }
+.sugestao { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
+@media (max-width: 760px) { .sugestao { grid-template-columns: minmax(0, 1fr); } }
+.sugestao .principal-s, .sugestao .alternativa-s { border-radius: var(--radius); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; }
+.sugestao .principal-s { background: linear-gradient(160deg, var(--hero-a), var(--hero-b)); box-shadow: 0 0 0 2px var(--accent); }
+.sugestao .alternativa-s { background: var(--surface-2); }
+.sugestao .rotulo-s { font-size: 13.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--link); margin: 0; }
+.sugestao .alternativa-s .rotulo-s { color: var(--text-2); }
+.sugestao h3 { font-size: clamp(26px, 3.4vw, 34px); }
+.sugestao .alternativa-s h3 { font-size: 22px; }
+.sugestao p { margin: 0; color: var(--text-2); }
+.sugestao .acoes-s { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 6px; }
+.sugestao .nota-s { grid-column: 1 / -1; margin: 0; padding: 14px 18px; border-radius: 12px; background: var(--azul-soft); color: var(--text); font-size: 15.5px; }
+.sugestao .nota-s.alerta { background: var(--accent-soft); }
+.js .sugestao { animation: surgir 0.35s ease-out; }
+
+/* Cartões das distros */
+.grade-distros { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+.distro { padding: 24px; display: flex; flex-direction: column; gap: 12px; scroll-margin-top: 84px; transition: box-shadow 0.3s; }
+.distro:target, .distro.destaque { box-shadow: 0 0 0 3px var(--accent), var(--shadow-hover); }
+.distro .ficha { width: fit-content; white-space: normal; }
+.distro-topo { display: flex; align-items: center; gap: 14px; }
+.distro-topo h3 { font-size: 21px; }
+.distro-topo .edicao { color: var(--text-2); font-size: 14px; }
+.selo-distro { width: 52px; height: 52px; border-radius: 14px; flex: none; }
+.selo-distro b { font-family: var(--font-display); font-size: 26px; color: #fff; line-height: 1; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+.distro p { margin: 0; color: var(--text-2); font-size: 15.5px; }
+.distro dl { margin: 0; display: grid; gap: 4px; font-size: 15px; }
+.distro dt { font-weight: 600; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-2); margin-top: 6px; }
+.distro dd { margin: 0; color: var(--text-2); }
+.distro-links { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+a.botao-mini { text-decoration: none; }
+
+/* Instalar */
+.conferir-iso { margin-top: 12px; }
+.conferir-iso .linha code { min-width: 0; }
+.teclas { margin-top: 14px; }
+.teclas td:nth-child(2) { white-space: nowrap; }
+kbd { display: inline-block; padding: 0.05em 0.45em; border-radius: 6px; background: var(--surface); box-shadow: inset 0 -2px 0 var(--line), 0 0 0 1px var(--line); font-size: 0.85em; color: var(--text); }
+
+/* bora */
+.bora-grade { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 900px) { .bora-grade { grid-template-columns: minmax(0, 1fr); } }
+.bora-grade .janela pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.bora-lado { display: grid; gap: 18px; }
+.proximo { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px 20px; color: inherit; text-decoration: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.proximo:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.proximo .ladrilho { width: 56px; height: 56px; border-radius: 14px; }
+.proximo .ladrilho svg { width: 30px; height: 30px; }
+.proximo .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.proximo .sobretitulo { margin: 0; font-size: 12.5px; }
+.proximo strong { font-weight: 600; font-size: 17px; }
+.proximo .txt > span:last-child { color: var(--text-2); font-size: 15px; line-height: 1.45; }
+.proximo .ir { width: 16px; height: 16px; color: var(--text-2); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 560px) {
+  .questionario { padding: 20px 16px; }
+  .opcoes { grid-template-columns: minmax(0, 1fr); }
+  .opcao-caixa { padding: 12px 14px; }
+}
