@@ -1225,3 +1225,384 @@ PAGINAS = {
     "desktop/navegador-leve": pagina_navegador,
     "sistema/servicos-enxutos": pagina_servicos,
 }
+
+
+# ---------------------------------------------------------------- rolê 3: programação
+
+def _saida(titulo, linhas, final):
+    """Linhas de uma receita no bora aplicar: texto comum, ou ("ok", texto)."""
+    out = [("", f'<span class="c">{titulo}</span>')]
+    for l in linhas:
+        if isinstance(l, tuple):
+            out.append(("", f'<span class="bar">  │</span> <span class="v">ok:</span> {l[1]}'))
+        else:
+            out.append(("", f'<span class="bar">  │</span> {l}'))
+    out.append(("", f'<span class="v">✓</span> {final}: aplicada e testada'))
+    return out
+
+
+def _no_terminal(texto, linhas, alt):
+    return f'''    <section class="largura" aria-label="Uma aplicação de verdade">
+{cabeca("No terminal", "Uma aplicação de verdade", texto)}
+      <figure style="margin:0">
+{janela("bora aplicar", linhas, alt)}
+      </figure>
+    </section>'''
+
+
+def _pagina(rid, ilustra, legenda, faz, nao, passos, terminal, porq, muda, conferir_, fontes_):
+    r = ler_receita(rid)
+    corpo = [abertura(rid, r, ilustra, legenda)]
+    corpo.append(secao("resumo", "Em resumo", "O que faz e o que não faz", "", faz_nao(faz, nao)))
+    corpo.append(secao("passo-a-passo", "Passo a passo", "Como o bora aplica esta receita", "As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.", etapas([
+        ("verificar", "azul", "Verificar", "já está aplicada?", passos[0]),
+        ("aplicar", "", "Aplicar", "faz a mudança", passos[1]),
+        ("testar", "verde", "Testar", "funcionou?", passos[2]),
+        ("desfazer", "cinza", "Desfazer", "quando você pedir", passos[3]),
+    ])))
+    corpo.append(terminal)
+    corpo.append(secao("porques", "Os porquês", "Por que assim", "", porques(porq)))
+    corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas(muda)))
+    corpo.append(secao("parametros", "Parâmetros", "O que dá para escolher", "", parametros(rid, r)))
+    corpo.append(secao("conferir", "Confira você mesmo", "Os comandos para conferir", "", comandos(conferir_)))
+    corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
+    corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
+    corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes(fontes_ + [
+        ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md")])))
+    corpo.append(bloco_pedidos(rid, "esta receita", "nesta receita", editar=f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"))
+    return "\n\n".join(corpo)
+
+
+def _commit(x, y, i, texto, cor="laranja"):
+    return f'''<g class="pacote" style="--i:{i}">
+              <circle cx="{x}" cy="{y}" r="13" class="{cor}"/>
+              <text x="{x}" y="{y + 36}" font-size="12.5" text-anchor="middle" class="t2">{texto}</text>
+            </g>'''
+
+
+ILUSTRA_GIT = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ig-t">
+            <title id="ig-t">Uma linha do tempo de commits no ramo main, cada um com o nome e o e-mail de quem fez, e uma chave que liga o computador ao GitHub sem senha.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Cada commit guarda quem fez, quando e por quê</text>
+            <path d="M50 92H430" class="traco"/>
+            """ + "".join(_commit(50 + i * 95, 92, i, t) for i, t in enumerate(["início", "menu", "cores", "conserto", "versão 1"])) + """
+            <text x="20" y="160" font-size="13" class="t2 mono">main · Ana Aluna &lt;ana@exemplo.com.br&gt;</text>
+            <g class="volta">
+              <rect x="20" y="196" width="440" height="128" rx="14" class="caixa-svg"/>
+              <circle cx="66" cy="246" r="14" fill="none" stroke="var(--accent)" stroke-width="3"/>
+              <path d="M80 246h46M110 246v14M122 246v10" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+              <text x="150" y="232" font-size="14" font-weight="600">Uma chave SSH ed25519</text>
+              <text x="150" y="254" font-size="13" class="t2">A parte pública vai para o GitHub ou o GitLab;</text>
+              <text x="150" y="274" font-size="13" class="t2">a privada nunca sai do seu computador.</text>
+              <text x="150" y="304" font-size="13" class="t2 mono">git push, sem digitar senha</text>
+            </g>
+          </svg>"""
+
+
+def pagina_git():
+    return _pagina(
+        "dev/git", ILUSTRA_GIT, "Ilustração. O nome e o e-mail vão em cada commit; a chave é o seu crachá para o GitHub e o GitLab.",
+        ["<strong>Instala o Git</strong>, se ainda não estiver instalado.",
+         "<strong>Põe o seu nome e o seu e-mail</strong> nos commits, para o primeiro <code>git commit</code> não parar pedindo.",
+         "<strong>Começa os repositórios no ramo <code>main</code></strong>, o mesmo nome do GitHub e do GitLab.",
+         "<strong>Deixa o <code>git pull</code> juntar as mudanças</strong> sozinho, sem parar com uma pergunta que quem começa ainda não sabe responder.",
+         "<strong>Cria uma chave SSH</strong> e mostra a linha para colar no GitHub ou no GitLab."],
+        ["Não cria conta no GitHub nem no GitLab, e não cadastra a chave por você.",
+         "Não apaga o que já estava no seu <code>.gitconfig</code>: só acrescenta.",
+         "Não cria outra chave SSH se você já tiver uma.",
+         "Não apaga a chave no desfazer: ela pode já estar cadastrada no site."],
+        ["<p>Confere se o Git está instalado e se o nome, o e-mail, o ramo inicial e o jeito de juntar do <code>git pull</code> já estão como a receita pede, e se a pessoa já tem uma chave SSH.</p>",
+         "<ul><li>Instala <code>git</code> e <code>openssh-client</code>, se faltarem.</li><li>Guarda uma cópia do <code>~/.gitconfig</code> e grava <code>user.name</code>, <code>user.email</code> e, se não existirem, <code>init.defaultBranch</code> e <code>pull.rebase</code>, como a própria pessoa.</li><li>Cria <code>~/.ssh/id_ed25519</code>, se não houver chave, e mostra a parte pública.</li></ul>",
+         "<p>Confere cada configuração, faz um commit de verdade num repositório de teste, apagado no fim, e confere a chave com <code>ssh-keygen -l</code>.</p>",
+         "<p>Volta o <code>~/.gitconfig</code> ao que era, ou apaga o arquivo, se foi a receita que o criou, e remove os pacotes que ela instalou. A chave SSH fica.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta que nunca tinha usado o Git, encurtada nas linhas do apt.", _saida("[1/4] Git", [
+            "Instalando: git openssh-client",
+            "Git: user.name = Ana Aluna", "Git: user.email = ana@exemplo.com.br",
+            "Git: init.defaultBranch = main", "Git: pull.rebase = false",
+            "Chave SSH criada: /home/aluna/.ssh/id_ed25519",
+            "Para usar a chave no GitHub, abra https://github.com/settings/ssh/new e cole esta linha:",
+            '  <span class="d">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDvQF3u0… ana@exemplo.com.br</span>',
+            ("ok", "Git instalado (git --version)"), ("ok", "nome nos commits de aluna (git config user.name)"),
+            ("ok", "e-mail nos commits de aluna (git config user.email)"), ("ok", "repositórios novos começam no ramo main (init.defaultBranch)"),
+            ("ok", "o git pull sabe juntar as mudanças (pull.rebase)"), ("ok", "um commit de teste funciona"),
+            ("ok", "aluna tem uma chave SSH válida (ssh-keygen -l)"), "Tudo conferido."], "Git"),
+            "Terminal mostrando o bora aplicar a receita Git: instala o Git, grava o nome, o e-mail e dois padrões, cria a chave SSH, mostra a linha para colar no GitHub e confere sete testes."),
+        [("Por que o nome e o e-mail?", "Cada commit leva o nome e o e-mail de quem fez. O GitHub e o GitLab usam o e-mail para ligar o commit à sua conta, por isso vale usar o mesmo de lá. Sem eles, o Git se recusa a fazer o commit."),
+         ("Por que <code>main</code>?", "É o nome que o GitHub e o GitLab dão ao ramo principal. Com outro nome no seu computador, o primeiro <code>git push</code> cria um ramo a mais, e os tutoriais deixam de bater com o que você vê."),
+         ("Por que <code>pull.rebase = false</code>?", "Quando você e outra pessoa mudam o mesmo repositório, o <code>git pull</code> precisa juntar as duas versões. Sem essa configuração, o Git para e pede que você escolha entre merge, rebase e fast-forward. O merge é o comportamento clássico e o que os tutoriais esperam."),
+         ("Por que uma chave SSH, e sem senha?", "O GitHub não aceita mais a senha da conta no <code>git push</code>. A chave é o jeito recomendado e não expira. Ela é criada sem senha porque a receita não faz perguntas no meio; para pôr uma, rode <code>ssh-keygen -p -f ~/.ssh/id_ed25519</code>.")],
+        [("pacote", "git e openssh-client", "Instalados se ainda não estiverem."),
+         ("arquivo", "~/.gitconfig", "<code>user.name</code>, <code>user.email</code>, <code>init.defaultBranch</code> e <code>pull.rebase</code>. O que já estava lá fica."),
+         ("arquivo", "~/.ssh/id_ed25519 e id_ed25519.pub", "A chave SSH, só se a pessoa ainda não tiver uma.")],
+        [("git config --global --list", "Mostra tudo o que está configurado no seu Git."),
+         ("cat ~/.ssh/id_ed25519.pub", "Mostra a parte pública da chave, para colar no GitHub ou no GitLab."),
+         ("ssh -T git@github.com", "Depois de cadastrar a chave, responde com o seu usuário do GitHub.")],
+        [("Configuração inicial do Git", "Pro Git, em português", "https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git"),
+         ("Gerar uma chave SSH", "Documentação do GitHub", "https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"),
+         ("Chaves SSH no GitLab", "Documentação do GitLab", "https://docs.gitlab.com/user/ssh/")])
+
+
+ILUSTRA_COMPILACAO = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="icp-t">
+            <title id="icp-t">Um pip install e um npm install encontram um pedaço em C. Sem compilador, a instalação para com erro; com as ferramentas de compilação, o pedaço é compilado e a instalação termina.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Um pacote com um pedaço em C</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="44" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="40" y="78" font-size="14" class="mono">pip install um-pacote</text>
+              <rect x="300" y="60" width="140" height="24" rx="8" class="vermelho"/>
+              <text x="370" y="77" font-size="12.5" font-weight="600" text-anchor="middle" style="fill:#fff">gcc: not found</text>
+            </g>
+            <text x="20" y="128" font-size="13" class="t2">Sem compilador, a instalação para no meio.</text>
+            <g class="pacote" style="--i:1">
+              <rect x="20" y="150" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="40" y="184" font-size="14" class="mono">npm install outro-pacote</text>
+              <rect x="300" y="166" width="140" height="24" rx="8" class="verde"/>
+              <text x="370" y="183" font-size="12.5" font-weight="600" text-anchor="middle" style="fill:#fff">compilado ✓</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="230" width="440" height="94" rx="14" class="caixa-svg"/>
+              <text x="40" y="262" font-size="14" font-weight="600">build-essential e pkg-config</text>
+              <text x="40" y="286" font-size="13" class="t2 mono">gcc · g++ · make · libc-dev · pkg-config</text>
+              <text x="40" y="308" font-size="13" class="t2">O que o pip e o npm chamam por baixo, sem avisar.</text>
+            </g>
+          </svg>"""
+
+
+def pagina_compilacao():
+    return _pagina(
+        "dev/compilacao", ILUSTRA_COMPILACAO, "Ilustração. A maioria dos pacotes vem pronta; os que não vêm são compilados na hora.",
+        ["<strong>Instala o compilador de C e de C++</strong>, o <code>gcc</code> e o <code>g++</code>.",
+         "<strong>Instala o <code>make</code></strong> e as bibliotecas básicas do C, pelo <code>build-essential</code>.",
+         "<strong>Instala o <code>pkg-config</code></strong>, que os scripts de compilação usam para achar as bibliotecas do sistema."],
+        ["Não configura nada: são só programas novos.",
+         "Não instala bibliotecas de projetos específicos, como as de banco de dados ou de imagem.",
+         "Não remove no desfazer o que outro programa passou a usar."],
+        ["<p>Confere se os pacotes <code>build-essential</code> e <code>pkg-config</code> estão instalados.</p>",
+         "<p>Instala os dois, com as dependências que faltarem, e anota tudo o que entrou.</p>",
+         "<p>Roda <code>gcc</code>, <code>g++</code>, <code>make</code> e <code>pkg-config</code>, e compila e roda um programa de uma linha em C e outro em C++, numa pasta temporária.</p>",
+         "<p>Remove os pacotes que a receita instalou, com as dependências que vieram junto, menos o que outro programa passou a usar.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[2/4] Ferramentas de compilação", [
+            "Instalando: build-essential pkg-config", '<span class="d">0 upgraded, 95 newly installed, 0 to remove and 0 not upgraded.</span>',
+            "Pronto: gcc, g++, make e pkg-config instalados.",
+            ("ok", "compilador de C (gcc --version)"), ("ok", "compilador de C++ (g++ --version)"), ("ok", "make (make --version)"),
+            ("ok", "pkg-config acha as bibliotecas do sistema"), ("ok", "um programa em C compila e roda"),
+            ("ok", "um programa em C++ compila e roda"), "Tudo conferido."], "Ferramentas de compilação"),
+            "Terminal mostrando o bora aplicar a receita Ferramentas de compilação: instala o build-essential e o pkg-config e confere seis testes, dois deles compilando e rodando programas de verdade."),
+        [("Por que, se eu vou programar em Python ou JavaScript?", "Muitos pacotes do pip e do npm têm um pedaço em C ou C++, por velocidade. Quando não há uma versão pronta para a sua máquina, eles são compilados na hora da instalação. Sem o compilador, o erro aparece no meio de um monte de texto em inglês."),
+         ("O que é o <code>build-essential</code>?", "Um pacote que não tem nada dentro: ele só puxa o <code>gcc</code>, o <code>g++</code>, o <code>make</code> e as bibliotecas do C. É o jeito que o Debian e o Ubuntu fazem para instalar o kit básico de uma vez.")],
+        [("pacote", "build-essential", "O gcc, o g++, o make e as bibliotecas básicas do C."),
+         ("pacote", "pkg-config", "Acha as bibliotecas instaladas para os scripts de compilação.")],
+        [("gcc --version", "Mostra a versão do compilador de C."),
+         ("make --version", "Mostra a versão do make.")],
+        [("O pacote build-essential", "Debian", "https://packages.debian.org/stable/build-essential"),
+         ("pkg-config", "freedesktop.org", "https://www.freedesktop.org/wiki/Software/pkg-config/")])
+
+
+ILUSTRA_PYTHON = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ipy-t">
+            <title id="ipy-t">O Python da distro fica intocado, no meio, usado pelo sistema. Cada projeto tem a sua caixa, um ambiente virtual, com as próprias bibliotecas, em versões que podem ser diferentes.</title>
+            <rect x="140" y="24" width="200" height="70" rx="14" class="caixa-svg"/>
+            <text x="240" y="54" font-size="14" font-weight="600" text-anchor="middle">Python da distro</text>
+            <text x="240" y="76" font-size="12.5" text-anchor="middle" class="t2">o sistema usa; ninguém mexe</text>
+            <path d="M190 94v30M290 94v30" class="traco tracejado"/>
+            <g class="pacote" style="--i:0">
+              <rect x="40" y="128" width="190" height="120" rx="14" fill="none" stroke="var(--azul)" stroke-width="2.4" stroke-dasharray="6 4"/>
+              <text x="60" y="156" font-size="14" font-weight="600">site/.venv</text>
+              <text x="60" y="184" font-size="13" class="t2 mono">flask 3.1</text>
+              <text x="60" y="206" font-size="13" class="t2 mono">requests 2.32</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <rect x="250" y="128" width="190" height="120" rx="14" fill="none" stroke="var(--azul)" stroke-width="2.4" stroke-dasharray="6 4"/>
+              <text x="270" y="156" font-size="14" font-weight="600">dados/.venv</text>
+              <text x="270" y="184" font-size="13" class="t2 mono">pandas 2.3</text>
+              <text x="270" y="206" font-size="13" class="t2 mono">requests 2.28</text>
+            </g>
+            <g class="volta">
+              <rect x="40" y="268" width="400" height="56" rx="14" class="caixa-svg"/>
+              <text x="240" y="301" font-size="11.5" text-anchor="middle" class="mono">python3 -m venv .venv &amp;&amp; source .venv/bin/activate</text>
+            </g>
+          </svg>"""
+
+
+def pagina_python():
+    return _pagina(
+        "dev/python", ILUSTRA_PYTHON, "Ilustração. Cada projeto tem o seu ambiente, e as versões das bibliotecas não brigam entre si.",
+        ["<strong>Instala o módulo de ambientes virtuais</strong> e o <code>pip</code>, para cada projeto ter as suas bibliotecas.",
+         "<strong>Instala os cabeçalhos do Python</strong>, que os pacotes com partes em C pedem para compilar.",
+         "<strong>Instala o <code>pipx</code></strong>, para programas de linha de comando escritos em Python.",
+         "<strong>Faz o comando <code>python</code> abrir o Python 3</strong>, como os tutoriais escrevem.",
+         "<strong>Cria a pasta <code>~/.local/bin</code></strong>, onde o pipx põe os programas, para ela entrar no PATH."],
+        ["Não troca a versão do Python da distro.",
+         "Não instala nada com <code>sudo pip</code>, que pode quebrar programas do sistema.",
+         "Não cria projetos nem ambientes por você.",
+         "Não apaga os ambientes virtuais dos seus projetos no desfazer."],
+        ["<p>Confere se <code>python3-venv</code>, <code>python3-pip</code>, <code>python3-dev</code>, <code>pipx</code> e <code>python-is-python3</code> estão instalados, e se a pasta <code>~/.local/bin</code> existe.</p>",
+         "<p>Instala os pacotes que faltarem e cria <code>~/.local/bin</code>, como a própria pessoa. O <code>~/.profile</code> põe essa pasta no PATH a cada login.</p>",
+         "<p>Confere que <code>python</code> e <code>python3</code> mostram a mesma versão, cria um ambiente virtual de verdade numa pasta temporária e roda o <code>pip</code> de dentro dele, e confere o <code>Python.h</code> e o <code>pipx</code>.</p>",
+         "<p>Remove os pacotes que a receita instalou e a pasta <code>~/.local/bin</code>, se ainda estiver vazia. Os ambientes dos projetos ficam.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[3/4] Python com ambientes virtuais", [
+            "Instalando: python3-venv python3-pip python3-dev pipx python-is-python3",
+            "Pasta criada: /home/aluna/.local/bin (entra no PATH no próximo login)",
+            "Pronto: Python 3.14.4. Para cada projeto, crie um ambiente com: python3 -m venv .venv &amp;&amp; source .venv/bin/activate",
+            ("ok", "Python 3 instalado (Python 3.14.4)"), ("ok", "o comando python abre o Python 3"),
+            ("ok", "um ambiente virtual novo funciona, com o pip dentro (python3 -m venv)"),
+            ("ok", "cabeçalhos para compilar pacotes com partes em C (Python.h)"), ("ok", "pipx instalado (pipx --version)"),
+            ("ok", "a pasta dos programas do pipx existe (/home/aluna/.local/bin)"), "Tudo conferido."], "Python com ambientes virtuais"),
+            "Terminal mostrando o bora aplicar a receita Python com ambientes virtuais: instala cinco pacotes, cria a pasta dos programas do pipx e confere seis testes, um deles criando um ambiente virtual."),
+        [("Por que não <code>sudo pip install</code>?", "O Python da distro é usado por programas do próprio sistema. Trocar uma biblioteca dele pode quebrar esses programas. Por isso, desde o Debian 12 e o Ubuntu 23.04, o pip fora de um ambiente virtual recusa instalar, com o erro <code>externally-managed-environment</code>."),
+         ("O que é um ambiente virtual?", "Uma pasta, em geral <code>.venv</code>, dentro do projeto, com um Python e as bibliotecas só daquele projeto. Dois projetos podem usar versões diferentes da mesma biblioteca. Apagar a pasta apaga tudo, sem rastro no sistema."),
+         ("E o pipx?", "É para programas, e não para bibliotecas: <code>pipx install ruff</code> cria um ambiente só para o ruff e põe o comando em <code>~/.local/bin</code>. Atualizar ou remover um não mexe nos outros.")],
+        [("pacote", "python3-venv, python3-pip e python3-dev", "Os ambientes virtuais, o pip dentro deles e os cabeçalhos para compilar."),
+         ("pacote", "pipx e python-is-python3", "Programas em Python em ambientes próprios, e o comando <code>python</code>."),
+         ("arquivo", "~/.local/bin", "Criada vazia, se ainda não existir. Entra no PATH no próximo login.")],
+        [("python3 -m venv .venv", "Cria um ambiente virtual na pasta do projeto."),
+         ("source .venv/bin/activate", "Entra no ambiente. O prompt passa a mostrar <code>(.venv)</code>; para sair, <code>deactivate</code>."),
+         ("pipx install ruff", "Instala um programa de linha de comando no seu próprio ambiente.")],
+        [("venv: ambientes virtuais", "Documentação do Python, em português", "https://docs.python.org/pt-br/3/library/venv.html"),
+         ("PEP 668", "Ambientes gerenciados pela distro", "https://peps.python.org/pep-0668/"),
+         ("pipx", "Documentação oficial", "https://pipx.pypa.io/")])
+
+
+ILUSTRA_NODE = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ino-t">
+            <title id="ino-t">O arquivo do Node.js sai de nodejs.org, passa pela conferência da soma SHA256 gravada na receita e só então é instalado. Os pacotes do npm install -g vão para a pasta pessoal, sem sudo.</title>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="30" width="130" height="64" rx="12" class="caixa-svg"/>
+              <text x="85" y="58" font-size="14" font-weight="600" text-anchor="middle">nodejs.org</text>
+              <text x="85" y="80" font-size="12" text-anchor="middle" class="t2">26.13.0 LTS</text>
+            </g>
+            <path d="M156 62h42" class="traco"/><path d="M190 56l8 6-8 6" class="traco"/>
+            <g class="pacote" style="--i:1">
+              <rect x="206" y="30" width="120" height="64" rx="12" class="azul"/>
+              <text x="266" y="58" font-size="14" font-weight="600" text-anchor="middle" style="fill:#fff">SHA256</text>
+              <text x="266" y="80" font-size="12" text-anchor="middle" style="fill:#fff">bate? ✓</text>
+            </g>
+            <path d="M332 62h42" class="traco"/><path d="M366 56l8 6-8 6" class="traco"/>
+            <g class="pacote" style="--i:2">
+              <rect x="382" y="30" width="78" height="64" rx="12" class="verde"/>
+              <text x="421" y="67" font-size="13" font-weight="600" text-anchor="middle" style="fill:#fff">instala</text>
+            </g>
+            <text x="20" y="128" font-size="13" class="t2">Se o arquivo não for exatamente o testado, nada é instalado.</text>
+            <g class="volta">
+              <rect x="20" y="158" width="440" height="166" rx="14" class="caixa-svg"/>
+              <text x="40" y="190" font-size="14" font-weight="600">npm install -g, sem sudo</text>
+              <text x="40" y="222" font-size="13" class="mono">/usr/local/lib/nodejs/</text>
+              <text x="280" y="222" font-size="13" class="t2">o Node.js, do root</text>
+              <text x="40" y="252" font-size="13" class="mono">~/.local/lib/node_modules/</text>
+              <text x="280" y="252" font-size="13" class="t2">os seus pacotes</text>
+              <text x="40" y="282" font-size="13" class="mono">~/.local/bin/</text>
+              <text x="280" y="282" font-size="13" class="t2">os seus comandos</text>
+              <text x="40" y="308" font-size="12.5" class="t2">Nada do root na sua pasta, nada seu na do root.</text>
+            </g>
+          </svg>"""
+
+
+def pagina_node():
+    return _pagina(
+        "dev/node", ILUSTRA_NODE, "Ilustração. A versão e as somas ficam gravadas na receita, e sobem junto com o bora.",
+        ["<strong>Instala o Node.js LTS oficial</strong>, com o <code>npm</code> e o <code>npx</code>, igual em todas as distros.",
+         "<strong>Confere a soma SHA256</strong> do arquivo baixado antes de instalar.",
+         "<strong>Faz o <code>npm install -g</code> funcionar sem sudo</strong>, instalando na sua pasta pessoal.",
+         "<strong>Cria a pasta <code>~/.local/bin</code></strong>, onde aparecem os comandos instalados pelo npm."],
+        ["Não usa o Node.js da distro, que no Ubuntu 24.04 é a versão 18, já fora de suporte.",
+         "Não remove o Node.js da distro, se ele estiver instalado: só passa na frente no PATH.",
+         "Não atualiza sozinho pelo <code>apt</code>: a versão sobe com o <code>bora</code>.",
+         "Não passa por cima de um <code>node</code> que você instalou à mão em <code>/usr/local/bin</code>.",
+         "Não apaga os pacotes que você instalou com <code>npm install -g</code> no desfazer."],
+        ["<p>Confere se o Node.js da versão da receita está em <code>/usr/local/lib/nodejs</code>, se <code>node</code>, <code>npm</code> e <code>npx</code> em <code>/usr/local/bin</code> apontam para ele, se o <code>npmrc</code> está como a receita escreve e se <code>~/.local/bin</code> existe.</p>",
+         "<ul><li>Para, sem mudar nada, se já houver um <code>node</code> em <code>/usr/local/bin</code> que não veio do <code>bora</code>.</li><li>Baixa o arquivo de nodejs.org, confere a soma SHA256 gravada na receita e abre em <code>/usr/local/lib/nodejs</code>.</li><li>Cria os links em <code>/usr/local/bin</code>, escreve <code>prefix=${HOME}/.local</code> no <code>npmrc</code> do Node.js e cria <code>~/.local/bin</code>.</li></ul>",
+         "<p>Como a pessoa: confere a versão do <code>node</code>, o <code>npm</code> e o <code>npx</code>, roda um programa e confere que o <code>npm prefix -g</code> é <code>~/.local</code>.</p>",
+         "<p>Apaga os links e a pasta do Node.js, remove os pacotes que a receita instalou e a pasta <code>~/.local/bin</code>, se ainda estiver vazia.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[3/4] Node.js", [
+            "Baixando o Node.js 26.13.0 de https://nodejs.org/dist/v26.13.0/node-v26.13.0-linux-x64.tar.xz",
+            "Soma SHA256 conferida.", "Node.js instalado em /usr/local/lib/nodejs/node-v26.13.0-linux-x64",
+            "Arquivo atualizado: /usr/local/lib/nodejs/node-v26.13.0-linux-x64/etc/npmrc",
+            "Pasta criada: /home/aluna/.local/bin (entra no PATH no próximo login)",
+            "Pronto: Node.js 26.13.0 e npm 11.20.0.",
+            ("ok", "Node.js 26.13.0 (node --version)"), ("ok", "npm (npm --version)"), ("ok", "npx (npx --version)"),
+            ("ok", "o Node.js roda um programa"), ("ok", "npm install -g instala em ~/.local, sem sudo (npm prefix -g)"),
+            ("ok", "a pasta dos programas do npm existe (/home/aluna/.local/bin)"), "Tudo conferido."], "Node.js"),
+            "Terminal mostrando o bora aplicar a receita Node.js: baixa o Node.js 26.13.0, confere a soma SHA256, instala, configura o npm e confere seis testes."),
+        [("Por que não o Node.js da distro?", "No Ubuntu 24.04 e nas derivadas, como o Linux Mint 22, o Pop!_OS e o Zorin OS, ele é a versão 18, que saiu de suporte em 2025. As ferramentas de hoje, como o Vite, pedem uma versão mais nova, e o primeiro tutorial já quebraria."),
+         ("É seguro baixar de fora da distro?", "O arquivo vem de nodejs.org, do próprio projeto, e a receita traz a soma SHA256 do arquivo que foi testado. Se o que chegar não bater, nada é instalado. É a regra do projeto para instaladores oficiais."),
+         ("Por que o npm sem sudo?", "Com <code>sudo npm install -g</code>, os arquivos ficam do root, e o próximo <code>npm</code> sem sudo falha com <code>EACCES</code>. Com o <code>prefix</code> em <code>~/.local</code>, cada pessoa instala na própria pasta."),
+         ("Como atualizar?", "Quando sair um <code>bora</code> com uma versão nova do Node.js, aplique a receita de novo. Ela instala a nova ao lado e troca os links.")],
+        [("pacote", "curl, xz-utils e ca-certificates", "Para baixar e abrir o arquivo, se faltarem."),
+         ("arquivo", "/usr/local/lib/nodejs/node-v26.13.0-linux-x64", "O Node.js, com o npm e o npx, e o <code>etc/npmrc</code> com o <code>prefix</code>."),
+         ("arquivo", "/usr/local/bin/node, npm e npx", "Links para a versão instalada."),
+         ("arquivo", "~/.local/bin", "Criada vazia, se ainda não existir. Entra no PATH no próximo login.")],
+        [("node --version", "Mostra a versão do Node.js."),
+         ("npm prefix -g", "Mostra onde o <code>npm install -g</code> instala: a sua <code>~/.local</code>."),
+         ("npm create vite@latest meu-site", "Começa um projeto web com o Vite.")],
+        [("Downloads do Node.js", "nodejs.org", "https://nodejs.org/pt/download"),
+         ("Versões LTS do Node.js", "nodejs.org", "https://nodejs.org/pt/about/previous-releases"),
+         ("A configuração prefix", "Documentação do npm", "https://docs.npmjs.com/cli/using-npm/config#prefix")])
+
+
+ILUSTRA_PODMAN = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ipo-t">
+            <title id="ipo-t">À esquerda, o Docker, com um serviço rodando como root por trás de todos os contêineres. À direita, o Podman, em que cada pessoa roda os próprios contêineres na sua conta, e o root de dentro do contêiner é um usuário sem poder do lado de fora.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Docker</text>
+            <rect x="20" y="42" width="200" height="40" rx="10" class="vermelho"/>
+            <text x="120" y="67" font-size="13" font-weight="600" text-anchor="middle" style="fill:#fff">serviço como root</text>
+            """ + "".join(f'<rect x="{30 + i * 64}" y="100" width="52" height="40" rx="8" class="caixa-svg"/>' for i in range(3)) + """
+            <path d="M120 82v18" class="traco"/>
+            <text x="20" y="166" font-size="12.5" class="t2">o grupo docker vale o root</text>
+            <text x="260" y="28" font-size="14" font-weight="600">Podman</text>
+            <g class="pacote" style="--i:0">
+              <rect x="260" y="42" width="200" height="40" rx="10" class="verde"/>
+              <text x="360" y="67" font-size="13" font-weight="600" text-anchor="middle" style="fill:#fff">a sua conta</text>
+              """ + "".join(f'<rect x="{270 + i * 64}" y="100" width="52" height="40" rx="8" fill="none" stroke="var(--ok)" stroke-width="2.2"/>' for i in range(3)) + """
+              <path d="M360 82v18" class="traco"/>
+              <text x="260" y="166" font-size="12.5" class="t2">sem serviço, sem root</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="196" width="440" height="128" rx="14" class="caixa-svg"/>
+              <text x="40" y="226" font-size="14" font-weight="600">O root de dentro é você do lado de fora</text>
+              <text x="40" y="252" font-size="13" class="mono">dentro: root (0)  →  fora: 165536</text>
+              <text x="40" y="278" font-size="13" class="t2">A faixa de IDs vem de /etc/subuid e /etc/subgid.</text>
+              <text x="40" y="304" font-size="13" class="mono">podman run --rm -it python:3.13</text>
+            </g>
+          </svg>"""
+
+
+def pagina_podman():
+    return _pagina(
+        "containers/podman", ILUSTRA_PODMAN, "Ilustração. Os comandos são os mesmos do Docker; muda quem roda os contêineres.",
+        ["<strong>Instala o Podman</strong>, que aceita os mesmos comandos do Docker na maioria dos casos.",
+         "<strong>Deixa os contêineres rodarem na sua conta</strong>, sem serviço como root e sem sudo.",
+         "<strong>Cria a faixa de IDs</strong> que os contêineres sem root precisam, se a conta ainda não tiver.",
+         "<strong>Acha as imagens pelo nome curto</strong>, como <code>python</code> ou <code>nginx</code>, no Docker Hub."],
+        ["Não instala o Docker nem cria o grupo <code>docker</code>.",
+         "Não deixa nenhum serviço rodando: o Podman só roda quando você chama.",
+         "Não baixa imagem nenhuma: você escolhe o que rodar.",
+         "Não apaga as suas imagens e contêineres no desfazer: eles ficam em <code>~/.local/share/containers</code>."],
+        ["<p>Confere se <code>podman</code> e <code>uidmap</code> estão instalados, se a configuração dos registros está como a receita escreve e se a conta tem a faixa de IDs em <code>/etc/subuid</code> e <code>/etc/subgid</code>.</p>",
+         "<ul><li>Instala <code>podman</code> e <code>uidmap</code>.</li><li>Escreve <code>/etc/containers/registries.conf.d/50-bora-docker-hub.conf</code>, com o Docker Hub para os nomes curtos.</li><li>Se a conta não tiver faixa de IDs, guarda uma cópia de <code>/etc/subuid</code> e <code>/etc/subgid</code> e acrescenta 65536 IDs depois das faixas que já existem.</li></ul>",
+         "<p>Confere o <code>podman --version</code>, a faixa de IDs, a permissão do <code>newuidmap</code>, que o <code>podman info</code> da pessoa diz <code>rootless: true</code> e que o Docker Hub está nos registros.</p>",
+         "<p>Apaga a configuração dos registros, volta <code>/etc/subuid</code> e <code>/etc/subgid</code> ao que eram e remove os pacotes que a receita instalou.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta sem faixa de IDs, encurtada nas linhas do apt.", _saida("[4/4] Contêineres com Podman", [
+            "Instalando: podman uidmap",
+            "Arquivo atualizado: /etc/containers/registries.conf.d/50-bora-docker-hub.conf",
+            "Faixa de IDs para os contêineres de aluna: 165536 a 231071",
+            "Pronto: podman version 5.7.0. Para testar: podman run --rm hello-world",
+            ("ok", "Podman instalado (podman --version)"), ("ok", "faixa de IDs de aluna para os contêineres (/etc/subuid e /etc/subgid)"),
+            ("ok", "o newuidmap pode mapear os IDs (uidmap)"), ("ok", "aluna roda o Podman sem ser root (podman info)"),
+            ("ok", "imagens com nome curto vêm do Docker Hub"), "Tudo conferido."], "Contêineres com Podman"),
+            "Terminal mostrando o bora aplicar a receita Contêineres com Podman: instala o Podman, configura o Docker Hub, cria a faixa de IDs da conta e confere cinco testes."),
+        [("Por que Podman, e não Docker?", "No Docker, um serviço roda como root, e quem está no grupo <code>docker</code> consegue, na prática, fazer qualquer coisa no sistema. O Podman roda cada contêiner na conta de quem chamou, e aceita os mesmos comandos na maioria dos casos."),
+         ("O que é a faixa de IDs?", "Dentro do contêiner, os programas costumam rodar como root. Do lado de fora, esse root vira um ID da faixa da sua conta, sem poder nenhum no sistema. O <code>adduser</code> já cria a faixa para contas novas; contas antigas podem não ter."),
+         ("Por que o Docker Hub?", "Os tutoriais escrevem <code>podman run python</code>, com o nome curto. Sem dizer onde procurar, o Podman do Ubuntu não acha a imagem. Com um registro só na lista, ele procura lá, como o Docker faz.")],
+        [("pacote", "podman e uidmap", "O Podman e o <code>newuidmap</code>, que os contêineres sem root usam."),
+         ("arquivo", "/etc/containers/registries.conf.d/50-bora-docker-hub.conf", "<code>unqualified-search-registries = [\"docker.io\"]</code>."),
+         ("arquivo", "/etc/subuid e /etc/subgid", "Uma faixa de 65536 IDs para a conta, só se ela ainda não tiver.")],
+        [("podman run --rm hello-world", "Baixa e roda o contêiner de teste, que imprime uma mensagem e sai."),
+         ("podman info", "Mostra a configuração; <code>rootless: true</code> quer dizer que roda sem root."),
+         ("podman images", "Lista as imagens baixadas. Para apagar tudo: <code>podman system reset</code>.")],
+        [("Podman sem root", "Tutorial oficial", "https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md"),
+         ("registries.conf", "containers/image", "https://github.com/containers/image/blob/main/docs/containers-registries.conf.5.md"),
+         ("Podman", "Wiki do Debian", "https://wiki.debian.org/Podman")])
+
+
+PAGINAS.update({
+    "dev/git": pagina_git,
+    "dev/compilacao": pagina_compilacao,
+    "dev/python": pagina_python,
+    "dev/node": pagina_node,
+    "containers/podman": pagina_podman,
+})

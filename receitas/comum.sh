@@ -245,3 +245,69 @@ resultado_dos_testes() {
     fi
     msg "Tudo conferido."
 }
+
+# --- A pessoa ------------------------------------------------------------
+
+# Pessoas com conta neste computador e pasta pessoal em /home.
+pessoas_do_sistema() {
+    getent passwd | awk -F: '$3 >= 1000 && $3 < 60000 && $6 ~ "^/home/" && $7 !~ /(nologin|false)$/ {print $1}' |
+        while read -r u; do
+            [ -d "$(getent passwd "$u" | cut -d: -f6)" ] && echo "$u"
+        done
+}
+
+# A pessoa para quem a receita configura a pasta pessoal. Com "auto" (ou vazio),
+# é quem chamou o bora com sudo; se o bora foi aberto direto como root, é a única
+# pessoa com conta e pasta pessoal em /home.
+descobrir_pessoa() {
+    local alvo=${1:-auto} contas=()
+    if [ "$alvo" = auto ]; then alvo=${BORA_PESSOA:-}; fi
+    if [ -z "$alvo" ]; then
+        mapfile -t contas < <(pessoas_do_sistema)
+        if [ "${#contas[@]}" -eq 0 ]; then
+            falha "não encontrei nenhuma pessoa com pasta pessoal em /home; informe a conta no parâmetro usuario"
+        elif [ "${#contas[@]}" -gt 1 ]; then
+            falha "este computador tem mais de uma conta (${contas[*]}); rode o bora com sudo, da conta de quem vai programar, ou informe a conta no parâmetro usuario"
+        fi
+        alvo=${contas[0]}
+    fi
+    getent passwd "$alvo" >/dev/null || falha "não existe a conta $alvo neste computador"
+    [ "$(id -u "$alvo")" -ne 0 ] || falha "a receita configura a conta de uma pessoa, e não a do root"
+    [ -d "$(pasta_pessoal "$alvo")" ] || falha "a conta $alvo não tem pasta pessoal"
+    echo "$alvo"
+}
+
+pasta_pessoal() { getent passwd "$1" | cut -d: -f6; }
+
+# Roda um comando como a pessoa, a partir da pasta pessoal dela, e não da
+# pasta da receita, que só o root abre.
+como_pessoa() {
+    local p=$1 casa
+    shift
+    casa=$(pasta_pessoal "$p")
+    (cd "$casa" && runuser -u "$p" -- env HOME="$casa" USER="$p" LOGNAME="$p" "$@")
+}
+
+# Cria uma pasta dentro da pasta pessoal, como a própria pessoa, e anota as
+# pastas novas para o desfazer apagar, se ainda estiverem vazias.
+criar_pasta_da_pessoa() {
+    local p=$1 pasta=$2 d novas=()
+    d=$pasta
+    while [ ! -d "$d" ]; do
+        novas+=("$d")
+        d=$(dirname "$d")
+    done
+    [ "${#novas[@]}" -gt 0 ] || return 0
+    como_pessoa "$p" mkdir -p "$pasta"
+    printf '%s\n' "${novas[@]}" >>"$BORA_ESTADO/pastas-novas"
+}
+
+# Apaga as pastas que a receita criou, da mais funda para a mais rasa, e só as vazias.
+remover_pastas_novas() {
+    [ -f "$BORA_ESTADO/pastas-novas" ] || return 0
+    local d
+    sort -ru "$BORA_ESTADO/pastas-novas" | while read -r d; do
+        if [ -n "$d" ]; then rmdir "$d" 2>/dev/null || true; fi
+    done
+    rm -f "$BORA_ESTADO/pastas-novas"
+}

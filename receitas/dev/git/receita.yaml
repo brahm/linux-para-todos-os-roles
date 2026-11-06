@@ -1,0 +1,28 @@
+id: dev/git
+nome: Git
+descricao: Instala o Git com o seu nome e o seu e-mail nos commits, e cria uma chave SSH para o GitHub ou o GitLab.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  nome:
+    tipo: texto
+    padrao: auto
+    pergunta: Que nome vai nos seus commits? "auto" mantém o que já estiver configurado, ou usa o nome da sua conta neste computador.
+  email:
+    tipo: texto
+    pergunta: Que e-mail vai nos seus commits? Use o mesmo da sua conta no GitHub ou no GitLab. Em branco, mantém o que já estiver configurado.
+  chave_ssh:
+    tipo: booleano
+    padrao: true
+    descricao: Criar uma chave SSH para o GitHub ou o GitLab, se a pessoa ainda não tiver uma.
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.

@@ -540,7 +540,22 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
             );
             let mut respostas = BTreeMap::new();
             for p in &role.perguntas {
-                respostas.insert(p.id.clone(), ui::perguntar(&p.texto, p.padrao.as_deref())?);
+                let resposta = if p.opcoes.is_empty() {
+                    ui::perguntar(&p.texto, p.padrao.as_deref())?
+                } else {
+                    let opcoes: Vec<Opcao> = p
+                        .opcoes
+                        .iter()
+                        .map(|o| Opcao::new(o, p.rotulo(o), true))
+                        .collect();
+                    let padrao = p
+                        .padrao
+                        .as_ref()
+                        .and_then(|d| p.opcoes.iter().position(|o| o == d));
+                    let i = ui::escolher(&format!("\n{}", p.texto), &opcoes, padrao)?;
+                    p.opcoes[i].clone()
+                };
+                respostas.insert(p.id.clone(), resposta);
             }
             let mut cru = match plano::montar_de_role(role, &respostas, &fam) {
                 Ok(p) => p,
@@ -549,7 +564,7 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
                     continue;
                 }
             };
-            for item in &role.receitas {
+            for item in role.receitas.iter().filter(|i| i.entra(&respostas)) {
                 let rec = c.receita(&item.id).unwrap();
                 let fixos: Vec<String> = item.parametros.iter().map(|(k, _)| k.clone()).collect();
                 let extra = perguntar_parametros(rec, &fixos)?;

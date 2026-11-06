@@ -78,3 +78,7 @@ jobs:
       - name: Rolê Dar vida nova a uma máquina antiga
         # O Xfce no Ubuntu e o LXQt no Debian, para os dois ambientes passarem a cada pull request.
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e AMBIENTE=${{ matrix.imagem == 'debian:13' && 'lxqt' || 'xfce' }} -v "$PWD":/bora bora-teste ./testes/conteiner/maquina-antiga.sh
+      - name: Rolê Começar a programar, perfil Python
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=python -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
+      - name: Rolê Começar a programar, perfil web
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=web -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh

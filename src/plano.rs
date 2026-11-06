@@ -76,6 +76,13 @@ pub fn montar_de_role(
             .filter(|r| !r.is_empty())
             .or(p.padrao.as_ref())
         {
+            Some(r) if !p.opcoes.is_empty() && !p.opcoes.contains(r) => {
+                return Err(format!(
+                    "a resposta para {} precisa ser uma destas opções: {}",
+                    p.id,
+                    p.opcoes.join(", ")
+                ));
+            }
             Some(r) => {
                 completas.insert(p.id.clone(), r.clone());
             }
@@ -88,7 +95,7 @@ pub fn montar_de_role(
         }
     }
     let mut passos = Vec::new();
-    for item in &role.receitas {
+    for item in role.receitas.iter().filter(|i| i.entra(&completas)) {
         let mut params = Mapping::new();
         for (k, v) in &item.parametros {
             let v = match v {

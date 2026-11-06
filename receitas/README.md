@@ -60,9 +60,9 @@ Os tipos de parâmetro são `escolha` (com `opcoes` e, se quiser, `rotulos` que 
 - Todos começam com `#!/usr/bin/env bash` e `set -euo pipefail`.
 - O `bora` roda os scripts a partir da pasta da receita, como root quando `precisa_root: true`.
 - Os parâmetros chegam como variáveis de ambiente com o prefixo `BORA_` e o nome em maiúsculas, por exemplo `BORA_PERFIL` e `BORA_REDE_LOCAL`.
-- O `bora` também informa `BORA_FAMILIA`, `BORA_DISTRO`, `BORA_VERSAO`, `BORA_BASE` (a distro de base, como `ubuntu-24.04`) e `BORA_ESTADO`, uma pasta onde a receita guarda o que precisa para desfazer (cópias de arquivos, lista de pacotes instalados).
+- O `bora` também informa `BORA_PESSOA` (a conta de quem rodou o `bora` com `sudo`, vazia se ele foi aberto direto como root), `BORA_FAMILIA`, `BORA_DISTRO`, `BORA_VERSAO`, `BORA_BASE` (a distro de base, como `ubuntu-24.04`) e `BORA_ESTADO`, uma pasta onde a receita guarda o que precisa para desfazer (cópias de arquivos, lista de pacotes instalados).
 - O resto do ambiente é limpo: só passam `PATH`, as variáveis de idioma, `TERM` e as de proxy.
-- `BORA_LIB` aponta para o [`comum.sh`](comum.sh), com funções prontas: `instalar_pacotes` e `remover_pacotes_instalados` (que só removem o que a receita trouxe), `guardar_arquivo`, `escrever_arquivo` e `restaurar_arquivos`, `habilitar_unidade` e `desabilitar_unidades_habilitadas`, além de `msg`, `aviso`, `falha` e `conferir`. Carregue com `source "$BORA_LIB"`.
+- `BORA_LIB` aponta para o [`comum.sh`](comum.sh), com funções prontas: `instalar_pacotes` e `remover_pacotes_instalados` (que só removem o que a receita trouxe), `guardar_arquivo`, `escrever_arquivo` e `restaurar_arquivos`, `habilitar_unidade` e `desabilitar_unidades_habilitadas`, as funções para a pasta pessoal de quem vai usar (`descobrir_pessoa`, `pasta_pessoal`, `como_pessoa`, `criar_pasta_da_pessoa` e `remover_pastas_novas`), além de `msg`, `aviso`, `falha` e `conferir`. Carregue com `source "$BORA_LIB"`.
 - O `bora` guarda uma cópia da receita junto com cada aplicação, e o desfazer usa essa cópia, mesmo que a receita mude depois.
 - Antes de um `rm` com variável, use a forma `"${VARIAVEL:?}/arquivo"`, para que uma variável vazia nunca vire `rm /arquivo`.
 - Além do bash e das ferramentas básicas, as receitas podem usar `python3`, que vem em todas as distros suportadas.

@@ -1,0 +1,17 @@
+id: dev/node
+nome: Node.js
+descricao: Instala o Node.js LTS oficial, com o npm instalando pacotes globais na sua pasta pessoal, sem sudo.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar, para a pasta ~/.local/bin, onde o npm põe os programas instalados com -g. "auto" é quem rodou o bora com sudo.

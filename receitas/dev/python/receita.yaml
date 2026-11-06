@@ -1,0 +1,17 @@
+id: dev/python
+nome: Python com ambientes virtuais
+descricao: Prepara o Python para projetos, com ambientes virtuais, pip e pipx, sem mexer no Python que a distro usa.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar, para a pasta ~/.local/bin, onde o pipx põe os programas. "auto" é quem rodou o bora com sudo.

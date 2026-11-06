@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git · Linux para todos os rolês</title>
+  <meta name="description" content="Git, receita do bora: Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/dev-git.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Git">
+  <meta property="og:description" content="Git, receita do bora: Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/dev-git.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Git</li>
+          </ol>
+          <h1><span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M6 8.2v7.6M8 7.2c4.5 1 7.6 2.2 8 3.2"/></svg></span><span>Git</span></h1>
+          <p class="lema">Instala o Git com o seu nome e o seu e-mail nos commits, e cria uma chave SSH para o GitHub ou o GitLab.</p>
+          <div class="fichas">
+            <span class="ficha"><code>dev/git</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/dev/git">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ig-t">
+            <title id="ig-t">Uma linha do tempo de commits no ramo main, cada um com o nome e o e-mail de quem fez, e uma chave que liga o computador ao GitHub sem senha.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Cada commit guarda quem fez, quando e por quê</text>
+            <path d="M50 92H430" class="traco"/>
+            <g class="pacote" style="--i:0">
+              <circle cx="50" cy="92" r="13" class="laranja"/>
+              <text x="50" y="128" font-size="12.5" text-anchor="middle" class="t2">início</text>
+            </g><g class="pacote" style="--i:1">
+              <circle cx="145" cy="92" r="13" class="laranja"/>
+              <text x="145" y="128" font-size="12.5" text-anchor="middle" class="t2">menu</text>
+            </g><g class="pacote" style="--i:2">
+              <circle cx="240" cy="92" r="13" class="laranja"/>
+              <text x="240" y="128" font-size="12.5" text-anchor="middle" class="t2">cores</text>
+            </g><g class="pacote" style="--i:3">
+              <circle cx="335" cy="92" r="13" class="laranja"/>
+              <text x="335" y="128" font-size="12.5" text-anchor="middle" class="t2">conserto</text>
+            </g><g class="pacote" style="--i:4">
+              <circle cx="430" cy="92" r="13" class="laranja"/>
+              <text x="430" y="128" font-size="12.5" text-anchor="middle" class="t2">versão 1</text>
+            </g>
+            <text x="20" y="160" font-size="13" class="t2 mono">main · Ana Aluna &lt;ana@exemplo.com.br&gt;</text>
+            <g class="volta">
+              <rect x="20" y="196" width="440" height="128" rx="14" class="caixa-svg"/>
+              <circle cx="66" cy="246" r="14" fill="none" stroke="var(--accent)" stroke-width="3"/>
+              <path d="M80 246h46M110 246v14M122 246v10" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+              <text x="150" y="232" font-size="14" font-weight="600">Uma chave SSH ed25519</text>
+              <text x="150" y="254" font-size="13" class="t2">A parte pública vai para o GitHub ou o GitLab;</text>
+              <text x="150" y="274" font-size="13" class="t2">a privada nunca sai do seu computador.</text>
+              <text x="150" y="304" font-size="13" class="t2 mono">git push, sem digitar senha</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. O nome e o e-mail vão em cada commit; a chave é o seu crachá para o GitHub e o GitLab.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Instala o Git</strong>, se ainda não estiver instalado.</li>
+            <li><strong>Põe o seu nome e o seu e-mail</strong> nos commits, para o primeiro <code>git commit</code> não parar pedindo.</li>
+            <li><strong>Começa os repositórios no ramo <code>main</code></strong>, o mesmo nome do GitHub e do GitLab.</li>
+            <li><strong>Deixa o <code>git pull</code> juntar as mudanças</strong> sozinho, sem parar com uma pergunta que quem começa ainda não sabe responder.</li>
+            <li><strong>Cria uma chave SSH</strong> e mostra a linha para colar no GitHub ou no GitLab.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não cria conta no GitHub nem no GitLab, e não cadastra a chave por você.</li>
+            <li>Não apaga o que já estava no seu <code>.gitconfig</code>: só acrescenta.</li>
+            <li>Não cria outra chave SSH se você já tiver uma.</li>
+            <li>Não apaga a chave no desfazer: ela pode já estar cadastrada no site.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se o Git está instalado e se o nome, o e-mail, o ramo inicial e o jeito de juntar do <code>git pull</code> já estão como a receita pede, e se a pessoa já tem uma chave SSH.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Instala <code>git</code> e <code>openssh-client</code>, se faltarem.</li><li>Guarda uma cópia do <code>~/.gitconfig</code> e grava <code>user.name</code>, <code>user.email</code> e, se não existirem, <code>init.defaultBranch</code> e <code>pull.rebase</code>, como a própria pessoa.</li><li>Cria <code>~/.ssh/id_ed25519</code>, se não houver chave, e mostra a parte pública.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere cada configuração, faz um commit de verdade num repositório de teste, apagado no fim, e confere a chave com <code>ssh-keygen -l</code>.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Volta o <code>~/.gitconfig</code> ao que era, ou apaga o arquivo, se foi a receita que o criou, e remove os pacotes que ela instalou. A chave SSH fica.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 26.04, numa conta que nunca tinha usado o Git, encurtada nas linhas do apt.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Git: instala o Git, grava o nome, o e-mail e dois padrões, cria a chave SSH, mostra a linha para colar no GitHub e confere sete testes.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[1/4] Git</span></span><span class="l "><span class="bar">  │</span> Instalando: git openssh-client</span><span class="l "><span class="bar">  │</span> Git: user.name = Ana Aluna</span><span class="l "><span class="bar">  │</span> Git: user.email = ana@exemplo.com.br</span><span class="l "><span class="bar">  │</span> Git: init.defaultBranch = main</span><span class="l "><span class="bar">  │</span> Git: pull.rebase = false</span><span class="l "><span class="bar">  │</span> Chave SSH criada: /home/aluna/.ssh/id_ed25519</span><span class="l "><span class="bar">  │</span> Para usar a chave no GitHub, abra https://github.com/settings/ssh/new e cole esta linha:</span><span class="l "><span class="bar">  │</span>   <span class="d">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDvQF3u0… ana@exemplo.com.br</span></span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> Git instalado (git --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> nome nos commits de aluna (git config user.name)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> e-mail nos commits de aluna (git config user.email)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> repositórios novos começam no ramo main (init.defaultBranch)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o git pull sabe juntar as mudanças (pull.rebase)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> um commit de teste funciona</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> aluna tem uma chave SSH válida (ssh-keygen -l)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Git: aplicada e testada</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que o nome e o e-mail?</h3><p>Cada commit leva o nome e o e-mail de quem fez. O GitHub e o GitLab usam o e-mail para ligar o commit à sua conta, por isso vale usar o mesmo de lá. Sem eles, o Git se recusa a fazer o commit.</p></article>
+        <article class="cartao porque revelar"><h3>Por que <code>main</code>?</h3><p>É o nome que o GitHub e o GitLab dão ao ramo principal. Com outro nome no seu computador, o primeiro <code>git push</code> cria um ramo a mais, e os tutoriais deixam de bater com o que você vê.</p></article>
+        <article class="cartao porque revelar"><h3>Por que <code>pull.rebase = false</code>?</h3><p>Quando você e outra pessoa mudam o mesmo repositório, o <code>git pull</code> precisa juntar as duas versões. Sem essa configuração, o Git para e pede que você escolha entre merge, rebase e fast-forward. O merge é o comportamento clássico e o que os tutoriais esperam.</p></article>
+        <article class="cartao porque revelar"><h3>Por que uma chave SSH, e sem senha?</h3><p>O GitHub não aceita mais a senha da conta no <code>git push</code>. A chave é o jeito recomendado e não expira. Ela é criada sem senha porque a receita não faz perguntas no meio; para pôr uma, rode <code>ssh-keygen -p -f ~/.ssh/id_ed25519</code>.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>git e openssh-client</strong><span>Instalados se ainda não estiverem.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.gitconfig</strong><span><code>user.name</code>, <code>user.email</code>, <code>init.defaultBranch</code> e <code>pull.rebase</code>. O que já estava lá fica.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.ssh/id_ed25519 e id_ed25519.pub</strong><span>A chave SSH, só se a pessoa ainda não tiver uma.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>nome</code></td><td><code>auto</code></td><td>Que nome vai nos seus commits? "auto" mantém o que já estiver configurado, ou usa o nome da sua conta neste computador.</td></tr><tr><td><code>email</code></td><td><code>None</code></td><td>Que e-mail vai nos seus commits? Use o mesmo da sua conta no GitHub ou no GitLab. Em branco, mantém o que já estiver configurado.</td></tr><tr><td><code>chave_ssh</code></td><td><code>sim</code></td><td>Criar uma chave SSH para o GitHub ou o GitLab, se a pessoa ainda não tiver uma.</td></tr><tr><td><code>usuario</code></td><td><code>auto</code></td><td>A conta que vai programar. "auto" é quem rodou o bora com sudo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas dev/git -p dev/git.chave_ssh=nao</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>git config --global --list</code><span>Mostra tudo o que está configurado no seu Git.</span></div>
+        <div class="cartao comando revelar"><code>cat ~/.ssh/id_ed25519.pub</code><span>Mostra a parte pública da chave, para colar no GitHub ou no GitLab.</span></div>
+        <div class="cartao comando revelar"><code>ssh -T git@github.com</code><span>Depois de cadastrar a chave, responde com o seu usuário do GitHub.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/comecar-a-programar.html">
+          <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
+          <h3>Começar a programar</h3>
+          <p>Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.</p>
+          <div class="rodape"><span class="num">03</span><span class="vai">Ver o rolê</span></div>
+        </a>
+        <a class="cartao role" href="../roles/vibecodar.html">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Configuração inicial do Git</strong><span>Pro Git, em português</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Gerar uma chave SSH</strong><span>Documentação do GitHub</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://docs.gitlab.com/user/ssh/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Chaves SSH no GitLab</strong><span>Documentação do GitLab</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/dev/git/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdev/git%5D%20&amp;onde=dev/git">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdev/git%5D%20Funcionar%20em%20&amp;onde=dev/git">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20dev/git&amp;onde=dev/git">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/dev/git/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

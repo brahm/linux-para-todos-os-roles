@@ -395,6 +395,84 @@ fn role_com_perguntas() {
     assert!(erros(&r).contains("falta a resposta"));
 }
 
+const ROLE_PERFIS: &str = r#"id: perfis
+nome: Rolê com perfis
+descricao: A receita dois só entra no perfil completo.
+para_quem: [curiosos]
+status: rascunho
+familias: [ubuntu]
+perguntas:
+  - id: pasta
+    texto: Onde?
+  - id: perfil
+    texto: Qual perfil?
+    opcoes: [simples, completo]
+    rotulos:
+      simples: só a receita um
+      completo: as duas receitas
+    padrao: simples
+receitas:
+  - id: teste/um
+    alvo: "{pasta}"
+  - id: teste/dois
+    quando: {perfil: completo}
+    alvo: "{pasta}"
+pronto_quando: Os arquivos existem.
+como_desfazer: Apaga os arquivos.
+"#;
+
+#[test]
+fn role_com_perfis() {
+    let a = Ambiente::novo("perfis");
+    fs::write(a.base.join("catalogo/objetivos/perfis.yaml"), ROLE_PERFIS).unwrap();
+    let pasta = format!("pasta={}", a.alvo().display());
+    let r = a.bora(&["plano", "perfis", "-r", &pasta, "-o", "-"]);
+    assert!(texto(&r).contains("teste/um"), "{}", texto(&r));
+    assert!(!texto(&r).contains("teste/dois"), "{}", texto(&r));
+    let r = a.bora(&[
+        "plano",
+        "perfis",
+        "-r",
+        &pasta,
+        "-r",
+        "perfil=completo",
+        "-o",
+        "-",
+    ]);
+    assert!(texto(&r).contains("teste/dois"), "{}", texto(&r));
+    let r = a.bora_falha(
+        &[
+            "plano",
+            "perfis",
+            "-r",
+            &pasta,
+            "-r",
+            "perfil=outro",
+            "-o",
+            "-",
+        ],
+        2,
+    );
+    assert!(erros(&r).contains("simples, completo"), "{}", erros(&r));
+    // No menu: o rolê com perfis é o segundo; a pasta, o perfil 2 (completo) e salvar.
+    let entrada = format!("2\n{}\n2\n3\n", a.alvo().display());
+    let r = a.rodar_com(&[], &entrada, "ubuntu-26.04", 0);
+    let saida = texto(&r);
+    assert!(saida.contains("as duas receitas"), "{saida}");
+    let salvo = saida
+        .split("Plano salvo em ")
+        .nth(1)
+        .unwrap()
+        .split_whitespace()
+        .next()
+        .unwrap();
+    assert!(
+        fs::read_to_string(Path::new(salvo))
+            .unwrap()
+            .contains("teste/dois")
+    );
+}
+
 #[test]
 fn simular_nao_muda_nada() {
     let a = Ambiente::novo("simular");

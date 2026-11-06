@@ -1,0 +1,12 @@
+id: dev/compilacao
+nome: Ferramentas de compilação
+descricao: Instala o compilador de C e C++, o make e o pkg-config, que muitos pacotes de Python e de Node.js pedem na instalação.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada

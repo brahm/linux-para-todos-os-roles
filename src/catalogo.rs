@@ -339,12 +339,35 @@ pub struct Pergunta {
     pub id: String,
     pub texto: String,
     pub padrao: Option<String>,
+    /// Quando não está vazia, a resposta precisa ser uma destas opções.
+    pub opcoes: Vec<String>,
+    pub rotulos: Vec<(String, String)>,
+}
+
+impl Pergunta {
+    pub fn rotulo(&self, opcao: &str) -> &str {
+        self.rotulos
+            .iter()
+            .find(|(k, _)| k == opcao)
+            .map(|(_, v)| v.as_str())
+            .unwrap_or("")
+    }
 }
 
 #[derive(Debug, Clone)]
 pub struct ItemRole {
     pub id: String,
     pub parametros: Vec<(String, Value)>,
+    /// A receita só entra no plano quando cada pergunta tem a resposta dada aqui.
+    pub quando: Vec<(String, String)>,
+}
+
+impl ItemRole {
+    pub fn entra(&self, respostas: &std::collections::BTreeMap<String, String>) -> bool {
+        self.quando
+            .iter()
+            .all(|(pergunta, valor)| respostas.get(pergunta) == Some(valor))
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -652,10 +675,33 @@ pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String
                 l.erro("cada pergunta precisa de id e texto");
                 continue;
             };
+            let padrao = p.get("padrao").and_then(texto_de);
+            let opcoes: Vec<String> = match p.get("opcoes") {
+                Some(Value::Sequence(o)) => o.iter().filter_map(texto_de).collect(),
+                _ => vec![],
+            };
+            let rotulos = match p.get("rotulos") {
+                Some(Value::Mapping(m)) => chaves_texto(m)
+                    .into_iter()
+                    .map(|(k, v)| (k, texto_de(v).unwrap_or_default()))
+                    .collect(),
+                _ => vec![],
+            };
+            if !opcoes.is_empty()
+                && let Some(d) = &padrao
+                && !opcoes.contains(d)
+            {
+                l.erro(format!(
+                    "o padrão da pergunta {id} precisa ser uma das opções: {}",
+                    opcoes.join(", ")
+                ));
+            }
             perguntas.push(Pergunta {
                 id,
                 texto,
-                padrao: p.get("padrao").and_then(texto_de),
+                padrao,
+                opcoes,
+                rotulos,
             });
         }
     }
@@ -672,8 +718,31 @@ pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String
                     continue;
                 };
                 let mut parametros = Vec::new();
+                let mut quando = Vec::new();
+                match m.get("quando") {
+                    None => {}
+                    Some(Value::Mapping(q)) => {
+                        for (pid, valor) in chaves_texto(q) {
+                            let valor = texto_de(valor).unwrap_or_default();
+                            match perguntas.iter().find(|p| p.id == pid) {
+                                None => l.erro(format!(
+                                    "{rid}.quando usa {pid}, que não é uma pergunta do rolê"
+                                )),
+                                Some(p) if !p.opcoes.is_empty() && !p.opcoes.contains(&valor) => l
+                                    .erro(format!(
+                                        "{rid}.quando: {valor} não é uma opção da pergunta {pid}"
+                                    )),
+                                Some(_) => {}
+                            }
+                            quando.push((pid, valor));
+                        }
+                    }
+                    Some(_) => l.erro(format!(
+                        "{rid}.quando precisa ser um mapa de pergunta: resposta"
+                    )),
+                }
                 for (chave, valor) in chaves_texto(m) {
-                    if chave == "id" {
+                    if chave == "id" || chave == "quando" {
                         continue;
                     }
                     let texto = texto_de(valor).unwrap_or_default();
@@ -695,6 +764,7 @@ pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String
                 itens.push(ItemRole {
                     id: rid,
                     parametros,
+                    quando,
                 });
             }
         }

@@ -58,3 +58,15 @@ Registro das decisões que definem o projeto, com o porquê de cada uma. Quando 
 | O uBlock Origin vem da loja oficial da Mozilla, pela política `ExtensionSettings` | O bloqueador precisa de atualizações frequentes, que a loja entrega sozinha. O pacote do Debian demora a chegar e não serve para o Firefox do Snap. É a única exceção à regra de só usar os repositórios da distro e o Flathub, e vale porque quem baixa é o próprio Firefox, da loja do fabricante |
 | Os serviços só são desligados quando a máquina comprovadamente não usa: Bluetooth sem placa, ModemManager sem modem e a espera da rede sem pastas da rede no `fstab` | Impressão, som e busca de arquivos dependem do uso, e desligar errado quebraria algo sem aviso. A receita usa `disable`, e não `mask`, para um comando ligar de volta |
 | O `bora diag` mostra o zram e se o disco do sistema é SSD ou disco rígido | É o que o rolê precisa para dizer quando um SSD faria mais diferença do que qualquer ajuste |
+
+## 6 de novembro de 2026: rolê "Começar a programar"
+
+| Decisão | Por quê |
+|---|---|
+| O rolê tem dois perfis, Python e web, escolhidos numa pergunta com opções; as receitas do perfil entram no plano com `quando` | Quem vai para dados e automação precisa do Python preparado; quem vai para web, do Node.js. Instalar só o que a pessoa vai usar deixa o computador mais simples de entender. O formato de rolê ganhou `opcoes` nas perguntas e `quando` nas receitas para isso |
+| O Node.js é o LTS oficial de nodejs.org, numa versão fixada (26.13.0), conferida pela soma SHA256 gravada na receita, em `/usr/local/lib/nodejs` | O Node.js do Ubuntu 24.04, a base da maior parte da onda 1, é a versão 18, que já saiu de suporte e não roda o Vite atual. Escolhido por Brahm em 6/11/2026. É mais uma exceção à regra dos repositórios da distro, nos termos da regra dos instaladores oficiais: o arquivo vem do fabricante e só é instalado se a soma bater. A versão sobe com o `bora` |
+| O `npm install -g` instala em `~/.local`, pelo `prefix` no `npmrc` do Node.js | É o fim do `sudo npm install -g`, que deixa arquivos do root na pasta do npm e quebra o próximo `npm` sem sudo |
+| O Python é o da distro, com `venv`, `pip`, `pipx` e `python-is-python3`, sem trocar a versão | A distro usa o próprio Python, e o PEP 668 já impede o `pip` fora de um ambiente virtual. Um ambiente por projeto é o que os tutoriais ensinam |
+| Os contêineres são do Podman, sem root, com o Docker Hub como registro dos nomes curtos | O Podman não tem um serviço como root por trás e aceita os comandos do Docker. No Docker, estar no grupo `docker` equivale a ser root |
+| As receitas que mexem na pasta pessoal configuram a conta de quem rodou o `bora` com `sudo`, que o `bora` passa em `BORA_PESSOA` | O `bora` roda como root, mas o Git, o pipx, o npm e os contêineres são de uma pessoa. Sem `sudo`, vale a única conta com pasta em `/home`, ou o parâmetro `usuario` |
+| A chave SSH é criada sem senha, e o desfazer não apaga | A receita não faz perguntas no meio, e o LEIAME ensina a pôr uma senha depois. A chave pode já estar cadastrada no GitHub, e apagar cortaria o acesso |
