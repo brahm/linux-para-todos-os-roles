@@ -45,3 +45,16 @@ Registro das decisões que definem o projeto, com o porquê de cada uma. Quando 
 | O backup só aceita disco em ext4, xfs ou btrfs, e o `bora` nunca formata disco | exFAT, NTFS e FAT não guardam dono, permissões nem hardlinks. Formatar apagaria o que está no disco, e isso é decisão da pessoa |
 | O backup roda de hora em hora (copiando se a última cópia tiver mais de 20 horas) e ao conectar o disco | Num notebook, o disco externo quase nunca está conectado na hora marcada |
 | O desfazer do backup nunca apaga as cópias do disco | São os arquivos da pessoa |
+
+## 6 de novembro de 2026: rolê "Dar vida nova a uma máquina antiga"
+
+| Decisão | Por quê |
+|---|---|
+| O zram usa o `systemd-zram-generator`, com até 50% da memória (no máximo 8 GB), zstd e prioridade acima da swap no disco | É o que o Fedora usa por padrão, existe no Ubuntu e no Debian, e configura tudo num arquivo só. A swap no disco fica como reserva |
+| A receita do zram não mexe num zram que já existia | O Pop!_OS e quem instalou o `zram-tools` já têm um, configurado de propósito |
+| O ambiente leve é o Xfce ou o LXQt, instalado ao lado do atual e sem os pacotes recomendados | Com os recomendados viria outra tela de login, que mudaria o jeito de entrar no computador. Ao lado, dá para testar sem perder nada |
+| A sessão padrão vai pelo AccountsService, e só quando a pessoa pede | É de onde o GDM e o LightDM tiram a sessão de cada pessoa, e o arquivo é guardado e restaurado como qualquer outro |
+| O navegador enxuto é o próprio Firefox, configurado por `/etc/firefox/policies/policies.json` | O Firefox já vem nas distros da onda 1, e o arquivo de políticas vale para o Snap e para o pacote do apt. Trocar de navegador mudaria o dia a dia da pessoa |
+| O uBlock Origin vem da loja oficial da Mozilla, pela política `ExtensionSettings` | O bloqueador precisa de atualizações frequentes, que a loja entrega sozinha. O pacote do Debian demora a chegar e não serve para o Firefox do Snap. É a única exceção à regra de só usar os repositórios da distro e o Flathub, e vale porque quem baixa é o próprio Firefox, da loja do fabricante |
+| Os serviços só são desligados quando a máquina comprovadamente não usa: Bluetooth sem placa, ModemManager sem modem e a espera da rede sem pastas da rede no `fstab` | Impressão, som e busca de arquivos dependem do uso, e desligar errado quebraria algo sem aviso. A receita usa `disable`, e não `mask`, para um comando ligar de volta |
+| O `bora diag` mostra o zram e se o disco do sistema é SSD ou disco rígido | É o que o rolê precisa para dizer quando um SSD faria mais diferença do que qualquer ajuste |

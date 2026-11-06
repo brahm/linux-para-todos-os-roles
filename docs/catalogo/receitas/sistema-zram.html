@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memória comprimida · Linux para todos os rolês</title>
+  <meta name="description" content="Memória comprimida, receita do bora: Usa zram para caber mais programas abertos em pouca memória. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/sistema-zram.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Memória comprimida">
+  <meta property="og:description" content="Memória comprimida, receita do bora: Usa zram para caber mais programas abertos em pouca memória. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/sistema-zram.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Memória comprimida</li>
+          </ol>
+          <h1><span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2.5V5M15 2.5V5M9 19v2.5M15 19v2.5M2.5 9H5M2.5 15H5M19 9h2.5M19 15h2.5"/></svg></span><span>Memória comprimida</span></h1>
+          <p class="lema">Liga o zram, uma área de troca comprimida na própria memória, para caber mais abas e programas antes de a máquina engasgar.</p>
+          <div class="fichas">
+            <span class="ficha"><code>sistema/zram</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/sistema/zram">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iz-t">
+            <title id="iz-t">Duas barras de memória. Sem zram, a memória enche e o que sobra vai para o disco rígido, que é lento. Com zram, as páginas paradas ficam comprimidas na própria memória, ocupando um terço do espaço, e sobra lugar para mais abas.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Sem zram</text><text x="94" y="28" font-size="13" class="t2">a memória enche e vai para o disco</text>
+            <rect x="20" y="42" width="300" height="44" rx="10" class="caixa-svg"/>
+            <rect x="26" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.55"/><rect x="75" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.6200000000000001"/><rect x="124" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.6900000000000001"/><rect x="173" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.76"/><rect x="222" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.8300000000000001"/><rect x="271" y="48" width="43" height="32" rx="6" class="laranja" style="opacity:0.9000000000000001"/>
+            <path d="M330 64h44" class="traco"/><path d="M366 58l8 6-8 6" class="traco"/>
+            <rect x="384" y="42" width="76" height="44" rx="10" class="vermelho" style="opacity:.85"/>
+            <text x="422" y="69" font-size="12.5" font-weight="600" text-anchor="middle" style="fill:#fff">disco</text>
+            <text x="20" y="108" font-size="13" class="t2">O disco rígido é centenas de vezes mais lento que a memória: tudo trava.</text>
+            <text x="20" y="160" font-size="14" font-weight="600">Com zram</text><text x="96" y="160" font-size="13" class="t2">o que está parado fica comprimido</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="174" width="300" height="44" rx="10" class="caixa-svg"/>
+              <rect x="26" y="180" width="43" height="32" rx="6" class="laranja" style="opacity:0.55"/><rect x="75" y="180" width="43" height="32" rx="6" class="laranja" style="opacity:0.6200000000000001"/><rect x="124" y="180" width="43" height="32" rx="6" class="laranja" style="opacity:0.6900000000000001"/>
+              <rect x="173" y="180" width="13" height="32" rx="4" class="azul"/><rect x="190" y="180" width="13" height="32" rx="4" class="azul"/><rect x="207" y="180" width="13" height="32" rx="4" class="azul"/>
+              <text x="290" y="201" font-size="12.5" text-anchor="middle" class="t2">livre</text>
+            </g>
+            <text x="20" y="242" font-size="13" class="t2">As barras azuis são as mesmas páginas, comprimidas com zstd a um terço.</text>
+            <g class="volta">
+              <rect x="20" y="262" width="440" height="66" rx="14" class="caixa-svg"/>
+              <text x="40" y="290" font-size="14" font-weight="600">A swap no disco continua lá, como reserva.</text>
+              <text x="40" y="312" font-size="13" class="t2">O kernel só usa ela quando o zram enche.</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. A compressão real depende do que está na memória; um terço é o comum com zstd.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Liga uma swap comprimida na memória</strong>, o zram, com até metade da memória e no máximo 8 GB.</li>
+            <li><strong>Comprime com zstd</strong>, que costuma reduzir as páginas a um terço do tamanho.</li>
+            <li><strong>Passa na frente da swap no disco</strong>, com prioridade 100: o disco só é usado quando o zram enche.</li>
+            <li><strong>Ajusta o kernel para o zram</strong>, como o Fedora e o Pop!_OS já fazem.</li>
+            <li><strong>Liga na hora</strong>, sem precisar reiniciar, e a cada boot.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não apaga a swap que já existe no disco.</li>
+            <li>Não mexe num zram que já existia, do <code>zram-tools</code>, do <code>zram-config</code> ou de outra configuração: só confere.</li>
+            <li>Não reserva memória: o zram começa vazio e só cresce quando a memória aperta.</li>
+            <li>Não faz milagre com 1 GB: abaixo de 2 GB, até o ambiente leve aperta.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Se o computador já tem zram configurado por outro programa, a receita diz qual e não mexe em nada. Senão, confere se o <code>systemd-zram-generator</code> está instalado, se os dois arquivos de configuração estão como a receita escreve e se o <code>/dev/zram0</code> está ligado como swap.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere o gerador, os dois arquivos, e que o <code>/dev/zram0</code> aparece em <code>/proc/swaps</code> com prioridade 100 e comprimindo com zstd.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Desliga o zram (o que estava nele volta para a memória), apaga os dois arquivos, volta os ajustes do kernel aos valores de antes e remove o pacote, se foi a receita que o instalou. Se faltar memória para desligar na hora, o zram sai no próximo reinício.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>Montada com as mensagens da receita numa máquina com systemd, encurtada nas linhas do apt. A saída do zramctl é um exemplo, de uma máquina com 4 GB.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Memória comprimida: instala o gerador do zram, escreve a configuração, liga o zram e confere seis testes. Depois, o zramctl mostra 612 MB de memória guardados em 196 MB.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[3/6] Memória comprimida (zram)</span></span><span class="l "><span class="bar">  │</span> Instalando: systemd-zram-generator</span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /etc/systemd/zram-generator.conf</span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /etc/sysctl.d/99-bora-zram.conf</span><span class="l "><span class="bar">  │</span> Ligando o zram.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> gerador do zram instalado (systemd-zram-generator)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> configuração do zram (/etc/systemd/zram-generator.conf)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> ajustes do kernel para o zram (/etc/sysctl.d/99-bora-zram.conf)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> zram ligado como swap (swapon --show)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o zram comprime com zstd (zramctl)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o kernel usa o zram antes da swap no disco (prioridade 100)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Memória comprimida (zram): aplicada e testada</span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">zramctl</span></span><span class="l ">NAME       ALGORITHM DISKSIZE  DATA  COMPR TOTAL STREAMS MOUNTPOINT</span><span class="l ">/dev/zram0 zstd           1.9G  612M  187M  196M       2 [SWAP]</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que zram, e não mais swap no disco?</h3><p>Num disco rígido, ler e gravar uma página leva milissegundos; comprimir e descomprimir na memória leva microssegundos. É a diferença entre o mouse travar e a máquina seguir respondendo.</p></article>
+        <article class="cartao porque revelar"><h3>Por que metade da memória?</h3><p>É o tamanho máximo, e não o que o zram ocupa de saída. Com a compressão de um terço, metade da memória em zram guarda páginas que ocupariam 1,5 vez a memória inteira. É o padrão do Debian e perto do que o Fedora usa.</p></article>
+        <article class="cartao porque revelar"><h3>O que são os ajustes do kernel?</h3><p>Por padrão, o kernel evita trocar, pensando num disco lento. Com o zram, trocar é barato, então <code>vm.swappiness = 180</code> deixa o kernel comprimir cedo, antes de a memória ficar apertada, e <code>vm.page-cluster = 0</code> faz ele ler uma página por vez, em vez de oito.</p></article>
+        <article class="cartao porque revelar"><h3>E se a distro já tiver zram?</h3><p>O Pop!_OS e algumas outras já ligam zram. A receita encontra a configuração que existe, diz de onde ela vem e não mexe em nada.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>systemd-zram-generator</strong><span>Instalado se ainda não estiver. Cria o <code>/dev/zram0</code> a cada boot.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/systemd/zram-generator.conf</strong><span>Tamanho de até 50% da memória (no máximo 8 GB), zstd e prioridade 100.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/sysctl.d/99-bora-zram.conf</strong><span><code>vm.swappiness</code>, <code>vm.watermark_boost_factor</code>, <code>vm.watermark_scale_factor</code> e <code>vm.page-cluster</code>.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span class="txt"><strong>systemd-zram-setup@zram0.service e dev-zram0.swap</strong><span>As unidades que o gerador cria: uma prepara o zram, a outra liga como swap.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>porcentagem</code></td><td><code>50</code></td><td>Até quanto da memória o zram pode ocupar, em porcentagem (de 10 a 100). O limite é sempre de 8 GB.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas sistema/zram -p sistema/zram.porcentagem=7</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>zramctl</code><span>Mostra o tamanho do zram, quanto ele guarda (DATA) e quanto isso ocupa comprimido (TOTAL).</span></div>
+        <div class="cartao comando revelar"><code>swapon --show</code><span>Lista as swaps com a prioridade de cada uma: o zram com 100, o disco abaixo.</span></div>
+        <div class="cartao comando revelar"><code>free -h</code><span>A linha Swap soma o zram e a swap no disco.</span></div>
+        <div class="cartao comando revelar"><code>bora diag</code><span>Mostra a memória comprimida ligada, e se o disco do sistema é SSD ou disco rígido.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel nao-se-aplica">Não se aplica</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel nao-se-aplica">Não se aplica</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://github.com/systemd/zram-generator/blob/main/man/zram-generator.conf.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>zram-generator.conf(5)</strong><span>As opções do gerador do systemd</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://wiki.archlinux.org/title/Zram"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Zram</strong><span>ArchWiki, com os ajustes do kernel</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://docs.kernel.org/admin-guide/blockdev/zram.html"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>zram</strong><span>Documentação do kernel</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/sistema/zram/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bsistema/zram%5D%20&amp;onde=sistema/zram">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bsistema/zram%5D%20Funcionar%20em%20&amp;onde=sistema/zram">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20sistema/zram&amp;onde=sistema/zram">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/sistema/zram/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

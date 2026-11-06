@@ -170,17 +170,18 @@ def pagina_role(r):
       <figure style="margin:0">
 {janela("sudo bora", [
             ("cmd", P + '<span class="c">sudo bora</span>'),
-            ("", '<span class="c">bora 0.2.0 · Linux para todos os rolês</span>'),
+            ("", '<span class="c">bora 0.3.0 · Linux para todos os rolês</span>'),
             ("", '<span class="d">Ubuntu 26.04.1 LTS, família ubuntu, 8 GB de RAM, 120 GB livres</span>'),
             ("", ""),
             ("", 'O que você quer fazer com este computador?'),
-            ("", '   1. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</span>'),
-            ("", '   2. Receitas avulsas  <span class="d">escolher uma ou mais receitas do catálogo</span>'),
-            ("", '   3. Ver o diagnóstico completo'),
-            ("", '   4. Desfazer a última aplicação'),
-            ("", '   5. Montar uma pergunta para a IA  <span class="d">bora ajuda</span>'),
-            ("", '   6. Sair'),
-            ("cmd", 'Número: <span class="c">1</span>'),
+            ("", '   1. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador…</span>'),
+            ("", '   2. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</span>'),
+            ("", '   3. Receitas avulsas  <span class="d">escolher uma ou mais receitas do catálogo</span>'),
+            ("", '   4. Ver o diagnóstico completo'),
+            ("", '   5. Desfazer a última aplicação'),
+            ("", '   6. Montar uma pergunta para a IA  <span class="d">bora ajuda</span>'),
+            ("", '   7. Sair'),
+            ("cmd", 'Número: <span class="c">2</span>'),
             ("", 'Sistema atualizado: Instalar as atualizações de segurança sozinho, todo dia? [S/n] <span class="c">s</span>'),
             ("", 'Backup da pasta pessoal: Em que disco externo guardar a cópia? "auto" usa o disco USB conectado agora; ou informe a partição, como /dev/sdb1. [auto]: <span class="c">auto</span>'),
             ("", ""),
@@ -199,6 +200,47 @@ def pagina_role(r):
             ("", '   4. Voltar'),
             ("", 'Número [1]: <span class="cursor"></span>'),
         ], "Terminal mostrando o menu do bora: o rolê Pronto para estudar e trabalhar é escolhido, o bora faz duas perguntas e mostra o plano com as seis receitas.")}
+      </figure>
+    </section>''')
+
+    if rid == "maquina-antiga":
+        corpo.append(f'''    <section class="largura" aria-label="O menu de verdade">
+{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz quatro perguntas, todas com um padrão, e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora, encurtada nas descrições, numa máquina de 4 GB.")}
+      <figure style="margin:0">
+{janela("sudo bora", [
+            ("cmd", P + '<span class="c">sudo bora</span>'),
+            ("", '<span class="c">bora 0.3.0 · Linux para todos os rolês</span>'),
+            ("", '<span class="d">Debian GNU/Linux 13 (trixie), família debian, 3.8 GB de RAM, 96 GB livres</span>'),
+            ("", ""),
+            ("", 'O que você quer fazer com este computador?'),
+            ("", '   1. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</span>'),
+            ("", '   2. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás…</span>'),
+            ("", '   <span class="d">…</span>'),
+            ("cmd", 'Número: <span class="c">1</span>'),
+            ("", 'Sistema atualizado: Instalar as atualizações de segurança sozinho, todo dia? [S/n] <span class="c">s</span>'),
+            ("", 'Ambiente gráfico leve: Qual ambiente leve você quer?'),
+            ("", '   1. xfce  <span class="d">Xfce. Leve, completo e com cara de sempre; o mais fácil para quem vem do Windows.</span>'),
+            ("", '   2. lxqt  <span class="d">LXQt. Ainda mais leve, para máquinas com 2 GB de memória ou menos.</span>'),
+            ("", 'Número [1]: <span class="c">1</span>'),
+            ("", 'Ambiente gráfico leve: Passar a entrar no ambiente leve por padrão? Com não, ele só aparece como opção na tela de login. [s/N] <span class="c">s</span>'),
+            ("", 'Navegador enxuto: Instalar o bloqueador de anúncios uBlock Origin no Firefox? [S/n] <span class="c">s</span>'),
+            ("", 'Serviços enxutos: Manter o boot esperando a rede conectar? Só faz falta em quem monta pastas da rede ao ligar. [s/N] <span class="c">n</span>'),
+            ("", ""),
+            ("", 'Plano: maquina-antiga'),
+            ("", '  1. Sistema atualizado  <span class="d">automaticas=sim</span>'),
+            ("", '  2. Snapshot do sistema · risco médio  <span class="d">dispositivo=auto, diarios=5, semanais=3</span>'),
+            ("", '  3. Memória comprimida (zram)  <span class="d">porcentagem=50</span>'),
+            ("", '  4. Ambiente gráfico leve  <span class="d">ambiente=xfce, entrar_no_leve=sim</span>'),
+            ("", '  5. Navegador enxuto  <span class="d">bloquear_anuncios=sim</span>'),
+            ("", '  6. Serviços enxutos  <span class="d">esperar_rede=não</span>'),
+            ("", ""),
+            ("", 'O que fazer com o plano?'),
+            ("", '   1. Aplicar agora  <span class="d">pede a senha de administrador</span>'),
+            ("", '   2. Só simular  <span class="d">mostra o que mudaria, sem mudar nada</span>'),
+            ("", '   3. Salvar para depois  <span class="d">para revisar, versionar ou aplicar em outra máquina</span>'),
+            ("", '   4. Voltar'),
+            ("", 'Número [1]: <span class="cursor"></span>'),
+        ], "Terminal mostrando o menu do bora: o rolê Dar vida nova a uma máquina antiga é escolhido, o bora faz quatro perguntas e mostra o plano com as seis receitas.")}
       </figure>
     </section>''')
 

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Navegador enxuto · Linux para todos os rolês</title>
+  <meta name="description" content="Navegador enxuto, receita do bora: O Firefox com bloqueio de anúncios e sem o que pesa à toa. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/desktop-navegador-leve.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Navegador enxuto">
+  <meta property="og:description" content="Navegador enxuto, receita do bora: O Firefox com bloqueio de anúncios e sem o que pesa à toa. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/desktop-navegador-leve.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Navegador enxuto</li>
+          </ol>
+          <h1><span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5S14.5 17.9 12 20.5C9.5 17.9 8.4 15.1 8.4 12S9.5 6.1 12 3.5z"/></svg></span><span>Navegador enxuto</span></h1>
+          <p class="lema">Deixa o Firefox mais leve, com o bloqueador de anúncios uBlock Origin e sem telemetria nem atalhos patrocinados.</p>
+          <div class="fichas">
+            <span class="ficha"><code>desktop/navegador-leve</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/desktop/navegador-leve">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="in-t">
+            <title id="in-t">Quatro coisas que pesam no Firefox de uma máquina antiga mudam, uma depois da outra: os anúncios passam a ser bloqueados, as abas paradas saem da memória quando ela acaba, a sessão é gravada no disco a cada minuto em vez de a cada 15 segundos, e a telemetria é desligada.</title>
+            <text x="20" y="26" font-size="14" font-weight="600">O mesmo Firefox, com menos peso:</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="44" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="68" font-size="14" font-weight="600" class="mono">anúncios</text>
+              <rect x="190" y="59" width="110" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="190" y="59" width="110" height="8" rx="4"/>
+              <text x="316" y="68" font-size="13" class="t2 velha">carregam</text>
+              <text x="316" y="68" font-size="13" class="nova" style="fill:var(--ok)">bloqueados ✓</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <rect x="20" y="90" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="114" font-size="14" font-weight="600" class="mono">abas paradas</text>
+              <rect x="190" y="105" width="110" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="190" y="105" width="110" height="8" rx="4"/>
+              <text x="316" y="114" font-size="13" class="t2 velha">na memória</text>
+              <text x="316" y="114" font-size="13" class="nova" style="fill:var(--ok)">descarregam ✓</text>
+            </g>
+            <g class="pacote" style="--i:2">
+              <rect x="20" y="136" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="160" font-size="14" font-weight="600" class="mono">sessão no disco</text>
+              <rect x="190" y="151" width="110" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="190" y="151" width="110" height="8" rx="4"/>
+              <text x="316" y="160" font-size="13" class="t2 velha">a cada 15 s</text>
+              <text x="316" y="160" font-size="13" class="nova" style="fill:var(--ok)">a cada 60 s ✓</text>
+            </g>
+            <g class="pacote" style="--i:3">
+              <rect x="20" y="182" width="440" height="38" rx="10" class="caixa-svg"/>
+              <text x="36" y="206" font-size="14" font-weight="600" class="mono">telemetria</text>
+              <rect x="190" y="197" width="110" height="8" rx="4" class="caixa-svg"/>
+              <rect class="barra-p laranja" x="190" y="197" width="110" height="8" rx="4"/>
+              <text x="316" y="206" font-size="13" class="t2 velha">ligada</text>
+              <text x="316" y="206" font-size="13" class="nova" style="fill:var(--ok)">desligada ✓</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="236" width="440" height="92" rx="14" class="caixa-svg"/>
+              <rect x="40" y="254" width="56" height="56" rx="12" class="vermelho"/>
+              <path d="M68 266l14 6v8c0 8-6 13-14 17-8-4-14-9-14-17v-8z" fill="#fff"/>
+              <text x="114" y="276" font-size="14" font-weight="600">uBlock Origin</text>
+              <text x="114" y="298" font-size="13" class="t2">Baixado da loja da Mozilla na primeira vez</text>
+              <text x="114" y="316" font-size="13" class="t2">que o Firefox abrir, e atualizado sozinho.</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. As mudanças valem para o Firefox da distro, inclusive o Snap do Ubuntu.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Instala o uBlock Origin</strong>, o bloqueador de anúncios mais usado, pela loja oficial da Mozilla.</li>
+            <li><strong>Tira da memória as abas paradas</strong> quando ela acaba. Elas recarregam quando você clica.</li>
+            <li><strong>Abre mais rápido</strong>: as abas da última vez só carregam quando você clica nelas.</li>
+            <li><strong>Grava menos no disco</strong>: a sessão é salva a cada minuto, e não a cada 15 segundos.</li>
+            <li><strong>Desliga a telemetria, os estudos e os atalhos patrocinados</strong> da página inicial.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não troca de navegador: os seus favoritos, senhas e extensões continuam lá.</li>
+            <li>Não instala o Firefox. Se ele não estiver instalado, as configurações ficam prontas para quando ele for.</li>
+            <li>Não trava as preferências: você muda qualquer uma em <code>about:config</code>.</li>
+            <li>Não mexe no Firefox do Flatpak, que não lê o arquivo de políticas: a receita avisa se encontrar um.</li>
+            <li>Não tira nada de um <code>policies.json</code> que já existia: só acrescenta.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se <code>/etc/firefox/policies/policies.json</code> já tem cada política e preferência da receita, com os mesmos valores. Se tiver, pula a receita.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Se o arquivo de políticas existir e não for um JSON válido, para e explica: o Firefox também não consegue ler.</li><li>Guarda uma cópia do arquivo e junta a ele as políticas da receita, sem tirar nada.</li><li>Avisa se o Firefox não estiver instalado, ou se for o do Flatpak.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere que o arquivo é um JSON válido, que tem todas as políticas e preferências da receita e, com <code>bloquear_anuncios</code>, o uBlock Origin.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Volta o <code>policies.json</code> ao que era, ou apaga, se foi a receita que criou. O uBlock Origin, se já tiver sido instalado, fica como uma extensão comum, que você remove em <code>about:addons</code>.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 26.04.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Navegador enxuto: escreve as políticas do Firefox e confere quatro testes, todos ok.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[5/6] Navegador enxuto</span></span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /etc/firefox/policies/policies.json</span><span class="l "><span class="bar">  │</span> Pronto. Feche e abra o Firefox para valer. O uBlock Origin é baixado da loja de extensões da Mozilla na primeira vez que ele abrir.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o arquivo de políticas é um JSON que o Firefox lê (/etc/firefox/policies/policies.json)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> telemetria, estudos e atalhos patrocinados desligados</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> abas paradas saem da memória quando ela acaba (browser.tabs.unloadOnLowMemory)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o uBlock Origin é instalado na próxima vez que o Firefox abrir</span><span class="l "><span class="bar">  │</span> Para ver no Firefox: abra about:policies e confira a lista de políticas ativas.</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Navegador enxuto: aplicada e testada</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que bloquear anúncios?</h3><p>Numa página de notícias comum, os anúncios e os rastreadores são boa parte do que é baixado e do processador gasto. Bloqueados, a página carrega mais rápido, gasta menos memória e fica mais segura.</p></article>
+        <article class="cartao porque revelar"><h3>Por que o Firefox, e não outro navegador?</h3><p>Ele já vem no Ubuntu, no Mint e no Debian, então nada muda para quem usa. E é dos poucos em que o uBlock Origin completo ainda funciona: nos navegadores baseados no Chromium, só a versão limitada.</p></article>
+        <article class="cartao porque revelar"><h3>Por que pela loja da Mozilla, e não por um pacote?</h3><p>O uBlock Origin precisa de atualizações frequentes para acompanhar os sites. Pela loja oficial da Mozilla, ele se atualiza sozinho, no Firefox do Snap e no do apt. O pacote do Debian demora a chegar e não serve para o Snap.</p></article>
+        <article class="cartao porque revelar"><h3>Por que um arquivo de políticas?</h3><p>É o jeito oficial de configurar o Firefox para o computador todo, para todas as pessoas, sem mexer no perfil de ninguém. Em <code>about:policies</code>, o próprio Firefox mostra o que está valendo.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/firefox/policies/policies.json</strong><span>Criado, ou completado se já existir. O Firefox lê daqui em qualquer distro, inclusive o Snap do Ubuntu.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/></svg><span class="txt"><strong>uBlock Origin</strong><span>Com <code>bloquear_anuncios</code>, instalado pelo próprio Firefox na primeira vez que ele abrir.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>bloquear_anuncios</code></td><td><code>sim</code></td><td>Instalar o bloqueador de anúncios uBlock Origin no Firefox?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas desktop/navegador-leve -p desktop/navegador-leve.bloquear_anuncios=nao</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+        <p>No Firefox, digite na barra de endereços:</p>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>about:policies</code><span>Lista as políticas ativas e mostra se alguma tem erro.</span></div>
+        <div class="cartao comando revelar"><code>about:addons</code><span>Mostra o uBlock Origin, depois da primeira abertura.</span></div>
+        <div class="cartao comando revelar"><code>about:unloads</code><span>Mostra as abas na ordem em que o Firefox descarrega quando a memória acaba.</span></div>
+        <div class="cartao comando revelar"><code>about:processes</code><span>Mostra quanta memória e processador cada aba está usando.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel nao-se-aplica">Não se aplica</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://mozilla.github.io/policy-templates/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Políticas do Firefox</strong><span>Mozilla, a lista completa</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/gorhill/uBlock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>uBlock Origin</strong><span>O projeto, no GitHub</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://support.mozilla.org/kb/unload-inactive-tabs-save-system-memory-firefox"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Descarregar abas para economizar memória</strong><span>Suporte da Mozilla</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/desktop/navegador-leve/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdesktop/navegador-leve%5D%20&amp;onde=desktop/navegador-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdesktop/navegador-leve%5D%20Funcionar%20em%20&amp;onde=desktop/navegador-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20desktop/navegador-leve&amp;onde=desktop/navegador-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/desktop/navegador-leve/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

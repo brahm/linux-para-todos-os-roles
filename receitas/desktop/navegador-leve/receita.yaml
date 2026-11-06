@@ -1,0 +1,24 @@
+id: desktop/navegador-leve
+nome: Navegador enxuto
+descricao: Deixa o Firefox mais leve, com o bloqueador de anúncios uBlock Origin e sem telemetria nem atalhos patrocinados.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada
+parametros:
+  bloquear_anuncios:
+    tipo: booleano
+    padrao: true
+    pergunta: Instalar o bloqueador de anúncios uBlock Origin no Firefox?
+testes:
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-06
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

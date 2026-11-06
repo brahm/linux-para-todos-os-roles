@@ -247,3 +247,6 @@ a.role h3 { color: var(--text); }
   .js .foto.vence { opacity: 0.18; }
   .js .pacote-rede circle, .js .ciclo .bolinha { opacity: 0; }
 }
+
+/* Caminhos longos, como /etc/firefox/policies/policies.json, quebram no celular em vez de alargar a página. */
+.etapa code, .caixa code, .cartao code, .lema code { overflow-wrap: anywhere; }

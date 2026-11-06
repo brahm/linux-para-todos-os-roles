@@ -13,8 +13,8 @@ RECEITAS = {
     "sistema/backup-pessoal": ("Backup da pasta pessoal", "backup", "l-amarelo", "Uma cópia dos seus arquivos num disco externo, todo dia."),
     "sistema/zram": ("Memória comprimida", "memoria", "l-verde", "Usa zram para caber mais programas abertos em pouca memória."),
     "desktop/ambiente-leve": ("Ambiente leve", "janela", "l-verde", "Um ambiente gráfico leve ao lado do atual, escolhido na tela de login."),
-    "desktop/navegador-leve": ("Navegador enxuto", "navegador", "l-azul", "Um navegador que gasta menos memória, com bloqueio de anúncios."),
-    "sistema/servicos-enxutos": ("Serviços desnecessários desligados", "desligar", "l-grafite", "Desliga o que a máquina não usa, como Bluetooth sem placa de Bluetooth."),
+    "desktop/navegador-leve": ("Navegador enxuto", "navegador", "l-azul", "O Firefox com bloqueio de anúncios e sem o que pesa à toa."),
+    "sistema/servicos-enxutos": ("Serviços enxutos", "desligar", "l-grafite", "Desliga o que a máquina não usa, como Bluetooth sem placa de Bluetooth."),
     "dev/git": ("Git", "git", "l-vermelho", "Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab."),
     "dev/compilacao": ("Ferramentas de compilação", "ferramenta", "l-grafite", "Compilador, make e o que mais os pacotes de programação pedem."),
     "dev/python": ("Python com ambientes virtuais", "python", "l-azul", "Python para projetos, sem mexer no Python que a distro usa."),
@@ -31,7 +31,8 @@ RECEITAS = {
     "rede/teste-cgnat": ("Teste de CGNAT", "rede", "l-grafite", "Mostra se a sua internet está atrás de CGNAT, e por que isso não importa com a VPN."),
 }
 
-PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/codecs", "desktop/flatpak", "sistema/backup-pessoal"]
+PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/codecs", "desktop/flatpak", "sistema/backup-pessoal",
+           "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos"]
 
 AREAS = {
     "base": "Base",
@@ -112,30 +113,33 @@ ROLES = [
         "nome": "Dar vida nova a uma máquina antiga",
         "resumo": "Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.",
         "para_quem": ["curiosos", "estudantes"],
-        "hardware": "64 bits e 2 GB de memória",
-        "status": "planejado",
-        "receitas": [("base/atualizar", ""), ("sistema/snapshot", ""), ("sistema/zram", ""), ("desktop/ambiente-leve", ""),
+        "hardware": "64 bits, 2 GB de memória e 15 GB livres",
+        "status": "rascunho",
+        "receitas": [("base/atualizar", ""), ("sistema/snapshot", ""), ("sistema/zram", ""), ("desktop/ambiente-leve", "Xfce ou LXQt"),
                      ("desktop/navegador-leve", ""), ("sistema/servicos-enxutos", "")],
         "faz": [
+            "<strong>Atualiza tudo e guarda uma foto do sistema</strong> antes de mexer, para voltar atrás se algo der errado.",
             "<strong>Comprime a memória</strong> com zram, para caber mais abas e programas antes de a máquina engasgar.",
-            "<strong>Instala um ambiente leve</strong>, como o Xfce, ao lado do que você já tem. Você escolhe qual usar na tela de login.",
-            "<strong>Troca o navegador pesado</strong> por um mais enxuto, com bloqueio de anúncios, que também deixa as páginas mais leves.",
-            "<strong>Desliga o que a máquina não usa</strong>, como o serviço de Bluetooth num computador sem Bluetooth.",
+            "<strong>Instala um ambiente leve</strong>, o Xfce ou o LXQt, ao lado do que você já tem. Você escolhe qual usar na tela de login.",
+            "<strong>Deixa o Firefox mais leve</strong>, com o bloqueador de anúncios uBlock Origin e as abas paradas saindo da memória quando ela acaba.",
+            "<strong>Desliga o que a máquina não usa</strong>, como o Bluetooth num computador sem Bluetooth, e faz o boot parar de esperar a rede.",
         ],
         "nao_faz": [
             "Não apaga o ambiente gráfico que você já tem.",
+            "Não troca o seu navegador: o Firefox continua o mesmo, com os seus favoritos e senhas.",
             "Não faz uma máquina de 32 bits rodar distros modernas: elas pararam de sair para 32 bits.",
             "Não mexe na BIOS, nem troca peças, nem faz overclock.",
-            "Não promete milagre: um disco rígido antigo continua lento, e o rolê diz quando um SSD faria mais diferença do que qualquer ajuste.",
+            "Não promete milagre: um disco rígido antigo continua lento, e o <code>bora diag</code> diz quando um SSD faria mais diferença do que qualquer ajuste.",
         ],
         "porques": [
-            ("Por que zram, e não mais swap no disco?", "Num disco rígido antigo, usar o disco como memória deixa tudo travando. O zram guarda a memória comprimida na própria memória, o que é muito mais rápido."),
+            ("Por que zram, e não mais swap no disco?", "Num disco rígido antigo, usar o disco como memória deixa tudo travando. O zram guarda a memória comprimida na própria memória, o que é muito mais rápido. A swap no disco continua lá, como reserva."),
             ("Por que o ambiente leve fica ao lado do atual?", "Para você testar sem perder nada. Se não gostar, escolhe o antigo na tela de login, ou desfaz o rolê."),
-            ("Por que mexer no navegador?", "Numa máquina antiga, o navegador é o programa que mais gasta memória. Menos anúncios significa menos coisa carregando em cada página."),
+            ("Por que mexer no navegador, e não trocar de navegador?", "Numa máquina antiga, o navegador é o programa que mais gasta memória, e boa parte do peso de uma página são anúncios. O Firefox já vem nas distros da onda 1 e é dos poucos em que o uBlock Origin completo ainda funciona."),
+            ("E o SSD?", "Trocar um disco rígido por um SSD, mesmo o mais barato, é o que mais deixa uma máquina antiga rápida: o boot cai de minutos para segundos. O <code>bora diag</code> mostra que tipo de disco a máquina tem."),
         ],
-        "pronto_quando": "O navegador abre cinco abas e toca um vídeo sem a máquina travar, e o bora diag mostra o zram ligado.",
-        "como_desfazer": "O bora desliga o zram, religa os serviços que desligou e remove o ambiente e o navegador que instalou. O ambiente antigo nunca saiu de lá.",
-        "perguntas": ["Você quer manter o ambiente atual como padrão ou passar a entrar no leve?"],
+        "pronto_quando": "O Firefox abre cinco abas e toca um vídeo sem a máquina travar, e o bora diag mostra o zram ligado.",
+        "como_desfazer": "O bora desliga o zram, religa os serviços que desligou, volta o Firefox ao que era e remove o ambiente leve. O ambiente antigo nunca saiu de lá.",
+        "perguntas": ["Qual ambiente leve: Xfce ou LXQt? (o padrão é o Xfce)", "Passar a entrar no ambiente leve por padrão? (o padrão é não: ele aparece como opção na tela de login)", "Instalar o bloqueador de anúncios no Firefox? (o padrão é sim)"],
     },
     {
         "id": "comecar-a-programar", "num": "03", "icone": "terminal", "cor": "l-grafite",

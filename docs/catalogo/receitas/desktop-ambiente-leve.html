@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ambiente leve · Linux para todos os rolês</title>
+  <meta name="description" content="Ambiente leve, receita do bora: Um ambiente gráfico leve ao lado do atual, escolhido na tela de login. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/desktop-ambiente-leve.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Ambiente leve">
+  <meta property="og:description" content="Ambiente leve, receita do bora: Um ambiente gráfico leve ao lado do atual, escolhido na tela de login. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/desktop-ambiente-leve.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Ambiente leve</li>
+          </ol>
+          <h1><span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18M6 6.3h.01M8.5 6.3h.01"/></svg></span><span>Ambiente leve</span></h1>
+          <p class="lema">Instala o Xfce ou o LXQt ao lado do ambiente que você já tem, para escolher na tela de login.</p>
+          <div class="fichas">
+            <span class="ficha"><code>desktop/ambiente-leve</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/desktop/ambiente-leve">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iam-t">
+            <title id="iam-t">Duas áreas de trabalho lado a lado: a de antes, que gasta uns 1,5 GB de memória, e o Xfce, que gasta uns 500 MB. Embaixo, a tela de login mostra as duas opções de sessão, e a pessoa escolhe qual abrir.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Os dois ficam instalados, lado a lado</text>
+            <g>
+              <rect x="20" y="44" width="210" height="150" rx="12" class="caixa-svg"/>
+              <rect x="20" y="44" width="210" height="22" rx="0" class="azul" style="opacity:.9"/>
+              <rect x="36" y="84" width="90" height="56" rx="6" class="fundo" stroke="var(--line)"/>
+              <rect x="136" y="84" width="78" height="40" rx="6" class="fundo" stroke="var(--line)"/>
+              <text x="125" y="222" font-size="14" font-weight="600" text-anchor="middle">O ambiente de antes</text>
+              <text x="125" y="242" font-size="13" text-anchor="middle" class="t2">uns 1,5 GB de memória</text>
+            </g>
+            <g>
+              <rect x="250" y="44" width="210" height="150" rx="12" class="caixa-svg"/>
+              <rect x="250" y="172" width="210" height="22" rx="0" class="laranja" style="opacity:.9"/>
+              <rect x="266" y="70" width="90" height="56" rx="6" class="fundo" stroke="var(--line)"/>
+              <rect x="366" y="70" width="78" height="40" rx="6" class="fundo" stroke="var(--line)"/>
+              <text x="355" y="222" font-size="14" font-weight="600" text-anchor="middle">Xfce ou LXQt</text>
+              <text x="355" y="242" font-size="13" text-anchor="middle" class="t2">de 400 a 600 MB</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="262" width="440" height="66" rx="14" class="caixa-svg"/>
+              <text x="40" y="288" font-size="14" font-weight="600">Na tela de login, você escolhe:</text>
+              <rect x="40" y="298" width="120" height="22" rx="11" class="fundo" stroke="var(--line)"/>
+              <text x="100" y="314" font-size="12.5" text-anchor="middle">Ubuntu</text>
+              <rect x="170" y="298" width="120" height="22" rx="11" class="laranja"/>
+              <text x="230" y="314" font-size="12.5" text-anchor="middle" font-weight="600" style="fill:#fff">Xfce Session</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. O consumo de memória é aproximado e muda com os programas abertos.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Instala o Xfce ou o LXQt</strong>, os ambientes leves mais usados, dos repositórios oficiais.</li>
+            <li><strong>Fica ao lado do ambiente atual</strong>: você escolhe qual abrir na tela de login.</li>
+            <li><strong>Traz o essencial para o dia a dia</strong>: terminal, notificações, bateria, bloqueio de tela, a rede Wi-Fi e a janela que pede a senha de administrador.</li>
+            <li><strong>Pode virar o padrão</strong>, com <code>entrar_no_leve</code>, para cada pessoa do computador.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não remove o ambiente que você já tem, nem os seus programas e configurações.</li>
+            <li>Não troca a tela de login: instala sem os pacotes recomendados, que trariam outra.</li>
+            <li>Não instala jogos, protetores de tela e programas que você não pediu.</li>
+            <li>Não desfaz com você dentro do ambiente leve: pede para sair dessa sessão primeiro.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se cada pacote do ambiente escolhido está instalado e, com <code>entrar_no_leve</code>, se cada pessoa já entra nele por padrão. Se estiver tudo certo, pula a receita.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Instala os pacotes do ambiente com <code>--no-install-recommends</code>.</li><li>Instala o Xorg, se o computador não tiver, e o applet de rede, se ele usar o NetworkManager.</li><li>Com <code>entrar_no_leve</code>, grava a sessão de cada pessoa em <code>/var/lib/AccountsService/users</code>, guardando antes uma cópia.</li><li>Explica como escolher o ambiente na tela de login.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere os pacotes, o arquivo que põe o ambiente na tela de login (<code>/usr/share/xsessions/xfce.desktop</code> ou <code>lxqt.desktop</code>), o programa que abre a sessão e o Xorg e, com <code>entrar_no_leve</code>, a sessão gravada de cada pessoa.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Volta os arquivos do AccountsService ao que eram e remove os pacotes que a receita instalou, com as dependências que vieram junto. Se alguém estiver dentro do ambiente leve, para antes de mudar qualquer coisa.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 26.04, com o Xfce e <code>entrar_no_leve: sim</code>, encurtada nas linhas do apt.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Ambiente gráfico leve: instala o Xfce, faz ele abrir por padrão para a pessoa do computador e confere os testes.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[4/6] Ambiente gráfico leve</span></span><span class="l "><span class="bar">  │</span> Instalando: xfce4 xfce4-terminal xfce4-notifyd xfce4-power-manager xfce4-screensaver mate-polkit tango-icon-theme network-manager-applet</span><span class="l "><span class="bar">  │</span> <span class="d">0 upgraded, 265 newly installed, 0 to remove and 0 not upgraded.</span></span><span class="l "><span class="bar">  │</span> Arquivo atualizado: /var/lib/AccountsService/users/ana</span><span class="l "><span class="bar">  │</span> ana passa a entrar no Xfce por padrão.</span><span class="l "><span class="bar">  │</span> Pronto. Na próxima vez que você entrar, o Xfce abre direto. O ambiente antigo continua na tela de login.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> pacote xfce4 instalado</span><span class="l "><span class="bar">  │</span> <span class="d">…</span></span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o Xfce aparece na tela de login (/usr/share/xsessions/xfce.desktop)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o programa que abre a sessão existe (startxfce4)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> servidor gráfico instalado (Xorg)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> ana entra no Xfce por padrão (/var/lib/AccountsService/users/ana)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Ambiente gráfico leve: aplicada e testada</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Xfce ou LXQt?</h3><p>O Xfce é o mais completo dos leves, com o jeito de sempre: menu, barra de tarefas e ícones na área de trabalho. É o padrão. O LXQt gasta ainda menos, e é a escolha para 2 GB de memória ou menos.</p></article>
+        <article class="cartao porque revelar"><h3>Por que ao lado, e não no lugar?</h3><p>Para testar sem perder nada. Se não gostar, escolha o antigo na tela de login. Os seus arquivos e programas são os mesmos nos dois.</p></article>
+        <article class="cartao porque revelar"><h3>Por que sem os recomendados?</h3><p>Junto com o Xfce, o apt recomenda outra tela de login, o LightDM, que trocaria a que você já tem e mudaria o jeito de entrar no computador. Também viriam programas que pesam. A receita escolhe à mão o que faz falta.</p></article>
+        <article class="cartao porque revelar"><h3>E o Wayland?</h3><p>O Xfce e o LXQt rodam no Xorg, que é o que funciona melhor com placas de vídeo antigas. Se o computador veio só com Wayland, a receita instala o Xorg junto.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>xfce4 e companhia, ou lxqt-core e companhia</strong><span>O ambiente, o terminal, as notificações, a bateria, o bloqueio de tela e a janela da senha de administrador.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>xserver-xorg e network-manager-applet</strong><span>Só se faltarem: o Xorg, e o applet para escolher a rede Wi-Fi.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/var/lib/AccountsService/users/&lt;pessoa&gt;</strong><span>Só com <code>entrar_no_leve</code>: a sessão que abre por padrão. O GDM e o LightDM leem daqui.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>ambiente</code></td><td><code>xfce</code></td><td>Qual ambiente leve você quer?<ul style="margin:8px 0 0;padding-left:18px"><li><code>xfce</code>: Xfce. Leve, completo e com cara de sempre; o mais fácil para quem vem do Windows.</li><li><code>lxqt</code>: LXQt. Ainda mais leve, para máquinas com 2 GB de memória ou menos.</li></ul></td></tr><tr><td><code>entrar_no_leve</code></td><td><code>não</code></td><td>Passar a entrar no ambiente leve por padrão? Com não, ele só aparece como opção na tela de login.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas desktop/ambiente-leve -p desktop/ambiente-leve.ambiente=lxqt</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>ls /usr/share/xsessions</code><span>Lista as sessões que aparecem na tela de login.</span></div>
+        <div class="cartao comando revelar"><code>sudo cat /var/lib/AccountsService/users/$USER</code><span>Mostra a sessão que abre por padrão para você.</span></div>
+        <div class="cartao comando revelar"><code>free -h</code><span>Abra no ambiente antigo e no leve, com os mesmos programas, e compare a memória usada.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel nao-se-aplica">Não se aplica</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/maquina-antiga.html">
+          <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
+          <h3>Dar vida nova a uma máquina antiga</h3>
+          <p>Com Xfce ou LXQt. Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</p>
+          <div class="rodape"><span class="num">02</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://wiki.debian.org/Xfce"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Xfce</strong><span>Wiki do Debian</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://wiki.debian.org/LXQt"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LXQt</strong><span>Wiki do Debian</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://docs.xfce.org/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Documentação do Xfce</strong><span>docs.xfce.org</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/desktop/ambiente-leve/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdesktop/ambiente-leve%5D%20&amp;onde=desktop/ambiente-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bdesktop/ambiente-leve%5D%20Funcionar%20em%20&amp;onde=desktop/ambiente-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20desktop/ambiente-leve&amp;onde=desktop/ambiente-leve">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/desktop/ambiente-leve/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
