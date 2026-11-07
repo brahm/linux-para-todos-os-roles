@@ -24,8 +24,10 @@ if [ -s "$BORA_ESTADO/debs-removidos" ]; then
     msg "Atualizando a lista de pacotes."
     apt_get update -q
     msg "Instalando de volta: $(tr '\n' ' ' <"$BORA_ESTADO/debs-removidos")"
+    # Sem os recomendados: o que eles traziam nunca saiu, e assim não entra
+    # nada que não estava antes (o snapd recomenda o gnupg, por exemplo).
     # shellcheck disable=SC2046
-    apt_get install -y -q $(cat "$BORA_ESTADO/debs-removidos")
+    apt_get install -y -q --no-install-recommends $(cat "$BORA_ESTADO/debs-removidos")
 fi
 rm -f "$BORA_ESTADO/debs-removidos"
 if [ -f "$BORA_ESTADO/marcados-manual" ]; then
