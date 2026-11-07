@@ -1,0 +1,25 @@
+id: seguranca/ssh
+nome: Acesso por SSH na rede de casa
+descricao: Liga o servidor SSH para entrar neste computador pelo terminal de outro, só pela rede local, sem login do root e, se você quiser, só com chave.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  so_chave:
+    tipo: booleano
+    padrao: false
+    descricao: Aceitar só chave SSH, sem senha. Precisa que a conta já tenha uma chave em ~/.ssh/authorized_keys.
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai entrar por SSH, usada para conferir a chave quando so_chave é sim. Com auto, é quem rodou o bora com sudo.
+  rede_local:
+    tipo: cidr
+    padrao: auto
+    descricao: A rede da casa, como 192.168.0.0/24, liberada no firewall quando ele está ligado.

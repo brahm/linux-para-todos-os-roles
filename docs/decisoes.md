@@ -55,7 +55,7 @@ Registro das decisões que definem o projeto, com o porquê de cada uma. Quando 
 | O ambiente leve é o Xfce ou o LXQt, instalado ao lado do atual e sem os pacotes recomendados | Com os recomendados viria outra tela de login, que mudaria o jeito de entrar no computador. Ao lado, dá para testar sem perder nada |
 | A sessão padrão vai pelo AccountsService, e só quando a pessoa pede | É de onde o GDM e o LightDM tiram a sessão de cada pessoa, e o arquivo é guardado e restaurado como qualquer outro |
 | O navegador enxuto é o próprio Firefox, configurado por `/etc/firefox/policies/policies.json` | O Firefox já vem nas distros da onda 1, e o arquivo de políticas vale para o Snap e para o pacote do apt. Trocar de navegador mudaria o dia a dia da pessoa |
-| O uBlock Origin vem da loja oficial da Mozilla, pela política `ExtensionSettings` | O bloqueador precisa de atualizações frequentes, que a loja entrega sozinha. O pacote do Debian demora a chegar e não serve para o Firefox do Snap. É a única exceção à regra de só usar os repositórios da distro e o Flathub, e vale porque quem baixa é o próprio Firefox, da loja do fabricante |
+| O uBlock Origin vem da loja oficial da Mozilla, pela política `ExtensionSettings` | O bloqueador precisa de atualizações frequentes, que a loja entrega sozinha. O pacote do Debian demora a chegar e não serve para o Firefox do Snap. É a única exceção à regra de só usar os repositórios da distro e o Flathub, e vale porque quem baixa é o próprio Firefox, da loja do fabricante. Confirmado por Brahm em 7/11/2026 |
 | Os serviços só são desligados quando a máquina comprovadamente não usa: Bluetooth sem placa, ModemManager sem modem e a espera da rede sem pastas da rede no `fstab` | Impressão, som e busca de arquivos dependem do uso, e desligar errado quebraria algo sem aviso. A receita usa `disable`, e não `mask`, para um comando ligar de volta |
 | O `bora diag` mostra o zram e se o disco do sistema é SSD ou disco rígido | É o que o rolê precisa para dizer quando um SSD faria mais diferença do que qualquer ajuste |
 
@@ -70,3 +70,19 @@ Registro das decisões que definem o projeto, com o porquê de cada uma. Quando 
 | Os contêineres são do Podman, sem root, com o Docker Hub como registro dos nomes curtos | O Podman não tem um serviço como root por trás e aceita os comandos do Docker. No Docker, estar no grupo `docker` equivale a ser root |
 | As receitas que mexem na pasta pessoal configuram a conta de quem rodou o `bora` com `sudo`, que o `bora` passa em `BORA_PESSOA` | O `bora` roda como root, mas o Git, o pipx, o npm e os contêineres são de uma pessoa. Sem `sudo`, vale a única conta com pasta em `/home`, ou o parâmetro `usuario` |
 | A chave SSH é criada sem senha, e o desfazer não apaga | A receita não faz perguntas no meio, e o LEIAME ensina a pôr uma senha depois. A chave pode já estar cadastrada no GitHub, e apagar cortaria o acesso |
+
+## 7 de novembro de 2026: pendências da v0.4.0
+
+Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plano depois da v0.4.0.
+
+| Decisão | Por quê |
+|---|---|
+| O nível `testada` aparece no site como "testada em contêiner" enquanto a receita só tiver testes em contêiner | A definição antiga dizia "roda em máquina virtual", e nenhuma receita tinha passado numa ainda. O rótulo diz o que foi feito de verdade |
+| Cada rolê tem um roteiro de teste em máquina virtual, em `testes/vm/`, rodado no Ubuntu 24.04, no Ubuntu 26.04, no Debian 13 e no Linux Mint | O contêiner não confere kernel, disco, rede nem tela de login. Das derivadas, só o Mint entra, por ser a mais usada; o Pop!_OS e o Zorin OS continuam como "herdada" |
+| O formulário "Relato de teste" recebe testes em máquina virtual e em computador de verdade | Quem testa não precisa saber abrir um pull request para contribuir com a parte mais valiosa |
+| O histórico do `/etc` (etckeeper) entra no rolê 1, logo depois da atualização | Assim, tudo o que as receitas seguintes mudam na configuração fica registrado. O desfazer guarda uma cópia do histórico em `/var/backups` antes de remover |
+| O Sem Snap entra no rolê 1 como opcional, perguntado com o padrão "não" | Tirar o Snap é uma escolha, e não um conserto. A receita para sem mudar nada se encontrar um snap que não sabe trocar ou se tirar o `snapd` levaria um pacote que não é do Snap |
+| No Sem Snap, o Firefox vem do repositório APT da Mozilla, com a chave conferida pela impressão digital publicada, e o Thunderbird vem do Flathub | O pacote `firefox` do Ubuntu só instala o Snap. O repositório da Mozilla é o caminho que ela recomenda, entrega as atualizações no mesmo dia e mantém as políticas de `/etc/firefox/policies`. É a segunda exceção à regra dos repositórios da distro, nos mesmos termos da do uBlock Origin: o arquivo vem do fabricante. O repositório é ligado antes de qualquer coisa sair, para uma falha de rede não deixar a pessoa sem navegador |
+| O acesso por SSH entra no rolê 2 como opcional, só para a rede local, sem login do root e, se pedido, só com chave | Uma máquina antiga que vira servidor da casa fica num canto, sem tela. A receita só desliga a senha se a conta já tiver uma chave, e a regra do firewall vale só para a rede local. A mesma receita vai servir ao rolê 7 |
+| Os links do site e da documentação são conferidos todo mês pelo GitHub Actions, que abre uma issue quando algum quebra | As páginas da distro apontam para sites de fora, que mudam de endereço sem avisar |
+| A versão do Node.js da receita é comparada toda semana com nodejs.org, e uma versão nova da mesma linha LTS abre uma issue, com destaque para as correções de segurança | A versão fixada só sobe com o `bora`, e uma correção de segurança não pode esperar alguém lembrar de olhar |

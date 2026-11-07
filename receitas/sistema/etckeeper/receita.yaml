@@ -1,0 +1,12 @@
+id: sistema/etckeeper
+nome: Histórico do /etc
+descricao: Guarda cada mudança na configuração do sistema (a pasta /etc) num histórico do Git, para ver o que mudou, quando e voltar um arquivo.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: nao-se-aplica
+  opensuse: planejada

@@ -82,3 +82,5 @@ jobs:
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=python -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
       - name: Rolê Começar a programar, perfil web
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=web -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
+      - name: Histórico do /etc, SSH e Sem Snap
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/novas-capacidades.sh

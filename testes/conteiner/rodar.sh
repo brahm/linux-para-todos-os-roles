@@ -35,7 +35,7 @@ chown -R aluno:aluno /home/aluno
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "Plano"
-bora plano --receitas base/atualizar,sistema/snapshot,seguranca/firewall,desktop/codecs,desktop/flatpak,sistema/backup-pessoal \
+bora plano --receitas base/atualizar,sistema/etckeeper,sistema/snapshot,seguranca/firewall,desktop/codecs,desktop/flatpak,sistema/backup-pessoal \
     -p "sistema/snapshot.dispositivo=$DISCO" \
     -p "sistema/backup-pessoal.destino=$DISCO_BACKUP" \
     -p "seguranca/firewall.perfil=${PERFIL:-servidor-lan}" \
@@ -99,6 +99,7 @@ if ! diff -u /tmp/pacotes-antes /tmp/pacotes-depois; then
     echo "FALHOU: os pacotes não voltaram ao que eram"
     exit 1
 fi
+[ ! -e /etc/.git ] || { echo "FALHOU: o histórico do /etc ficou"; exit 1; }
 [ ! -e /etc/systemd/system/bora-snapshot.timer ] || { echo "FALHOU: o timer ficou"; exit 1; }
 [ ! -e /etc/timeshift/timeshift.json ] || { echo "FALHOU: a configuração do Timeshift ficou"; exit 1; }
 [ ! -e /etc/systemd/system/bora-backup-pessoal.timer ] || { echo "FALHOU: o timer do backup ficou"; exit 1; }

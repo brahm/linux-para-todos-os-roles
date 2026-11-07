@@ -11,6 +11,9 @@ RECEITAS = {
     "desktop/codecs": ("Codecs de áudio e vídeo", "codecs", "l-roxo", "Para tocar MP3, MP4 e os vídeos que vêm do celular."),
     "desktop/flatpak": ("Flatpak e Flathub", "flatpak", "l-azul", "A loja de aplicativos que funciona igual em qualquer distro."),
     "sistema/backup-pessoal": ("Backup da pasta pessoal", "backup", "l-amarelo", "Uma cópia dos seus arquivos num disco externo, todo dia."),
+    "sistema/etckeeper": ("Histórico do /etc", "historico", "l-azul", "Cada mudança na configuração do sistema guardada no Git, para ver o que mudou e voltar um arquivo."),
+    "desktop/sem-snap": ("Sem Snap", "sem-snap", "l-marrom", "Tira o Snap do Ubuntu, com o Firefox da Mozilla e os seus dados no lugar."),
+    "seguranca/ssh": ("Acesso por SSH", "terminal", "l-grafite", "Entrar nesta máquina pelo terminal de outra, só pela rede de casa."),
     "sistema/zram": ("Memória comprimida", "memoria", "l-verde", "Usa zram para caber mais programas abertos em pouca memória."),
     "desktop/ambiente-leve": ("Ambiente leve", "janela", "l-verde", "Um ambiente gráfico leve ao lado do atual, escolhido na tela de login."),
     "desktop/navegador-leve": ("Navegador enxuto", "navegador", "l-azul", "O Firefox com bloqueio de anúncios e sem o que pesa à toa."),
@@ -32,7 +35,8 @@ RECEITAS = {
 }
 
 PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/codecs", "desktop/flatpak", "sistema/backup-pessoal",
-           "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos",
+           "sistema/etckeeper", "desktop/sem-snap",
+           "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos", "seguranca/ssh",
            "dev/git", "dev/compilacao", "dev/python", "dev/node", "containers/podman"]
 
 AREAS = {
@@ -57,7 +61,7 @@ FAMILIAS = [
 ]
 
 NIVEL_TEXTO = {
-    "testada": "Testada",
+    "testada": "Testada em contêiner",
     "herdada": "Herdada",
     "comunidade": "Comunidade",
     "planejada": "Planejada",
@@ -82,8 +86,8 @@ ROLES = [
         "para_quem": ["curiosos", "estudantes"],
         "hardware": "2 GB de memória, 20 GB livres e um disco externo",
         "status": "rascunho",
-        "receitas": [("base/atualizar", ""), ("seguranca/firewall", "perfil desktop"), ("sistema/snapshot", ""),
-                     ("desktop/codecs", ""), ("desktop/flatpak", ""), ("sistema/backup-pessoal", "")],
+        "receitas": [("base/atualizar", ""), ("sistema/etckeeper", ""), ("seguranca/firewall", "perfil desktop"), ("sistema/snapshot", ""),
+                     ("desktop/codecs", ""), ("desktop/flatpak", ""), ("desktop/sem-snap", "se você pedir"), ("sistema/backup-pessoal", "")],
         "faz": [
             "<strong>Atualiza tudo</strong> e deixa as correções de segurança chegando sozinhas, todo dia.",
             "<strong>Liga o firewall</strong> no perfil de uso pessoal: nada que chega de fora entra sem ser chamado.",
@@ -91,6 +95,8 @@ ROLES = [
             "<strong>Toca qualquer vídeo e música</strong>, com os codecs que as distros não trazem por questão de licença.",
             "<strong>Abre a loja Flathub</strong>, com os aplicativos de estudo e trabalho na versão mais nova.",
             "<strong>Copia a sua pasta pessoal</strong> para um disco externo, todo dia.",
+            "<strong>Guarda o histórico da configuração</strong> do sistema no Git, para ver o que cada instalação mudou em <code>/etc</code>.",
+            "<strong>Tira o Snap, se você pedir</strong>, com o Firefox da Mozilla e o Thunderbird do Flathub no lugar, levando os seus dados.",
         ],
         "nao_faz": [
             "Não troca a sua distro nem o seu ambiente gráfico.",
@@ -107,7 +113,7 @@ ROLES = [
         ],
         "pronto_quando": "O bora diz que tudo está aplicado, um vídeo comum toca, o Timeshift mostra o primeiro snapshot e o disco externo tem a primeira cópia da pasta pessoal.",
         "como_desfazer": "O bora desfaz as receitas na ordem contrária e remove só o que ele mesmo instalou.",
-        "perguntas": ["Instalar as atualizações de segurança sozinho, todo dia? (o padrão é sim)", "Em que disco externo guardar a cópia da pasta pessoal? (o padrão usa o disco USB conectado)"],
+        "perguntas": ["Tirar o Snap e usar o Firefox da Mozilla e os aplicativos do Flathub no lugar? (o padrão é não)", "Instalar as atualizações de segurança sozinho, todo dia? (o padrão é sim)", "Em que disco externo guardar a cópia da pasta pessoal? (o padrão usa o disco USB conectado)"],
     },
     {
         "id": "maquina-antiga", "num": "02", "icone": "broto", "cor": "l-verde",
@@ -117,13 +123,14 @@ ROLES = [
         "hardware": "64 bits, 2 GB de memória e 15 GB livres",
         "status": "rascunho",
         "receitas": [("base/atualizar", ""), ("sistema/snapshot", ""), ("sistema/zram", ""), ("desktop/ambiente-leve", "Xfce ou LXQt"),
-                     ("desktop/navegador-leve", ""), ("sistema/servicos-enxutos", "")],
+                     ("desktop/navegador-leve", ""), ("sistema/servicos-enxutos", ""), ("seguranca/ssh", "se você pedir")],
         "faz": [
             "<strong>Atualiza tudo e guarda uma foto do sistema</strong> antes de mexer, para voltar atrás se algo der errado.",
             "<strong>Comprime a memória</strong> com zram, para caber mais abas e programas antes de a máquina engasgar.",
             "<strong>Instala um ambiente leve</strong>, o Xfce ou o LXQt, ao lado do que você já tem. Você escolhe qual usar na tela de login.",
             "<strong>Deixa o Firefox mais leve</strong>, com o bloqueador de anúncios uBlock Origin e as abas paradas saindo da memória quando ela acaba.",
             "<strong>Desliga o que a máquina não usa</strong>, como o Bluetooth num computador sem Bluetooth, e faz o boot parar de esperar a rede.",
+            "<strong>Liga o SSH, se você pedir</strong>, para cuidar da máquina pelo terminal de outro computador da casa, sem login do root e só pela rede local.",
         ],
         "nao_faz": [
             "Não apaga o ambiente gráfico que você já tem.",
@@ -140,7 +147,7 @@ ROLES = [
         ],
         "pronto_quando": "O Firefox abre cinco abas e toca um vídeo sem a máquina travar, e o bora diag mostra o zram ligado.",
         "como_desfazer": "O bora desliga o zram, religa os serviços que desligou, volta o Firefox ao que era e remove o ambiente leve. O ambiente antigo nunca saiu de lá.",
-        "perguntas": ["Qual ambiente leve: Xfce ou LXQt? (o padrão é o Xfce)", "Passar a entrar no ambiente leve por padrão? (o padrão é não: ele aparece como opção na tela de login)", "Instalar o bloqueador de anúncios no Firefox? (o padrão é sim)"],
+        "perguntas": ["Entrar nesta máquina pelo terminal de outro computador da casa, por SSH? (o padrão é não)", "Qual ambiente leve: Xfce ou LXQt? (o padrão é o Xfce)", "Passar a entrar no ambiente leve por padrão? (o padrão é não: ele aparece como opção na tela de login)", "Instalar o bloqueador de anúncios no Firefox? (o padrão é sim)"],
     },
     {
         "id": "comecar-a-programar", "num": "03", "icone": "terminal", "cor": "l-grafite",

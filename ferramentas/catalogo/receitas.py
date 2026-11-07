@@ -120,7 +120,7 @@ def onde_testada(r):
             <tbody>{testes}</tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada</strong> quer dizer que a receita passou em teste automático nessa família. Ela ainda não rodou numa máquina virtual nem num computador de verdade; o <code>bora</code> avisa isso quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>'''
 
 
@@ -160,7 +160,7 @@ def abertura(rid, r, ilustracao, legenda):
             <span class="ficha"><code>{rid}</code></span>
             <span class="ficha risco-{risco}">{risco_txt}</span>
             <span class="ficha">Pede a senha de administrador</span>
-            <span class="ficha feito testada">Testada no Ubuntu e no Debian</span>
+            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
@@ -1605,4 +1605,189 @@ PAGINAS.update({
     "dev/python": pagina_python,
     "dev/node": pagina_node,
     "containers/podman": pagina_podman,
+})
+
+
+# ---------------------------------------------------------------- capacidades novas: etckeeper, sem-snap e ssh
+
+ILUSTRA_ETCKEEPER = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iet-t">
+            <title id="iet-t">A pasta /etc com uma linha do tempo de registros do Git: a instalação, a instalação do firewall, a mudança do dia, cada um mostrando o que mudou na configuração.</title>
+            <rect x="20" y="24" width="440" height="64" rx="14" class="caixa-svg"/>
+            <text x="44" y="52" font-size="14" font-weight="600" class="mono">/etc</text>
+            <text x="44" y="74" font-size="12.5" class="t2">a configuração do sistema, num repositório do Git</text>
+            <path d="M60 140H420" class="traco"/>
+            """ + "".join(_commit(60 + i * 120, 140, i, t) for i, t in enumerate(["instalação", "apt: ufw", "apt: codecs", "dia 12"])) + """
+            <g class="volta">
+              <rect x="20" y="210" width="440" height="110" rx="14" class="caixa-svg"/>
+              <text x="44" y="240" font-size="13" class="mono">$ sudo git -C /etc log --oneline</text>
+              <text x="44" y="266" font-size="12.5" class="t2 mono">a1c3e9f commit diário</text>
+              <text x="44" y="288" font-size="12.5" class="t2 mono">7d20b14 saving changes after apt run</text>
+              <text x="44" y="310" font-size="12.5" class="t2 mono">3f9e002 Initial commit</text>
+            </g>
+          </svg>"""
+
+
+def pagina_etckeeper():
+    return _pagina(
+        "sistema/etckeeper", ILUSTRA_ETCKEEPER, "Ilustração. Cada instalação e cada dia viram um registro no histórico do /etc.",
+        ["<strong>Guarda a pasta <code>/etc</code> num repositório do Git</strong>, com o primeiro registro na hora.",
+         "<strong>Registra cada instalação do apt</strong>, antes e depois, e o que mudou por fora dele uma vez por dia.",
+         "<strong>Fecha o histórico</strong> com permissão só do root, porque o <code>/etc</code> tem as senhas cifradas."],
+        ["Não manda o histórico para lugar nenhum: ele fica no próprio computador.",
+         "Não substitui o snapshot nem o backup: guarda só a configuração.",
+         "Não mexe num histórico do <code>/etc</code> que já existia antes do <code>bora</code>."],
+        ["<p>Confere se o pacote <code>etckeeper</code> está instalado e se o <code>/etc</code> tem um histórico com pelo menos um registro.</p>",
+         "<p>Instala o <code>etckeeper</code>, que cria o histórico e o primeiro registro, registra o que tiver mudado desde então e fecha a pasta <code>/etc/.git</code> para o root.</p>",
+         "<p>Confere o histórico, o gancho do apt, a permissão 700 de <code>/etc/.git</code> e o arquivo onde ficam o dono e as permissões de cada arquivo.</p>",
+         "<p>Guarda uma cópia do histórico em <code>/var/backups</code>, remove o repositório com <code>etckeeper uninit</code> e tira o pacote. Os arquivos do <code>/etc</code> ficam como estão.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[2/8] Histórico do /etc", [
+            "Instalando: etckeeper", '<span class="d">0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.</span>',
+            "Pronto. Para ver o histórico: sudo git -C /etc log --oneline",
+            ("ok", "etckeeper instalado"), ("ok", "o /etc tem um histórico com pelo menos um registro (git -C /etc log)"),
+            ("ok", "o apt registra cada instalação no histórico (/etc/apt/apt.conf.d/05etckeeper)"),
+            ("ok", "só o root lê o histórico (/etc/.git com permissão 700)"),
+            ("ok", "dono e permissões de cada arquivo guardados à parte (/etc/.etckeeper)"), "Tudo conferido."], "Histórico do /etc"),
+            "Terminal mostrando o bora aplicar a receita Histórico do /etc: instala o etckeeper e confere cinco testes."),
+        [("Já tenho o snapshot. Para que outro?", "O snapshot volta o sistema inteiro a como estava ontem. O histórico do <code>/etc</code> responde a uma pergunta menor: o que mudou na configuração desde que o Wi-Fi parou? Com ele, dá para ver a diferença de um arquivo e voltar só aquele, sem desfazer o resto."),
+         ("Por que o Git?", "É a ferramenta que todo mundo que programa usa para guardar versões, e o <code>git log -p</code> mostra, linha por linha, o que cada programa e cada receita do <code>bora</code> mudou. Para quem está aprendendo, é um jeito de ver o sistema por dentro.")],
+        [("pacote", "etckeeper", "Guarda o /etc no Git e avisa o apt antes e depois de cada instalação. Traz o git, se faltar."),
+         ("arquivo", "/etc/.git e /etc/.etckeeper", "O histórico, com permissão só do root, e o dono e as permissões de cada arquivo."),
+         ("relogio", "etckeeper.timer", "Um registro por dia do que mudou por fora do apt.")],
+        [("sudo git -C /etc log --oneline", "A lista de registros, do mais novo para o mais velho."),
+         ("sudo git -C /etc log -p -- fstab", "O histórico de um arquivo, com as linhas que mudaram."),
+         ("sudo git -C /etc diff", "O que mudou desde o último registro.")],
+        [("etckeeper", "Site do projeto", "https://etckeeper.branchable.com/"),
+         ("etckeeper, na ArchWiki", "ArchWiki", "https://wiki.archlinux.org/title/Etckeeper")])
+
+
+ILUSTRA_SEM_SNAP = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="isn-t">
+            <title id="isn-t">À esquerda, o Firefox e o Thunderbird do Snap; à direita, o Firefox da Mozilla e o Thunderbird do Flathub, com os perfis levados de um lado para o outro.</title>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="30" width="190" height="200" rx="14" fill="none" stroke="var(--text-2)" stroke-width="2.2" stroke-dasharray="6 4"/>
+              <text x="115" y="60" font-size="14" font-weight="600" text-anchor="middle">Snap</text>
+              <text x="115" y="104" font-size="13" text-anchor="middle" class="t2">Firefox</text>
+              <text x="115" y="134" font-size="13" text-anchor="middle" class="t2">Thunderbird</text>
+              <text x="115" y="164" font-size="13" text-anchor="middle" class="t2">loja de aplicativos</text>
+              <text x="115" y="206" font-size="12" text-anchor="middle" class="t2 mono">snapd sempre rodando</text>
+            </g>
+            <path d="M222 130h36" class="traco"/>
+            <path d="M250 122l10 8-10 8" class="traco"/>
+            <g class="pacote" style="--i:1">
+              <rect x="270" y="30" width="190" height="200" rx="14" class="caixa-svg"/>
+              <text x="365" y="60" font-size="14" font-weight="600" text-anchor="middle">No lugar</text>
+              <text x="365" y="104" font-size="13" text-anchor="middle">Firefox da Mozilla</text>
+              <text x="365" y="134" font-size="13" text-anchor="middle">Thunderbird do Flathub</text>
+              <text x="365" y="164" font-size="13" text-anchor="middle">GNOME Software</text>
+              <text x="365" y="206" font-size="12" text-anchor="middle" class="t2 mono">com os seus dados</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="256" width="440" height="64" rx="14" class="caixa-svg"/>
+              <text x="240" y="284" font-size="12.5" text-anchor="middle" class="mono">Package: snapd · Pin-Priority: -10</text>
+              <text x="240" y="306" font-size="12.5" text-anchor="middle" class="t2">o apt não traz o Snap de volta</text>
+            </g>
+          </svg>"""
+
+
+def pagina_sem_snap():
+    return _pagina(
+        "desktop/sem-snap", ILUSTRA_SEM_SNAP, "Ilustração. Os mesmos programas, de outra fonte, com os seus dados.",
+        ["<strong>Tira o Snap do Ubuntu</strong> e impede que o apt o traga de volta.",
+         "<strong>Troca o Firefox do Snap pelo da Mozilla</strong>, do repositório oficial, com a chave conferida, levando favoritos, senhas e extensões.",
+         "<strong>Troca o Thunderbird do Snap pelo do Flathub</strong>, com os seus e-mails, e a loja do Snap pelo GNOME Software."],
+        ["Só entra se você pedir: o padrão do rolê é deixar o Snap como está.",
+         "Não tira um snap que não sabe trocar: ela para e diz qual é, sem mudar nada.",
+         "Não apaga os seus perfis: as cópias ficam, mesmo depois do desfazer.",
+         "Não mexe no Debian nem no Linux Mint, que já não usam o Snap: nelas, só bloqueia o apt."],
+        ["<p>Confere se o pacote <code>snapd</code> e algum snap estão instalados, e se o apt ainda poderia trazer o <code>snapd</code> de volta.</p>",
+         "<p>Recusa se houver um snap sem substituto. Liga o repositório da Mozilla antes de tirar qualquer coisa, copia os perfis para os lugares novos, remove os snaps e o <code>snapd</code>, bloqueia o <code>snapd</code> no apt e instala o Firefox e o Thunderbird no lugar.</p>",
+         "<p>Confere que o <code>snapd</code> e os snaps saíram, que o apt recusa o <code>snapd</code>, que o Firefox vem de <code>packages.mozilla.org</code> e que os perfis estão nos lugares novos.</p>",
+         "<p>Remove o que a receita instalou, apaga os arquivos do apt que ela criou, instala de volta o <code>snapd</code>, os metapacotes e os snaps de programas, e devolve os perfis para a pasta do Snap.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com um snap do Firefox, encurtada nas linhas do apt.", _saida("[7/8] Sem Snap", [
+            "Atualizando a lista de pacotes, com o repositório da Mozilla.",
+            "Perfil copiado para /home/aluno/.mozilla/firefox", "Removendo o snapd: snapd",
+            "Arquivo atualizado: /etc/apt/preferences.d/bora-sem-snap.pref", "Instalando: firefox firefox-l10n-pt-br",
+            "Pronto. O Snap saiu e não volta pelo apt.",
+            ("ok", "o snapd não está instalado (dpkg -l snapd)"), ("ok", "nenhum snap ficou em /var/lib/snapd/snaps"),
+            ("ok", "o apt não instala o snapd de volta (apt-cache policy snapd)"),
+            ("ok", "o Firefox é o pacote da Mozilla (apt-cache policy firefox)"), ("ok", "os perfis copiados estão no lugar novo"),
+            "Tudo conferido."], "Sem Snap"),
+            "Terminal mostrando o bora aplicar a receita Sem Snap: liga o repositório da Mozilla, copia o perfil do Firefox, remove o snapd, bloqueia a volta dele e instala o Firefox da Mozilla, conferindo cinco testes."),
+        [("O Snap é ruim?", "Não. Ele funciona e é o jeito do Ubuntu de entregar aplicativos. Mas cada snap é uma imagem montada no boot, os programas demoram mais para abrir na primeira vez e o <code>snapd</code> fica rodando o tempo todo. Com o Flatpak já ligado pelo rolê, são duas lojas fazendo o mesmo trabalho. Por isso é uma escolha sua, e não um conserto."),
+         ("Por que o Firefox da Mozilla, e não o do Flathub?", "O repositório da Mozilla é o caminho que ela mesma recomenda para Debian e Ubuntu, entrega as atualizações no mesmo dia e continua lendo as políticas de <code>/etc/firefox/policies</code>, que o navegador enxuto usa. A chave é conferida pela impressão digital que a Mozilla publica."),
+         ("Por que o risco alto?", "A receita mexe no navegador e nos metapacotes do Ubuntu. Ela para antes de mudar qualquer coisa quando encontra um snap sem substituto, quando tirar o <code>snapd</code> levaria um pacote que não é do Snap, ou quando o repositório da Mozilla não responde.")],
+        [("pacote", "snapd (sai)", "Junto com os snaps e os pacotes de transição. Os metapacotes do Ubuntu saem, mas o que eles puxavam fica."),
+         ("arquivo", "/etc/apt/preferences.d/bora-sem-snap.pref", "Prioridade -10 para o snapd: o apt não instala de volta."),
+         ("arquivo", "/etc/apt/sources.list.d/mozilla.sources", "O repositório da Mozilla, com a chave em /etc/apt/keyrings e prioridade 1000 em preferences.d/mozilla.pref."),
+         ("pacote", "firefox e firefox-l10n-pt-br", "O Firefox da Mozilla, em português."),
+         ("copia", "~/.mozilla/firefox", "O perfil do Firefox, copiado de ~/snap/firefox antes de o Snap sair.")],
+        [("snap list", "Depois da receita, responde que o comando não existe."),
+         ("apt-cache policy snapd", "O candidato é (none): o apt não instala o snapd."),
+         ("apt-cache policy firefox", "A versão instalada vem de packages.mozilla.org.")],
+        [("Instalar o Firefox no Linux", "Mozilla", "https://support.mozilla.org/kb/install-firefox-linux"),
+         ("apt_preferences(5)", "Manual do apt", "https://manpages.debian.org/stable/apt/apt_preferences.5.en.html")])
+
+
+ILUSTRA_SSH = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="issh-t">
+            <title id="issh-t">Um notebook da casa conecta por SSH na máquina antiga, pela rede local. Uma conexão vinda da internet fica de fora, barrada no firewall.</title>
+            <rect x="20" y="40" width="170" height="110" rx="14" class="caixa-svg"/>
+            <text x="105" y="76" font-size="14" font-weight="600" text-anchor="middle">Notebook</text>
+            <text x="105" y="100" font-size="12" text-anchor="middle" class="t2 mono">ssh ana@192.168.0.20</text>
+            <rect x="290" y="40" width="170" height="110" rx="14" class="caixa-svg"/>
+            <text x="375" y="76" font-size="14" font-weight="600" text-anchor="middle">Máquina antiga</text>
+            <text x="375" y="100" font-size="12" text-anchor="middle" class="t2">sem tela, num canto</text>
+            <g class="pacote" style="--i:0">
+              <path d="M190 95h100" class="traco"/>
+              <text x="240" y="86" font-size="12" text-anchor="middle" class="t2">rede de casa</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="190" width="440" height="130" rx="14" class="caixa-svg"/>
+              <text x="44" y="220" font-size="12.5" class="mono">PermitRootLogin no</text>
+              <text x="44" y="244" font-size="12.5" class="mono">PasswordAuthentication yes (ou no, só chave)</text>
+              <text x="44" y="268" font-size="12.5" class="mono">MaxAuthTries 4</text>
+              <text x="44" y="300" font-size="12.5" class="t2">firewall: porta 22 só para a rede local</text>
+            </g>
+          </svg>"""
+
+
+def pagina_ssh():
+    return _pagina(
+        "seguranca/ssh", ILUSTRA_SSH, "Ilustração. A máquina da casa atende pelo terminal de outro computador, só pela rede local.",
+        ["<strong>Liga o servidor SSH</strong>, para entrar nesta máquina pelo terminal de outro computador da casa.",
+         "<strong>Fecha o que uma máquina de casa não precisa</strong>: o login do root, as senhas vazias e o encaminhamento de janelas.",
+         "<strong>Libera só a rede local no firewall</strong>, quando ele está ligado.",
+         "<strong>Aceita só chave, se você pedir</strong>, e só depois de conferir que a conta já tem uma."],
+        ["Só entra se você pedir: o padrão do rolê é não ligar o SSH.",
+         "Não abre porta para a internet. Para entrar de fora de casa, o caminho é uma VPN.",
+         "Não desliga a senha numa conta sem chave, para ninguém ficar trancado do lado de fora.",
+         "Não cria contas nem chaves por você."],
+        ["<p>Confere se o <code>openssh-server</code> está instalado, se a configuração do <code>bora</code> está no lugar e, com o firewall ligado, se a rede local está liberada.</p>",
+         "<p>Instala o servidor, escreve <code>/etc/ssh/sshd_config.d/10-bora.conf</code>, confere com <code>sshd -t</code> antes de recarregar, liga o SSH no boot e acrescenta a regra do firewall para a rede local.</p>",
+         "<p>Confere a configuração válida, os valores que valem de verdade com <code>sshd -T</code>, o SSH ligado no boot, a porta 22 esperando conexões e a regra do firewall.</p>",
+         "<p>Remove a regra do firewall e o arquivo da receita, desliga o que ela ligou e tira o <code>openssh-server</code>, se foi ela que instalou. Quem está conectado na hora continua.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04 com o firewall ligado, encurtada nas linhas do apt.", _saida("[7/7] Acesso por SSH na rede de casa", [
+            "Instalando: openssh-server", "Arquivo atualizado: /etc/ssh/sshd_config.d/10-bora.conf",
+            "Firewall: SSH liberado só para a rede local (192.168.0.0/24).", "Pronto. De outro computador da casa: ssh ana@192.168.0.20",
+            ("ok", "servidor SSH instalado (openssh-server)"), ("ok", "o sshd aceita a configuração (sshd -t)"),
+            ("ok", "o root não entra por SSH (PermitRootLogin no)"), ("ok", "entra com a senha da conta ou com chave (PasswordAuthentication yes)"),
+            ("ok", "no máximo 4 tentativas por conexão (MaxAuthTries 4)"), ("ok", "o SSH liga junto com o computador (ssh.socket)"),
+            ("ok", "o firewall libera o SSH só para a rede local"), "Tudo conferido."], "Acesso por SSH na rede de casa"),
+            "Terminal mostrando o bora aplicar a receita Acesso por SSH: instala o servidor, escreve a configuração, libera a rede local no firewall e confere sete testes."),
+        [("Para que SSH numa máquina antiga?", "Uma máquina antiga que vira servidor da casa costuma ficar num canto, sem tela nem teclado. O SSH é o jeito de cuidar dela de outro computador: atualizar, ver o espaço em disco, reiniciar um serviço."),
+         ("Senha ou chave?", "A senha funciona na hora e serve para começar. A chave não dá para adivinhar e é o recomendado depois que você copiar a sua com <code>ssh-copy-id</code>. Aí é só rodar o <code>bora</code> de novo com <code>so_chave</code> em sim."),
+         ("Por que só a rede local?", "Nenhuma receita do <code>bora</code> abre porta para a internet: depende do roteador, do provedor e do CGNAT, e uma porta de SSH aberta recebe tentativas de senha o dia inteiro. De fora de casa, use uma VPN, como o Tailscale.")],
+        [("pacote", "openssh-server", "O servidor SSH. Cria as chaves do servidor na instalação."),
+         ("arquivo", "/etc/ssh/sshd_config.d/10-bora.conf", "Sem login do root, sem senha vazia, no máximo 4 tentativas e, se você pedir, só chave."),
+         ("servico", "ssh.socket ou ssh.service", "O SSH liga junto com o computador."),
+         ("escudo", "Regra do ufw bora-ssh", "A porta 22 liberada só para a rede local, quando o firewall está ligado.")],
+        [("ssh pessoa@endereço", "De outro computador da casa, com o endereço que ip -4 addr mostra."),
+         ("sudo sshd -T | grep -E 'permitrootlogin|passwordauthentication'", "Os valores que valem de verdade."),
+         ("ssh-copy-id pessoa@endereço", "Copia a sua chave para a máquina, para depois usar só chave.")],
+        [("sshd_config(5)", "OpenBSD", "https://man.openbsd.org/sshd_config"),
+         ("SSH", "Wiki do Debian", "https://wiki.debian.org/SSH")])
+
+
+PAGINAS.update({
+    "sistema/etckeeper": pagina_etckeeper,
+    "desktop/sem-snap": pagina_sem_snap,
+    "seguranca/ssh": pagina_ssh,
 })

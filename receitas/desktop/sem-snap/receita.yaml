@@ -1,0 +1,12 @@
+id: desktop/sem-snap
+nome: Sem Snap
+descricao: Tira o Snap do Ubuntu e impede que ele volte, trocando o Firefox do Snap pelo pacote oficial da Mozilla, com os seus favoritos e senhas.
+risco: alto
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: nao-se-aplica
+  arch: nao-se-aplica
+  fedora-imutavel: nao-se-aplica
+  opensuse: nao-se-aplica

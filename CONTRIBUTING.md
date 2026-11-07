@@ -10,7 +10,7 @@ O projeto usa a licença [0BSD](LICENSE). Ao enviar uma contribuição, você co
 
 - **Propor um rolê:** abra uma issue descrevendo o objetivo em linguagem de gente ("quero que este PC vire o lugar das fotos da família"), para quem ele serve e em que máquina você pensou.
 - **Escrever ou melhorar uma receita:** siga o formato descrito em [`receitas/README.md`](receitas/README.md).
-- **Testar:** rodar uma receita numa distro em que ela ainda não foi testada e registrar o resultado é uma das contribuições mais valiosas.
+- **Testar:** rodar uma receita numa distro em que ela ainda não foi testada e registrar o resultado é uma das contribuições mais valiosas. Os [roteiros de teste em VM](testes/vm/README.md) dizem o que conferir em cada rolê, e o formulário [Relato de teste](https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=5-relato-de-teste.yml) serve para contar como foi, sem precisar abrir um pull request.
 - **Revisar textos:** se uma explicação ficou confusa para você, ela vai ficar confusa para outras pessoas.
 
 ## Antes de abrir um pull request
