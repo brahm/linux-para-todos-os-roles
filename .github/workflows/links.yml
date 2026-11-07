@@ -1,0 +1,61 @@
+# Confere, uma vez por mês, os links do site e da documentação. Quando algum
+# quebra, abre uma issue com a lista (ou comenta na que já estiver aberta).
+name: Links
+
+on:
+  schedule:
+    - cron: "17 9 1 * *" # dia 1 de cada mês, 6h17 em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  links:
+    name: Conferir os links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Conferir com o lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # 403 e 429: sites que recusam robôs ou pedem calma, mas funcionam no navegador.
+          # Os links de abrir issue e de histórico do GitHub pedem login.
+          args: >-
+            --no-progress
+            --max-concurrency 8
+            --timeout 30
+            --max-retries 3
+            --accept 200..=299,403,429
+            --exclude '^https://github\.com/brahm/linux-para-todos-os-roles/(issues/new|commits)'
+            --root-dir ${{ github.workspace }}/docs
+            'docs/**/*.html'
+            '*.md'
+            'receitas/**/*.md'
+            'objetivos/*.md'
+            'familias/*.md'
+            'marca/*.md'
+            'testes/**/*.md'
+          output: relatorio-links.md
+          fail: false
+      - name: Abrir ou atualizar a issue
+        if: steps.lychee.outputs.exit_code != 0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create links-quebrados --color d93f0b --description "Achado pela conferência mensal de links" 2>/dev/null || true
+          {
+            echo "A conferência mensal achou links que não respondem. Corrija o link na fonte (em \`ferramentas/catalogo/\` para as páginas do catálogo e da distro) e gere o site de novo."
+            echo
+            cat relatorio-links.md
+            echo
+            echo "Execução: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } >corpo.md
+          aberta=$(gh issue list --label links-quebrados --state open --json number --jq '.[0].number')
+          if [ -n "$aberta" ]; then
+            gh issue comment "$aberta" --body-file corpo.md
+          else
+            gh issue create --title "Links quebrados no site e na documentação" --label links-quebrados --body-file corpo.md
+          fi

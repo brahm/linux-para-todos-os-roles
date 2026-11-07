@@ -7,13 +7,24 @@ hardware_minimo:
   ram_gb: 2
   disco_livre_gb: 20
 familias: [ubuntu, debian]
+perguntas:
+  - id: sem_snap
+    texto: Tirar o Snap e usar o Firefox da Mozilla e os aplicativos do Flathub no lugar?
+    opcoes: [nao, sim]
+    rotulos:
+      nao: Não, deixar o Snap como está (o recomendado para começar).
+      sim: Sim, tirar o Snap. O Firefox e o Thunderbird continuam, com os seus dados.
+    padrao: nao
 receitas:
   - id: base/atualizar
+  - id: sistema/etckeeper
   - id: seguranca/firewall
     perfil: desktop
   - id: sistema/snapshot
   - id: desktop/codecs
   - id: desktop/flatpak
+  - id: desktop/sem-snap
+    quando: {sem_snap: sim}
   - id: sistema/backup-pessoal
 pronto_quando: O bora diz que tudo está aplicado, um vídeo comum toca, o Timeshift mostra o primeiro snapshot e o disco externo tem a primeira cópia da pasta pessoal.
-como_desfazer: O bora desfaz as receitas na ordem contrária e remove só o que ele mesmo instalou.
+como_desfazer: O bora desfaz as receitas na ordem contrária e remove só o que ele mesmo instalou. Se o Snap saiu, ele volta, com o Firefox e o Thunderbird do Snap.

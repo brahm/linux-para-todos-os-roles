@@ -7,6 +7,14 @@ hardware_minimo:
   ram_gb: 2
   disco_livre_gb: 15
 familias: [ubuntu, debian]
+perguntas:
+  - id: acesso_ssh
+    texto: Quer entrar nesta máquina pelo terminal de outro computador da casa (SSH)?
+    opcoes: [nao, sim]
+    rotulos:
+      nao: Não, ela vai ser usada com tela e teclado.
+      sim: Sim, ela vai ficar num canto, servindo a casa. Só a rede local entra.
+    padrao: nao
 receitas:
   - id: base/atualizar
   - id: sistema/snapshot
@@ -14,5 +22,7 @@ receitas:
   - id: desktop/ambiente-leve
   - id: desktop/navegador-leve
   - id: sistema/servicos-enxutos
+  - id: seguranca/ssh
+    quando: {acesso_ssh: sim}
 pronto_quando: O Firefox abre cinco abas e toca um vídeo sem a máquina travar, e o bora diag mostra o zram ligado.
 como_desfazer: O bora desliga o zram, religa os serviços que desligou, volta o Firefox ao que era e remove o ambiente leve. O ambiente antigo nunca saiu de lá.

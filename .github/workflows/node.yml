@@ -1,0 +1,68 @@
+# Confere, toda semana, se saiu uma versão nova do Node.js na mesma linha LTS
+# que a receita dev/node fixa. Se saiu, abre uma issue com o passo a passo
+# para atualizar, e avisa quando a versão nova corrige falhas de segurança.
+name: Node.js
+
+on:
+  schedule:
+    - cron: "41 10 * * 1" # segunda-feira, 7h41 em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  versao:
+    name: Conferir a versão do Node.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Comparar com nodejs.org
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          atual=$(sed -n 's/^NODE_VERSAO=//p' receitas/dev/node/comum-node.sh)
+          linha=${atual%%.*}
+          curl -fsSL --retry 3 https://nodejs.org/dist/index.json -o index.json
+          # As versões da mesma linha, da mais nova para a mais velha, mais novas que a da receita.
+          jq -r --arg l "v$linha." '.[] | select(.version | startswith($l)) | "\(.version | ltrimstr("v")) \(.security) \(.date)"' index.json |
+            while read -r v seg data; do
+              if [ "$(printf '%s\n%s\n' "$atual" "$v" | sort -V | tail -n 1)" = "$v" ] && [ "$v" != "$atual" ]; then
+                echo "$v $seg $data"
+              fi
+            done >novas.txt
+          if [ ! -s novas.txt ]; then
+            echo "A receita está na versão mais nova da linha $linha: $atual."
+            exit 0
+          fi
+          nova=$(head -n 1 novas.txt | cut -d' ' -f1)
+          titulo="Node.js $nova: atualizar a receita dev/node"
+          if gh issue list --state all --search "\"$titulo\" in:title" --json number --jq '.[0].number' | grep -q .; then
+            echo "Já existe uma issue para o Node.js $nova."
+            exit 0
+          fi
+          aviso=""
+          if grep -q ' true ' novas.txt; then
+            aviso="**Pelo menos uma das versões abaixo corrige falhas de segurança.** Vale publicar uma versão nova do bora assim que der."
+          fi
+          {
+            echo "Saiu o Node.js $nova, e a receita \`dev/node\` instala o $atual."
+            echo
+            [ -n "$aviso" ] && { echo "$aviso"; echo; }
+            echo "| Versão | Segurança | Data |"
+            echo "|---|---|---|"
+            while read -r v seg data; do
+              echo "| [$v](https://nodejs.org/en/blog/release/v$v) | $([ "$seg" = true ] && echo sim || echo não) | $data |"
+            done <novas.txt
+            echo
+            echo "Para atualizar:"
+            echo
+            echo "1. Em \`receitas/dev/node/comum-node.sh\`, troque \`NODE_VERSAO\` por \`$nova\` e as duas somas pelas de \`node-v$nova-linux-x64.tar.xz\` e \`node-v$nova-linux-arm64.tar.xz\`, copiadas de https://nodejs.org/dist/v$nova/SHASUMS256.txt."
+            echo "2. Troque a versão citada em \`docs/decisoes.md\`, no LEIAME da receita e em \`ferramentas/catalogo/\`, e gere o site."
+            echo "3. Abra um pull request; o CI testa o perfil web nas três distros."
+            echo "4. Suba a versão do bora no \`Cargo.toml\` para a publicação sair sozinha depois do merge."
+          } >corpo.md
+          gh label create node --color 3c873a --description "Versão do Node.js da receita dev/node" 2>/dev/null || true
+          gh issue create --title "$titulo" --label node --body-file corpo.md

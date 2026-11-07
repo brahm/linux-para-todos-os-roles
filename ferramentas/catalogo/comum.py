@@ -40,6 +40,8 @@ ICONES = {
     "filme": '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/>',
     "vpn": '<path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><circle cx="12" cy="10.5" r="1.8"/><path d="M12 12.3v3.2"/>',
     "rede": '<circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7v4M12 11l-6 5.3M12 11l6 5.3"/>',
+    "historico": '<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4.5v3.8h3.8"/><path d="M12 8v4.3l3 1.8"/>',
+    "sem-snap": '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/><path d="M9.5 9.2l5 2.8-5 2.8z"/>',
     # Rolês, os mesmos da página inicial
     "livro": '<path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/>',
     "broto": '<rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/>',

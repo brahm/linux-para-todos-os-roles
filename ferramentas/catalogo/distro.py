@@ -3,7 +3,7 @@
 import json
 from comum import REPO, cabeca, janela, bloco_pedidos
 
-# suporte: "testada" (o bora tem receitas testadas nela), "herdada" (usa as receitas da base)
+# suporte: "testada" (o bora tem receitas testadas em contêiner nela), "herdada" (usa as receitas da base)
 # ou "onda N" (o bora ainda não chegou à família).
 DISTROS = [
     {
@@ -97,7 +97,7 @@ FAMILIA_NOME = {"ubuntu": "família Ubuntu", "debian": "família Debian", "fedor
 def ficha_suporte(d):
     s = d["suporte"]
     if s == "testada":
-        return '<span class="ficha feito">✓ Testada com o <code>bora</code></span>'
+        return '<span class="ficha feito">✓ Testada em contêiner com o <code>bora</code></span>'
     if s == "herdada":
         return '<span class="ficha herdada">Usa as receitas do Ubuntu</span>'
     return f'<span class="ficha planejado"><code>bora</code> na {s}</span>'

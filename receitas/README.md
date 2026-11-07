@@ -28,7 +28,7 @@ descricao: Bloqueia conexões de entrada e libera só o que o perfil pede.
 risco: medio                 # baixo | medio | alto
 precisa_root: true
 familias:
-  ubuntu: testada            # testada | herdada | comunidade | planejada | nao-se-aplica
+  ubuntu: testada            # testada | herdada | comunidade | planejada | nao-se-aplica (veja familias/README.md)
   debian: testada
   fedora: planejada
   arch: planejada

@@ -1,0 +1,68 @@
+name: Relato de teste
+description: Rodei um rolê ou uma receita numa máquina virtual ou num computador de verdade, e conto como foi.
+title: "Teste: "
+labels: [relato-de-teste]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por testar! Os testes automáticos rodam num contêiner, que não tem kernel, disco nem tela de login de verdade, então o seu relato é o que faz uma receita ser recomendada sem ressalva. Os [roteiros de teste em VM](https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md) dizem o que conferir em cada rolê.
+
+        Antes de colar qualquer saída, remova IPs públicos, nomes de usuário, tokens e chaves. O `bora ajuda` já faz isso por você.
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde você testou
+      options:
+        - Máquina virtual
+        - Computador de verdade
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: Distro e versão
+      placeholder: Ubuntu 24.04, Debian 13, Linux Mint 22.2
+    validations:
+      required: true
+  - type: input
+    id: maquina
+    attributes:
+      label: Máquina
+      description: No computador de verdade, o modelo, a memória e o tipo de disco. Na VM, o programa e a memória.
+      placeholder: Notebook Dell de 2014, 4 GB, disco rígido / GNOME Boxes, 2 GB
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do bora
+      description: A primeira linha de bora --version.
+      placeholder: bora 0.5.0
+    validations:
+      required: true
+  - type: input
+    id: role
+    attributes:
+      label: Rolê ou receitas testadas
+      placeholder: Dar vida nova a uma máquina antiga, com Xfce e SSH
+    validations:
+      required: true
+  - type: dropdown
+    id: resultado
+    attributes:
+      label: Resultado
+      options:
+        - Tudo funcionou, inclusive o desfazer
+        - Funcionou, com ressalvas (conto abaixo)
+        - Alguma receita falhou (conto abaixo)
+    validations:
+      required: true
+  - type: textarea
+    id: conferido
+    attributes:
+      label: O que você conferiu
+      description: Pode colar a lista do roteiro, marcando o que passou e o que não passou.
+  - type: textarea
+    id: saida
+    attributes:
+      label: Saída do bora, se algo falhou
+      render: text
