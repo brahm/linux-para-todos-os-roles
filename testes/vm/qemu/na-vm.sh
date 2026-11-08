@@ -10,8 +10,8 @@
 #
 # Um rolê novo em objetivos/ entra sozinho. Os outros rolês vão com todas as
 # receitas de uma vez, como se a pessoa respondesse "sim" a tudo, e com os
-# parâmetros padrão. As receitas de testes/vm/qemu/so-com-tela.txt ficam de
-# fora. No fim, /root/cobertas.txt lista as receitas que passaram por aqui.
+# parâmetros padrão, ou os de testes/vm/qemu/parametros.txt para os que não
+# têm padrão. As receitas de testes/vm/qemu/so-com-tela.txt ficam de fora. No fim, /root/cobertas.txt lista as receitas que passaram por aqui.
 set -euo pipefail
 cd /bora
 etapa() { printf '\n--- %s ---\n' "$*"; }
@@ -65,7 +65,12 @@ case "${1:?fase}" in
             [ -n "$receitas" ] || continue
             etapa "Rolê $role, com o snapshot de antes, que o bora tira pelo Timeshift: $receitas"
             antes=$(snapshots)
-            bora plano --receitas "$receitas" -o "/root/role-$role.yaml"
+            parametros=()
+            while IFS= read -r p; do
+                [[ "$p" =~ ^[[:space:]]*(#|$) ]] && continue
+                if [[ ",$receitas," == *",${p%%.*},"* ]]; then parametros+=(-p "$p"); fi
+            done <testes/vm/qemu/parametros.txt
+            bora plano --receitas "$receitas" "${parametros[@]}" -o "/root/role-$role.yaml"
             saida=$(bora aplicar "/root/role-$role.yaml" --sem-perguntar)
             printf '%s\n' "$saida"
             # Se tudo já estava aplicado, o bora nem tira o snapshot.
