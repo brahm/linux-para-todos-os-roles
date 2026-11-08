@@ -21,8 +21,8 @@ ufw status verbose >/tmp/ufw-antes
 
 bora plano --receitas seguranca/firewall -p seguranca/firewall.perfil=servidor-lan -o /tmp/fw.yaml
 bora aplicar /tmp/fw.yaml --sem-perguntar --sem-snapshot
-ufw status | grep -q 'bora-ssh-rede-local' || falhou "a regra do SSH da rede local não entrou"
-ufw status | grep -q 'minha-regra' || falhou "a regra que já existia sumiu ao aplicar"
+grep -q 'bora-ssh-rede-local' <<<"$(ufw status)" || falhou "a regra do SSH da rede local não entrou"
+grep -q 'minha-regra' <<<"$(ufw status)" || falhou "a regra que já existia sumiu ao aplicar"
 
 bora desfazer --sem-perguntar
 command -v ufw >/dev/null || falhou "o desfazer removeu um ufw que já existia"
@@ -60,7 +60,7 @@ if bora aplicar /tmp/fw2.yaml --sem-perguntar --sem-snapshot >/tmp/saida-ssh 2>&
 fi
 cat /tmp/saida-ssh
 grep -q 'sessão SSH vinda de 203.0.113.5' /tmp/saida-ssh || falhou "a mensagem não explica o motivo"
-if command -v ufw >/dev/null && ufw status | grep -q '^Status: active'; then
+if command -v ufw >/dev/null && grep -q '^Status: active' <<<"$(ufw status)"; then
     falhou "o firewall ficou ligado"
 fi
 echo "ok: o bora parou antes de ligar o firewall"
@@ -83,7 +83,7 @@ python3 -c 'import socket, time; c = socket.create_connection((socket.gethostbyn
 cliente=$!
 sleep 1
 bora aplicar /tmp/fw2.yaml --sem-perguntar --sem-snapshot
-ufw status | grep -q '22/tcp.*bora-ssh-rede-local' || falhou "o SSH da rede local não foi liberado"
+grep -q '22/tcp.*bora-ssh-rede-local' <<<"$(ufw status)" || falhou "o SSH da rede local não foi liberado"
 echo "ok: com SSH ligado, o perfil desktop libera a porta 22 só para a rede local"
 bora desfazer --sem-perguntar
 kill "$cliente" "$servidor" 2>/dev/null || true

@@ -14,7 +14,7 @@ sem_modem() {
 
 # Pastas da rede no fstab (NFS, Samba) precisam que o boot espere a rede.
 sem_pastas_de_rede() {
-    ! awk '$1 !~ /^#/ && ($3 ~ /^(nfs|nfs4|cifs|smb3|sshfs|fuse\.sshfs|glusterfs|ceph)$/ || $4 ~ /_netdev/)' /etc/fstab 2>/dev/null | grep -q .
+    ! grep -q . <<<"$(awk '$1 !~ /^#/ && ($3 ~ /^(nfs|nfs4|cifs|smb3|sshfs|fuse\.sshfs|glusterfs|ceph)$/ || $4 ~ /_netdev/)' /etc/fstab 2>/dev/null)"
 }
 
 # Lista "serviço|motivo" do que a receita desliga nesta máquina.

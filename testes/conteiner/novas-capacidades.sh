@@ -64,7 +64,7 @@ etapa "etckeeper"
 pacotes >/tmp/antes-etc
 bora plano --receitas sistema/etckeeper -o /tmp/etc.yaml
 aplicar_duas_vezes /tmp/etc.yaml
-git -C /etc log --oneline | head -5
+git -C /etc log --oneline -n 5
 echo "teste do bora" >/etc/bora-teste.conf
 DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends tree >/dev/null
 [ -n "$(git -C /etc log --oneline)" ] || falhou "o histórico do /etc está vazio"
@@ -156,7 +156,7 @@ aplicar_duas_vezes /tmp/snap.yaml
 grep -qx snapd <<<"$(pacotes)" && falhou "o snapd continuou instalado"
 grep -q 'bora.teste' /home/aluno/.mozilla/firefox/abc.default/prefs.js || falhou "o perfil do Firefox não foi copiado"
 [ "$(stat -c %U /home/aluno/.mozilla/firefox/abc.default/prefs.js)" = aluno ] || falhou "o perfil copiado não é do aluno"
-grep -A1 '^ \*\*\*' <<<"$(apt-cache policy firefox)" | grep -q packages.mozilla.org || falhou "o Firefox não é o da Mozilla"
+grep -q packages.mozilla.org <<<"$(grep -A1 '^ \*\*\*' <<<"$(apt-cache policy firefox)")" || falhou "o Firefox não é o da Mozilla"
 firefox --version || true
 
 etapa "Desfazer o Sem Snap"

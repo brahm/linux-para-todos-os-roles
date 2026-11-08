@@ -7,7 +7,7 @@ exigir_apt
 source ./comum-podman.sh
 
 sem_root() { [ "$(como_pessoa "$PESSOA" podman info --format '{{.Host.Security.Rootless}}' 2>/dev/null)" = true ]; }
-docker_hub() { podman info --format '{{.Registries}}' 2>/dev/null | grep -q docker.io; }
+docker_hub() { grep -q docker.io <<<"$(podman info --format '{{.Registries}}' 2>/dev/null)"; }
 
 conferir "Podman instalado (podman --version)" podman --version
 conferir "faixa de IDs de $PESSOA para os contêineres (/etc/subuid e /etc/subgid)" eval 'tem_faixa subuid && tem_faixa subgid'

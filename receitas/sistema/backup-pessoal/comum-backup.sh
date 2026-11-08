@@ -19,7 +19,7 @@ achar_disco() {
 
 valor_da_config() {
     [ -f "$CONFIG" ] || return 0
-    sed -n "s/^$1=//p" "$CONFIG" | tr -d '"' | head -n1
+    sed -n "s/^$1=//p" "$CONFIG" | tr -d '"' | awk 'NR == 1'
 }
 
 fs_linux() { [[ " $FS_LINUX " == *" $1 "* ]]; }

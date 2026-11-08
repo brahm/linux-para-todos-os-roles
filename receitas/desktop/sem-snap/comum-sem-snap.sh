@@ -43,7 +43,7 @@ deb_de_transicao() { grep -q 'snap' <<<"$(dpkg-query -W -f='${Version}' "$1" 2>/
 # O Firefox instalado é o da Mozilla?
 firefox_da_mozilla() {
     pacote_instalado firefox && ! deb_de_transicao firefox &&
-        grep -A1 '^ \*\*\*' <<<"$(LC_ALL=C apt-cache policy firefox 2>/dev/null)" | grep -q packages.mozilla.org
+        grep -q packages.mozilla.org <<<"$(grep -A1 '^ \*\*\*' <<<"$(LC_ALL=C apt-cache policy firefox 2>/dev/null)")"
 }
 
 # Copia uma pasta de perfil de um caminho para outro, como a própria pessoa,

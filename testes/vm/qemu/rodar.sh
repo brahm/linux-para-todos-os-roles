@@ -104,7 +104,7 @@ fase() {
     falhou "a fase $1 falhou"
 }
 esperar_ssh
-vm "uname -r; cat /etc/os-release | head -n 2"
+vm "uname -r; sed -n 1,2p /etc/os-release"
 
 etapa "Copiar o bora e o catálogo"
 tar -C "$RAIZ" --exclude=./target --exclude=./.git --exclude=./docs --exclude=./binario -czf repo.tar.gz .

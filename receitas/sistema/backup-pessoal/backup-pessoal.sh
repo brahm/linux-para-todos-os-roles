@@ -57,7 +57,7 @@ if [ -z "$dev" ]; then
     exit 0
 fi
 
-ponto_de_montagem() { { findmnt -n -o TARGET --source "$dev" 2>/dev/null || true; } | head -n1; }
+ponto_de_montagem() { findmnt -n -f -o TARGET --source "$dev" 2>/dev/null || true; }
 
 # Ao conectar o disco, a sessão gráfica costuma montá-lo em /media. Espera
 # um pouco por isso, para não disputar o disco com o gerenciador de arquivos.
@@ -163,7 +163,7 @@ for u in $USUARIOS; do
     # Guarda só as últimas $MANTER versões.
     total=$(versoes "$destino" | wc -l)
     if [ "$total" -gt "$MANTER" ]; then
-        versoes "$destino" | head -n $((total - MANTER)) | while read -r velha; do
+        versoes "$destino" | awk -v n=$((total - MANTER)) 'NR <= n' | while read -r velha; do
             rm -rf "${destino:?}/${velha:?}"
             msg "$u: cópia antiga apagada: $velha"
         done

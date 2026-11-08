@@ -10,7 +10,7 @@ read -r fonte uuid tipo modo < <(descobrir_destino)
 msg "Os snapshots vão para $fonte ($tipo, modo $modo)."
 
 if [ "$modo" = rsync ]; then
-    livre_kb=$(df --output=avail -k "$(findmnt -n -o TARGET --source "$fonte" | head -n1 || echo /)" | tail -n1 | tr -d ' ')
+    livre_kb=$(df --output=avail -k "$(findmnt -n -f -o TARGET --source "$fonte" || echo /)" | tail -n1 | tr -d ' ')
     if [ -n "$livre_kb" ] && [ "$livre_kb" -lt $((ESPACO_MINIMO_GB * 1024 * 1024)) ]; then
         falha "há menos de $ESPACO_MINIMO_GB GB livres em $fonte; libere espaço ou escolha outro dispositivo"
     fi

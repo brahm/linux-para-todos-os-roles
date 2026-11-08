@@ -27,7 +27,7 @@ PY
 portas_ssh() {
     {
         ss -Hltnp 2>/dev/null | awk '/"sshd"|"sshd-session"/ {n = split($4, a, ":"); print a[n]}'
-        if ss -Hltn 'sport = :22' 2>/dev/null | grep -q .; then echo 22; fi
+        if grep -q . <<<"$(ss -Hltn 'sport = :22' 2>/dev/null)"; then echo 22; fi
     } | sort -un
 }
 
@@ -57,10 +57,10 @@ regras_do_perfil() {
     fi
 }
 
-ufw_ativo() { LC_ALL=C ufw status 2>/dev/null | grep -q '^Status: active'; }
+ufw_ativo() { grep -q '^Status: active' <<<"$(LC_ALL=C ufw status 2>/dev/null)"; }
 
 padroes_certos() {
-    LC_ALL=C ufw status verbose 2>/dev/null | grep -q '^Default: deny (incoming), allow (outgoing)'
+    grep -q '^Default: deny (incoming), allow (outgoing)' <<<"$(LC_ALL=C ufw status verbose 2>/dev/null)"
 }
 
 # A regra já está no ufw? Compara com "ufw show added", que repete os comandos.
