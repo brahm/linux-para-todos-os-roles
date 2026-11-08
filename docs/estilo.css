@@ -324,3 +324,9 @@ a.linha:hover { background: color-mix(in srgb, var(--text) 4%, transparent); }
 
 .bolha-p { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--link); }
 .bolha-p svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Capturas da máquina virtual com tela, nas páginas das receitas */
+.capturas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 12px 0; }
+.captura { margin: 0; }
+.captura img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.captura figcaption { margin-top: 6px; font-size: 14px; color: var(--text-2); }

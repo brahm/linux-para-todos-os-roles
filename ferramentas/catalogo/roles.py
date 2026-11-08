@@ -90,6 +90,8 @@ def estacoes(r):
 def status_ficha(r):
     prontas = sum(1 for rid, _ in r["receitas"] if rid in PRONTAS)
     total = len(r["receitas"])
+    if prontas == total and r["status"] == "testado":
+        return f'<span class="ficha feito">Testado · {total} receitas</span>'
     if prontas == total:
         return f'<span class="ficha agora">Em teste · {total} de {total} receitas prontas</span>'
     if r["status"] == "em-construcao":
@@ -133,6 +135,11 @@ def pagina_role(r):
     if r["status"] == "planejado":
         aviso = ("Este rolê ainda está no papel. As receitas tracejadas não existem, e os detalhes podem mudar."
                  + (f" As receitas prontas ({', '.join(RECEITAS[x][0] for x in prontas)}) já funcionam hoje, como receitas avulsas no menu do <code>bora</code>." if prontas else ""))
+    elif len(prontas) == len(r["receitas"]) and r["status"] == "testado":
+        aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
+                 "Toda semana, cada receita é aplicada, conferida e desfeita em máquinas virtuais de verdade, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, "
+                 "inclusive com a tela de login e o navegador; o registro de testes de cada receita mostra a última vez. "
+                 "Cada receita sabe se desfazer e, com o snapshot do sistema configurado, o <code>bora</code> tira um antes de aplicar.")
     elif len(prontas) == len(r["receitas"]):
         aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
                  "Elas passam nos testes automáticos em contêiner e, na parte que não depende de tela, numa máquina virtual de verdade, toda semana. "

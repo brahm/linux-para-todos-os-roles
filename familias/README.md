@@ -42,7 +42,7 @@ Uma diferença nova entra aqui quando aparecer num relato de teste. Se ela exigi
 
 ## Níveis de suporte
 
-- **testada:** a receita passa nos testes automáticos dessa família a cada mudança. No site, aparece como "testada em contêiner" enquanto o registro de testes da receita (`testes` no `receita.yaml`) só tiver testes em contêiner. Ela só é recomendada sem ressalva depois de passar numa máquina virtual ou num computador de verdade, pelo [roteiro de teste em VM](../testes/vm/README.md); até lá, o `bora` avisa quando monta o plano.
+- **testada:** a receita passa nos testes automáticos dessa família a cada mudança. No site, aparece como "testada em contêiner" enquanto o registro de testes da receita (`testes` no `receita.yaml`) só tiver testes em contêiner. Ela só é recomendada sem ressalva depois de passar numa máquina virtual ou num computador de verdade, pelas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci) ou por um roteiro manual; até lá, o `bora` avisa quando monta o plano.
 - **herdada:** a derivada usa a receita da base, e o `bora` avisa quando aquela derivada ainda não foi testada.
 - **comunidade:** receitas aceitas com relato de teste, sem garantia do projeto.
 - **nao-se-aplica:** aparece no menu como indisponível, com o motivo.

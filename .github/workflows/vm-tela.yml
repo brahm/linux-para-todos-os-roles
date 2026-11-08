@@ -87,7 +87,14 @@ jobs:
         with:
           pattern: cobertas-*
           path: cobertas
-      - name: Gravar nas receitas
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: telas-*
+          path: telas
+      # As capturas vão para o site junto com o registro: só quando ele muda
+      # (no máximo uma vez a cada 30 dias) ou quando a distro ainda não tem
+      # nenhuma, para o repositório não crescer toda semana.
+      - name: Gravar nas receitas, com as capturas
         run: |
           shopt -s nullglob
           for lista in cobertas/cobertas-*/cobertas.txt; do
@@ -95,8 +102,20 @@ jobs:
             mapfile -t receitas <"$lista"
             [ "${#receitas[@]}" -gt 0 ] || continue
             echo "== $alvo"
+            antes=$(git diff receitas | sha1sum)
             python3 ferramentas/registros/registrar.py --onde vm \
               --distro "${alvo%%-*}" --versao "${alvo#*-}" --data "$(date -u +%F)" "${receitas[@]}"
+            destino=testes/vm/telas/$alvo
+            if [ "$(git diff receitas | sha1sum)" != "$antes" ] || [ ! -d "$destino" ]; then
+              novas=(telas/telas-"$alvo"/site/*.png)
+              if [ "${#novas[@]}" -gt 0 ]; then
+                rm -rf "$destino"
+                mkdir -p "$destino"
+                cp "${novas[@]}" "$destino/"
+                date -u +%F >"$destino/data.txt"
+                echo "capturas novas em $destino"
+              fi
+            fi
           done
       - name: Gravar na main e publicar o site
         env:

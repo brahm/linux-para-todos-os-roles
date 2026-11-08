@@ -2,7 +2,7 @@ id: maquina-antiga
 nome: Dar vida nova a uma máquina antiga
 descricao: Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.
 para_quem: [curiosos, estudantes]
-status: rascunho
+status: testado
 hardware_minimo:
   ram_gb: 2
   disco_livre_gb: 15
