@@ -3,17 +3,23 @@
 # roda nela a parte dos rolês que não depende de tela: o que o contêiner não
 # consegue provar, como o boot com o zram e o firewall, o Timeshift tirando
 # um snapshot da própria raiz, os temporizadores do systemd e o backup
-# disparado quando o disco externo é conectado.
+# disparado quando o disco externo é conectado. Além do rolê 1, aplica os
+# outros rolês sem as receitas que só se conferem com tela (veja o na-vm.sh).
 #
 #   testes/vm/qemu/rodar.sh ubuntu-24.04 binario/bora
+#   testes/vm/qemu/rodar.sh ubuntu-26.04 binario/bora
 #   testes/vm/qemu/rodar.sh debian-13 binario/bora
+#
+# Quando tudo passa, $PASTA/cobertas.txt lista as receitas que a máquina
+# aplicou, desfez e conferiu; o workflow usa a lista para gravar o registro.
 #
 # Precisa de qemu-system-x86, qemu-utils, cloud-image-utils, openssh-client e
 # socat. Os arquivos da máquina ficam em $PASTA (padrão: /tmp/bora-vm).
 set -euo pipefail
 
-DISTRO=${1:?uso: rodar.sh ubuntu-24.04|debian-13 caminho/do/bora}
-BORA_BIN=$(realpath "${2:?uso: rodar.sh ubuntu-24.04|debian-13 caminho/do/bora}")
+USO="uso: rodar.sh ubuntu-24.04|ubuntu-26.04|debian-13 caminho/do/bora"
+DISTRO=${1:?$USO}
+BORA_BIN=$(realpath "${2:?$USO}")
 RAIZ=$(cd "$(dirname "$0")/../../.." && pwd)
 PASTA=${PASTA:-/tmp/bora-vm}
 PORTA=${PORTA:-2222}
@@ -23,6 +29,9 @@ cd "$PASTA"
 case "$DISTRO" in
     ubuntu-24.04)
         IMAGEM_URL=https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+        USUARIO=ubuntu ;;
+    ubuntu-26.04)
+        IMAGEM_URL=https://cloud-images.ubuntu.com/resolute/current/resolute-server-cloudimg-amd64.img
         USUARIO=ubuntu ;;
     debian-13)
         # A "generic", e não a "genericcloud": o kernel de nuvem não traz o
@@ -36,10 +45,10 @@ etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() { echo "FALHOU: $*" >&2; exit 1; }
 
 etapa "Preparar a máquina ($DISTRO)"
-[ -f base.img ] || curl -fsSL --retry 3 -o base.img "$IMAGEM_URL"
-rm -f disco.qcow2 externo.img seed.img chave chave.pub monitor.sock serial.log
+[ -f "base-$DISTRO.img" ] || curl -fsSL --retry 3 -o "base-$DISTRO.img" "$IMAGEM_URL"
+rm -f disco.qcow2 externo.img seed.img chave chave.pub monitor.sock serial.log cobertas.txt
 # 30 GB: o rolê pede 20 GB livres para os snapshots. O arquivo só cresce com o uso.
-qemu-img create -q -f qcow2 -F qcow2 -b base.img disco.qcow2 30G
+qemu-img create -q -f qcow2 -F qcow2 -b "base-$DISTRO.img" disco.qcow2 30G
 # O disco externo do backup: 2 GB em ext4, sem partição, como um pen drive formatado.
 truncate -s 2G externo.img
 mkfs.ext4 -q -L BACKUP externo.img
@@ -131,5 +140,7 @@ fase depois-de-conectar
 
 etapa "Desfazer"
 fase desfazer
+vm "sudo cat /root/cobertas.txt" >cobertas.txt.parcial
+mv cobertas.txt.parcial cobertas.txt
 
 etapa "Tudo certo em $DISTRO"

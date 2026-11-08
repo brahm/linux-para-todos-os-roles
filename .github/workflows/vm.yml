@@ -1,9 +1,14 @@
 # Roda a parte dos rolês que não depende de tela numa máquina virtual de
-# verdade (QEMU com KVM), no Ubuntu 24.04 e no Debian 13: o boot com o zram,
-# o firewall e o SSH, o Timeshift na própria raiz, os temporizadores e o
-# backup ao conectar o disco. É o que o contêiner não consegue provar.
-# Leva uns 20 minutos, então roda toda semana, à mão e nos pull requests que
-# mexem nas receitas do rolê 1, no zram, no SSH ou no próprio teste.
+# verdade (QEMU com KVM), no Ubuntu 24.04 e 26.04 e no Debian 13: o rolê 1
+# inteiro, com o boot, o firewall, o Timeshift na própria raiz, os
+# temporizadores e o backup ao conectar o disco, e todos os outros rolês, sem
+# as receitas de testes/vm/qemu/so-com-tela.txt. É o que o contêiner não
+# consegue provar. Um rolê novo em objetivos/ entra sozinho.
+#
+# Roda toda semana, à mão e nos pull requests que mexem nas receitas, nos
+# rolês ou no próprio teste. Na main (no agendamento ou à mão), quando passa,
+# grava nas receitas o registro com "onde: vm" e gera o site de novo; quando o
+# agendamento falha, abre uma issue com a etiqueta vm (ou comenta na aberta).
 name: Máquina virtual
 
 on:
@@ -14,13 +19,8 @@ on:
     paths:
       - ".github/workflows/vm.yml"
       - "testes/vm/qemu/**"
-      - "receitas/comum.sh"
-      - "receitas/base/**"
-      - "receitas/sistema/**"
-      - "receitas/desktop/codecs/**"
-      - "receitas/desktop/flatpak/**"
-      - "receitas/seguranca/**"
-      - "objetivos/pronto-para-estudar.yaml"
+      - "receitas/**/*.sh"
+      - "objetivos/*.yaml"
 
 permissions:
   contents: read
@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: [ubuntu-24.04, debian-13]
+        distro: [ubuntu-24.04, ubuntu-26.04, debian-13]
     steps:
       - uses: actions/checkout@v5
       - name: Rust com musl
@@ -55,3 +55,91 @@ jobs:
       - name: Console da máquina, se falhou
         if: failure()
         run: tail -n 40 /tmp/bora-vm/serial.log || true
+      - name: Guardar a lista das receitas que passaram
+        uses: actions/upload-artifact@v7
+        with:
+          name: cobertas-${{ matrix.distro }}
+          path: /tmp/bora-vm/cobertas.txt
+          retention-days: 7
+
+  # Grava o registro de cada distro que passou, mesmo que outra tenha falhado.
+  registrar:
+    name: Gravar o registro nas receitas
+    needs: vm
+    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: cobertas-*
+          path: cobertas
+      - name: Gravar nas receitas
+        run: |
+          shopt -s nullglob
+          for lista in cobertas/cobertas-*/cobertas.txt; do
+            alvo=${lista#cobertas/cobertas-}; alvo=${alvo%%/*}   # ubuntu-24.04
+            mapfile -t receitas <"$lista"
+            [ "${#receitas[@]}" -gt 0 ] || continue
+            echo "== $alvo"
+            python3 ferramentas/registros/registrar.py --onde vm \
+              --distro "${alvo%%-*}" --versao "${alvo#*-}" --data "$(date -u +%F)" "${receitas[@]}"
+          done
+      - name: Gerar o site de novo
+        run: |
+          python3 -c 'import yaml' 2>/dev/null || pip install --quiet pyyaml
+          python3 ferramentas/catalogo/gerar.py
+      - name: Gravar na main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add receitas docs
+          if git diff --cached --quiet; then
+            echo "Nada novo para registrar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "Registra o teste na máquina virtual de $(date -u +%F)"
+          gravou=nao
+          for tentativa in 1 2 3; do
+            if git pull -q --rebase origin main && git push -q origin HEAD:main; then
+              gravou=sim
+              break
+            fi
+            sleep $((tentativa * 5))
+          done
+          [ "$gravou" = sim ] || { echo "Não consegui gravar na main." >&2; exit 1; }
+          # Um push feito pelo próprio workflow não dispara outros workflows,
+          # então o site é publicado por aqui.
+          gh workflow run site.yml --ref main
+
+  # No domingo ninguém está olhando: a falha vira uma issue.
+  avisar:
+    name: Abrir ou atualizar a issue
+    needs: vm
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Abrir ou atualizar a issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create vm --color 5a32a3 --description "Falha no teste semanal da máquina virtual" 2>/dev/null || true
+          {
+            echo "O teste semanal na máquina virtual falhou em pelo menos uma distro. O log de cada uma mostra a fase que falhou e, logo abaixo, os avisos do journal e o fim do console da máquina."
+            echo
+            echo "Execução: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } >corpo.md
+          aberta=$(gh issue list --label vm --state open --json number --jq '.[0].number')
+          if [ -n "$aberta" ]; then
+            gh issue comment "$aberta" --body-file corpo.md
+          else
+            gh issue create --title "O teste na máquina virtual falhou" --label vm --body-file corpo.md
+          fi

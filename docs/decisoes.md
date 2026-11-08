@@ -96,3 +96,17 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | As actions de artefato sobem para a v7 (`upload-artifact` e `download-artifact`) | A v5, proposta antes, ainda roda no Node.js 20, que o GitHub está desligando; a v7 é a primeira das duas que roda no Node.js 24 |
 | A parte dos rolês que não depende de tela roda numa VM de verdade no CI, com QEMU e KVM, no Ubuntu 24.04 e no Debian 13 (workflow Máquina virtual) | Os runners do GitHub têm KVM, e as imagens de nuvem das duas distros sobem em segundos com cloud-init. Cada distro leva de 9 a 12 minutos, então roda todo domingo e nos pull requests que mexem nas receitas que ela cobre, e não em todo push. Ela não substitui o roteiro manual: a tela, o player, a loja e os perfis só se conferem olhando |
 | O que a VM achou nas primeiras rodadas foi corrigido no mesmo pull request | Quatro defeitos que o contêiner não via: o zram não ligava no Ubuntu sem reiniciar (o módulo só carregava no boot) e não tinha o módulo nas instalações de servidor e de nuvem; as receitas do firewall e do SSH trocavam o comentário da regra do SSH uma da outra, e a segunda aplicação nunca dizia "nada mudou"; e o teste dos codecs falhava às vezes por um `dpkg -L \| grep -m1` com pipefail |
+
+## 8 de novembro de 2026: terceira rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| A versão sobe para 0.5.1. Escolhido por Brahm em 8/11/2026 | As correções que a VM achou já estavam na `main`, mas a versão publicada era a 0.5.0, sem elas |
+| A VM do CI aplica, além do rolê 1, todos os outros rolês, com todas as receitas de uma vez e sem as que só se conferem com tela (`testes/vm/qemu/so-com-tela.txt`). Um rolê novo entra sozinho | Hoje isso cobre o rolê 3 inteiro e a parte sem tela do rolê 2. Aplicar todas as receitas, como se a pessoa respondesse "sim" a tudo, cobre os dois caminhos do rolê 3 (Python e Node.js) numa só máquina |
+| O Ubuntu 26.04 entra na VM do CI, pela imagem de nuvem oficial | É a outra LTS da família Ubuntu, e a imagem oficial sobe do mesmo jeito que a da 24.04 |
+| Quando a VM passa na `main`, o próprio workflow grava nas receitas o registro com `onde: vm` e `por: testes-automaticos`, e publica o site | Sem o registro, o `bora` seguia avisando que a receita não tinha passado numa máquina virtual. O registro é um por distro e só muda de data, para a lista não crescer toda semana, e não substitui o relato de uma pessoa, que tem outro autor |
+| Quando a VM falha no domingo, o workflow abre uma issue com a etiqueta `vm`, ou comenta na que estiver aberta | É o que os workflows de links e do Node.js já fazem. Um e-mail do GitHub se perde fácil |
+| Nenhum script usa mais `\| grep -q`, `\| grep -m` ou `\| head`, e o CI barra os novos (`ferramentas/pipes/conferir.sh`) | Com pipefail, eles falham às vezes por SIGPIPE, como o teste dos codecs. No lugar, `grep -q x <<<"$(cmd)"`, um `awk` que lê até o fim ou a opção da própria ferramenta que limita a saída |
+| O zram continua trazendo o `linux-image-extra-virtual` em servidor e em nuvem, com o aviso no LEIAME de que ele puxa o `linux-firmware` | É o que mantém o zram depois da próxima atualização do kernel. Quem tem pouco disco pode instalar só os módulos do kernel de agora |
+| O segfault do Timeshift no contêiner do Ubuntu 24.04 fica sendo acompanhado na [issue #16](https://github.com/brahm/linux-para-todos-os-roles/issues/16) | Aconteceu uma vez e não se repetiu |
+| Os rolês continuam `rascunho` até os roteiros manuais passarem | A VM do CI não confere a tela, então não basta para o `testado` |
