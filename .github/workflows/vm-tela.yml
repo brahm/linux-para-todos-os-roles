@@ -1,0 +1,131 @@
+# Liga uma máquina virtual com tela de login (o GDM, como num desktop) no
+# Ubuntu 24.04 e 26.04 e no Debian 13 e confere as receitas que só se veem
+# com tela, as de testes/vm/qemu/so-com-tela.txt: o ambiente leve aparece e
+# abre sozinho para o aluno, o Firefox abre com o uBlock Origin e, no Ubuntu,
+# é o da Mozilla, e não o do Snap. Tira capturas da tela de cada passo, que
+# ficam nos artefatos da execução por 30 dias.
+#
+# Roda toda semana, à mão e nos pull requests que mexem nessas receitas ou no
+# próprio teste. Na main, quando passa, grava nas receitas o registro com
+# "onde: vm" e gera o site de novo, como o workflow Máquina virtual; quando o
+# agendamento falha, abre uma issue com a etiqueta vm.
+name: Máquina virtual com tela
+
+on:
+  schedule:
+    - cron: "17 10 * * 0" # domingo, 7h17 em Brasília
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/vm-tela.yml"
+      - "testes/vm/qemu/**"
+      - "receitas/desktop/ambiente-leve/**"
+      - "receitas/desktop/navegador-leve/**"
+      - "receitas/desktop/sem-snap/**"
+      - "receitas/comum.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  tela:
+    name: Tela ${{ matrix.distro }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu-24.04, ubuntu-26.04, debian-13]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rust com musl
+        run: |
+          rustup toolchain install stable --profile minimal --target x86_64-unknown-linux-musl
+          rustup default stable
+      - name: Compilar o bora
+        run: cargo build --release --locked --target x86_64-unknown-linux-musl
+      - name: QEMU e KVM
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends qemu-system-x86 qemu-utils cloud-image-utils socat
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+      - name: Tela de login, aplicar, entrar, abrir o Firefox e desfazer
+        run: testes/vm/qemu/tela.sh ${{ matrix.distro }} target/x86_64-unknown-linux-musl/release/bora
+      - name: Console da máquina, se falhou
+        if: failure()
+        run: tail -n 40 /tmp/bora-tela/serial.log || true
+      - name: Guardar as capturas da tela
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: telas-${{ matrix.distro }}
+          path: /tmp/bora-tela/telas/
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Guardar a lista das receitas que passaram
+        uses: actions/upload-artifact@v7
+        with:
+          name: cobertas-${{ matrix.distro }}
+          path: /tmp/bora-tela/cobertas.txt
+          retention-days: 7
+
+  # Grava o registro de cada distro que passou, mesmo que outra tenha falhado.
+  registrar:
+    name: Gravar o registro nas receitas
+    needs: tela
+    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: cobertas-*
+          path: cobertas
+      - name: Gravar nas receitas
+        run: |
+          shopt -s nullglob
+          for lista in cobertas/cobertas-*/cobertas.txt; do
+            alvo=${lista#cobertas/cobertas-}; alvo=${alvo%%/*}   # ubuntu-24.04
+            mapfile -t receitas <"$lista"
+            [ "${#receitas[@]}" -gt 0 ] || continue
+            echo "== $alvo"
+            python3 ferramentas/registros/registrar.py --onde vm \
+              --distro "${alvo%%-*}" --versao "${alvo#*-}" --data "$(date -u +%F)" "${receitas[@]}"
+          done
+      - name: Gravar na main e publicar o site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ferramentas/registros/gravar-na-main.sh "Registra o teste na máquina virtual com tela de $(date -u +%F)"
+
+  # No domingo ninguém está olhando: a falha vira uma issue.
+  avisar:
+    name: Abrir ou atualizar a issue
+    needs: tela
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Abrir ou atualizar a issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create vm --color 5a32a3 --description "Falha no teste semanal da máquina virtual" 2>/dev/null || true
+          {
+            echo "O teste semanal na máquina virtual com tela falhou em pelo menos uma distro. O log de cada uma mostra a fase que falhou, e o artefato telas-<distro> traz as capturas da tela, inclusive a do momento da falha (falhou.png)."
+            echo
+            echo "Execução: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } >corpo.md
+          aberta=$(gh issue list --label vm --state open --json number --jq '.[0].number')
+          if [ -n "$aberta" ]; then
+            gh issue comment "$aberta" --body-file corpo.md
+          else
+            gh issue create --title "O teste na máquina virtual falhou" --label vm --body-file corpo.md
+          fi
