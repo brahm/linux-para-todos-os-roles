@@ -88,7 +88,12 @@ jobs:
       - name: Rolê Começar a programar, perfil web
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=web -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
       - name: Rolê Vibecodar, com todos os agentes, o VS Code e a caixa de areia
-        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/vibecodar.sh
+        # O runner (Ubuntu 24.04) só deixa criar user namespaces com um perfil
+        # do AppArmor, e o contêiner não tem AppArmor para carregar o perfil
+        # da receita. Aqui a restrição sai do runner; a VM do CI confere o perfil.
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/vibecodar.sh
       - name: Histórico do /etc, SSH e Sem Snap
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/novas-capacidades.sh
       - name: Marcar que a distro passou

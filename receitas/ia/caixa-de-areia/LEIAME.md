@@ -12,13 +12,13 @@ Um agente roda comandos no seu computador, com as suas permissões. Na maioria d
 
 **Duas camadas.** O Claude Code e o Codex têm a própria caixa de areia, que isola cada comando que o agente roda e pede permissão para sair dela. A receita liga a do Claude Code (`sandbox.enabled` em `~/.claude/settings.json`); a do Codex já vem ligada. O comando `caixa` isola o agente inteiro, e serve para qualquer um, inclusive os que não têm caixa própria, como o OpenCode, o Copilot CLI e o Mistral Vibe.
 
-**O AppArmor do Ubuntu.** Do Ubuntu 24.04 em diante, só os programas com um perfil do AppArmor podem criar o "espaço de usuário" que a caixa de areia usa. Sem um perfil para o `bubblewrap`, a caixa do `bora`, a do Claude Code e a do Codex não abrem. A receita escreve esse perfil, do mesmo jeito que o Ubuntu faz com o Flatpak, só quando o sistema tem essa restrição.
+**O AppArmor do Ubuntu.** Do Ubuntu 24.04 em diante, só os programas com um perfil do AppArmor podem criar o "espaço de usuário" que a caixa de areia usa. Sem um perfil para o `bubblewrap`, a caixa do `bora`, a do Claude Code e a do Codex não abrem. O Ubuntu 26.04 já traz um perfil para o `bubblewrap`; o 24.04, não. A receita escreve um, do mesmo jeito que o Ubuntu faz com o Flatpak, só quando o sistema tem essa restrição e o `bubblewrap` não abre sem ele.
 
 ## O que muda no sistema
 
 - Instala os pacotes `bubblewrap` e `socat` (que a caixa de areia do Claude Code usa para a rede).
 - Escreve o comando `/usr/local/bin/caixa`.
-- No Ubuntu 24.04 em diante, escreve o perfil `/etc/apparmor.d/bora-bwrap` e carrega com `apparmor_parser`.
+- Se o kernel restringe os user namespaces e o `bubblewrap` não abre sem um perfil (o caso do Ubuntu 24.04), escreve o perfil `/etc/apparmor.d/bora-bwrap` e carrega com `apparmor_parser`.
 - Se o Claude Code estiver instalado, liga `sandbox.enabled` em `~/.claude/settings.json`, sem mexer no resto do arquivo.
 
 Dentro da `caixa`, o agente:

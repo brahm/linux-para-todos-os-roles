@@ -16,7 +16,7 @@ if ! cmp -s ./caixa "$CAIXA"; then
     msg "Falta o comando caixa."
     exit 1
 fi
-if userns_restrito && ! cmp -s <(perfil_apparmor) "$PERFIL_APPARMOR"; then
+if ! bwrap_abre; then
     msg "O AppArmor ainda não deixa o bubblewrap abrir a caixa de areia."
     exit 1
 fi

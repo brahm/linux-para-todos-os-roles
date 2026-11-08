@@ -14,7 +14,12 @@ instalar_pacotes $PACOTES
 echo "$PESSOA" >"$BORA_ESTADO/pessoa"
 escrever_arquivo "$CAIXA" 0755 <./caixa
 
-if userns_restrito; then
+# O Ubuntu 26.04 já traz um perfil para o bubblewrap (bwrap-userns-restrict);
+# o 24.04, não. O perfil do bora só entra quando o bubblewrap não abre sem ele,
+# para não disputar o /usr/bin/bwrap com o perfil da distro.
+if userns_restrito && ! bwrap_abre; then
+    command -v apparmor_parser >/dev/null ||
+        falha "o kernel só deixa abrir a caixa de areia com um perfil do AppArmor, e este sistema não tem o apparmor_parser (pacote apparmor) para carregar um"
     perfil_apparmor | escrever_arquivo "$PERFIL_APPARMOR" 0644
     apparmor_parser -r "$PERFIL_APPARMOR"
     msg "O AppArmor passa a deixar o bubblewrap abrir a caixa de areia."

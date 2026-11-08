@@ -151,7 +151,7 @@
           <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
           <div class="corpo">
             <h3>Aplicar <small>faz a mudança</small></h3>
-            <ul><li>Instala os pacotes e escreve <code>/usr/local/bin/caixa</code>.</li><li>No Ubuntu 24.04 em diante, escreve e carrega o perfil <code>/etc/apparmor.d/bora-bwrap</code>.</li><li>Liga <code>sandbox.enabled</code> em <code>~/.claude/settings.json</code>, sem mexer no resto.</li></ul>
+            <ul><li>Instala os pacotes e escreve <code>/usr/local/bin/caixa</code>.</li><li>Se o bubblewrap não abrir por causa do AppArmor, como no Ubuntu 24.04, escreve e carrega o perfil <code>/etc/apparmor.d/bora-bwrap</code>.</li><li>Liga <code>sandbox.enabled</code> em <code>~/.claude/settings.json</code>, sem mexer no resto.</li></ul>
           </div>
         </li>
         <li class="etapa verde revelar">
@@ -195,7 +195,7 @@
         <article class="cartao porque revelar"><h3>Por que isolar um agente?</h3><p>Um modelo erra, entende mal, ou lê num arquivo do projeto uma instrução escondida para apagar algo ou mandar as suas chaves para fora. Na caixa, o estrago fica na pasta do projeto, que está no Git.</p></article>
         <article class="cartao porque revelar"><h3>Por que o bubblewrap, e não um contêiner?</h3><p>O distrobox e o toolbox montam a pasta pessoal inteira e o sistema dentro do contêiner, então não isolam. O bubblewrap é a peça que o Flatpak usa para isolar os aplicativos, e a mesma que o Claude Code e o Codex usam no Linux.</p></article>
         <article class="cartao porque revelar"><h3>E o <code>git push</code>?</h3><p>Dentro da caixa, o agente não vê a sua chave SSH. Faça o push fora, depois de conferir o que ele fez. É de propósito.</p></article>
-        <article class="cartao porque revelar"><h3>O que é o perfil do AppArmor?</h3><p>Do Ubuntu 24.04 em diante, só programas com um perfil podem criar o espaço isolado que a caixa usa. A receita escreve um para o bubblewrap, como o Ubuntu faz com o Flatpak, e só quando o sistema tem essa restrição.</p></article>
+        <article class="cartao porque revelar"><h3>O que é o perfil do AppArmor?</h3><p>Do Ubuntu 24.04 em diante, só programas com um perfil podem criar o espaço isolado que a caixa usa. O Ubuntu 26.04 já traz um para o bubblewrap; no 24.04, a receita escreve um, como o Ubuntu faz com o Flatpak.</p></article>
       </div>
     </section>
 
@@ -207,7 +207,7 @@
       <ul class="caixa revelar">
         <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span class="txt"><strong>bubblewrap e socat</strong><span>A caixa de areia e a ponte de rede que o Claude Code usa.</span></span></div></li>
         <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/usr/local/bin/caixa</strong><span>O comando que monta a caixa.</span></span></div></li>
-        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/apparmor.d/bora-bwrap</strong><span>Só no Ubuntu 24.04 em diante.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>/etc/apparmor.d/bora-bwrap</strong><span>Só quando o bubblewrap não abre sem ele, como no Ubuntu 24.04.</span></span></div></li>
         <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.claude/settings.json</strong><span><code>sandbox.enabled: true</code>, se o Claude Code estiver instalado.</span></span></div></li>
       </ul>
     </section>

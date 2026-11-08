@@ -71,7 +71,12 @@ case "${1:?fase}" in
                 if [[ ",$receitas," == *",${p%%.*},"* ]]; then parametros+=(-p "$p"); fi
             done <testes/vm/qemu/parametros.txt
             bora plano --receitas "$receitas" "${parametros[@]}" -o "/root/role-$role.yaml"
-            saida=$(bora aplicar "/root/role-$role.yaml" --sem-perguntar)
+            # Com a saída numa variável, ela só aparece no log se for impressa
+            # também quando o bora falha.
+            if ! saida=$(bora aplicar "/root/role-$role.yaml" --sem-perguntar); then
+                printf '%s\n' "$saida"
+                falhou "o rolê $role não aplicou"
+            fi
             printf '%s\n' "$saida"
             # Se tudo já estava aplicado, o bora nem tira o snapshot.
             if ! grep -q "Tudo já estava aplicado" <<<"$saida"; then
