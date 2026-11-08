@@ -1,0 +1,4 @@
+# Valores para os parâmetros sem padrão, que a máquina virtual não tem a quem
+# perguntar. Um por linha, como no "bora plano -p": receita.parametro=valor.
+# Só entram nos rolês que têm a receita.
+dev/git.email=aluno@exemplo.com.br

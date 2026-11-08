@@ -46,6 +46,6 @@ if systemd_rodando; then
 else
     msg "Sem systemd rodando, o zram liga no próximo boot."
 fi
-if grep -v '^/dev/zram' /proc/swaps 2>/dev/null | awk 'NR > 1' | grep -q .; then
+if awk 'NR > 1 && $1 !~ /^\/dev\/zram/ { achou = 1 } END { exit !achou }' /proc/swaps 2>/dev/null; then
     msg "A swap no disco continua lá, como reserva: o kernel só usa ela quando o zram enche."
 fi

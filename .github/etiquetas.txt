@@ -1,7 +1,7 @@
 # Etiquetas do repositório: nome, cor (hexadecimal, sem #) e descrição,
 # separados por |. O workflow "Etiquetas" cria ou atualiza cada uma quando
 # este arquivo muda na main. Os formulários em ISSUE_TEMPLATE usam as cinco
-# primeiras; os workflows, as duas últimas.
+# primeiras; os workflows, as três últimas.
 pedido|1d76db|Pedido de recurso no bora ou no site
 receita-nova|0e8a16|Pedido ou proposta de receita nova
 role-novo|5319e7|Pedido ou proposta de rolê novo
@@ -9,3 +9,4 @@ problema|d73a4a|Algo no bora, num rolê ou numa receita não funcionou
 relato-de-teste|fbca04|Teste numa máquina virtual ou num computador de verdade
 links-quebrados|d93f0b|Achado pela conferência mensal de links
 node|3c873a|Versão do Node.js da receita dev/node
+vm|5a32a3|Falha no teste semanal da máquina virtual

@@ -108,7 +108,7 @@ if command -v flatpak >/dev/null; then echo "FALHOU: o Flatpak continuou instala
 mount "$DISCO_BACKUP" /mnt
 ls /mnt/bora-backup/*/aluno/ultimo/Documentos/trabalho.txt >/dev/null 2>&1 || { echo "FALHOU: o desfazer apagou as cópias do disco externo"; exit 1; }
 umount /mnt
-if command -v ufw >/dev/null && ufw status | grep -q '^Status: active'; then
+if command -v ufw >/dev/null && grep -q '^Status: active' <<<"$(ufw status)"; then
     echo "FALHOU: o firewall continuou ligado"
     exit 1
 fi

@@ -150,7 +150,7 @@
           <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
           <div class="corpo">
             <h3>Aplicar <small>faz a mudança</small></h3>
-            <ul><li>Se o kernel não traz o módulo do zram, como no Ubuntu Server e nas imagens de nuvem, instala os módulos extras do kernel (<code>linux-modules-extra</code>).</li><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>
+            <ul><li>Se o kernel não traz o módulo do zram, como no Ubuntu Server e nas imagens de nuvem, instala os módulos extras do kernel (<code>linux-modules-extra</code>). Em servidor e em nuvem, eles puxam o <code>linux-firmware</code>, com centenas de MB; o LEIAME da receita explica como evitar.</li><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>
           </div>
         </li>
         <li class="etapa verde revelar">

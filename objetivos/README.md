@@ -72,7 +72,7 @@ Na linha de comando, a resposta vai com `-r`: `bora plano comecar-a-programar -r
 
 ## Quando um rolê vira `testado`
 
-Um rolê passa de `rascunho` para `testado` quando o roteiro de teste em máquina virtual dele, em [`testes/vm/`](../testes/vm/README.md), passa inteiro no **Ubuntu 24.04** e no **Debian 13**, incluindo o desfazer, e cada receita do rolê tem o teste registrado com `onde: vm` (ou `maquina`) nessas duas distros. O Ubuntu 26.04 e o Linux Mint continuam no roteiro, mas não seguram a mudança de status: um problema neles vira uma issue, e o rolê segue `testado`.
+Um rolê passa de `rascunho` para `testado` quando o roteiro de teste em máquina virtual dele, em [`testes/vm/`](../testes/vm/README.md), passa inteiro no **Ubuntu 24.04** e no **Debian 13**, incluindo o desfazer, e cada receita do rolê tem o teste registrado com `onde: vm` (ou `maquina`) nessas duas distros. O Ubuntu 26.04 e o Linux Mint continuam no roteiro, mas não seguram a mudança de status: um problema neles vira uma issue, e o rolê segue `testado`. O registro que a [VM do CI](../testes/vm/README.md#a-parte-automática-no-ci) grava sozinha conta para as receitas que ela aplica, mas não dispensa o roteiro: a parte com tela só se confere olhando.
 
 ## Rolês da primeira versão
 

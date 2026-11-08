@@ -15,6 +15,8 @@ Os ajustes do kernel que vão junto dizem que trocar ficou barato: o kernel pass
 ## O que muda no sistema
 
 - Se o kernel não traz o módulo do zram, como no Ubuntu Server e nas imagens de nuvem, instala os módulos extras do kernel: o `linux-modules-extra` do kernel de agora e, quando o sistema segue o kernel `linux-image-virtual`, o `linux-image-extra-virtual`, para o módulo continuar lá depois das atualizações do kernel. Num Ubuntu de desktop eles já vêm instalados.
+
+  **Atenção, em servidor e em nuvem:** o `linux-image-extra-virtual` puxa junto o `linux-firmware`, com os firmwares de todo tipo de placa. São algumas centenas de MB de download e perto de 1 GB no disco, num sistema que não precisaria deles. A receita aceita esse custo para o zram não sumir na próxima atualização do kernel. Se o disco for apertado, instale você mesmo só o `linux-modules-extra-$(uname -r)` antes de aplicar: com o módulo presente, a receita não instala nada do kernel, mas o zram para de funcionar quando o kernel for atualizado, até você instalar o `linux-modules-extra` do kernel novo.
 - Instala o pacote `systemd-zram-generator`, que cria o zram a cada boot.
 - Escreve `/etc/systemd/zram-generator.conf`: um zram de até 50% da memória (o parâmetro `porcentagem`), nunca mais de 8 GB, com compressão zstd e prioridade 100.
 - Escreve `/etc/sysctl.d/99-bora-zram.conf` com `vm.swappiness = 180`, `vm.watermark_boost_factor = 0`, `vm.watermark_scale_factor = 125` e `vm.page-cluster = 0`.
@@ -39,7 +41,7 @@ Para ver você mesmo: `zramctl` mostra o tamanho do zram, quanto ele guarda e qu
 
 ## Como desfazer
 
-O `desfazer.sh` desliga o zram (o que estava nele volta para a memória), apaga os dois arquivos, volta os ajustes do kernel aos valores de antes e remove o `systemd-zram-generator`, se foi a receita que o instalou. Se a memória estiver cheia demais para desligar o zram na hora, ele avisa, e o zram sai no próximo reinício.
+O `desfazer.sh` desliga o zram (o que estava nele volta para a memória), apaga os dois arquivos, volta os ajustes do kernel aos valores de antes e remove o `systemd-zram-generator`, se foi a receita que o instalou. Os módulos extras do kernel e o `linux-firmware` também saem, se vieram com a receita e nenhum outro pacote passou a precisar deles. Se a memória estiver cheia demais para desligar o zram na hora, ele avisa, e o zram sai no próximo reinício.
 
 ## Fontes
 
