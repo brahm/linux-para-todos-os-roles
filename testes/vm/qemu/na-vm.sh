@@ -70,6 +70,13 @@ case "${1:?fase}" in
         ;;
 
     antes-de-conectar)
+        # O disco estava conectado no boot, então o backup "ao conectar" já
+        # está rodando (ele espera até 1 minuto a sessão montar o disco).
+        # Enquanto ele roda, conectar de novo não dispara outro.
+        for _ in $(seq 1 36); do
+            [ "$(systemctl show -p ActiveState --value "$CONECTAR")" != activating ] && break
+            sleep 5
+        done
         systemctl show -p InvocationID --value "$CONECTAR" >/root/conectar-antes
         echo "Última execução do backup ao conectar: $(cat /root/conectar-antes)"
         ;;
