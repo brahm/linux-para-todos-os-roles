@@ -49,6 +49,6 @@ jobs:
           ls -l /dev/kvm
       - name: Ligar, aplicar, reiniciar, reconectar o disco e desfazer
         run: testes/vm/qemu/rodar.sh ${{ matrix.distro }} target/x86_64-unknown-linux-musl/release/bora
-      - name: Console da máquina
-        if: always()
-        run: tail -n 200 /tmp/bora-vm/serial.log || true
+      - name: Console da máquina, se falhou
+        if: failure()
+        run: tail -n 40 /tmp/bora-vm/serial.log || true
