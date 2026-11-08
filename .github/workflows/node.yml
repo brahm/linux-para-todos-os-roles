@@ -59,7 +59,7 @@ jobs:
             echo
             echo "Para atualizar:"
             echo
-            echo "1. Em \`receitas/dev/node/comum-node.sh\`, troque \`NODE_VERSAO\` por \`$nova\` e as duas somas pelas de \`node-v$nova-linux-x64.tar.xz\` e \`node-v$nova-linux-arm64.tar.xz\`, copiadas de https://nodejs.org/dist/v$nova/SHASUMS256.txt."
+            echo "1. Em \`receitas/dev/node/comum-node.sh\`, troque \`NODE_VERSAO\` por \`$nova\` e a soma pela de \`node-v$nova-linux-x64.tar.xz\`, copiada de https://nodejs.org/dist/v$nova/SHASUMS256.txt."
             echo "2. Troque a versão citada em \`docs/decisoes.md\`, no LEIAME da receita e em \`ferramentas/catalogo/\`, e gere o site."
             echo "3. Abra um pull request; o CI testa o perfil web nas três distros."
             echo "4. Suba a versão do bora no \`Cargo.toml\` para a publicação sair sozinha depois do merge."

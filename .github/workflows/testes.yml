@@ -32,7 +32,7 @@ jobs:
       - name: Catálogo
         run: cargo run --quiet -- conferir
       - name: shellcheck
-        run: shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh testes/conteiner/*.sh testes/vm/qemu/*.sh ferramentas/pipes/*.sh
+        run: shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh testes/conteiner/*.sh testes/vm/qemu/*.sh ferramentas/pipes/*.sh ferramentas/notas/*.sh
       - name: Pipes que quebram com pipefail
         run: ferramentas/pipes/conferir.sh
 

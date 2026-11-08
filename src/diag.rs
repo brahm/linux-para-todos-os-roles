@@ -504,9 +504,9 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
     if let Some(m) = motivo {
         problemas.push(m);
     }
-    if maquina != "x86_64" && maquina != "aarch64" {
+    if maquina != "x86_64" {
         problemas.push(format!(
-            "a arquitetura {maquina} não é suportada; o bora precisa de 64 bits (x86_64 ou aarch64)"
+            "a arquitetura {maquina} não é suportada; o bora precisa de um computador de 64 bits x86_64 (Intel ou AMD)"
         ));
     }
     if !systemd {

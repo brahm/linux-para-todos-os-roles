@@ -12,7 +12,7 @@
 </div>
 
 > [!NOTE]
-> **Versão 0, para testar.** O `bora` já leva o computador até os três primeiros rolês no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. "Pronto para estudar e trabalhar" atualiza o sistema e liga o firewall, o snapshot do sistema, os codecs de áudio e vídeo, o Flatpak e o backup da pasta pessoal num disco externo, guarda o histórico da configuração em `/etc` e, se você pedir, tira o Snap. "Dar vida nova a uma máquina antiga" liga a memória comprimida (zram), instala o Xfce ou o LXQt ao lado do ambiente atual, deixa o Firefox mais leve, com bloqueio de anúncios, desliga os serviços que a máquina não usa e, se você pedir, liga o SSH só para a rede de casa. "Começar a programar" configura o Git com uma chave SSH, instala as ferramentas de compilação e o Podman, e, conforme o perfil, o Python com ambientes virtuais ou o Node.js LTS. Elas passaram nos testes automáticos em contêiner, mas ainda não foram testadas numa máquina virtual nem num computador de verdade; os [roteiros de teste em VM](testes/vm/README.md) dizem como ajudar. Use numa máquina que possa ser formatada sem dor. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
+> **Versão 0, para testar.** O `bora` já leva o computador até os três primeiros rolês no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. "Pronto para estudar e trabalhar" atualiza o sistema e liga o firewall, o snapshot do sistema, os codecs de áudio e vídeo, o Flatpak e o backup da pasta pessoal num disco externo, guarda o histórico da configuração em `/etc` e, se você pedir, tira o Snap. "Dar vida nova a uma máquina antiga" liga a memória comprimida (zram), instala o Xfce ou o LXQt ao lado do ambiente atual, deixa o Firefox mais leve, com bloqueio de anúncios, desliga os serviços que a máquina não usa e, se você pedir, liga o SSH só para a rede de casa. "Começar a programar" configura o Git com uma chave SSH, instala as ferramentas de compilação e o Podman, e, conforme o perfil, o Python com ambientes virtuais ou o Node.js LTS. Elas passam nos testes automáticos em contêiner e, na parte que não depende de tela, numa máquina virtual de verdade, toda semana. O que só se confere olhando (a tela de login, o vídeo tocando, o navegador) ainda espera os [roteiros de teste em VM](testes/vm/README.md), que dizem como ajudar. Use numa máquina que possa ser formatada sem dor. A trilha completa está no [site](https://brahm.github.io/linux-para-todos-os-roles/#status).
 
 ## O que é
 
@@ -39,7 +39,7 @@ bora desfazer                  volta atrás
 
 ## Experimentar
 
-O `bora` é um arquivo só, para computadores de 64 bits (x86_64 ou aarch64). Baixe o da sua máquina na [página de versões](https://github.com/brahm/linux-para-todos-os-roles/releases), junto com o `SHA256SUMS`, e confira antes de rodar:
+O `bora` é um arquivo só, para computadores de 64 bits x86_64 (Intel ou AMD). Baixe o `bora-linux-x86_64` na [página de versões](https://github.com/brahm/linux-para-todos-os-roles/releases), junto com o `SHA256SUMS`, e confira antes de rodar:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS

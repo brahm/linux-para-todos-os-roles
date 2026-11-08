@@ -29,11 +29,12 @@ O `bora` é escrito em Rust, e as receitas são scripts bash. Com o [Rust](https
 cargo test                     # testes do bora, com um catálogo de mentira
 cargo run -- conferir          # confere o formato de todas as receitas e rolês
 shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh
+ferramentas/pipes/conferir.sh  # barra "| grep -q" e "| head", que falham às vezes com pipefail
 ```
 
 Para testar uma receita mudada sem recompilar, aponte o `bora` para a pasta do repositório: `BORA_RAIZ=$PWD cargo run -- lista`.
 
-As receitas também rodam de verdade em contêineres com systemd, como explica [`testes/conteiner/README.md`](testes/conteiner/README.md). O GitHub Actions faz isso a cada pull request no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Um teste em contêiner é registrado com `onde: conteiner` e não substitui o teste numa máquina virtual.
+As receitas também rodam de verdade em contêineres com systemd, como explica [`testes/conteiner/README.md`](testes/conteiner/README.md). O GitHub Actions faz isso a cada pull request no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Um teste em contêiner é registrado com `onde: conteiner` e não substitui o teste numa máquina virtual. A parte dos rolês que não depende de tela também roda numa máquina virtual com QEMU, toda semana e nos pull requests que mexem nas receitas, como explica [`testes/vm/README.md`](testes/vm/README.md#a-parte-automática-no-ci). Uma receita nova que só se confere com tela entra em [`testes/vm/qemu/so-com-tela.txt`](testes/vm/qemu/so-com-tela.txt).
 
 ## Regras para receitas
 

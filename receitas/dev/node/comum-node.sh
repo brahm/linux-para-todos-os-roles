@@ -1,15 +1,14 @@
 # shellcheck shell=bash disable=SC2034
 # Funções usadas pelos scripts desta receita.
 
-# A versão LTS que esta receita instala e testa. Ao trocar, troque também as
-# somas, copiadas de https://nodejs.org/dist/v<versão>/SHASUMS256.txt.
+# A versão LTS que esta receita instala e testa. Ao trocar, troque também a
+# soma, copiada de https://nodejs.org/dist/v<versão>/SHASUMS256.txt.
+# O bora só roda em x86_64, então só entra o pacote linux-x64.
 NODE_VERSAO=26.13.0
 NODE_SHA256_X64=d28a96af6c38596f6d9d97c0ee531c13d238d757742387d1928de822d959e997
-NODE_SHA256_ARM64=406fe3fbde1c054adff8b297c16fdb5af6659db327c1ac8acd46b56ef1af9a92
 
 case "$(uname -m)" in
     x86_64) NODE_ARQ=x64 NODE_SHA256=$NODE_SHA256_X64 ;;
-    aarch64) NODE_ARQ=arm64 NODE_SHA256=$NODE_SHA256_ARM64 ;;
     *) falha "o Node.js oficial não tem versão para $(uname -m)" ;;
 esac
 NODE_NOME=node-v$NODE_VERSAO-linux-$NODE_ARQ

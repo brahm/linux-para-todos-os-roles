@@ -91,7 +91,7 @@ def status_ficha(r):
     prontas = sum(1 for rid, _ in r["receitas"] if rid in PRONTAS)
     total = len(r["receitas"])
     if prontas == total:
-        return f'<span class="ficha agora">Para testar · {total} de {total} receitas prontas</span>'
+        return f'<span class="ficha agora">Em teste · {total} de {total} receitas prontas</span>'
     if r["status"] == "em-construcao":
         return f'<span class="ficha agora">Em construção · {prontas} de {total} prontas</span>'
     if prontas:
@@ -135,7 +135,8 @@ def pagina_role(r):
                  + (f" As receitas prontas ({', '.join(RECEITAS[x][0] for x in prontas)}) já funcionam hoje, como receitas avulsas no menu do <code>bora</code>." if prontas else ""))
     elif len(prontas) == len(r["receitas"]):
         aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
-                 "Elas passaram nos testes automáticos em contêiner, mas ainda não numa máquina virtual nem num computador de verdade. Use numa máquina que possa ser formatada sem dor.")
+                 "Elas passam nos testes automáticos em contêiner e, na parte que não depende de tela, numa máquina virtual de verdade, toda semana. "
+                 "O que só se confere olhando, como a tela de login, o vídeo tocando e o navegador, ainda espera o <a href=\"https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md\">roteiro de teste em máquina virtual</a>. Até ele passar, use numa máquina que possa ser formatada sem dor.")
     else:
         aviso = (f"Faltam {len(r['receitas']) - len(prontas)} receitas para este rolê aparecer completo no menu. "
                  f"As {len(prontas)} prontas já funcionam hoje, como receitas avulsas no menu do <code>bora</code>.")
