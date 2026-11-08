@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Roda dentro da máquina virtual que o tela.sh liga, como root, em fases:
 #
-#   preparar        instala a tela de login (GDM) e o Firefox, como num
-#                   desktop, cria a pessoa "aluno" e liga a tela no boot
+#   preparar [gdm|lightdm]
+#                   instala a tela de login (o GDM, do GNOME, ou o LightDM,
+#                   das máquinas com Xfce) e o Firefox, como num desktop,
+#                   cria a pessoa "aluno" e liga a tela no boot
 #   tela-de-login   espera a tela de login aparecer
 #   aplicar         aplica as receitas de so-com-tela.txt (duas vezes, a
 #                   segunda sem mudar nada), com o ambiente leve como padrão,
@@ -14,8 +16,10 @@
 #   desfazer        desfaz tudo, confere no Ubuntu que o Snap e o Firefox do
 #                   Snap voltaram e espera a tela de login voltar
 #
-# O ambiente leve é o Xfce no Ubuntu e o LXQt no Debian, como nos testes em
-# contêiner. No fim, /root/cobertas.txt lista as receitas que passaram por aqui.
+# O ambiente leve é o Xfce no Ubuntu e o LXQt no Debian com o GDM, como nos
+# testes em contêiner, e o Xfce no Debian com o LightDM, o jeito mais comum
+# de uma máquina antiga com Debian. No fim, /root/cobertas.txt lista as
+# receitas que passaram por aqui.
 set -euo pipefail
 cd /bora
 etapa() { printf '\n--- %s ---\n' "$*"; }
@@ -24,7 +28,11 @@ falhou() {
     exit 1
 }
 . /etc/os-release
-if [ "$ID" = debian ]; then AMBIENTE=lxqt; else AMBIENTE=xfce; fi
+# A tela de login escolhida no preparar fica anotada para as outras fases.
+if [ "${1:-}" = preparar ]; then echo "${2:-gdm}" >/root/tela-de-login; fi
+TELA=$(cat /root/tela-de-login 2>/dev/null || echo gdm)
+case "$TELA" in gdm | lightdm) ;; *) falhou "tela de login desconhecida: $TELA" ;; esac
+if [ "$ID" = debian ] && [ "$TELA" = gdm ]; then AMBIENTE=lxqt; else AMBIENTE=xfce; fi
 case "$AMBIENTE" in
     xfce) PROCESSO=xfce4-session ;;
     lxqt) PROCESSO=lxqt-session ;;
@@ -101,6 +109,9 @@ case "${1:?fase}" in
             apt-get install -y -q gdm3
             # O Firefox do Ubuntu é o do Snap, que a receita sem-snap troca.
             snap install firefox
+        elif [ "$TELA" = lightdm ]; then
+            # Sem recomendados: o LightDM traria junto um ambiente gráfico.
+            apt-get install -y -q --no-install-recommends lightdm lightdm-gtk-greeter accountsservice xserver-xorg firefox-esr
         else
             apt-get install -y -q gdm3 firefox-esr
         fi
@@ -126,10 +137,18 @@ case "${1:?fase}" in
         awk '$1 == "-" && $2 == "receita:" { print $3 }' /root/tela.yaml | sort -u >/root/cobertas.txt
 
         etapa "Entrada automática do $PESSOA, para a tela mostrar a sessão"
-        conf=$(conf_do_gdm)
-        cp "$conf" /root/gdm.conf.antes
-        sed -i "/^\[daemon\]/a AutomaticLoginEnable=true\nAutomaticLogin=$PESSOA" "$conf"
-        grep -A3 '^\[daemon\]' "$conf"
+        if [ "$TELA" = lightdm ]; then
+            # Sem autologin-session: o LightDM usa a sessão que a receita
+            # gravou para a pessoa no AccountsService.
+            mkdir -p /etc/lightdm/lightdm.conf.d
+            printf '[Seat:*]\nautologin-user=%s\nautologin-user-timeout=0\n' "$PESSOA" >/etc/lightdm/lightdm.conf.d/90-bora-teste.conf
+            cat /etc/lightdm/lightdm.conf.d/90-bora-teste.conf
+        else
+            conf=$(conf_do_gdm)
+            cp "$conf" /root/gdm.conf.antes
+            sed -i "/^\[daemon\]/a AutomaticLoginEnable=true\nAutomaticLogin=$PESSOA" "$conf"
+            grep -A3 '^\[daemon\]' "$conf"
+        fi
         ;;
 
     sessao)
@@ -175,7 +194,11 @@ case "${1:?fase}" in
 
     sair)
         etapa "Desligar a entrada automática e fechar o Firefox"
-        cp /root/gdm.conf.antes "$(conf_do_gdm)"
+        if [ "$TELA" = lightdm ]; then
+            rm -f /etc/lightdm/lightdm.conf.d/90-bora-teste.conf
+        else
+            cp /root/gdm.conf.antes "$(conf_do_gdm)"
+        fi
         pkill -u "$PESSOA" firefox || true
         ;;
 

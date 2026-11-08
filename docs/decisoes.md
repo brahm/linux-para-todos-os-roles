@@ -154,3 +154,12 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | A máquina com tela confere, no Ubuntu, que o snapd e o Firefox do Snap voltam ao desfazer o Sem Snap | A receita só avisava quando a volta falhava, e nenhum teste conferia |
 | As capturas da máquina com tela aparecem nas páginas das receitas, numa versão com metade do tamanho. Elas são trocadas só junto com o registro (no máximo uma vez por mês) ou quando a distro ainda não tem nenhuma | Elas sumiam em 30 dias nos artefatos. Trocar toda semana faria o repositório crescer à toa |
 | A captura só reprova uma tela com mais de 99,5% de uma cor | A tela de login do Ubuntu tem 97% de uma cor e ficava perto do limite antigo, de 98% |
+
+## 8 de novembro de 2026: sétima rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| Uma tarefa agendada, toda segunda às 8h47, lê as issues `vm` abertas, investiga pelo log e abre um PR com a correção ou conta ao Brahm o que achou. Escolhido por Brahm em 8/11/2026 | As issues de domingo não tinham ninguém encarregado |
+| O roteiro manual no Linux Mint tem uma issue própria (#22), para o Brahm ou a comunidade pegar | Ficou sem data e sem responsável quando as VMs passaram a bastar para o `testado` |
+| A máquina com tela ganha o Debian 13 com o LightDM e o Xfce | É o jeito mais comum de uma máquina antiga com Debian, o público do rolê 2, e só o GDM era testado |
+| A tarefa da issue #16 passa de 8/2 para 1/2/2027 | O GitHub guarda os logs por 90 dias, e ela procura 3 meses deles |

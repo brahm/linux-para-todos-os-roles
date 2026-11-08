@@ -108,7 +108,8 @@ CAPTURAS = {
     "desktop/sem-snap": [("3-firefox", "O Firefox depois da receita (no Ubuntu, o da Mozilla)"),
                          ("4-depois-de-desfazer", "A tela de login depois de desfazer tudo")],
 }
-DISTROS_TELAS = [("ubuntu-24.04", "Ubuntu 24.04"), ("ubuntu-26.04", "Ubuntu 26.04"), ("debian-13", "Debian 13")]
+DISTROS_TELAS = [("ubuntu-24.04", "Ubuntu 24.04"), ("ubuntu-26.04", "Ubuntu 26.04"), ("debian-13", "Debian 13"),
+                 ("debian-13-lightdm", "Debian 13 com o LightDM")]
 PASTA_TELAS = RAIZ_REPO + "testes/vm/telas/"
 
 

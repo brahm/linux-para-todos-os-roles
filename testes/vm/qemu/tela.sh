@@ -8,6 +8,10 @@
 #   testes/vm/qemu/tela.sh ubuntu-24.04 binario/bora
 #   testes/vm/qemu/tela.sh ubuntu-26.04 binario/bora
 #   testes/vm/qemu/tela.sh debian-13 binario/bora
+#   testes/vm/qemu/tela.sh debian-13 binario/bora lightdm
+#
+# O terceiro argumento escolhe a tela de login: o GDM, do GNOME (o padrão),
+# ou o LightDM, das máquinas com Xfce.
 #
 # Quando tudo passa, $PASTA/cobertas.txt lista as receitas que a máquina
 # aplicou, desfez e conferiu; o workflow usa a lista para gravar o registro.
@@ -16,9 +20,10 @@
 # Os programas e a pasta são os mesmos do rodar.sh (padrão: /tmp/bora-tela).
 set -euo pipefail
 
-USO="uso: tela.sh ubuntu-24.04|ubuntu-26.04|debian-13 caminho/do/bora"
+USO="uso: tela.sh ubuntu-24.04|ubuntu-26.04|debian-13 caminho/do/bora [gdm|lightdm]"
 DISTRO=${1:?$USO}
 BORA_BIN=$(realpath "${2:?$USO}")
+TELA=${3:-gdm}
 RAIZ=$(cd "$(dirname "$0")/../../.." && pwd)
 PASTA=${PASTA:-/tmp/bora-tela}
 PORTA=${PORTA:-2223}
@@ -72,7 +77,7 @@ etapa "Copiar o bora e o catálogo"
 copiar_bora
 
 etapa "Instalar a tela de login e reiniciar"
-fase tela-na-vm.sh preparar
+fase tela-na-vm.sh "preparar $TELA"
 reiniciar
 fase tela-na-vm.sh tela-de-login
 capturar 1-tela-de-login
@@ -95,4 +100,4 @@ capturar 4-depois-de-desfazer
 vm "sudo cat /root/cobertas.txt" >cobertas.txt.parcial
 mv cobertas.txt.parcial cobertas.txt
 
-etapa "Tudo certo em $DISTRO"
+etapa "Tudo certo em $DISTRO, com o $TELA"
