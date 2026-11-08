@@ -1,0 +1,28 @@
+id: ia/agentes
+nome: Agentes de IA no terminal
+descricao: Instala os agentes de programação que você escolher (Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe) na sua conta, sem sudo, com a skill do bora para eles saberem montar um plano.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  agentes:
+    tipo: lista
+    opcoes: [claude, codex, copilot, opencode, vibe]
+    rotulos:
+      claude: Claude Code, da Anthropic. Precisa de um plano pago do Claude ou de chave de API.
+      codex: Codex, da OpenAI. Funciona com o ChatGPT, inclusive no plano gratuito, ou com chave de API.
+      copilot: Copilot CLI, do GitHub. Funciona com o plano gratuito do Copilot.
+      opencode: OpenCode, livre. Funciona com modelos gratuitos e com chave de qualquer provedor, como OpenRouter e DeepSeek.
+      vibe: Mistral Vibe, da Mistral. Funciona com chave de API da Mistral.
+    padrao: opencode
+    pergunta: "Quais agentes você quer? Escreva os nomes separados por vírgula: claude, codex, copilot, opencode, vibe."
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.

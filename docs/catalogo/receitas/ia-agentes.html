@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentes de IA no terminal · Linux para todos os rolês</title>
+  <meta name="description" content="Agentes de IA no terminal, receita do bora: Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, na sua conta, sem sudo. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/ia-agentes.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Agentes de IA no terminal">
+  <meta property="og:description" content="Agentes de IA no terminal, receita do bora: Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, na sua conta, sem sudo. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/ia-agentes.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Agentes de IA no terminal</li>
+          </ol>
+          <h1><span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16.2h5"/><circle cx="12" cy="3.5" r="1"/></svg></span><span>Agentes de IA no terminal</span></h1>
+          <p class="lema">Instala os agentes de programação que você escolher (Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe) na sua conta, sem sudo, com a skill do bora para eles saberem montar um plano.</p>
+          <div class="fichas">
+            <span class="ficha"><code>ia/agentes</code></span>
+            <span class="ficha risco-medio">Risco médio</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/ia/agentes">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iag-t">
+            <title id="iag-t">Cinco agentes, cada um com o seu comando, instalados na pasta ~/.local/bin da pessoa, sem sudo. Todos leem a skill do bora.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">~/.local/bin, na sua conta, sem sudo</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="48" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="88" y="75" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">claude</text>
+              <text x="88" y="96" font-size="11.5" text-anchor="middle" class="t2">Anthropic</text>
+            </g><g class="pacote" style="--i:1">
+              <rect x="170" y="48" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="238" y="75" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">codex</text>
+              <text x="238" y="96" font-size="11.5" text-anchor="middle" class="t2">OpenAI</text>
+            </g><g class="pacote" style="--i:2">
+              <rect x="320" y="48" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="388" y="75" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">copilot</text>
+              <text x="388" y="96" font-size="11.5" text-anchor="middle" class="t2">GitHub</text>
+            </g><g class="pacote" style="--i:3">
+              <rect x="20" y="124" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="88" y="151" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">opencode</text>
+              <text x="88" y="172" font-size="11.5" text-anchor="middle" class="t2">livre</text>
+            </g><g class="pacote" style="--i:4">
+              <rect x="170" y="124" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="238" y="151" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">vibe</text>
+              <text x="238" y="172" font-size="11.5" text-anchor="middle" class="t2">Mistral</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="220" width="440" height="104" rx="14" class="caixa-svg"/>
+              <text x="40" y="250" font-size="14" font-weight="600">A skill do bora</text>
+              <text x="40" y="276" font-size="13" class="t2">O agente monta e valida o plano; quem aplica é você:</text>
+              <text x="40" y="304" font-size="13" class="mono">sudo bora aplicar plano.yaml</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. Cada agente funciona com um tipo de conta; o rolê não depende de nenhum fabricante.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Instala os agentes que você escolher</strong>: Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe.</li>
+            <li><strong>Na sua conta, sem sudo</strong>, pelos pacotes oficiais de cada fabricante no npm e no PyPI, que conferem a soma de cada arquivo.</li>
+            <li><strong>Ensina o bora aos agentes</strong>, com uma skill que mostra como montar e validar um plano sem rodar nada como root.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não cria contas nem assina planos por você.</li>
+            <li>Não roda instaladores do tipo <code>curl | sh</code>: por isso o Antigravity CLI, que só tem esse, ainda não entra.</li>
+            <li>Não mexe num agente que você já instalou de outro jeito.</li>
+            <li>Não apaga as configurações e os logins dos agentes no desfazer.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se o comando de cada agente escolhido existe na sessão da pessoa e se a skill do bora está nas duas pastas de skills.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Para cada agente que falta, roda como a pessoa <code>npm install -g</code> ou <code>pipx install</code>, e anota o que instalou.</li><li>Escreve a skill em <code>~/.claude/skills/bora</code> e em <code>~/.agents/skills/bora</code>.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Para cada agente: o comando responde a <code>--version</code> e está na conta da pessoa, e não na do root. A conversa de verdade precisa da sua conta, e fica com você.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Desinstala os agentes que a receita instalou e apaga a skill, se ela não mudou.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 24.04, com os cinco agentes, encurtada nas linhas do npm.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Agentes de IA no terminal: instala cinco agentes na conta da pessoa e a skill do bora, e confere que cada um responde.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[9/11] Agentes de IA no terminal</span></span><span class="l "><span class="bar">  │</span> Instalando @anthropic-ai/claude-code, do npm, em /home/dani/.local</span><span class="l "><span class="bar">  │</span> Instalado: claude (2.1.319 (Claude Code))</span><span class="l "><span class="bar">  │</span> Instalando @openai/codex, do npm, em /home/dani/.local</span><span class="l "><span class="bar">  │</span> Instalado: codex (codex-cli 0.167.0)</span><span class="l "><span class="bar">  │</span> Instalando mistral-vibe, do PyPI, com o pipx</span><span class="l "><span class="bar">  │</span> Instalado: vibe (vibe 3.1.0)</span><span class="l "><span class="bar">  │</span> Skill do bora instalada: /home/dani/.claude/skills/bora/SKILL.md</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> claude responde (claude --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> codex responde (codex --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> copilot responde (copilot --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> opencode responde (opencode --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> vibe responde (vibe --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> a skill do bora está em /home/dani/.claude/skills/bora</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Agentes de IA no terminal: aplicada e testada</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Qual agente escolher?</h3><p>O OpenCode funciona com modelos gratuitos e com a chave de qualquer provedor, e é o padrão. O Codex funciona com a conta gratuita do ChatGPT, e o Copilot CLI, com o plano gratuito do Copilot. O Claude Code pede um plano pago do Claude ou crédito na API. Dá para instalar vários e testar.</p></article>
+        <article class="cartao porque revelar"><h3>Por que na minha conta, e não para o sistema?</h3><p>Assim nenhum agente roda como root, e eles conseguem se atualizar sozinhos, sem sudo, como vários fazem.</p></article>
+        <article class="cartao porque revelar"><h3>Por que a versão mais nova, e não uma fixa?</h3><p>Os agentes mudam toda semana, e uma versão antiga costuma parar de funcionar com o serviço do fabricante. A máquina virtual do CI confere os cinco toda semana.</p></article>
+        <article class="cartao porque revelar"><h3>O que é a skill do bora?</h3><p>Um arquivo que o agente lê quando o assunto aparece. Ela ensina a ver a máquina, montar e validar um plano, e sempre pedir para você aplicar. É a terceira porta do bora, a do agente.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.local/bin</strong><span>Os comandos <code>claude</code>, <code>codex</code>, <code>copilot</code>, <code>opencode</code> e <code>vibe</code>, conforme a escolha.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.claude/skills/bora e ~/.agents/skills/bora</strong><span>A skill do bora, um <code>SKILL.md</code>.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>agentes</code></td><td><code>opencode</code></td><td>Quais agentes você quer? Escreva os nomes separados por vírgula: claude, codex, copilot, opencode, vibe.<ul style="margin:8px 0 0;padding-left:18px"><li><code>claude</code>: Claude Code, da Anthropic. Precisa de um plano pago do Claude ou de chave de API.</li><li><code>codex</code>: Codex, da OpenAI. Funciona com o ChatGPT, inclusive no plano gratuito, ou com chave de API.</li><li><code>copilot</code>: Copilot CLI, do GitHub. Funciona com o plano gratuito do Copilot.</li><li><code>opencode</code>: OpenCode, livre. Funciona com modelos gratuitos e com chave de qualquer provedor, como OpenRouter e DeepSeek.</li><li><code>vibe</code>: Mistral Vibe, da Mistral. Funciona com chave de API da Mistral.</li></ul></td></tr><tr><td><code>usuario</code></td><td><code>auto</code></td><td>A conta que vai programar. "auto" é quem rodou o bora com sudo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas ia/agentes -p ia/agentes.agentes=claude,codex</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>opencode</code><span>Abre o OpenCode na pasta do projeto. Na primeira vez, escolha um modelo.</span></div>
+        <div class="cartao comando revelar"><code>codex</code><span>Abre o Codex; na primeira vez, ele pede para entrar com a conta do ChatGPT.</span></div>
+        <div class="cartao comando revelar"><code>npm ls -g</code><span>Lista os agentes instalados pelo npm na sua conta.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/vibecodar.html">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://docs.claude.com/en/docs/claude-code/setup"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Claude Code</strong><span>Anthropic</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/openai/codex"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Codex CLI</strong><span>OpenAI</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Copilot CLI</strong><span>GitHub Docs</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://opencode.ai/docs/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>OpenCode</strong><span>Documentação</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/mistralai/mistral-vibe"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Mistral Vibe</strong><span>GitHub</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/ia/agentes/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bia/agentes%5D%20&amp;onde=ia/agentes">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bia/agentes%5D%20Funcionar%20em%20&amp;onde=ia/agentes">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20ia/agentes&amp;onde=ia/agentes">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/ia/agentes/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

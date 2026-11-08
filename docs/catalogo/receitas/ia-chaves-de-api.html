@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chaves de API guardadas · Linux para todos os rolês</title>
+  <meta name="description" content="Chaves de API guardadas, receita do bora: Um lugar para as chaves, com permissão só do dono. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta name="theme-color" content="#fff6ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#241f31" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/ia-chaves-de-api.html">
+  <link rel="icon" href="../../imagens/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../imagens/icone-256.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Linux para todos os rolês">
+  <meta property="og:title" content="Chaves de API guardadas">
+  <meta property="og:description" content="Chaves de API guardadas, receita do bora: Um lugar para as chaves, com permissão só do dono. O passo a passo, o que faz, o que não faz e os porquês.">
+  <meta property="og:url" content="https://brahm.github.io/linux-para-todos-os-roles/catalogo/receitas/ia-chaves-de-api.html">
+  <meta property="og:image" content="https://brahm.github.io/linux-para-todos-os-roles/imagens/imagem-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../fontes/InterDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../fontes/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../estilo.css">
+  <link rel="stylesheet" href="../../catalogo/catalogo.css">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="../../catalogo/catalogo.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="pegada" viewBox="0 0 16 16"><path fill="currentColor" d="M9.32 7.68A2.17 2.17 0 1 1 6.38 10.84L2.44 6.41A1.61 1.61 0 0 1 4.63 4.07L9.32 7.68ZM10.17 9.26A2.17 2.17 0 1 1 5.83 9.26L6.25 2.64A1.75 1.75 0 0 1 9.75 2.64L10.17 9.26ZM9.62 10.84A2.17 2.17 0 1 1 6.68 7.68L11.37 4.07A1.61 1.61 0 0 1 13.56 6.41L9.62 10.84ZM4.93 10.67A3.32 3.32 0 1 1 11.07 10.67L9.78 13.81A1.92 1.92 0 0 1 6.22 13.81L4.93 10.67ZM8 9.4L4.43 6.07C5.93 6.12 7.12 5.41 8 3.95L8 9.4ZM8 9.4L8 3.95C8.88 5.41 10.07 6.12 11.57 6.07L8 9.4Z"/></symbol>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="largura">
+      <a class="marca-mini" href="../../" aria-label="Linux para todos os rolês, início">
+        <svg aria-hidden="true"><use href="#pegada"/></svg>
+        <span>Linux para todos os <em>rolês</em></span>
+      </a>
+      <nav aria-label="Seções">
+        <a href="../../#o-que-e">O que é</a>
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="../../#como-funciona">Como funciona</a>
+        <a href="../../#status">Status</a>
+        <a href="../../#bora-junto">Bora junto</a>
+        <a class="github" href="https://github.com/brahm/linux-para-todos-os-roles">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="abertura interna">
+      <div class="largura">
+        <div>
+          <ol class="migalhas" aria-label="Onde você está">
+            <li><a href="../">Rolês e receitas</a></li>
+            <li><a href="../#receitas">Receitas</a></li>
+            <li aria-current="page">Chaves de API guardadas</li>
+          </ol>
+          <h1><span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16.5 6.5l2.5 2.5M14 9l2 2"/></svg></span><span>Chaves de API guardadas</span></h1>
+          <p class="lema">Um arquivo para as chaves de API dos agentes de IA, fora de qualquer projeto e com permissão só do dono, carregado em cada terminal.</p>
+          <div class="fichas">
+            <span class="ficha"><code>ia/chaves-de-api</code></span>
+            <span class="ficha risco-baixo">Risco baixo</span>
+            <span class="ficha">Pede a senha de administrador</span>
+            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+          </div>
+          <div class="acoes">
+            <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles/tree/main/receitas/ia/chaves-de-api">Ver o código</a>
+          </div>
+        </div>
+        <figure class="palco" style="margin:0" data-anima>
+          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ich-t">
+            <title id="ich-t">O arquivo de chaves fica em ~/.config, fora dos projetos, com permissão só da dona. Cada terminal novo carrega as chaves, e os agentes as encontram nas variáveis de ambiente.</title>
+            <rect x="20" y="24" width="440" height="110" rx="14" class="caixa-svg"/>
+            <text x="44" y="54" font-size="13" class="mono">~/.config/chaves-de-api/chaves.env</text>
+            <text x="44" y="80" font-size="12.5" class="t2 mono">-rw------- dani</text>
+            <text x="44" y="108" font-size="12.5" class="mono">OPENROUTER_API_KEY=sk-or-…</text>
+            <path d="M240 134v34" class="traco"/>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="170" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="44" y="204" font-size="13" class="t2">cada terminal novo carrega as chaves (~/.bashrc)</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="246" width="210" height="74" rx="14" fill="none" stroke="var(--ok)" stroke-width="2.4"/>
+              <text x="125" y="290" font-size="13" text-anchor="middle">os agentes acham</text>
+              <rect x="250" y="246" width="210" height="74" rx="14" fill="none" stroke="var(--vermelho)" stroke-width="2.4"/>
+              <text x="355" y="282" font-size="13" text-anchor="middle">fora do Git</text>
+              <text x="355" y="302" font-size="12.5" text-anchor="middle" class="t2">e de outras contas</text>
+            </g>
+          </svg>
+          <figcaption>Ilustração. A chave fica num lugar só, longe dos projetos.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="resumo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
+        <h2>O que faz e o que não faz</h2>
+      </div>
+      <div class="faz-nao">
+        <div class="cartao faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✓</span>O que faz</h3>
+          <ul>
+            <li><strong>Cria um arquivo para as chaves de API</strong> em <code>~/.config/chaves-de-api</code>, que só a sua conta abre.</li>
+            <li><strong>Carrega as chaves em cada terminal novo</strong>, onde os agentes as procuram.</li>
+            <li><strong>Diz onde criar cada chave</strong>, com o provedor que você escolheu no topo do arquivo.</li>
+          </ul>
+        </div>
+        <div class="cartao nao-faz revelar">
+          <h3><span class="marca-icone" aria-hidden="true">✕</span>O que não faz</h3>
+          <ul>
+            <li>Não recebe a sua chave pelo bora: o plano pode ir para o Git ou para uma IA, então você cola a chave no arquivo, depois.</li>
+            <li>Não manda as chaves para lugar nenhum.</li>
+            <li>Não apaga o arquivo no desfazer se você já colou alguma chave.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="passo-a-passo" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo a passo</p>
+        <h2>Como o bora aplica esta receita</h2>
+        <p>As mesmas quatro etapas de toda receita, com o que esta confere em cada uma.</p>
+      </div>
+      <ol class="etapas">
+        <li class="etapa azul revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <div class="corpo">
+            <h3>Verificar <small>já está aplicada?</small></h3>
+            <p>Confere se a pasta e o arquivo existem, com as permissões 700 e 600 e a sua conta como dona, e se o <code>.bashrc</code> tem o bloco do bora.</p>
+          </div>
+        </li>
+        <li class="etapa  revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="corpo">
+            <h3>Aplicar <small>faz a mudança</small></h3>
+            <ul><li>Cria a pasta e o arquivo, se não existirem, já com a permissão só da pessoa.</li><li>Acrescenta ao <code>.bashrc</code> o bloco que carrega o arquivo.</li></ul>
+          </div>
+        </li>
+        <li class="etapa verde revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3.5h6M10 3.5v5.5L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3.5"/><path d="M7.5 15h9"/></svg></span>
+          <div class="corpo">
+            <h3>Testar <small>funcionou?</small></h3>
+            <p>Confere as permissões, que outra conta não lê o arquivo, que ele não tem erro de sintaxe e, com uma chave de teste num arquivo temporário, que a chave chega ao terminal.</p>
+          </div>
+        </li>
+        <li class="etapa cinza revelar">
+          <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <div class="corpo">
+            <h3>Desfazer <small>quando você pedir</small></h3>
+            <p>Tira o bloco do <code>.bashrc</code>. O arquivo só sai se continuar sem nenhuma chave.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="largura" aria-label="Uma aplicação de verdade">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>No terminal</p>
+        <h2>Uma aplicação de verdade</h2>
+        <p>A saída de um teste no Ubuntu 24.04, com o OpenRouter escolhido.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Chaves de API guardadas: cria o arquivo de chaves, liga o carregamento no .bashrc e confere seis testes.">
+          <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+<pre aria-hidden="true"><span class="l "><span class="c">[8/11] Chaves de API guardadas</span></span><span class="l "><span class="bar">  │</span> Arquivo de chaves criado: /home/dani/.config/chaves-de-api/chaves.env</span><span class="l "><span class="bar">  │</span> Cada terminal novo de dani passa a carregar as chaves (/home/dani/.bashrc).</span><span class="l "><span class="bar">  │</span> Para usar a sua chave, abra o arquivo num editor, tire o # da linha OPENROUTER_API_KEY= e cole a chave depois do =.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> a pasta das chaves só abre para dani (700)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o arquivo das chaves só abre para dani (600)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> outra conta não consegue ler as chaves</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o arquivo das chaves não tem erro</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> o .bashrc carrega as chaves em cada terminal novo</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> uma chave do arquivo chega ao terminal (printenv)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Chaves de API guardadas: aplicada e testada</span></pre>
+        </div>
+        <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
+      </figure>
+    </section>
+
+    <section id="porques" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Os porquês</p>
+        <h2>Por que assim</h2>
+      </div>
+      <div class="porques">
+        <article class="cartao porque revelar"><h3>Por que não no próprio projeto?</h3><p>Um <code>.env</code> no projeto é o caminho mais curto para a chave ir parar no GitHub. Fora de qualquer projeto, nenhum <code>git add</code> alcança.</p></article>
+        <article class="cartao porque revelar"><h3>Por que o bora não pergunta a chave?</h3><p>O plano do bora é um arquivo que pode ir para o Git, ser mostrado a uma IA ou aplicado em outra máquina. Uma chave ali vazaria. Você cola a chave direto no arquivo, num editor.</p></article>
+        <article class="cartao porque revelar"><h3>Qual provedor escolher?</h3><p>O OpenRouter dá acesso a vários modelos com uma chave só, alguns gratuitos. A DeepSeek costuma ser das mais baratas. Os planos mudam o tempo todo; confira na página de cada um.</p></article>
+      </div>
+    </section>
+
+    <section id="o-que-muda" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como</p>
+        <h2>O que muda no sistema</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.config/chaves-de-api/chaves.env</strong><span>Permissão 600, com uma linha comentada por provedor.</span></span></div></li>
+        <li><div class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>~/.bashrc</strong><span>Um bloco do bora que carrega o arquivo em cada terminal novo.</span></span></div></li>
+      </ul>
+    </section>
+
+    <section id="parametros" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parâmetros</p>
+        <h2>O que dá para escolher</h2>
+      </div>
+      <div class="tabela-envolta revelar">
+        <table class="tabela">
+          <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
+          <tbody>
+            <tr><td><code>provedor</code></td><td><code>nenhum</code></td><td>Vai usar chave de API de algum provedor?<ul style="margin:8px 0 0;padding-left:18px"><li><code>nenhum</code>: Não vou usar chave de API por enquanto.</li><li><code>openrouter</code>: OpenRouter, que dá acesso a vários modelos, alguns gratuitos.</li><li><code>deepseek</code>: DeepSeek, com a API dos modelos da DeepSeek.</li><li><code>outro</code>: Outro provedor, como Anthropic, OpenAI, Google ou Mistral.</li></ul></td></tr><tr><td><code>usuario</code></td><td><code>auto</code></td><td>A conta que vai programar. "auto" é quem rodou o bora com sudo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas ia/chaves-de-api -p ia/chaves-de-api.provedor=openrouter</code></p>
+    </section>
+
+    <section id="conferir" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Confira você mesmo</p>
+        <h2>Os comandos para conferir</h2>
+      </div>
+      <div class="comandos-conferir">
+        <div class="cartao comando revelar"><code>ls -l ~/.config/chaves-de-api</code><span>Mostra que só você lê o arquivo (<code>-rw-------</code>).</span></div>
+        <div class="cartao comando revelar"><code>printenv OPENROUTER_API_KEY</code><span>Num terminal novo, mostra se a chave chegou.</span></div>
+      </div>
+    </section>
+
+    <section id="onde-testada" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde funciona</p>
+        <h2>Distros e testes</h2>
+      </div>
+      <div class="familias revelar">
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
+        <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
+        <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
+        <div class="cartao familia"><strong>openSUSE</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Tumbleweed, Leap</span></div>
+      </div>
+      <div class="bloco">
+        <h3>Registro de testes</h3>
+        <div class="tabela-envolta revelar">
+          <table class="tabela">
+            <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+      </div>
+    </section>
+
+    <section id="roles" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Onde ela entra</p>
+        <h2>Rolês que usam esta receita</h2>
+      </div>
+      <div class="grade">
+        <a class="cartao role" href="../roles/vibecodar.html">
+          <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
+          <h3>Vibecodar</h3>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="vai">Ver o rolê</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section id="fontes" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Fontes</p>
+        <h2>Para ler mais</h2>
+      </div>
+      <ul class="caixa revelar">
+        <li><a class="linha" href="https://opencode.ai/docs/providers/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Provedores no OpenCode</strong><span>Documentação do OpenCode</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://openrouter.ai/docs/api-keys"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>Chaves de API</strong><span>OpenRouter</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+        <li><a class="linha" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/ia/chaves-de-api/LEIAME.md"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>LEIAME da receita</strong><span>O mesmo conteúdo, junto do código</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>
+      </ul>
+    </section>
+
+    <section id="pedidos" class="largura pedidos">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora melhorar</p>
+        <h2>Falta alguma coisa?</h2>
+        <p>Os pedidos viram issues no GitHub, onde qualquer pessoa pode comentar, votar com um 👍 ou se oferecer para fazer.</p>
+      </div>
+      <div class="convites">
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bia/chaves-de-api%5D%20&amp;onde=ia/chaves-de-api">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <h3>Pedir um recurso nesta receita</h3>
+          <p>Uma opção nova, um comportamento diferente ou algo que esta receita ainda não faz.</p>
+          <span class="seta">Fazer um pedido</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=1-pedido-de-recurso.yml&amp;title=%5Bia/chaves-de-api%5D%20Funcionar%20em%20&amp;onde=ia/chaves-de-api">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M9.5 10.3h5M12 7.8v5"/></svg></span>
+          <h3>Pedir em outra distro</h3>
+          <p>Usa Fedora, Arch ou outra família? Diga qual, e conte se puder testar.</p>
+          <span class="seta">Pedir outra distro</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml&amp;title=Receita%3A%20">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span>
+          <h3>Pedir uma receita nova</h3>
+          <p>Uma mudança que o bora ainda não sabe fazer, dentro deste rolê ou fora dele.</p>
+          <span class="seta">Pedir uma receita</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=4-problema.yml&amp;title=Problema%3A%20ia/chaves-de-api&amp;onde=ia/chaves-de-api">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg></span>
+          <h3>Relatar um problema</h3>
+          <p>Algo não funcionou como esta página diz? O formulário já vem com o roteiro.</p>
+          <span class="seta">Relatar</span>
+        </a>
+        <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/receitas/ia/chaves-de-api/LEIAME.md">
+          <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>
+          <h3>Melhorar esta explicação</h3>
+          <p>Ficou confuso? Sugira um jeito melhor de dizer, direto no arquivo.</p>
+          <span class="seta">Ver no GitHub</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape-site">
+    <div class="largura">
+      <div>
+        <a class="marca-mini" href="../../"><svg aria-hidden="true"><use href="#pegada"/></svg><span>Linux para todos os <em>rolês</em></span></a>
+        <p>Feito no Brasil, em português, sob a licença <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/LICENSE">0BSD</a>. A fonte é a Inter, sob a <a href="../../fontes/OFL.txt">SIL Open Font License</a>.</p>
+        <p class="grub">Nenhum demônio foi invocado no GRUB para fazer este site.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="../../distro/">Escolher a distro</a>
+        <a href="../../catalogo/">Rolês e receitas</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles">Repositório</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md">Como contribuir</a>
+        <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/docs/decisoes.md">Decisões</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

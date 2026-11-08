@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# caixa: roda um comando numa caixa de areia, com o bubblewrap.
+# Instalado pelo bora (receita ia/caixa-de-areia).
+#
+#   caixa claude          caixa opencode          caixa bash
+#
+# Dentro da caixa, o comando:
+#   - escreve só na pasta em que você está, nas pastas dos próprios agentes
+#     (configuração, login e cache) e num /tmp que some no fim;
+#   - lê o resto do sistema, mas não muda nada;
+#   - não vê as suas chaves SSH, o GnuPG, o login do GitHub CLI nem o arquivo
+#     de chaves de API (as chaves que já estão no terminal continuam valendo);
+#   - não vê os outros programas, nem o D-Bus e os sockets em /run;
+#   - não consegue usar sudo;
+#   - acessa a internet, que os agentes precisam para falar com o modelo.
+set -euo pipefail
+
+if [ "$#" -eq 0 ] || [ "$1" = -h ] || [ "$1" = --help ]; then
+    sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
+    exit 0
+fi
+command -v bwrap >/dev/null || { echo "caixa: falta o bubblewrap (pacote bubblewrap)" >&2; exit 1; }
+[ "$(id -u)" -ne 0 ] || { echo "caixa: rode como você mesmo, sem sudo" >&2; exit 1; }
+
+aqui=$(pwd -P)
+casa=$(cd "$HOME" && pwd -P)
+case "$aqui/" in
+    "$casa/"?*/) ;;
+    /tmp/?*/ | /var/tmp/?*/) ;;
+    *)
+        echo "caixa: entre na pasta de um projeto, dentro da sua pasta pessoal, e rode de novo." >&2
+        echo "       A caixa deixa escrever na pasta em que você está, e aqui ($aqui) seria demais." >&2
+        exit 1
+        ;;
+esac
+case "$aqui/" in
+    "$casa/.ssh/"* | "$casa/.gnupg/"* | "$casa/.config/"* | "$casa/.local/"*)
+        echo "caixa: $aqui é uma pasta de configuração, e não de um projeto." >&2
+        exit 1
+        ;;
+esac
+
+args=(
+    --ro-bind / /
+    --dev /dev
+    --proc /proc
+    --tmpfs /tmp
+    --tmpfs /run
+    --ro-bind-try /run/systemd/resolve /run/systemd/resolve
+    --unshare-all --share-net
+    --die-with-parent
+    --setenv CAIXA_DE_AREIA 1
+)
+# O que os agentes precisam escrever: configuração, login, histórico e cache.
+for d in .claude .claude.json .codex .copilot .config/opencode .local/share/opencode \
+    .local/state/opencode .vibe .config/github-copilot .cache .npm; do
+    [ -e "$casa/$d" ] && args+=(--bind "$casa/$d" "$casa/$d")
+done
+# O que eles não precisam ver.
+for d in .ssh .gnupg .config/gh .config/chaves-de-api .aws .kube .docker .password-store \
+    .local/share/keyrings; do
+    [ -d "$casa/$d" ] && args+=(--tmpfs "$casa/$d")
+done
+for f in .netrc .git-credentials; do
+    [ -f "$casa/$f" ] && args+=(--ro-bind /dev/null "$casa/$f")
+done
+args+=(--bind "$aqui" "$aqui" --chdir "$aqui")
+exec bwrap "${args[@]}" -- "$@"

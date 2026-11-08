@@ -1,0 +1,17 @@
+id: ia/caixa-de-areia
+nome: Caixa de areia para os agentes
+descricao: O comando caixa roda um agente de IA com o bubblewrap, escrevendo só na pasta do projeto, sem ver as suas chaves SSH e sem sudo, e liga a caixa de areia do próprio Claude Code.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.

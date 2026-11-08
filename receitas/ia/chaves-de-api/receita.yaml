@@ -1,0 +1,27 @@
+id: ia/chaves-de-api
+nome: Chaves de API guardadas
+descricao: Um arquivo para as chaves de API dos agentes de IA, fora de qualquer projeto e com permissão só do dono, carregado em cada terminal.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  provedor:
+    tipo: escolha
+    opcoes: [nenhum, openrouter, deepseek, outro]
+    rotulos:
+      nenhum: Não vou usar chave de API por enquanto.
+      openrouter: OpenRouter, que dá acesso a vários modelos, alguns gratuitos.
+      deepseek: DeepSeek, com a API dos modelos da DeepSeek.
+      outro: Outro provedor, como Anthropic, OpenAI, Google ou Mistral.
+    padrao: nenhum
+    pergunta: Vai usar chave de API de algum provedor?
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.

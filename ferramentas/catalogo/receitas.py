@@ -73,16 +73,17 @@ def parametros(rid, r):
         if isinstance(padrao, bool):
             padrao = "sim" if padrao else "não"
         o_que = p.get("pergunta") or p.get("descricao") or ""
-        if p.get("tipo") == "escolha":
+        if p.get("tipo") in ("escolha", "lista"):
             rot = p.get("rotulos") or {}
             ops = "".join(f"<li><code>{o}</code>{': ' + rot[o] if o in rot else ''}</li>" for o in p["opcoes"])
             o_que += f'<ul style="margin:8px 0 0;padding-left:18px">{ops}</ul>'
         linhas.append(f"<tr><td><code>{nome}</code></td><td><code>{padrao}</code></td><td>{o_que}</td></tr>")
     ps = list((r.get("parametros") or {}).items())
-    ordem = {"escolha": 0, "booleano": 1, "inteiro": 2}
+    ordem = {"escolha": 0, "lista": 0, "booleano": 1, "inteiro": 2}
     exemplo_nome, exemplo_valor = sorted(ps, key=lambda kv: ordem.get(kv[1].get("tipo"), 9))[0]
     tipo = exemplo_valor.get("tipo")
-    valor = {"escolha": (exemplo_valor.get("opcoes") or ["", ""])[1], "booleano": "nao", "inteiro": "7"}.get(tipo, "auto")
+    ops = exemplo_valor.get("opcoes") or ["", ""]
+    valor = {"escolha": ops[1], "lista": ",".join(ops[:2]), "booleano": "nao", "inteiro": "7"}.get(tipo, "auto")
     return f'''      <div class="tabela-envolta revelar">
         <table class="tabela">
           <thead><tr><th>Parâmetro</th><th>Padrão</th><th>O que é</th></tr></thead>
@@ -1828,4 +1829,339 @@ PAGINAS.update({
     "sistema/etckeeper": pagina_etckeeper,
     "desktop/sem-snap": pagina_sem_snap,
     "seguranca/ssh": pagina_ssh,
+})
+
+
+# ---------------------------------------------------------------- rolê 4: vibecodar
+
+ILUSTRA_FERRAMENTAS = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ife-t">
+            <title id="ife-t">Quatro comandos que os agentes usam para entender um projeto: rg procura um texto, fd acha um arquivo, jq lê um JSON e gh fala com o GitHub.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">O que o agente roda para entender um projeto</text>
+            """ + "".join(f'''<g class="pacote" style="--i:{i}">
+              <rect x="20" y="{48 + i * 70}" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="40" y="{82 + i * 70}" font-size="14" font-weight="600" class="mono">{c}</text>
+              <text x="200" y="{82 + i * 70}" font-size="13" class="t2">{d}</text>
+            </g>''' for i, (c, d) in enumerate([("rg TODO", "procura um texto em tudo"), ("fd -e py", "acha os arquivos .py"),
+                                                ("jq .versao", "lê um campo de um JSON"), ("gh pr create", "abre um pull request")])) + """
+          </svg>"""
+
+
+def pagina_ferramentas():
+    return _pagina(
+        "dev/ferramentas", ILUSTRA_FERRAMENTAS, "Ilustração. Sem essas ferramentas, o agente gasta tempo e tokens procurando outro caminho.",
+        ["<strong>Instala o <code>ripgrep</code></strong>, o comando <code>rg</code>, que procura um texto em todos os arquivos de um projeto.",
+         "<strong>Instala o <code>fd</code></strong>, que acha arquivos pelo nome, e cria o comando <code>fd</code>, que no Debian se chama <code>fdfind</code>.",
+         "<strong>Instala o <code>jq</code></strong>, que lê e filtra JSON.",
+         "<strong>Instala o GitHub CLI</strong>, o <code>gh</code>, para clonar, abrir pull requests e entrar no GitHub pelo terminal."],
+        ["Não entra no GitHub por você: o <code>gh auth login</code> é seu.",
+         "Não passa por cima de um <code>fd</code> que já exista em <code>/usr/local/bin</code>.",
+         "Não vem de fora da distro: os quatro estão nos repositórios do Ubuntu e do Debian."],
+        ["<p>Confere se os pacotes <code>ripgrep</code>, <code>fd-find</code>, <code>jq</code> e <code>gh</code> estão instalados e se existe o comando <code>fd</code>.</p>",
+         "<p>Instala os pacotes que faltarem e cria o link <code>/usr/local/bin/fd</code> para o <code>fdfind</code>.</p>",
+         "<p>Numa pasta de teste, procura um texto com <code>rg</code>, acha um arquivo com <code>fd</code>, lê um JSON com <code>jq</code> e roda <code>gh --version</code>.</p>",
+         "<p>Apaga o link do <code>fd</code> e remove os pacotes que a receita instalou, menos o que outro programa passou a usar.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[6/11] Ferramentas do terminal", [
+            "Instalando: ripgrep fd-find jq gh", "Comando criado: fd (o fdfind do Debian)",
+            "Pronto: rg, fd, jq e gh instalados. Para entrar no GitHub pelo terminal: gh auth login",
+            ("ok", "ripgrep acha um texto num projeto (rg)"), ("ok", "fd acha um arquivo pelo nome (fd)"),
+            ("ok", "jq lê um JSON (jq)"), ("ok", "GitHub CLI (gh --version)"), "Tudo conferido."], "Ferramentas do terminal"),
+            "Terminal mostrando o bora aplicar a receita Ferramentas do terminal: instala o ripgrep, o fd, o jq e o GitHub CLI e confere quatro testes."),
+        [("Por que o agente precisa delas?", "Para entender um projeto, o agente procura textos e arquivos o tempo todo. O <code>rg</code> é muito mais rápido que o <code>grep -r</code> e pula o que está no <code>.gitignore</code>, como a pasta <code>node_modules</code>. Vários agentes procuram o <code>rg</code> primeiro."),
+         ("Por que o <code>fd</code> se chama <code>fdfind</code>?", "No Debian, já existia outro programa com o nome <code>fd</code>. O pacote usa <code>fdfind</code>, e a receita cria o nome curto, que é o que os tutoriais e os agentes usam.")],
+        [("pacote", "ripgrep, fd-find, jq e gh", "Dos repositórios da distro."),
+         ("arquivo", "/usr/local/bin/fd", "Link para <code>/usr/bin/fdfind</code>.")],
+        [("rg -n 'TODO'", "Mostra cada linha com TODO no projeto, com o número da linha."),
+         ("fd -e py", "Lista os arquivos Python da pasta."),
+         ("gh auth login", "Entra no GitHub pelo terminal, sem senha no Git.")],
+        [("ripgrep", "GitHub", "https://github.com/BurntSushi/ripgrep"),
+         ("fd", "GitHub", "https://github.com/sharkdp/fd"),
+         ("GitHub CLI", "Manual", "https://cli.github.com/manual/")])
+
+
+ILUSTRA_SEGREDOS = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ise-t">
+            <title id="ise-t">Três arquivos indo para um commit. O .env nem entra, porque o Git ignora. O config.py com um token é barrado pelo gitleaks. O ola.py passa.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">git add . &amp;&amp; git commit</text>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="48" width="200" height="50" rx="12" class="caixa-svg"/>
+              <text x="40" y="79" font-size="13.5" class="mono">.env</text>
+              <text x="250" y="79" font-size="13" class="t2">ignorado pelo Git</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <rect x="20" y="114" width="200" height="50" rx="12" fill="none" stroke="var(--vermelho)" stroke-width="2.4"/>
+              <text x="40" y="145" font-size="13.5" class="mono">config.py</text>
+              <text x="250" y="145" font-size="13" class="t2">barrado: tem um token</text>
+            </g>
+            <g class="pacote" style="--i:2">
+              <rect x="20" y="180" width="200" height="50" rx="12" fill="none" stroke="var(--ok)" stroke-width="2.4"/>
+              <text x="40" y="211" font-size="13.5" class="mono">ola.py</text>
+              <text x="250" y="211" font-size="13" class="t2">passa</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="252" width="440" height="72" rx="14" class="caixa-svg"/>
+              <text x="40" y="282" font-size="13" class="mono">gitleaks protect --staged</text>
+              <text x="40" y="306" font-size="12.5" class="t2">roda antes de cada commit, em todos os projetos</text>
+            </g>
+          </svg>"""
+
+
+def pagina_segredos():
+    return _pagina(
+        "seguranca/segredos", ILUSTRA_SEGREDOS, "Ilustração. Duas barreiras: o Git nem oferece o .env, e o gitleaks confere o resto.",
+        ["<strong>Confere cada commit com o gitleaks</strong> e barra o que leva uma chave de API, um token ou uma senha.",
+         "<strong>Faz o Git ignorar os arquivos <code>.env</code></strong> e as chaves privadas em todos os projetos, inclusive os que você clonar depois.",
+         "<strong>Mantém os ganchos de cada projeto</strong> funcionando: o gancho do bora chama o do projeto depois do gitleaks."],
+        ["Não apaga segredos que já foram para o histórico: para isso, troque a chave no site do provedor.",
+         "Não passa por cima de um <code>core.hooksPath</code> que você já tinha.",
+         "Não roda nos projetos que definem os próprios ganchos com o husky ou o <code>core.hooksPath</code> do projeto.",
+         "Não impede um <code>git commit --no-verify</code>, para quando o gitleaks errar."],
+        ["<p>Confere se o <code>git</code> e o <code>gitleaks</code> estão instalados, se o arquivo de exclusões globais tem o bloco do bora e se o <code>core.hooksPath</code> aponta para os ganchos do bora.</p>",
+         "<ul><li>Para, sem mudar nada, se a conta já usar outro <code>core.hooksPath</code>.</li><li>Acrescenta o bloco do bora ao <code>~/.config/git/ignore</code> (ou ao arquivo do <code>core.excludesFile</code>).</li><li>Cria <code>~/.config/git/ganchos-bora</code>, com o gancho e um link para cada nome de gancho, e configura o <code>core.hooksPath</code>.</li></ul>",
+         "<p>Num repositório de teste, como a pessoa: um <code>.env</code> fica fora do Git, um commit com um token do GitHub inventado é barrado, um commit sem segredo passa e um gancho do próprio projeto continua rodando.</p>",
+         "<p>Tira o <code>core.hooksPath</code> e o bloco do bora, apaga os ganchos e remove os pacotes que a receita instalou. As suas outras linhas ficam.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[7/11] Verificação de segredos", [
+            "Instalando: gitleaks",
+            "O Git de dani passa a ignorar .env e chaves em todos os projetos (/home/dani/.config/git/ignore).",
+            "O gitleaks passa a conferir cada commit de dani (ganchos em /home/dani/.config/git/ganchos-bora).",
+            ("ok", "gitleaks instalado (gitleaks version)"), ("ok", "um arquivo .env fica fora do Git (git check-ignore .env)"),
+            ("ok", "um commit com um token do GitHub é barrado"), ("ok", "um commit sem segredo passa"),
+            ("ok", "os ganchos do próprio projeto continuam rodando"), "Tudo conferido."], "Verificação de segredos"),
+            "Terminal mostrando o bora aplicar a receita Verificação de segredos: instala o gitleaks, configura o Git e confere cinco testes, um deles barrando um commit com um token."),
+        [("Por que não basta apagar o arquivo depois?", "A chave continua no histórico do Git, e num repositório público robôs acham em minutos. O único conserto é trocar a chave no site do provedor. Por isso o melhor é não deixar entrar."),
+         ("Por que nos ganchos da conta, e não em cada projeto?", "Assim vale para todo projeto, inclusive os que você clonar amanhã, sem lembrar de instalar nada. O gancho do bora chama o <code>.git/hooks</code> de cada projeto depois, para não quebrar o que já existia."),
+         ("E se o gitleaks errar?", "Ele às vezes acha que um texto de exemplo é uma chave. Confira o que ele apontou e, se for alarme falso, faça o commit com <code>git commit --no-verify</code>.")],
+        [("pacote", "git e gitleaks", "Dos repositórios da distro."),
+         ("arquivo", "~/.config/git/ignore", "Um bloco do bora com <code>.env</code>, <code>*.pem</code>, <code>*.key</code> e as chaves SSH."),
+         ("arquivo", "~/.config/git/ganchos-bora", "O gancho e os links; o <code>core.hooksPath</code> aponta para cá.")],
+        [("gitleaks detect", "Confere o projeto inteiro, com todo o histórico."),
+         ("git check-ignore -v .env", "Mostra qual regra faz o Git ignorar o arquivo."),
+         ("git config --global core.hooksPath", "Mostra a pasta dos ganchos da sua conta.")],
+        [("gitleaks", "GitHub", "https://github.com/gitleaks/gitleaks"),
+         ("Ganchos do Git", "Documentação do Git", "https://git-scm.com/docs/githooks"),
+         ("gitignore", "Documentação do Git", "https://git-scm.com/docs/gitignore")])
+
+
+ILUSTRA_CHAVES = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ich-t">
+            <title id="ich-t">O arquivo de chaves fica em ~/.config, fora dos projetos, com permissão só da dona. Cada terminal novo carrega as chaves, e os agentes as encontram nas variáveis de ambiente.</title>
+            <rect x="20" y="24" width="440" height="110" rx="14" class="caixa-svg"/>
+            <text x="44" y="54" font-size="13" class="mono">~/.config/chaves-de-api/chaves.env</text>
+            <text x="44" y="80" font-size="12.5" class="t2 mono">-rw------- dani</text>
+            <text x="44" y="108" font-size="12.5" class="mono">OPENROUTER_API_KEY=sk-or-…</text>
+            <path d="M240 134v34" class="traco"/>
+            <g class="pacote" style="--i:0">
+              <rect x="20" y="170" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="44" y="204" font-size="13" class="t2">cada terminal novo carrega as chaves (~/.bashrc)</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="246" width="210" height="74" rx="14" fill="none" stroke="var(--ok)" stroke-width="2.4"/>
+              <text x="125" y="290" font-size="13" text-anchor="middle">os agentes acham</text>
+              <rect x="250" y="246" width="210" height="74" rx="14" fill="none" stroke="var(--vermelho)" stroke-width="2.4"/>
+              <text x="355" y="282" font-size="13" text-anchor="middle">fora do Git</text>
+              <text x="355" y="302" font-size="12.5" text-anchor="middle" class="t2">e de outras contas</text>
+            </g>
+          </svg>"""
+
+
+def pagina_chaves():
+    return _pagina(
+        "ia/chaves-de-api", ILUSTRA_CHAVES, "Ilustração. A chave fica num lugar só, longe dos projetos.",
+        ["<strong>Cria um arquivo para as chaves de API</strong> em <code>~/.config/chaves-de-api</code>, que só a sua conta abre.",
+         "<strong>Carrega as chaves em cada terminal novo</strong>, onde os agentes as procuram.",
+         "<strong>Diz onde criar cada chave</strong>, com o provedor que você escolheu no topo do arquivo."],
+        ["Não recebe a sua chave pelo bora: o plano pode ir para o Git ou para uma IA, então você cola a chave no arquivo, depois.",
+         "Não manda as chaves para lugar nenhum.",
+         "Não apaga o arquivo no desfazer se você já colou alguma chave."],
+        ["<p>Confere se a pasta e o arquivo existem, com as permissões 700 e 600 e a sua conta como dona, e se o <code>.bashrc</code> tem o bloco do bora.</p>",
+         "<ul><li>Cria a pasta e o arquivo, se não existirem, já com a permissão só da pessoa.</li><li>Acrescenta ao <code>.bashrc</code> o bloco que carrega o arquivo.</li></ul>",
+         "<p>Confere as permissões, que outra conta não lê o arquivo, que ele não tem erro de sintaxe e, com uma chave de teste num arquivo temporário, que a chave chega ao terminal.</p>",
+         "<p>Tira o bloco do <code>.bashrc</code>. O arquivo só sai se continuar sem nenhuma chave.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com o OpenRouter escolhido.", _saida("[8/11] Chaves de API guardadas", [
+            "Arquivo de chaves criado: /home/dani/.config/chaves-de-api/chaves.env",
+            "Cada terminal novo de dani passa a carregar as chaves (/home/dani/.bashrc).",
+            "Para usar a sua chave, abra o arquivo num editor, tire o # da linha OPENROUTER_API_KEY= e cole a chave depois do =.",
+            ("ok", "a pasta das chaves só abre para dani (700)"), ("ok", "o arquivo das chaves só abre para dani (600)"),
+            ("ok", "outra conta não consegue ler as chaves"), ("ok", "o arquivo das chaves não tem erro"),
+            ("ok", "o .bashrc carrega as chaves em cada terminal novo"), ("ok", "uma chave do arquivo chega ao terminal (printenv)"),
+            "Tudo conferido."], "Chaves de API guardadas"),
+            "Terminal mostrando o bora aplicar a receita Chaves de API guardadas: cria o arquivo de chaves, liga o carregamento no .bashrc e confere seis testes."),
+        [("Por que não no próprio projeto?", "Um <code>.env</code> no projeto é o caminho mais curto para a chave ir parar no GitHub. Fora de qualquer projeto, nenhum <code>git add</code> alcança."),
+         ("Por que o bora não pergunta a chave?", "O plano do bora é um arquivo que pode ir para o Git, ser mostrado a uma IA ou aplicado em outra máquina. Uma chave ali vazaria. Você cola a chave direto no arquivo, num editor."),
+         ("Qual provedor escolher?", "O OpenRouter dá acesso a vários modelos com uma chave só, alguns gratuitos. A DeepSeek costuma ser das mais baratas. Os planos mudam o tempo todo; confira na página de cada um.")],
+        [("arquivo", "~/.config/chaves-de-api/chaves.env", "Permissão 600, com uma linha comentada por provedor."),
+         ("arquivo", "~/.bashrc", "Um bloco do bora que carrega o arquivo em cada terminal novo.")],
+        [("ls -l ~/.config/chaves-de-api", "Mostra que só você lê o arquivo (<code>-rw-------</code>)."),
+         ("printenv OPENROUTER_API_KEY", "Num terminal novo, mostra se a chave chegou.")],
+        [("Provedores no OpenCode", "Documentação do OpenCode", "https://opencode.ai/docs/providers/"),
+         ("Chaves de API", "OpenRouter", "https://openrouter.ai/docs/api-keys")])
+
+
+ILUSTRA_AGENTES = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iag-t">
+            <title id="iag-t">Cinco agentes, cada um com o seu comando, instalados na pasta ~/.local/bin da pessoa, sem sudo. Todos leem a skill do bora.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">~/.local/bin, na sua conta, sem sudo</text>
+            """ + "".join(f'''<g class="pacote" style="--i:{i}">
+              <rect x="{20 + (i % 3) * 150}" y="{48 + (i // 3) * 76}" width="136" height="60" rx="12" class="caixa-svg"/>
+              <text x="{88 + (i % 3) * 150}" y="{75 + (i // 3) * 76}" font-size="13.5" font-weight="600" text-anchor="middle" class="mono">{c}</text>
+              <text x="{88 + (i % 3) * 150}" y="{96 + (i // 3) * 76}" font-size="11.5" text-anchor="middle" class="t2">{d}</text>
+            </g>''' for i, (c, d) in enumerate([("claude", "Anthropic"), ("codex", "OpenAI"), ("copilot", "GitHub"), ("opencode", "livre"), ("vibe", "Mistral")])) + """
+            <g class="volta">
+              <rect x="20" y="220" width="440" height="104" rx="14" class="caixa-svg"/>
+              <text x="40" y="250" font-size="14" font-weight="600">A skill do bora</text>
+              <text x="40" y="276" font-size="13" class="t2">O agente monta e valida o plano; quem aplica é você:</text>
+              <text x="40" y="304" font-size="13" class="mono">sudo bora aplicar plano.yaml</text>
+            </g>
+          </svg>"""
+
+
+def pagina_agentes():
+    return _pagina(
+        "ia/agentes", ILUSTRA_AGENTES, "Ilustração. Cada agente funciona com um tipo de conta; o rolê não depende de nenhum fabricante.",
+        ["<strong>Instala os agentes que você escolher</strong>: Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe.",
+         "<strong>Na sua conta, sem sudo</strong>, pelos pacotes oficiais de cada fabricante no npm e no PyPI, que conferem a soma de cada arquivo.",
+         "<strong>Ensina o bora aos agentes</strong>, com uma skill que mostra como montar e validar um plano sem rodar nada como root."],
+        ["Não cria contas nem assina planos por você.",
+         "Não roda instaladores do tipo <code>curl | sh</code>: por isso o Antigravity CLI, que só tem esse, ainda não entra.",
+         "Não mexe num agente que você já instalou de outro jeito.",
+         "Não apaga as configurações e os logins dos agentes no desfazer."],
+        ["<p>Confere se o comando de cada agente escolhido existe na sessão da pessoa e se a skill do bora está nas duas pastas de skills.</p>",
+         "<ul><li>Para cada agente que falta, roda como a pessoa <code>npm install -g</code> ou <code>pipx install</code>, e anota o que instalou.</li><li>Escreve a skill em <code>~/.claude/skills/bora</code> e em <code>~/.agents/skills/bora</code>.</li></ul>",
+         "<p>Para cada agente: o comando responde a <code>--version</code> e está na conta da pessoa, e não na do root. A conversa de verdade precisa da sua conta, e fica com você.</p>",
+         "<p>Desinstala os agentes que a receita instalou e apaga a skill, se ela não mudou.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com os cinco agentes, encurtada nas linhas do npm.", _saida("[9/11] Agentes de IA no terminal", [
+            "Instalando @anthropic-ai/claude-code, do npm, em /home/dani/.local", "Instalado: claude (2.1.319 (Claude Code))",
+            "Instalando @openai/codex, do npm, em /home/dani/.local", "Instalado: codex (codex-cli 0.167.0)",
+            "Instalando mistral-vibe, do PyPI, com o pipx", "Instalado: vibe (vibe 3.1.0)",
+            "Skill do bora instalada: /home/dani/.claude/skills/bora/SKILL.md",
+            ("ok", "claude responde (claude --version)"), ("ok", "codex responde (codex --version)"),
+            ("ok", "copilot responde (copilot --version)"), ("ok", "opencode responde (opencode --version)"),
+            ("ok", "vibe responde (vibe --version)"), ("ok", "a skill do bora está em /home/dani/.claude/skills/bora"),
+            "Tudo conferido."], "Agentes de IA no terminal"),
+            "Terminal mostrando o bora aplicar a receita Agentes de IA no terminal: instala cinco agentes na conta da pessoa e a skill do bora, e confere que cada um responde."),
+        [("Qual agente escolher?", "O OpenCode funciona com modelos gratuitos e com a chave de qualquer provedor, e é o padrão. O Codex funciona com a conta gratuita do ChatGPT, e o Copilot CLI, com o plano gratuito do Copilot. O Claude Code pede um plano pago do Claude ou crédito na API. Dá para instalar vários e testar."),
+         ("Por que na minha conta, e não para o sistema?", "Assim nenhum agente roda como root, e eles conseguem se atualizar sozinhos, sem sudo, como vários fazem."),
+         ("Por que a versão mais nova, e não uma fixa?", "Os agentes mudam toda semana, e uma versão antiga costuma parar de funcionar com o serviço do fabricante. A máquina virtual do CI confere os cinco toda semana."),
+         ("O que é a skill do bora?", "Um arquivo que o agente lê quando o assunto aparece. Ela ensina a ver a máquina, montar e validar um plano, e sempre pedir para você aplicar. É a terceira porta do bora, a do agente.")],
+        [("arquivo", "~/.local/bin", "Os comandos <code>claude</code>, <code>codex</code>, <code>copilot</code>, <code>opencode</code> e <code>vibe</code>, conforme a escolha."),
+         ("arquivo", "~/.claude/skills/bora e ~/.agents/skills/bora", "A skill do bora, um <code>SKILL.md</code>.")],
+        [("opencode", "Abre o OpenCode na pasta do projeto. Na primeira vez, escolha um modelo."),
+         ("codex", "Abre o Codex; na primeira vez, ele pede para entrar com a conta do ChatGPT."),
+         ("npm ls -g", "Lista os agentes instalados pelo npm na sua conta.")],
+        [("Claude Code", "Anthropic", "https://docs.claude.com/en/docs/claude-code/setup"),
+         ("Codex CLI", "OpenAI", "https://github.com/openai/codex"),
+         ("Copilot CLI", "GitHub Docs", "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli"),
+         ("OpenCode", "Documentação", "https://opencode.ai/docs/"),
+         ("Mistral Vibe", "GitHub", "https://github.com/mistralai/mistral-vibe")])
+
+
+ILUSTRA_CAIXA = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ica-t">
+            <title id="ica-t">O agente dentro de uma caixa: escreve na pasta do projeto, lê o sistema sem mudar nada, e não alcança as chaves SSH, o login do GitHub nem o sudo.</title>
+            <rect x="20" y="24" width="440" height="190" rx="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="8 5"/>
+            <text x="44" y="54" font-size="13" class="mono">caixa opencode</text>
+            <g class="pacote" style="--i:0">
+              <rect x="44" y="72" width="190" height="56" rx="12" fill="none" stroke="var(--ok)" stroke-width="2.4"/>
+              <text x="139" y="98" font-size="13" text-anchor="middle">~/projetos/site</text>
+              <text x="139" y="118" font-size="12" text-anchor="middle" class="t2">escreve</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <rect x="246" y="72" width="190" height="56" rx="12" class="caixa-svg"/>
+              <text x="341" y="98" font-size="13" text-anchor="middle">o resto do sistema</text>
+              <text x="341" y="118" font-size="12" text-anchor="middle" class="t2">só lê</text>
+            </g>
+            <text x="44" y="166" font-size="12.5" class="t2">sem sudo · sem /run · com internet, para falar com o modelo</text>
+            <g class="volta">
+              """ + "".join(f'''<rect x="{20 + i * 150}" y="240" width="140" height="80" rx="12" fill="none" stroke="var(--vermelho)" stroke-width="2.2"/>
+              <text x="{90 + i * 150}" y="276" font-size="13" text-anchor="middle" class="mono">{c}</text>
+              <text x="{90 + i * 150}" y="298" font-size="12" text-anchor="middle" class="t2">invisível</text>''' for i, c in enumerate(["~/.ssh", "~/.config/gh", "chaves.env"])) + """
+            </g>
+          </svg>"""
+
+
+def pagina_caixa():
+    return _pagina(
+        "ia/caixa-de-areia", ILUSTRA_CAIXA, "Ilustração. Um comando errado do agente estraga, no máximo, a pasta do projeto, que está no Git.",
+        ["<strong>Instala o comando <code>caixa</code></strong>, que roda qualquer agente dentro de uma caixa de areia do <code>bubblewrap</code>.",
+         "<strong>Dentro dela, o agente escreve só na pasta do projeto</strong> e nas pastas dele, e lê o resto sem mudar nada.",
+         "<strong>Esconde as suas chaves SSH</strong>, o GnuPG, o login do GitHub CLI e o arquivo de chaves de API, e não deixa usar sudo.",
+         "<strong>Liga a caixa de areia do próprio Claude Code</strong>, se ele estiver instalado, e deixa a do Claude Code e a do Codex funcionarem no Ubuntu 24.04."],
+        ["Não corta a internet: o agente precisa dela para falar com o modelo.",
+         "Não abre na pasta pessoal inteira nem fora dela.",
+         "Não usa o distrobox nem o toolbox, que montam a pasta pessoal inteira e não isolam.",
+         "Não é uma máquina virtual: um defeito no kernel ainda alcançaria o sistema."],
+        ["<p>Confere se o <code>bubblewrap</code> e o <code>socat</code> estão instalados, se o comando <code>caixa</code> é o da receita, se o perfil do AppArmor está lá (quando o sistema restringe os user namespaces) e se a caixa de areia do Claude Code está ligada (quando ele está instalado).</p>",
+         "<ul><li>Instala os pacotes e escreve <code>/usr/local/bin/caixa</code>.</li><li>No Ubuntu 24.04 em diante, escreve e carrega o perfil <code>/etc/apparmor.d/bora-bwrap</code>.</li><li>Liga <code>sandbox.enabled</code> em <code>~/.claude/settings.json</code>, sem mexer no resto.</li></ul>",
+         "<p>Como a pessoa, numa pasta de teste: dentro da caixa, escreve no projeto, não escreve fora, não lê um arquivo de mentira em <code>~/.ssh</code>, não usa sudo, e a caixa recusa abrir na pasta pessoal.</p>",
+         "<p>Apaga o comando e o perfil, volta o <code>settings.json</code> do Claude Code e remove os pacotes que a receita instalou.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04.", _saida("[10/11] Caixa de areia para os agentes", [
+            "Instalando: bubblewrap socat", "Arquivo atualizado: /usr/local/bin/caixa",
+            "A caixa de areia do Claude Code foi ligada (/home/dani/.claude/settings.json).",
+            ("ok", "o bubblewrap abre uma caixa de areia sem root"), ("ok", "dentro da caixa, o agente escreve na pasta do projeto"),
+            ("ok", "dentro da caixa, ele não escreve fora do projeto"), ("ok", "dentro da caixa, ele não lê as chaves SSH"),
+            ("ok", "dentro da caixa, o sudo não funciona"), ("ok", "a caixa não abre com a pasta pessoal inteira"),
+            "Tudo conferido."], "Caixa de areia para os agentes"),
+            "Terminal mostrando o bora aplicar a receita Caixa de areia para os agentes: instala o bubblewrap, o comando caixa, liga a caixa do Claude Code e confere sete testes."),
+        [("Por que isolar um agente?", "Um modelo erra, entende mal, ou lê num arquivo do projeto uma instrução escondida para apagar algo ou mandar as suas chaves para fora. Na caixa, o estrago fica na pasta do projeto, que está no Git."),
+         ("Por que o bubblewrap, e não um contêiner?", "O distrobox e o toolbox montam a pasta pessoal inteira e o sistema dentro do contêiner, então não isolam. O bubblewrap é a peça que o Flatpak usa para isolar os aplicativos, e a mesma que o Claude Code e o Codex usam no Linux."),
+         ("E o <code>git push</code>?", "Dentro da caixa, o agente não vê a sua chave SSH. Faça o push fora, depois de conferir o que ele fez. É de propósito."),
+         ("O que é o perfil do AppArmor?", "Do Ubuntu 24.04 em diante, só programas com um perfil podem criar o espaço isolado que a caixa usa. A receita escreve um para o bubblewrap, como o Ubuntu faz com o Flatpak, e só quando o sistema tem essa restrição.")],
+        [("pacote", "bubblewrap e socat", "A caixa de areia e a ponte de rede que o Claude Code usa."),
+         ("arquivo", "/usr/local/bin/caixa", "O comando que monta a caixa."),
+         ("arquivo", "/etc/apparmor.d/bora-bwrap", "Só no Ubuntu 24.04 em diante."),
+         ("arquivo", "~/.claude/settings.json", "<code>sandbox.enabled: true</code>, se o Claude Code estiver instalado.")],
+        [("caixa --help", "Mostra o que fica dentro e fora da caixa."),
+         ("cd ~/projetos/site && caixa opencode", "Roda o OpenCode isolado na pasta do projeto."),
+         ("caixa bash", "Abre um terminal dentro da caixa, para ver com os próprios olhos.")],
+        [("bubblewrap", "GitHub", "https://github.com/containers/bubblewrap"),
+         ("Caixa de areia do Claude Code", "Anthropic", "https://docs.claude.com/en/docs/claude-code/sandboxing"),
+         ("Restrição de user namespaces", "Ubuntu", "https://ubuntu.com/blog/ubuntu-23-10-restricted-unprivileged-user-namespaces")])
+
+
+ILUSTRA_EDITOR = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ied-t">
+            <title id="ied-t">Quatro opções de editor: só o terminal, o VS Code do repositório da Microsoft, e o VSCodium e o Zed do Flathub.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">Qual editor?</text>
+            """ + "".join(f'''<g class="pacote" style="--i:{i}">
+              <rect x="20" y="{48 + i * 70}" width="440" height="56" rx="12" class="caixa-svg"/>
+              <text x="40" y="{82 + i * 70}" font-size="14" font-weight="600">{c}</text>
+              <text x="200" y="{82 + i * 70}" font-size="13" class="t2">{d}</text>
+            </g>''' for i, (c, d) in enumerate([("Só o terminal", "nada novo para instalar"), ("VS Code", "repositório da Microsoft"),
+                                                ("VSCodium", "Flathub, sem telemetria"), ("Zed", "Flathub, leve e rápido")])) + """
+          </svg>"""
+
+
+def pagina_editor():
+    return _pagina(
+        "dev/editor", ILUSTRA_EDITOR, "Ilustração. Dá para vibecodar só no terminal; o editor ajuda a ler o que o agente escreveu.",
+        ["<strong>Instala o VS Code</strong> do repositório oficial da Microsoft, com a chave conferida pela impressão digital publicada.",
+         "<strong>Ou o VSCodium ou o Zed</strong>, do Flathub, publicados pelos próprios projetos.",
+         "<strong>Ou nada</strong>, se você escolher ficar só no terminal."],
+        ["Não instala extensões: as dos agentes você escolhe dentro do editor.",
+         "Não usa o VS Code do Flathub, que não é da Microsoft e cujo terminal não enxerga os agentes.",
+         "Não apaga as suas configurações e extensões no desfazer."],
+        ["<p>Com o VS Code, confere se o pacote <code>code</code> está instalado e se o repositório da Microsoft está como a receita escreve. Com o VSCodium ou o Zed, se o aplicativo está instalado pelo Flathub.</p>",
+         "<ul><li>VS Code: baixa a chave, confere a impressão digital, escreve <code>/etc/apt/sources.list.d/vscode.sources</code> e instala o <code>code</code>. Se a chave não for a publicada, nada muda.</li><li>VSCodium ou Zed: instala do Flathub, que precisa estar ligado.</li></ul>",
+         "<p>VS Code: o pacote veio da Microsoft, a chave é a publicada e <code>code --version</code> responde. VSCodium ou Zed: o <code>flatpak info</code> acha o aplicativo.</p>",
+         "<p>Remove o editor e, no VS Code, o repositório e a chave da Microsoft.</p>"],
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com o VS Code, encurtada nas linhas do apt.", _saida("[11/11] Editor de código", [
+            "Arquivo atualizado: /etc/apt/keyrings/packages.microsoft.asc", "Arquivo atualizado: /etc/apt/sources.list.d/vscode.sources",
+            "Atualizando a lista de pacotes, com o repositório da Microsoft.", "Instalando: code",
+            ("ok", "VS Code instalado pelo repositório da Microsoft"), ("ok", "a chave da Microsoft é a publicada (BC528686B50D79E339D3721CEB3E94ADBE1229CF)"),
+            ("ok", "o VS Code responde (code --version)"), "Tudo conferido."], "Editor de código"),
+            "Terminal mostrando o bora aplicar a receita Editor de código com o VS Code: confere a chave da Microsoft, liga o repositório, instala e confere três testes."),
+        [("Por que o VS Code vem da Microsoft, e não do Flathub?", "O do Flathub é empacotado por voluntários, e o terminal dele roda dentro do Flatpak, sem enxergar os agentes instalados na sua conta. O repositório da Microsoft é o caminho que ela recomenda, e a receita confere a chave como faz com o Firefox da Mozilla."),
+         ("VS Code ou VSCodium?", "O código é o mesmo. O VSCodium tira a telemetria e a marca da Microsoft, mas usa outra loja de extensões, que nem sempre tem as extensões oficiais dos agentes."),
+         ("E o terminal no VSCodium e no Zed?", "No Flathub, o terminal integrado pode rodar dentro do Flatpak. Se o agente não aparecer nele, use o terminal do sistema, ao lado do editor.")],
+        [("arquivo", "/etc/apt/keyrings/packages.microsoft.asc", "A chave da Microsoft, só com o VS Code."),
+         ("arquivo", "/etc/apt/sources.list.d/vscode.sources", "O repositório do VS Code."),
+         ("pacote", "code, com.vscodium.codium ou dev.zed.Zed", "O editor escolhido.")],
+        [("code .", "Abre o VS Code na pasta do projeto."),
+         ("apt-cache policy code", "Mostra que o VS Code vem de packages.microsoft.com.")],
+        [("VS Code no Linux", "Microsoft", "https://code.visualstudio.com/docs/setup/linux"),
+         ("VSCodium", "Flathub", "https://flathub.org/apps/com.vscodium.codium"),
+         ("Zed", "Flathub", "https://flathub.org/apps/dev.zed.Zed")])
+
+
+PAGINAS.update({
+    "dev/ferramentas": pagina_ferramentas,
+    "seguranca/segredos": pagina_segredos,
+    "ia/chaves-de-api": pagina_chaves,
+    "ia/agentes": pagina_agentes,
+    "ia/caixa-de-areia": pagina_caixa,
+    "dev/editor": pagina_editor,
 })

@@ -27,7 +27,9 @@ pub const NIVEIS: &[&str] = &[
 ];
 pub const NIVEIS_APLICAVEIS: &[&str] = &["testada", "herdada", "comunidade"];
 const RISCOS: &[&str] = &["baixo", "medio", "alto"];
-const TIPOS: &[&str] = &["escolha", "cidr", "texto", "booleano", "inteiro", "caminho"];
+const TIPOS: &[&str] = &[
+    "escolha", "lista", "cidr", "texto", "booleano", "inteiro", "caminho",
+];
 const PUBLICOS: &[&str] = &["curiosos", "estudantes", "entusiastas"];
 const STATUS_ROLE: &[&str] = &["planejado", "rascunho", "testado"];
 const SCRIPTS: &[&str] = &["verificar", "aplicar", "testar", "desfazer"];
@@ -207,6 +209,30 @@ impl Parametro {
                         self.opcoes.join(", ")
                     ))
                 }
+            }
+            "lista" => {
+                // Várias opções, separadas por vírgula ou espaço, sem repetir.
+                let mut escolhidas: Vec<String> = Vec::new();
+                for item in texto.split(|c: char| c == ',' || c.is_whitespace()) {
+                    let item = item.trim().to_lowercase();
+                    if item.is_empty() || escolhidas.contains(&item) {
+                        continue;
+                    }
+                    if !self.opcoes.contains(&item) {
+                        return Err(format!(
+                            "{n}: {item} não é uma opção; escolha entre {}, separadas por vírgula",
+                            self.opcoes.join(", ")
+                        ));
+                    }
+                    escolhidas.push(item);
+                }
+                if escolhidas.is_empty() {
+                    return Err(format!(
+                        "{n} precisa de pelo menos uma destas opções: {}",
+                        self.opcoes.join(", ")
+                    ));
+                }
+                Ok(Valor::Texto(escolhidas.join(",")))
             }
             "booleano" => match texto.trim().to_lowercase().as_str() {
                 "sim" | "s" | "true" | "1" | "yes" => Ok(Valor::Booleano(true)),
@@ -524,7 +550,7 @@ pub fn ler_receita(pasta: &Path, raiz_receitas: &Path) -> Result<Receita, Vec<St
                 }
                 p.pergunta = pd.get("pergunta").and_then(texto_de).unwrap_or_default();
                 p.descricao = pd.get("descricao").and_then(texto_de).unwrap_or_default();
-                if tipo == "escolha" && p.opcoes.is_empty() {
+                if (tipo == "escolha" || tipo == "lista") && p.opcoes.is_empty() {
                     l.erro(format!("o parâmetro {pnome} é uma escolha sem opções"));
                 }
                 if p.padrao.is_some()
@@ -1027,6 +1053,14 @@ mod testes {
         e.opcoes = vec!["a".into(), "b".into()];
         assert!(e.converter(Some(&Value::String("b".into()))).is_ok());
         assert!(e.converter(Some(&Value::String("c".into()))).is_err());
+        let mut v = Parametro::novo("x", "lista");
+        v.opcoes = vec!["a".into(), "b".into(), "c".into()];
+        assert_eq!(
+            v.converter(Some(&Value::String("C, a,,a b".into()))),
+            Ok(Valor::Texto("c,a,b".into()))
+        );
+        assert!(v.converter(Some(&Value::String("a,d".into()))).is_err());
+        assert!(v.converter(Some(&Value::String(" , ".into()))).is_err());
         assert!(
             Parametro::novo("x", "caminho")
                 .converter(Some(&Value::String("rel".into())))

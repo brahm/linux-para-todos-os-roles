@@ -1,0 +1,61 @@
+id: vibecodar
+nome: Vibecodar
+descricao: Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.
+para_quem: [estudantes, entusiastas]
+status: rascunho
+hardware_minimo:
+  ram_gb: 4
+  disco_livre_gb: 20
+familias: [ubuntu, debian]
+perguntas:
+  - id: agentes
+    texto: "Quais agentes você quer? Escreva os nomes separados por vírgula: claude (Claude Code, plano pago do Claude ou chave de API), codex (Codex, com a conta do ChatGPT, inclusive a gratuita), copilot (Copilot CLI, com o plano gratuito do GitHub Copilot), opencode (OpenCode, com modelos gratuitos ou a chave de qualquer provedor) ou vibe (Mistral Vibe, com chave da Mistral)."
+    padrao: opencode
+  - id: provedor
+    texto: Vai usar chave de API de algum provedor?
+    opcoes: [nenhum, openrouter, deepseek, outro]
+    rotulos:
+      nenhum: Não, por enquanto.
+      openrouter: OpenRouter, com vários modelos, alguns gratuitos.
+      deepseek: DeepSeek.
+      outro: Outro, como Anthropic, OpenAI, Google ou Mistral.
+    padrao: nenhum
+  - id: editor
+    texto: Qual editor você quer?
+    opcoes: [terminal, vscode, vscodium, zed]
+    rotulos:
+      terminal: Só o terminal.
+      vscode: VS Code, da Microsoft.
+      vscodium: VSCodium, o VS Code sem a telemetria, pelo Flathub.
+      zed: Zed, leve e rápido, pelo Flathub.
+    padrao: terminal
+  - id: caixa
+    texto: Quer rodar os agentes numa caixa de areia, onde eles só escrevem na pasta do projeto? É o recomendado.
+    opcoes: [sim, nao]
+    rotulos:
+      sim: Sim, com o comando caixa e a caixa de areia do próprio agente.
+      nao: Não, os agentes rodam direto na minha conta.
+    padrao: sim
+receitas:
+  - id: base/atualizar
+  - id: dev/git
+  - id: dev/compilacao
+  - id: dev/python
+  - id: dev/node
+  - id: containers/podman
+  - id: dev/ferramentas
+  - id: seguranca/segredos
+  - id: ia/chaves-de-api
+    provedor: "{provedor}"
+  - id: ia/agentes
+    agentes: "{agentes}"
+  - id: ia/caixa-de-areia
+    quando: {caixa: sim}
+  - id: desktop/flatpak
+    quando: {editor: vscodium}
+  - id: desktop/flatpak
+    quando: {editor: zed}
+  - id: dev/editor
+    editor: "{editor}"
+pronto_quando: Cada agente responde no terminal (na primeira vez, ele pede para entrar na sua conta), e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
+como_desfazer: O bora remove os agentes, o editor, o gitleaks e a caixa de areia que instalou, e volta o Git e o .bashrc ao que eram. Os seus projetos, a chave SSH, os logins dos agentes e o arquivo de chaves, se você colou alguma, ficam onde estão.

@@ -1,0 +1,17 @@
+id: seguranca/segredos
+nome: Verificação de segredos
+descricao: O gitleaks confere cada commit e barra os que levam uma chave de API ou uma senha, e o Git passa a ignorar os arquivos .env e as chaves em todos os projetos.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.

@@ -1,0 +1,12 @@
+id: dev/ferramentas
+nome: Ferramentas do terminal
+descricao: Instala o ripgrep, o fd, o jq e o GitHub CLI, que os agentes de IA e quem programa usam o tempo todo.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada

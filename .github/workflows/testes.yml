@@ -87,6 +87,8 @@ jobs:
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=python -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
       - name: Rolê Começar a programar, perfil web
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=web -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
+      - name: Rolê Vibecodar, com todos os agentes, o VS Code e a caixa de areia
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/vibecodar.sh
       - name: Histórico do /etc, SSH e Sem Snap
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/novas-capacidades.sh
       - name: Marcar que a distro passou
