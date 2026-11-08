@@ -59,7 +59,7 @@ case "${1:?fase}" in
         grep -qx 'permitrootlogin no' <<<"$(sshd -T)" || falhou "o SSH voltou aceitando o root"
         systemctl is-active --quiet ssh.service ssh.socket || falhou "o SSH não voltou ligado"
         [ "$(git -C /etc rev-list --count HEAD)" -ge 2 ] || falhou "o histórico do /etc não registrou as mudanças"
-        git -C /etc log --oneline | head -n 5
+        git -C /etc log --oneline -n 5
         systemctl is-active --quiet bora-backup-pessoal.timer || falhou "o temporizador do backup não voltou"
         systemctl list-timers --all --no-pager | grep -E 'bora|etckeeper|timeshift|NEXT' || true
         [ "$(snapshots)" -ge 2 ] || falhou "os snapshots sumiram depois do boot"
