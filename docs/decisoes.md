@@ -142,3 +142,15 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | A captura reprova uma tela quase toda de uma cor só ou ainda em modo texto; o resto é conferido de dentro da máquina (sessões do systemd-logind, processos e o perfil do Firefox) | Uma imagem não diz sozinha se é a tela certa, mas prova que algo foi desenhado. Quem quiser ver, abre o artefato |
 | O registro `onde: vm` dessas receitas conta para o `testado` como o das outras, mas não dispensa o roteiro manual | A regra de quando um rolê vira `testado` continua a mesma até Brahm decidir outra coisa |
 | A parte que liga a máquina saiu do `rodar.sh` para o `maquina.sh`, que as duas VMs usam | Assim, uma correção no boot ou no SSH vale para as duas |
+
+## 8 de novembro de 2026: sexta rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| A receita do snapshot e o `bora` tentam o `timeshift --create` uma segunda vez quando ele cai. A tarefa agendada de 8/2/2027 só relata quantas vezes isso aconteceu e não fecha mais a issue #16. Escolhido por Brahm em 8/11/2026 | O segfault voltou no contêiner do Ubuntu 24.04 e passou na segunda tentativa. Quem usa de verdade também se beneficia |
+| As máquinas virtuais do CI bastam para um rolê virar `testado`: cada receita precisa do registro `onde: vm` com `resultado: ok` no Ubuntu 24.04 e no Debian 13. Os rolês 1, 2 e 3 passam a `testado`. Escolhido por Brahm em 8/11/2026 | Com a máquina com tela, todas as receitas dos três rolês passam toda semana nas três distros. Os roteiros manuais ficam como complemento |
+| A versão sobe para 0.5.3 | A nova tentativa do Timeshift mudou o `bora`, e só chega a quem usa numa versão nova |
+| O Linux Mint fica só nos roteiros manuais | Ele não tem imagem de nuvem para as máquinas do CI |
+| A máquina com tela confere, no Ubuntu, que o snapd e o Firefox do Snap voltam ao desfazer o Sem Snap | A receita só avisava quando a volta falhava, e nenhum teste conferia |
+| As capturas da máquina com tela aparecem nas páginas das receitas, numa versão com metade do tamanho. Elas são trocadas só junto com o registro (no máximo uma vez por mês) ou quando a distro ainda não tem nenhuma | Elas sumiam em 30 dias nos artefatos. Trocar toda semana faria o repositório crescer à toa |
+| A captura só reprova uma tela com mais de 99,5% de uma cor | A tela de login do Ubuntu tem 97% de uma cor e ficava perto do limite antigo, de 98% |

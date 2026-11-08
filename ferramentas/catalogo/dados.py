@@ -85,7 +85,7 @@ ROLES = [
         "resumo": "O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.",
         "para_quem": ["curiosos", "estudantes"],
         "hardware": "2 GB de memória, 20 GB livres e um disco externo",
-        "status": "rascunho",
+        "status": "testado",
         "receitas": [("base/atualizar", ""), ("sistema/etckeeper", ""), ("seguranca/firewall", "perfil desktop"), ("sistema/snapshot", ""),
                      ("desktop/codecs", ""), ("desktop/flatpak", ""), ("desktop/sem-snap", "se você pedir"), ("sistema/backup-pessoal", "")],
         "faz": [
@@ -121,7 +121,7 @@ ROLES = [
         "resumo": "Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.",
         "para_quem": ["curiosos", "estudantes"],
         "hardware": "64 bits, 2 GB de memória e 15 GB livres",
-        "status": "rascunho",
+        "status": "testado",
         "receitas": [("base/atualizar", ""), ("sistema/snapshot", ""), ("sistema/zram", ""), ("desktop/ambiente-leve", "Xfce ou LXQt"),
                      ("desktop/navegador-leve", ""), ("sistema/servicos-enxutos", ""), ("seguranca/ssh", "se você pedir")],
         "faz": [
@@ -155,7 +155,7 @@ ROLES = [
         "resumo": "Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.",
         "para_quem": ["estudantes", "entusiastas"],
         "hardware": "4 GB de memória e 20 GB livres",
-        "status": "rascunho",
+        "status": "testado",
         "receitas": [("base/atualizar", ""), ("dev/git", ""), ("dev/compilacao", ""), ("dev/python", "perfil Python"),
                      ("dev/node", "perfil web"), ("containers/podman", "")],
         "faz": [

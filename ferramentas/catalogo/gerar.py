@@ -31,6 +31,14 @@ for r in ROLES:
         descricao=f"{r['nome']}, rolê do Linux para todos os rolês: {r['resumo']}",
         corpo=pagina_role(r)))
 
+# As capturas da máquina virtual com tela, que as páginas das receitas mostram.
+import shutil
+from comum import RAIZ_REPO
+if os.path.isdir(RAIZ_REPO + "testes/vm/telas"):
+    shutil.rmtree(saida + "telas", ignore_errors=True)
+    shutil.copytree(RAIZ_REPO + "testes/vm/telas", saida + "telas", ignore=shutil.ignore_patterns("*.txt"))
+    print("copiadas as capturas da tela")
+
 # Escolher e instalar a distro, fora do catálogo: docs/distro/
 os.makedirs(DOCS + "distro", exist_ok=True)
 open(DOCS + "distro/index.html", "w", encoding="utf-8").write(pagina(

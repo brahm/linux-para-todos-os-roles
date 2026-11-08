@@ -2,7 +2,7 @@ id: pronto-para-estudar
 nome: Pronto para estudar e trabalhar
 descricao: O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.
 para_quem: [curiosos, estudantes]
-status: rascunho
+status: testado
 hardware_minimo:
   ram_gb: 2
   disco_livre_gb: 20

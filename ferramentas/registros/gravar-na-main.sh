@@ -12,6 +12,8 @@ python3 -c 'import yaml' 2>/dev/null || pip install --quiet pyyaml
 python3 ferramentas/catalogo/gerar.py >/dev/null
 
 git add receitas docs
+# As capturas da máquina virtual com tela, que o site mostra.
+if [ -d testes/vm/telas ]; then git add testes/vm/telas; fi
 if git diff --cached --quiet; then
     echo "Nada novo para registrar."
     exit 0

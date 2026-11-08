@@ -1,6 +1,7 @@
 //! Snapshot do sistema antes de aplicar um plano.
 
 use std::fs;
+use std::os::unix::process::ExitStatusExt;
 use std::path::Path;
 use std::process::Command;
 
@@ -27,9 +28,19 @@ pub fn ferramenta() -> Option<&'static str> {
 /// Cria o snapshot e devolve um nome para mostrar, ou a mensagem de erro.
 pub fn criar(descricao: &str) -> Result<String, String> {
     let saida = match ferramenta() {
-        Some("timeshift") => Command::new("timeshift")
-            .args(["--create", "--scripted", "--comments", descricao])
-            .output(),
+        Some("timeshift") => {
+            let rodar = || {
+                Command::new("timeshift")
+                    .args(["--create", "--scripted", "--comments", descricao])
+                    .output()
+            };
+            // O Timeshift às vezes cai com segfault logo no começo, antes de
+            // copiar qualquer coisa (issue #16). Uma segunda tentativa resolve.
+            match rodar() {
+                Ok(s) if s.status.signal().is_some() => rodar(),
+                outro => outro,
+            }
+        }
         Some("snapper") => Command::new("snapper")
             .args([
                 "-c",

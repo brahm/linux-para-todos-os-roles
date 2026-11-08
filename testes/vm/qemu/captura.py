@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Confere uma captura de tela da máquina virtual e grava a versão em PNG.
 
-    captura.py tela.ppm tela.png
+    captura.py tela.ppm tela.png [pequena.png]
 
 O monitor do QEMU grava a tela em PPM (o formato mais simples que existe).
 Este script lê esse arquivo, recusa uma tela que é quase toda de uma cor só
 (preta, por exemplo, quando nada desenhou nada) e grava um PNG, que é o que
-vai para os artefatos do workflow. Sem bibliotecas além da padrão do Python.
+vai para os artefatos do workflow. Com um terceiro caminho, grava ali também
+uma versão com a metade da largura e da altura, que é a que vai para o site.
+Sem bibliotecas além da padrão do Python.
 """
 import struct
 import sys
@@ -56,12 +58,30 @@ def gravar_png(caminho, largura, altura, pixels):
         f.write(pedaco(b"IEND", b""))
 
 
+def reduzir(largura, altura, pixels):
+    """A metade da largura e da altura, com a média de cada quadrado de 2x2."""
+    nl, na = largura // 2, altura // 2
+    linha = largura * 3
+    saida = bytearray(nl * na * 3)
+    for y in range(na):
+        a = pixels[2 * y * linha : (2 * y + 1) * linha]
+        b = pixels[(2 * y + 1) * linha : (2 * y + 2) * linha]
+        base = y * nl * 3
+        for x in range(nl):
+            i = 6 * x
+            for c in range(3):
+                saida[base + 3 * x + c] = (a[i + c] + a[i + 3 + c] + b[i + c] + b[i + 3 + c]) // 4
+    return nl, na, bytes(saida)
+
+
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) not in (3, 4):
         sys.exit(__doc__.strip().splitlines()[2].strip())
     entrada, saida = sys.argv[1], sys.argv[2]
     largura, altura, pixels = ler_ppm(entrada)
     gravar_png(saida, largura, altura, pixels)
+    if len(sys.argv) == 4:
+        gravar_png(sys.argv[3], *reduzir(largura, altura, pixels))
     # Um pixel a cada 7, para contar as cores sem demorar.
     cores = Counter(pixels[i : i + 3] for i in range(0, len(pixels) - 2, 3 * 7))
     total = sum(cores.values())
@@ -69,7 +89,9 @@ def main():
     print(f"{saida}: {largura}x{altura}, {len(cores)} cores, a mais comum em {mais_comum:.0%} da tela")
     if largura < 800 or altura < 600:
         sys.exit(f"{saida}: a tela está em {largura}x{altura}, ainda em modo texto")
-    if len(cores) < 16 or mais_comum > 0.98:
+    # A tela de login do GNOME é quase toda de uma cor (97% no Ubuntu), então
+    # só reprova o que é praticamente uma cor só.
+    if len(cores) < 16 or mais_comum > 0.995:
         sys.exit(f"{saida}: a tela está praticamente vazia")
 
 

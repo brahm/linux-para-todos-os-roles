@@ -1,5 +1,5 @@
 # Páginas das receitas prontas.
-from comum import REPO, ladrilho, cabeca, janela, bloco_pedidos, P
+from comum import REPO, RAIZ_REPO, ladrilho, cabeca, janela, bloco_pedidos, P
 from dados import RECEITAS, FAMILIAS, NIVEL_TEXTO, ler_receita, ROLES, pagina_receita
 
 ICONE_ETAPA = {
@@ -99,6 +99,43 @@ def comandos(lista):
         f'        <div class="cartao comando revelar"><code>{c}</code><span>{d}</span></div>' for c, d in lista) + "\n      </div>"
 
 
+# As capturas da máquina virtual com tela (testes/vm/telas/<distro>/, gravadas
+# pelo workflow) que cada receita mostra: (arquivo, legenda).
+CAPTURAS = {
+    "desktop/ambiente-leve": [("1-tela-de-login", "A tela de login, antes da receita"),
+                              ("2-ambiente-leve", "O ambiente leve, que abriu sozinho depois da receita")],
+    "desktop/navegador-leve": [("3-firefox", "O Firefox com o uBlock Origin instalado pela política")],
+    "desktop/sem-snap": [("3-firefox", "O Firefox depois da receita (no Ubuntu, o da Mozilla)"),
+                         ("4-depois-de-desfazer", "A tela de login depois de desfazer tudo")],
+}
+DISTROS_TELAS = [("ubuntu-24.04", "Ubuntu 24.04"), ("ubuntu-26.04", "Ubuntu 26.04"), ("debian-13", "Debian 13")]
+PASTA_TELAS = RAIZ_REPO + "testes/vm/telas/"
+
+
+def capturas(rid):
+    """As capturas da receita, por distro, ou nada se ainda não há nenhuma."""
+    import os
+    figuras = []
+    for alvo, nome in DISTROS_TELAS:
+        pasta = PASTA_TELAS + alvo + "/"
+        if not os.path.isfile(pasta + "data.txt"):
+            continue
+        a, m, d = open(pasta + "data.txt").read().strip().split("-")
+        for arq, legenda in CAPTURAS.get(rid, []):
+            if os.path.isfile(pasta + arq + ".png"):
+                figuras.append(f'''          <figure class="captura"><a href="../telas/{alvo}/{arq}.png"><img src="../telas/{alvo}/{arq}.png" alt="Captura da tela em {nome}: {legenda[0].lower() + legenda[1:]}" loading="lazy" width="640" height="400"></a><figcaption>{nome}, {d}/{m}/{a}. {legenda}.</figcaption></figure>''')
+    if not figuras:
+        return ""
+    return f'''
+      <div class="bloco">
+        <h3>Na máquina virtual com tela</h3>
+        <div class="capturas revelar">
+{chr(10).join(figuras)}
+        </div>
+        <p class="nota">Capturas de verdade do <a href="{REPO}/blob/main/testes/vm/README.md#a-máquina-com-tela">teste automático com tela</a>, que roda toda semana. Elas são trocadas quando o registro de testes muda, no máximo uma vez por mês.</p>
+      </div>'''
+
+
 def onde_testada(r):
     fam = r.get("familias") or {}
     cartoes = "\n".join(
@@ -121,7 +158,7 @@ def onde_testada(r):
           </table>
         </div>
         <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
-      </div>'''
+      </div>{capturas(r.get('id', ''))}'''
 
 
 def fontes(lista):

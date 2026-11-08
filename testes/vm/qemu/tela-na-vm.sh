@@ -11,7 +11,8 @@
 #   firefox         abre o Firefox na sessão do aluno e espera o uBlock Origin
 #                   ser instalado pela política da receita
 #   sair            desliga a entrada automática e fecha o Firefox
-#   desfazer        desfaz tudo e espera a tela de login voltar
+#   desfazer        desfaz tudo, confere no Ubuntu que o Snap e o Firefox do
+#                   Snap voltaram e espera a tela de login voltar
 #
 # O ambiente leve é o Xfce no Ubuntu e o LXQt no Debian, como nos testes em
 # contêiner. No fim, /root/cobertas.txt lista as receitas que passaram por aqui.
@@ -187,6 +188,12 @@ case "${1:?fase}" in
             grep -q "Não há nada para desfazer" <<<"$saida" && break
         done
         [ ! -e "/usr/share/xsessions/$AMBIENTE.desktop" ] || falhou "o $AMBIENTE continuou na tela de login depois de desfazer"
+        if [ "$ID" = ubuntu ]; then
+            # O Sem Snap desfeito devolve o Snap e o Firefox do Snap, que a máquina tinha antes.
+            dpkg -s snapd >/dev/null 2>&1 || falhou "o snapd não voltou depois de desfazer"
+            systemctl is-active --quiet snapd.service || falhou "o snapd voltou, mas não está rodando"
+            snap list firefox || falhou "o Firefox do Snap não voltou depois de desfazer"
+        fi
         bora historico
 
         etapa "A tela de login volta depois de desfazer"

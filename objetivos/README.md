@@ -41,7 +41,7 @@ Campos:
 | `id` | Nome curto, sem acento, usado no plano e na linha de comando |
 | `nome` e `descricao` | O que aparece no menu |
 | `para_quem` | Públicos que o rolê atende: `curiosos`, `estudantes`, `entusiastas` |
-| `status` | `planejado` (só a ideia), `rascunho` (receitas escritas e testadas em contêiner) ou `testado` (o [roteiro de teste em VM](../testes/vm/README.md) do rolê passou no Ubuntu 24.04 e no Debian 13) |
+| `status` | `planejado` (só a ideia), `rascunho` (receitas escritas e testadas em contêiner) ou `testado` (cada receita passou nas [máquinas virtuais do CI](../testes/vm/README.md) no Ubuntu 24.04 e no Debian 13) |
 | `hardware_minimo` | O `bora diag` esconde o rolê se a máquina não atender |
 | `familias` | Famílias de distro em que o rolê funciona (ver [`familias/`](../familias/README.md)) |
 | `perguntas` | O que o `bora` pergunta antes de montar o plano; as respostas entram nos parâmetros como `{id}`. Com `opcoes` (e, se quiser, `rotulos`), a pergunta vira um menu, e a resposta precisa ser uma das opções |
@@ -72,15 +72,15 @@ Na linha de comando, a resposta vai com `-r`: `bora plano comecar-a-programar -r
 
 ## Quando um rolê vira `testado`
 
-Um rolê passa de `rascunho` para `testado` quando o roteiro de teste em máquina virtual dele, em [`testes/vm/`](../testes/vm/README.md), passa inteiro no **Ubuntu 24.04** e no **Debian 13**, incluindo o desfazer, e cada receita do rolê tem o teste registrado com `onde: vm` (ou `maquina`) nessas duas distros. O Ubuntu 26.04 e o Linux Mint continuam no roteiro, mas não seguram a mudança de status: um problema neles vira uma issue, e o rolê segue `testado`. O registro que a [VM do CI](../testes/vm/README.md#a-parte-automática-no-ci) grava sozinha conta para as receitas que ela aplica, mas não dispensa o roteiro: a parte com tela só se confere olhando.
+Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste registrado com `onde: vm` (ou `maquina`) e `resultado: ok` no **Ubuntu 24.04** e no **Debian 13**. Quem grava esse registro são as duas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci), a sem tela e a [com tela](../testes/vm/README.md#a-máquina-com-tela), que aplicam, conferem e desfazem cada receita toda semana; um teste numa máquina de verdade também conta. O Ubuntu 26.04 roda nas mesmas máquinas, mas não segura a mudança de status: um problema nele vira uma issue, e o rolê segue `testado`. Os [roteiros manuais](../testes/vm/README.md) continuam como complemento, para o que só o olho confere (se o vídeo toca, se a loja abre, se os favoritos vieram) e para o Linux Mint, que não tem imagem para as máquinas do CI. Um problema achado neles vira uma issue, e o rolê volta para `rascunho` só se o problema impedir o uso. Escolhido por Brahm em 8/11/2026.
 
 ## Rolês da primeira versão
 
 | # | Rolê | O que inclui | Status |
 |:-:|---|---|---|
-| 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | rascunho |
-| 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | rascunho |
-| 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | rascunho |
+| 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | testado |
+| 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | testado |
+| 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | testado |
 | 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional | planejado |
 | 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |

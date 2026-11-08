@@ -2,7 +2,7 @@ id: comecar-a-programar
 nome: Começar a programar
 descricao: Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.
 para_quem: [estudantes, entusiastas]
-status: rascunho
+status: testado
 hardware_minimo:
   ram_gb: 4
   disco_livre_gb: 20
