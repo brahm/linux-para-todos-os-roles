@@ -34,3 +34,21 @@ testes:
     por: testes-automaticos
     onde: conteiner
     resultado: ok
+  - distro: debian
+    versao: "13"
+    data: 2026-11-08
+    por: testes-automaticos
+    onde: vm
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-08
+    por: testes-automaticos
+    onde: vm
+    resultado: ok
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-08
+    por: testes-automaticos
+    onde: vm
+    resultado: ok
