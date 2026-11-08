@@ -433,7 +433,7 @@ def corpo():
         <div class="bora-lado">
           <ul class="caixa">
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9"/></svg><span class="txt"><strong>O <code>OK</code> do <code>sha256sum</code></strong><span>Garante que o arquivo é o mesmo que saiu do projeto. Se aparecer outra coisa, apague e baixe de novo.</span></span></li>
-            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2.5 19h19"/></svg><span class="txt"><strong>Processador ARM?</strong><span>Troque <code>x86_64</code> por <code>aarch64</code> nos comandos.</span></span></li>
+            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2.5 19h19"/></svg><span class="txt"><strong>Processador ARM?</strong><span>O <code>bora</code> roda só em computadores de 64 bits com processador Intel ou AMD (x86_64).</span></span></li>
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg><span class="txt"><strong>Travou em algum ponto?</strong><span>Rode <code>./bora-linux-x86_64 ajuda</code>: ele monta uma pergunta pronta, sem dados sensíveis, para colar em qualquer chat de IA.</span></span></li>
           </ul>
           <a class="cartao proximo" href="../catalogo/roles/pronto-para-estudar.html">

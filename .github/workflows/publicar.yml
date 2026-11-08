@@ -57,36 +57,31 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "publicar=$publicar" >> "$GITHUB_OUTPUT"
 
+  # Só x86_64: o ARM não passa de 5% das instalações de Linux e nunca teve
+  # teste, então saiu (veja docs/decisoes.md).
   compilar:
-    name: Binário ${{ matrix.arquitetura }}
+    name: Binário x86_64
     needs: versao
     if: needs.versao.outputs.publicar == 'true'
-    strategy:
-      matrix:
-        include:
-          - arquitetura: x86_64
-            maquina: ubuntu-24.04
-          - arquitetura: aarch64
-            maquina: ubuntu-24.04-arm
-    runs-on: ${{ matrix.maquina }}
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - name: Rust com musl
         run: |
-          rustup toolchain install stable --profile minimal --target ${{ matrix.arquitetura }}-unknown-linux-musl
+          rustup toolchain install stable --profile minimal --target x86_64-unknown-linux-musl
           rustup default stable
       - name: Testes
         run: cargo test --locked
       - name: Compilar
         run: |
-          cargo build --release --locked --target ${{ matrix.arquitetura }}-unknown-linux-musl
+          cargo build --release --locked --target x86_64-unknown-linux-musl
           mkdir -p saida
-          cp target/${{ matrix.arquitetura }}-unknown-linux-musl/release/bora saida/bora-linux-${{ matrix.arquitetura }}
-          saida/bora-linux-${{ matrix.arquitetura }} versao
+          cp target/x86_64-unknown-linux-musl/release/bora saida/bora-linux-x86_64
+          saida/bora-linux-x86_64 versao
       - uses: actions/upload-artifact@v7
         with:
-          name: bora-linux-${{ matrix.arquitetura }}
-          path: saida/bora-linux-${{ matrix.arquitetura }}
+          name: bora-linux-x86_64
+          path: saida/bora-linux-x86_64
 
   publicar:
     name: Criar a versão
@@ -95,6 +90,7 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v5
       - uses: actions/download-artifact@v7
         with:
           path: saida
@@ -108,8 +104,10 @@ jobs:
           TAG: ${{ needs.versao.outputs.tag }}
         # Se a tag ainda não existe, o gh cria no commit que está sendo publicado.
         run: |
+          ferramentas/notas/escrever.sh "$TAG" "$GITHUB_SHA" >notas.md
+          cat notas.md
           gh release create "$TAG" saida/* \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "bora $TAG" \
-            --generate-notes
+            --notes-file notas.md

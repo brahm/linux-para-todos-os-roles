@@ -17,7 +17,7 @@ A versão instalada não se atualiza sozinha pelo `apt`. Quando o `bora` trouxer
 ## O que muda no sistema
 
 - Instala `curl`, `xz-utils` e `ca-certificates`, se faltarem, para baixar e abrir o arquivo.
-- Baixa `node-v<versão>-linux-x64.tar.xz` (ou `arm64`) de `https://nodejs.org/dist/`, confere a soma SHA256 e abre em `/usr/local/lib/nodejs/node-v<versão>-linux-<arquitetura>`.
+- Baixa `node-v<versão>-linux-x64.tar.xz` de `https://nodejs.org/dist/`, confere a soma SHA256 e abre em `/usr/local/lib/nodejs/node-v<versão>-linux-<arquitetura>`.
 - Cria os links `/usr/local/bin/node`, `/usr/local/bin/npm` e `/usr/local/bin/npx`. Se já existir um desses comandos ali que não veio do `bora`, a receita para sem mudar nada.
 - Escreve `etc/npmrc` dentro da pasta do Node.js, com `prefix=${HOME}/.local`.
 - Cria `~/.local/bin` na pasta pessoal de quem rodou o `bora`, se ainda não existir. O `~/.profile` do Ubuntu e do Debian põe essa pasta no PATH a cada login.

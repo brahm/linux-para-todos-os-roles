@@ -26,7 +26,19 @@ O `bora` agrupa as distros pela base de onde vieram. Uma receita é escrita uma 
 
 ## Como o `bora` reconhece a família
 
-O `bora diag` lê o `/etc/os-release` (campos `ID`, `ID_LIKE`, `VERSION_ID` e `UBUNTU_CODENAME`) e confere o processo de init. Derivadas herdam a família da base; as diferenças conhecidas de cada derivada ficam registradas à parte.
+O `bora diag` lê o `/etc/os-release` (campos `ID`, `ID_LIKE`, `VERSION_ID` e `UBUNTU_CODENAME`) e confere o processo de init. Derivadas herdam a família da base, pelo `UBUNTU_CODENAME`, e as diferenças conhecidas de cada uma ficam na seção abaixo.
+
+## Derivadas da família `ubuntu`
+
+O `bora` aceita a derivada quando a base dela é uma das que ele testa (Ubuntu 24.04 ou 26.04). Das três, só o Linux Mint entra nos [roteiros de teste em VM](../testes/vm/README.md); o Pop!_OS e o Zorin OS seguem como "herdada", com estas diferenças já conhecidas:
+
+| Derivada | Base | O que muda para as receitas |
+|---|---|---|
+| Linux Mint 22 | 24.04 | Bloqueia o Snap (`/etc/apt/preferences.d/nosnap.pref`), então o Sem Snap não tem o que fazer. Já vem com o Flathub ligado e com o Timeshift instalado, e o Firefox é o pacote `.deb` do próprio Mint. O ambiente padrão é o Cinnamon, e a edição Xfce já é a leve |
+| Pop!_OS 24.04 | 24.04 | O ambiente é o COSMIC, com tela de login própria, onde a escolha da sessão do ambiente leve ainda não foi conferida. Tem repositório próprio, que troca alguns pacotes do Ubuntu (o Firefox entre eles), não traz Snap, já vem com o Flathub ligado e já usa zram, então a receita do zram só confere |
+| Zorin OS 18 | 24.04 | Traz o Snap e o Flatpak ligados e repositórios próprios para os temas e os aplicativos da marca. O Zorin OS 17, ainda na base 22.04, fica de fora |
+
+Uma diferença nova entra aqui quando aparecer num relato de teste. Se ela exigir um comportamento diferente na receita, a receita passa a conferir a derivada pelo `ID` do `/etc/os-release`.
 
 ## Níveis de suporte
 

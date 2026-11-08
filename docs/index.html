@@ -108,7 +108,7 @@
 
   <span class="d">↑↓ escolher · Enter continuar · q sair</span> <span class="cursor"></span></pre>
           </div>
-          <figcaption class="legenda"><svg aria-hidden="true"><use href="#pegada"/></svg>Prévia de como vai ficar o menu com os sete rolês. Hoje, as receitas prontas já aparecem em “Receitas avulsas”.</figcaption>
+          <figcaption class="legenda"><svg aria-hidden="true"><use href="#pegada"/></svg>Prévia de como vai ficar o menu com os sete rolês. Hoje, ele já mostra os três primeiros, e cada receita pronta também pode ser escolhida sozinha, em “Receitas avulsas”.</figcaption>
         </figure>
       </div>
     </div>
@@ -150,19 +150,19 @@
           <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
           <h3>Pronto para estudar e trabalhar</h3>
           <p>Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal.</p>
-          <div class="rodape"><span class="num">01</span><span class="ficha planejado">Planejado</span></div>
+          <div class="rodape"><span class="num">01</span><span class="ficha agora">Em teste</span></div>
         </a>
         <a class="cartao role" href="catalogo/roles/maquina-antiga.html" style="color:inherit;text-decoration:none">
           <span class="ladrilho l-verde" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4"/><path d="M12 14v-3.2"/><path d="M12 10.8c0-2.2 1.4-3.4 3.6-3.4 0 2.2-1.4 3.4-3.6 3.4z"/><path d="M12 11.6c0-1.7-1.1-2.7-2.9-2.7 0 1.7 1.1 2.7 2.9 2.7z"/></svg></span>
           <h3>Dar vida nova a uma máquina antiga</h3>
           <p>Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados.</p>
-          <div class="rodape"><span class="num">02</span><span class="ficha planejado">Planejado</span></div>
+          <div class="rodape"><span class="num">02</span><span class="ficha agora">Em teste</span></div>
         </a>
         <a class="cartao role" href="catalogo/roles/comecar-a-programar.html" style="color:inherit;text-decoration:none">
           <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
           <h3>Começar a programar</h3>
           <p>Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis: web e Python.</p>
-          <div class="rodape"><span class="num">03</span><span class="ficha planejado">Planejado</span></div>
+          <div class="rodape"><span class="num">03</span><span class="ficha agora">Em teste</span></div>
         </a>
         <a class="cartao role" href="catalogo/roles/vibecodar.html" style="color:inherit;text-decoration:none">
           <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
@@ -211,7 +211,7 @@
         </article>
         <article class="cartao porta">
           <div class="rotulo"><span class="n">3</span><h3>Agente</h3></div>
-          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI e OpenCode, leem a skill do <code>bora</code>, conversam com você e escrevem o plano. O <code>bora</code> valida, e quem aplica é você.</p>
+          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI e OpenCode, vão ler a skill do <code>bora</code>, que chega na fase da casa e do Fedora, conversar com você e escrever o plano. O <code>bora</code> valida, e quem aplica é você.</p>
           <p class="precisa">Precisa de: <strong>um agente que leia skills</strong></p>
         </article>
       </div>
@@ -253,7 +253,7 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Status do desenvolvimento</p>
         <h2>Onde a gente está na trilha</h2>
-        <p>O projeto recomeçou do zero em novembro de 2026. Primeiro vêm os formatos e a marca; depois, o código. Nada aqui tem data marcada: cada passo sai quando estiver testado.</p>
+        <p>O projeto recomeçou do zero em novembro de 2026. Os formatos, a marca, o <code>bora</code> e os três primeiros rolês já saíram; agora falta fechar a primeira versão útil. Nada aqui tem data marcada: cada passo sai quando estiver testado.</p>
       </div>
       <div class="status-grade">
         <ol class="passos">
@@ -275,7 +275,15 @@
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
               <h3><code>bora</code> v0 e as três primeiras receitas <span class="ficha feito">Feito</span></h3>
-              <p>Diagnóstico, menus, plano, aplicar, desfazer, registro e snapshot. As receitas <code>base/atualizar</code>, <code>sistema/snapshot</code> e <code>seguranca/firewall</code>, testadas em contêiner no Ubuntu 26.04, no Ubuntu 24.04 e no Debian 13. Desde então, o GitHub Actions roda todas as receitas nessas três distros, em contêiner, a cada pull request.</p>
+              <p>Diagnóstico, menus, plano, aplicar, desfazer, registro e snapshot. As receitas <code>base/atualizar</code>, <code>sistema/snapshot</code> e <code>seguranca/firewall</code>, testadas em contêiner no Ubuntu 26.04, no Ubuntu 24.04 e no Debian 13. Cada versão sai sozinha, na <a href="https://github.com/brahm/linux-para-todos-os-roles/releases">página de versões</a>, quando o número muda.</p>
+            </div>
+          </li>
+          <li class="passo feito">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
+              <h3>Testes automáticos em contêiner e em máquina virtual <span class="ficha feito">Feito</span></h3>
+              <p>A cada pull request, o GitHub Actions aplica, confere e desfaz cada receita em contêiner no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Todo domingo, e quando uma receita muda, uma máquina virtual de verdade nessas três distros aplica a parte dos rolês que não depende de tela, reinicia, confere que tudo voltou sozinho e desfaz. Quando passa, o resultado entra no registro de testes de cada receita; quando falha, vira uma issue.</p>
+              <p>Também rodam sozinhos a conferência mensal dos links deste site e a semanal da versão do Node.js.</p>
             </div>
           </li>
           <li class="passo agora">
@@ -284,7 +292,7 @@
               <h3>Primeira versão útil <span class="voce-esta-aqui">Próximo passo</span></h3>
               <p>Rolês 1 a 4 no Ubuntu e no Debian, testados numa máquina virtual, e no Linux Mint, a derivada conferida (o Pop!_OS e o Zorin OS usam as receitas do Ubuntu). A pergunta pronta, o modo passo a passo, o <a href="distro/">roteiro para escolher e instalar a distro</a>, e o site gerado a partir das receitas.</p>
               <p>Já saíram a pergunta pronta, o modo passo a passo, as páginas das receitas, o roteiro da distro e os rolês 1, 2 e 3: <a href="catalogo/roles/pronto-para-estudar.html">Pronto para estudar e trabalhar</a>, com codecs, Flatpak e backup da pasta pessoal, <a href="catalogo/roles/maquina-antiga.html">Dar vida nova a uma máquina antiga</a>, com zram, ambiente leve, navegador enxuto e serviços enxutos, e <a href="catalogo/roles/comecar-a-programar.html">Começar a programar</a>, com Git, Python ou Node.js e contêineres com Podman. O rolê 1 também guarda o <a href="catalogo/receitas/sistema-etckeeper.html">histórico do /etc</a> e, se você pedir, <a href="catalogo/receitas/desktop-sem-snap.html">tira o Snap</a>; o rolê 2, se você pedir, liga o <a href="catalogo/receitas/seguranca-ssh.html">acesso por SSH</a> na rede de casa.</p>
-              <p>Falta o rolê 4, Vibecodar, e rodar os <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md">roteiros de teste em máquina virtual</a>: até lá, as receitas aparecem como testadas em contêiner.</p>
+              <p>Falta o rolê 4, Vibecodar, e rodar os <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md">roteiros de teste em máquina virtual</a>, que conferem o que só se vê na tela (a tela de login, o vídeo tocando, a loja, o Firefox) e o Linux Mint. Um rolê passa de "em teste" para "testado" quando o roteiro dele passa no Ubuntu 24.04 e no Debian 13.</p>
             </div>
           </li>
           <li class="passo">
@@ -424,7 +432,7 @@
       <div class="largura">
         <div>
           <h2>O melhor rolê é o que a gente faz junto.</h2>
-          <p>O projeto está no começo, que é a melhor hora para chegar: dá para opinar nos formatos antes de virarem código.</p>
+          <p>O projeto está no começo, que é a melhor hora para chegar: dá para testar os três primeiros rolês e opinar nos próximos antes de virarem código.</p>
         </div>
         <a class="botao escuro" href="https://github.com/brahm/linux-para-todos-os-roles">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Bora pro GitHub

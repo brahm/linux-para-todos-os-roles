@@ -110,3 +110,13 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | O zram continua trazendo o `linux-image-extra-virtual` em servidor e em nuvem, com o aviso no LEIAME de que ele puxa o `linux-firmware` | É o que mantém o zram depois da próxima atualização do kernel. Quem tem pouco disco pode instalar só os módulos do kernel de agora |
 | O segfault do Timeshift no contêiner do Ubuntu 24.04 fica sendo acompanhado na [issue #16](https://github.com/brahm/linux-para-todos-os-roles/issues/16) | Aconteceu uma vez e não se repetiu |
 | Os rolês continuam `rascunho` até os roteiros manuais passarem | A VM do CI não confere a tela, então não basta para o `testado` |
+
+## 8 de novembro de 2026: quarta rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| O `bora` deixa de ser publicado para ARM (aarch64) e passa a aceitar só x86_64. Escolhido por Brahm em 8/11/2026 | O ARM não passa de 5% das instalações de Linux, e o binário ARM nunca rodou em teste nenhum. Mais adiante, o `bora` vai ser distribuído também como pacote nas distros compatíveis |
+| As notas de cada versão saem em português, escritas pelo próprio workflow de publicação (`ferramentas/notas/escrever.sh`) | As notas automáticas do GitHub só existem em inglês. A lista de pull requests continua vindo delas |
+| As diferenças conhecidas do Linux Mint, do Pop!_OS e do Zorin OS ficam registradas em `familias/README.md` | O plano previa um `familias/derivadas.yaml`, mas o `bora` ainda não lê essas diferenças. Enquanto forem só informação, o README basta |
+| A issue #16 (segfault do Timeshift) é fechada em 8/2/2027 se não se repetir | Três meses de testes semanais sem o erro bastam para considerar que foi do contêiner |
+| O rolê 4, Vibecodar, começa quando Brahm pedir | Ele fecha a primeira versão útil, mas não tem data |
