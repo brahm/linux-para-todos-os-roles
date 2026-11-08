@@ -93,7 +93,7 @@ if pacote_instalado snapd; then
     for meta in $(grep -E '^ubuntu-(desktop|server)' "$BORA_ESTADO/debs-removidos" || true); do
         apt-cache depends --no-pre-depends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances "$meta" 2>/dev/null |
             awk '/Depends:|Recommends:/ {print $2}' | grep -v '^<' | sort -u | while read -r dep; do
-            if pacote_instalado "$dep" && apt-mark showauto "$dep" | grep -qx "$dep"; then
+            if pacote_instalado "$dep" && grep -qx "$dep" <<<"$(apt-mark showauto "$dep")"; then
                 apt-mark manual "$dep" >/dev/null
                 echo "$dep" >>"$BORA_ESTADO/marcados-manual"
             fi

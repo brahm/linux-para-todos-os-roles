@@ -45,6 +45,6 @@ O `desfazer.sh` remove só os pacotes que a receita instalou, com as dependênci
 
 ## Fontes
 
-- [Restricted formats, na documentação do Ubuntu](https://help.ubuntu.com/community/RestrictedFormats)
+- [O pacote ubuntu-restricted-extras, no arquivo do Ubuntu](https://packages.ubuntu.com/noble/ubuntu-restricted-extras)
 - [Multimedia codecs, na wiki do Debian](https://wiki.debian.org/MultimediaCodecs)
 - [Lista de plugins do GStreamer](https://gstreamer.freedesktop.org/documentation/plugins_doc.html)

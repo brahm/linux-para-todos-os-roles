@@ -59,3 +59,18 @@ outro_zram() {
 }
 
 zram_ligado() { grep -q '^/dev/zram0 ' /proc/swaps 2>/dev/null; }
+
+# O kernel tem o módulo do zram? No Ubuntu Server e nas imagens de nuvem, o
+# kernel vem sem o linux-modules-extra, e o zram mora nele.
+modulo_do_zram() { [ -d /sys/module/zram ] || modinfo zram >/dev/null 2>&1; }
+
+# Os pacotes que trazem o módulo: o do kernel de agora e, quando o sistema
+# segue o kernel "virtual" (o das imagens de nuvem), o metapacote que traz o
+# módulo também nos kernels das próximas atualizações.
+pacotes_do_modulo() {
+    local p
+    for p in "linux-modules-extra-$(uname -r)" linux-image-extra-virtual; do
+        if [ "$p" = linux-image-extra-virtual ] && ! pacote_instalado linux-image-virtual; then continue; fi
+        if apt-cache show "$p" >/dev/null 2>&1; then echo "$p"; fi
+    done
+}

@@ -86,3 +86,13 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | O acesso por SSH entra no rolê 2 como opcional, só para a rede local, sem login do root e, se pedido, só com chave | Uma máquina antiga que vira servidor da casa fica num canto, sem tela. A receita só desliga a senha se a conta já tiver uma chave, e a regra do firewall vale só para a rede local. A mesma receita vai servir ao rolê 7 |
 | Os links do site e da documentação são conferidos todo mês pelo GitHub Actions, que abre uma issue quando algum quebra | As páginas da distro apontam para sites de fora, que mudam de endereço sem avisar |
 | A versão do Node.js da receita é comparada toda semana com nodejs.org, e uma versão nova da mesma linha LTS abre uma issue, com destaque para as correções de segurança | A versão fixada só sobe com o `bora`, e uma correção de segurança não pode esperar alguém lembrar de olhar |
+
+## 8 de novembro de 2026: segunda rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| Um rolê vira `testado` quando o roteiro de teste em VM dele passa inteiro no Ubuntu 24.04 e no Debian 13. Escolhido por Brahm em 8/11/2026 | São as duas bases de que as outras distros da onda 1 dependem. O Ubuntu 26.04 e o Linux Mint seguem no roteiro, mas um problema neles vira issue em vez de segurar o status |
+| As etiquetas do repositório ficam em `.github/etiquetas.txt`, e um workflow as cria quando o arquivo muda | Os formulários de issue apontavam para etiquetas que não existiam, e o GitHub abria as issues sem elas, sem avisar |
+| As actions de artefato sobem para a v7 (`upload-artifact` e `download-artifact`) | A v5, proposta antes, ainda roda no Node.js 20, que o GitHub está desligando; a v7 é a primeira das duas que roda no Node.js 24 |
+| A parte dos rolês que não depende de tela roda numa VM de verdade no CI, com QEMU e KVM, no Ubuntu 24.04 e no Debian 13 (workflow Máquina virtual) | Os runners do GitHub têm KVM, e as imagens de nuvem das duas distros sobem em segundos com cloud-init. Cada distro leva de 9 a 12 minutos, então roda todo domingo e nos pull requests que mexem nas receitas que ela cobre, e não em todo push. Ela não substitui o roteiro manual: a tela, o player, a loja e os perfis só se conferem olhando |
+| O que a VM achou nas primeiras rodadas foi corrigido no mesmo pull request | Quatro defeitos que o contêiner não via: o zram não ligava no Ubuntu sem reiniciar (o módulo só carregava no boot) e não tinha o módulo nas instalações de servidor e de nuvem; as receitas do firewall e do SSH trocavam o comentário da regra do SSH uma da outra, e a segunda aplicação nunca dizia "nada mudou"; e o teste dos codecs falhava às vezes por um `dpkg -L \| grep -m1` com pipefail |

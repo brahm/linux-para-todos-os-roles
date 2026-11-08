@@ -66,5 +66,5 @@ padroes_certos() {
 # A regra já está no ufw? Compara com "ufw show added", que repete os comandos.
 regra_existe() {
     local regra=$1
-    LC_ALL=C ufw show added 2>/dev/null | sed "s/'//g" | grep -qxF "ufw $regra"
+    grep -qxF "ufw $regra" <<<"$(LC_ALL=C ufw show added 2>/dev/null | sed "s/'//g")"
 }

@@ -41,7 +41,7 @@ Campos:
 | `id` | Nome curto, sem acento, usado no plano e na linha de comando |
 | `nome` e `descricao` | O que aparece no menu |
 | `para_quem` | Públicos que o rolê atende: `curiosos`, `estudantes`, `entusiastas` |
-| `status` | `planejado` (só a ideia), `rascunho` (receitas escritas, sem teste) ou `testado` |
+| `status` | `planejado` (só a ideia), `rascunho` (receitas escritas e testadas em contêiner) ou `testado` (o [roteiro de teste em VM](../testes/vm/README.md) do rolê passou no Ubuntu 24.04 e no Debian 13) |
 | `hardware_minimo` | O `bora diag` esconde o rolê se a máquina não atender |
 | `familias` | Famílias de distro em que o rolê funciona (ver [`familias/`](../familias/README.md)) |
 | `perguntas` | O que o `bora` pergunta antes de montar o plano; as respostas entram nos parâmetros como `{id}`. Com `opcoes` (e, se quiser, `rotulos`), a pergunta vira um menu, e a resposta precisa ser uma das opções |
@@ -69,6 +69,10 @@ receitas:
 ```
 
 Na linha de comando, a resposta vai com `-r`: `bora plano comecar-a-programar -r perfil=web`.
+
+## Quando um rolê vira `testado`
+
+Um rolê passa de `rascunho` para `testado` quando o roteiro de teste em máquina virtual dele, em [`testes/vm/`](../testes/vm/README.md), passa inteiro no **Ubuntu 24.04** e no **Debian 13**, incluindo o desfazer, e cada receita do rolê tem o teste registrado com `onde: vm` (ou `maquina`) nessas duas distros. O Ubuntu 26.04 e o Linux Mint continuam no roteiro, mas não seguram a mudança de status: um problema neles vira uma issue, e o rolê segue `testado`.
 
 ## Rolês da primeira versão
 

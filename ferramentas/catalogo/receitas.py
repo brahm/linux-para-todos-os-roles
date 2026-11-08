@@ -631,7 +631,7 @@ def pagina_codecs():
     corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
     corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
     corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
-        ("Restricted formats", "Documentação do Ubuntu", "https://help.ubuntu.com/community/RestrictedFormats"),
+        ("ubuntu-restricted-extras", "O pacote, no arquivo do Ubuntu", "https://packages.ubuntu.com/noble/ubuntu-restricted-extras"),
         ("Multimedia codecs", "Wiki do Debian", "https://wiki.debian.org/MultimediaCodecs"),
         ("Plugins do GStreamer", "A lista oficial, com o que cada um toca", "https://gstreamer.freedesktop.org/documentation/plugins_doc.html"),
         ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
@@ -880,7 +880,7 @@ def pagina_zram():
         ("verificar", "azul", "Verificar", "já está aplicada?",
          "<p>Se o computador já tem zram configurado por outro programa, a receita diz qual e não mexe em nada. Senão, confere se o <code>systemd-zram-generator</code> está instalado, se os dois arquivos de configuração estão como a receita escreve e se o <code>/dev/zram0</code> está ligado como swap.</p>"),
         ("aplicar", "", "Aplicar", "faz a mudança",
-         "<ul><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>"),
+         "<ul><li>Se o kernel não traz o módulo do zram, como no Ubuntu Server e nas imagens de nuvem, instala os módulos extras do kernel (<code>linux-modules-extra</code>).</li><li>Instala o <code>systemd-zram-generator</code>, que cria o zram a cada boot.</li><li>Escreve <code>/etc/systemd/zram-generator.conf</code>, com o tamanho, o zstd e a prioridade.</li><li>Guarda os valores de agora dos ajustes do kernel e escreve <code>/etc/sysctl.d/99-bora-zram.conf</code>.</li><li>Liga o zram e aplica os ajustes, sem reiniciar.</li></ul>"),
         ("testar", "verde", "Testar", "funcionou?",
          "<p>Confere o gerador, os dois arquivos, e que o <code>/dev/zram0</code> aparece em <code>/proc/swaps</code> com prioridade 100 e comprimindo com zstd.</p>"),
         ("desfazer", "cinza", "Desfazer", "quando você pedir",
@@ -1336,7 +1336,7 @@ def pagina_git():
         [("git config --global --list", "Mostra tudo o que está configurado no seu Git."),
          ("cat ~/.ssh/id_ed25519.pub", "Mostra a parte pública da chave, para colar no GitHub ou no GitLab."),
          ("ssh -T git@github.com", "Depois de cadastrar a chave, responde com o seu usuário do GitHub.")],
-        [("Configuração inicial do Git", "Pro Git, em português", "https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git"),
+        [("Configuração inicial do Git", "Pro Git, em português", "https://git-scm.com/book/pt-br/v2/Primeiros-Passos-Configura%C3%A7%C3%A3o-inicial-do-Git"),
          ("Gerar uma chave SSH", "Documentação do GitHub", "https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"),
          ("Chaves SSH no GitLab", "Documentação do GitLab", "https://docs.gitlab.com/user/ssh/")])
 

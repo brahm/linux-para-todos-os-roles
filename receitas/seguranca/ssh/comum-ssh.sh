@@ -44,7 +44,23 @@ PY
 
 ufw_ativo() { command -v ufw >/dev/null && grep -q '^Status: active' <<<"$(LC_ALL=C ufw status 2>/dev/null)"; }
 
-regra_ufw() { printf 'allow from %s to any port 22 proto tcp comment bora-ssh\n' "$1"; }
+# O ufw guarda uma regra só por endereço, porta e protocolo: adicionar a mesma
+# regra com outro comentário só troca o comentário. A receita seguranca/firewall
+# libera o SSH com o comentário dela, e as duas receitas ficavam trocando o
+# comentário uma da outra a cada aplicação (a VM do CI pegou). Por isso esta
+# receita aceita a regra com qualquer comentário e só adiciona a sua quando não
+# há nenhuma.
+regra_base() { printf 'allow from %s to any port 22 proto tcp' "$1"; }
+regra_ufw() { printf '%s comment bora-ssh\n' "$(regra_base "$1")"; }
+
+# O firewall já libera o SSH para a rede $1, com qualquer comentário?
+ssh_liberado() {
+    local regras base
+    regras=$(LC_ALL=C ufw show added 2>/dev/null)
+    regras=${regras//\'/}
+    base="ufw $(regra_base "$1")"
+    grep -qxF "$base" <<<"$regras" || grep -qF "$base comment " <<<"$regras"
+}
 
 regra_existe() {
     local regras

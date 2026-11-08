@@ -24,6 +24,7 @@ conferir "gerador do zram instalado (systemd-zram-generator)" gerador
 conferir "configuração do zram ($CONF_ZRAM)" conf_certa
 conferir "ajustes do kernel para o zram ($CONF_SYSCTL)" sysctl_certo
 if systemd_rodando; then
+    conferir "o kernel tem o módulo do zram (modinfo zram)" modulo_do_zram
     conferir "zram ligado como swap (swapon --show)" zram_ligado
     conferir "o zram comprime com zstd (zramctl)" com_zstd
     conferir "o kernel usa o zram antes da swap no disco (prioridade 100)" prioridade

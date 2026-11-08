@@ -72,7 +72,9 @@ sudo bora desfazer
 
 ## 5. Sem Snap (só Ubuntu, a partir do snapshot `limpa`)
 
-Antes, abra o Firefox, entre num site, salve um favorito e uma senha, e feche o Firefox.
+Use uma instalação do Ubuntu com a opção "instalação completa" (ou "extended"), que já traz o Thunderbird do Snap. Se ele não vier, instale com `sudo snap install thunderbird`.
+
+Antes, abra o Firefox, entre num site, salve um favorito e uma senha, e feche o Firefox. Abra o Thunderbird, configure uma conta de e-mail de teste (ou só um perfil local, em "Pastas locais"), crie uma pasta com o nome `teste-bora` e feche o Thunderbird.
 
 ```sh
 sudo bora
@@ -84,9 +86,11 @@ Escolha o rolê e responda **sim** para tirar o Snap.
 - [ ] O Firefox abre pelo menu, em português, com o favorito e a senha salvos.
 - [ ] `apt-cache policy firefox` mostra a versão de `packages.mozilla.org`.
 - [ ] `sudo apt install snapd` recusa instalar.
+- [ ] `flatpak list` mostra o `org.mozilla.Thunderbird`, e o `snap list` não mostra mais o Thunderbird.
+- [ ] O Thunderbird abre pelo menu e mostra a conta de teste e a pasta `teste-bora`; o perfil está em `~/.var/app/org.mozilla.Thunderbird/.thunderbird`.
 - [ ] A loja de aplicativos (GNOME Software) abre e mostra aplicativos do Flathub.
 - [ ] Depois de reiniciar, o boot não mostra montagens de snap (`systemd-analyze blame | grep snap` não mostra nada).
-- [ ] `sudo bora desfazer`: o Snap e o Firefox do Snap voltam, e o Firefox abre com o favorito.
+- [ ] `sudo bora desfazer`: o Snap, o Firefox e o Thunderbird do Snap voltam. O Firefox abre com o favorito, e o Thunderbird com a pasta `teste-bora`; o Thunderbird do Flathub saiu de `flatpak list`.
 
 No Linux Mint e no Debian, o Sem Snap só bloqueia o apt:
 

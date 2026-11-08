@@ -2,13 +2,26 @@
 
 Os testes automáticos rodam num contêiner, que não tem kernel, disco, rede nem tela de login de verdade. Eles conferem que cada receita aplica, não muda nada na segunda vez e desfaz, mas não conferem, por exemplo, se o zram liga de fato ou se o Xfce aparece na tela de login. Estes roteiros cobrem o que falta, um por rolê, para rodar numa máquina virtual (VM).
 
-Uma receita só passa de "testada em contêiner" para recomendada sem ressalva depois de passar por aqui.
+Uma receita só passa de "testada em contêiner" para recomendada sem ressalva depois de passar por aqui. Um rolê vira `testado` quando o roteiro dele passa inteiro no Ubuntu 24.04 e no Debian 13 ([regra completa](../../objetivos/README.md#quando-um-rolê-vira-testado)).
 
 | Rolê | Roteiro | Tempo |
 |---|---|---|
 | Pronto para estudar e trabalhar | [`pronto-para-estudar.md`](pronto-para-estudar.md) | cerca de 1 hora |
 | Dar vida nova a uma máquina antiga | [`maquina-antiga.md`](maquina-antiga.md) | cerca de 1 hora |
 | Começar a programar | [`comecar-a-programar.md`](comecar-a-programar.md) | cerca de 40 minutos |
+
+## A parte automática, no CI
+
+O que não depende de tela também roda sozinho, numa VM de verdade com QEMU e KVM, no Ubuntu 24.04 e no Debian 13: o workflow [Máquina virtual](../../.github/workflows/vm.yml), com os scripts em [`qemu/`](qemu/). Ele liga a imagem de nuvem da distro com um disco externo de mentira, aplica o rolê 1 (duas vezes, a segunda sem mudar nada) e, à parte, o zram e o SSH, já com o snapshot de antes pelo Timeshift. Depois reinicia, confere que o zram, o firewall, o SSH, o histórico do `/etc`, o temporizador do backup e os snapshots voltaram sozinhos, desconecta e conecta de novo o disco para ver o backup disparar, e desfaz tudo.
+
+Para rodar no seu computador, com o `qemu-system-x86`, o `qemu-utils`, o `cloud-image-utils` e o `socat`:
+
+```sh
+cargo build --release --target x86_64-unknown-linux-musl
+testes/vm/qemu/rodar.sh debian-13 target/x86_64-unknown-linux-musl/release/bora
+```
+
+Ela não substitui os roteiros abaixo: a tela de login, o player de vídeo, a loja de aplicativos e os perfis do Firefox e do Thunderbird só se conferem olhando.
 
 ## Distros
 

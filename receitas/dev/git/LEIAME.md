@@ -44,7 +44,7 @@ A chave SSH fica: ela pode já estar cadastrada no GitHub ou no GitLab, e apagar
 
 ## Fontes
 
-- [Primeiros passos: configuração inicial do Git (Pro Git, em português)](https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git)
+- [Primeiros passos: configuração inicial do Git (Pro Git, em português)](https://git-scm.com/book/pt-br/v2/Primeiros-Passos-Configura%C3%A7%C3%A3o-inicial-do-Git)
 - [git-config: init.defaultBranch e pull.rebase](https://git-scm.com/docs/git-config)
 - [Gerar uma chave SSH e adicionar ao GitHub](https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 - [Chaves SSH no GitLab](https://docs.gitlab.com/user/ssh/)

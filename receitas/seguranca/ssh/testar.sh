@@ -13,7 +13,7 @@ senha_certa() { [ "$(valor_efetivo passwordauthentication)" = "$senha_esperada" 
 tentativas() { [ "$(valor_efetivo maxauthtries)" = 4 ]; }
 ligado_no_boot() { systemctl is-enabled --quiet "$(unidade_ssh)"; }
 escutando() { [ -n "$(ss -Hltn 'sport = :22')" ]; }
-regra_no_firewall() { regra_existe "$(regra_ufw "$(descobrir_rede_local)")"; }
+regra_no_firewall() { ssh_liberado "$(descobrir_rede_local)"; }
 
 conferir "servidor SSH instalado (openssh-server)" pacote_instalado openssh-server
 conferir "o sshd aceita a configuração (sshd -t)" config_valida

@@ -14,6 +14,7 @@ Os ajustes do kernel que vão junto dizem que trocar ficou barato: o kernel pass
 
 ## O que muda no sistema
 
+- Se o kernel não traz o módulo do zram, como no Ubuntu Server e nas imagens de nuvem, instala os módulos extras do kernel: o `linux-modules-extra` do kernel de agora e, quando o sistema segue o kernel `linux-image-virtual`, o `linux-image-extra-virtual`, para o módulo continuar lá depois das atualizações do kernel. Num Ubuntu de desktop eles já vêm instalados.
 - Instala o pacote `systemd-zram-generator`, que cria o zram a cada boot.
 - Escreve `/etc/systemd/zram-generator.conf`: um zram de até 50% da memória (o parâmetro `porcentagem`), nunca mais de 8 GB, com compressão zstd e prioridade 100.
 - Escreve `/etc/sysctl.d/99-bora-zram.conf` com `vm.swappiness = 180`, `vm.watermark_boost_factor = 0`, `vm.watermark_scale_factor = 125` e `vm.page-cluster = 0`.
