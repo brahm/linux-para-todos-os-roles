@@ -12,6 +12,12 @@ if quem=$(outro_zram); then
     exit 0
 fi
 
+if systemd_rodando && ! modulo_do_zram; then
+    mapfile -t extras < <(pacotes_do_modulo)
+    [ "${#extras[@]}" -gt 0 ] || falha "o kernel deste computador ($(uname -r)) não traz o módulo do zram, e não achei um pacote que traga"
+    msg "O kernel deste computador não traz o módulo do zram. Ele vem nos módulos extras do kernel."
+    instalar_pacotes "${extras[@]}"
+fi
 instalar_pacotes systemd-zram-generator
 conf_esperada | escrever_arquivo "$CONF_ZRAM"
 
