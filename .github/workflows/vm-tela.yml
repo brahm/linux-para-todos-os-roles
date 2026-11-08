@@ -29,13 +29,19 @@ permissions:
 
 jobs:
   tela:
-    name: Tela ${{ matrix.distro }}
+    name: Tela ${{ matrix.distro }}${{ matrix.tela && format(' com {0}', matrix.tela) || '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         distro: [ubuntu-24.04, ubuntu-26.04, debian-13]
+        tela: [""]
+        include:
+          # Rolê 2: uma máquina antiga com Debian costuma ter o Xfce e o LightDM.
+          - distro: debian-13
+            tela: lightdm
+            sufixo: -lightdm
     steps:
       - uses: actions/checkout@v5
       - name: Rust com musl
@@ -53,7 +59,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
           ls -l /dev/kvm
       - name: Tela de login, aplicar, entrar, abrir o Firefox e desfazer
-        run: testes/vm/qemu/tela.sh ${{ matrix.distro }} target/x86_64-unknown-linux-musl/release/bora
+        run: testes/vm/qemu/tela.sh ${{ matrix.distro }} target/x86_64-unknown-linux-musl/release/bora ${{ matrix.tela }}
       - name: Console da máquina, se falhou
         if: failure()
         run: tail -n 40 /tmp/bora-tela/serial.log || true
@@ -61,14 +67,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: telas-${{ matrix.distro }}
+          name: telas-${{ matrix.distro }}${{ matrix.sufixo }}
           path: /tmp/bora-tela/telas/
           retention-days: 30
           if-no-files-found: ignore
       - name: Guardar a lista das receitas que passaram
         uses: actions/upload-artifact@v7
         with:
-          name: cobertas-${{ matrix.distro }}
+          name: cobertas-${{ matrix.distro }}${{ matrix.sufixo }}
           path: /tmp/bora-tela/cobertas.txt
           retention-days: 7
 
@@ -98,13 +104,14 @@ jobs:
         run: |
           shopt -s nullglob
           for lista in cobertas/cobertas-*/cobertas.txt; do
-            alvo=${lista#cobertas/cobertas-}; alvo=${alvo%%/*}   # ubuntu-24.04
+            alvo=${lista#cobertas/cobertas-}; alvo=${alvo%%/*}   # ubuntu-24.04 ou debian-13-lightdm
+            distro=${alvo%-lightdm}                              # o registro é o mesmo, com a tela que for
             mapfile -t receitas <"$lista"
             [ "${#receitas[@]}" -gt 0 ] || continue
             echo "== $alvo"
             antes=$(git diff receitas | sha1sum)
             python3 ferramentas/registros/registrar.py --onde vm \
-              --distro "${alvo%%-*}" --versao "${alvo#*-}" --data "$(date -u +%F)" "${receitas[@]}"
+              --distro "${distro%%-*}" --versao "${distro#*-}" --data "$(date -u +%F)" "${receitas[@]}"
             destino=testes/vm/telas/$alvo
             if [ "$(git diff receitas | sha1sum)" != "$antes" ] || [ ! -d "$destino" ]; then
               novas=(telas/telas-"$alvo"/site/*.png)
