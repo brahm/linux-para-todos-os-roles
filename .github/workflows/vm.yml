@@ -3,7 +3,7 @@
 # o firewall e o SSH, o Timeshift na própria raiz, os temporizadores e o
 # backup ao conectar o disco. É o que o contêiner não consegue provar.
 # Leva uns 20 minutos, então roda toda semana, à mão e nos pull requests que
-# mexem nessas receitas ou no próprio teste.
+# mexem nas receitas do rolê 1, no zram, no SSH ou no próprio teste.
 name: Máquina virtual
 
 on:
@@ -15,7 +15,10 @@ on:
       - ".github/workflows/vm.yml"
       - "testes/vm/qemu/**"
       - "receitas/comum.sh"
+      - "receitas/base/**"
       - "receitas/sistema/**"
+      - "receitas/desktop/codecs/**"
+      - "receitas/desktop/flatpak/**"
       - "receitas/seguranca/**"
       - "objetivos/pronto-para-estudar.yaml"
 

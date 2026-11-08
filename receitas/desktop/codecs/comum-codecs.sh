@@ -17,11 +17,13 @@ declare -A PLUGINS=(
     [a52dec]="áudio AC-3 (Dolby Digital) de filmes e DVDs"
 )
 
-# O arquivo do plugin, achado pela lista de arquivos dos pacotes.
+# O arquivo do plugin, achado pela lista de arquivos dos pacotes. A lista vem
+# inteira antes do grep: com pipefail, um "dpkg -L | grep -m1" falha quando o
+# grep sai cedo e o dpkg leva SIGPIPE, o que depende da sorte.
 arquivo_do_plugin() {
     local nome=$1 p
     for p in "${PACOTES[@]}"; do
-        dpkg -L "$p" 2>/dev/null | grep -m1 "/gstreamer-1.0/libgst$nome\.so$" && return 0
+        grep -m1 "/gstreamer-1.0/libgst$nome\.so$" <<<"$(dpkg -L "$p" 2>/dev/null)" && return 0
     done
     return 1
 }
