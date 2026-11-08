@@ -27,17 +27,26 @@ cd "$PASTA"
 # shellcheck source=maquina.sh
 source "$RAIZ/testes/vm/qemu/maquina.sh"
 
-# Grava a tela num PNG em $PASTA/telas e confere que ela não está vazia.
+# Grava a tela num PNG em $PASTA/telas e confere que ela não está vazia. A
+# sessão pode já existir antes de a tela terminar de desenhar (a tela de
+# login do Ubuntu 24.04 já apareceu toda preta), então tenta por até 1 minuto.
 capturar() {
     local nome=$1
-    monitor "screendump $PASTA/telas/$nome.ppm"
-    for _ in $(seq 1 10); do
-        [ -s "telas/$nome.ppm" ] && break
-        sleep 1
+    for tentativa in $(seq 1 12); do
+        rm -f "telas/$nome.ppm"
+        monitor "screendump $PASTA/telas/$nome.ppm"
+        for _ in $(seq 1 10); do
+            [ -s "telas/$nome.ppm" ] && break
+            sleep 1
+        done
+        if python3 "$RAIZ/testes/vm/qemu/captura.py" "telas/$nome.ppm" "telas/$nome.png" "telas/site/$nome.png"; then
+            rm -f "telas/$nome.ppm"
+            return 0
+        fi
+        echo "a tela ainda não mostra nada (tentativa $tentativa); esperando"
+        sleep 5
     done
-    python3 "$RAIZ/testes/vm/qemu/captura.py" "telas/$nome.ppm" "telas/$nome.png" "telas/site/$nome.png" ||
-        falhou "a captura $nome não mostra nada"
-    rm -f "telas/$nome.ppm"
+    falhou "a captura $nome não mostra nada"
 }
 
 etapa "Preparar a máquina ($DISTRO)"
