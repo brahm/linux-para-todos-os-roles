@@ -145,7 +145,13 @@ case "${1:?fase}" in
             printf '%s\n' "$saida"
             grep -q "Não há nada para desfazer" <<<"$saida" && break
         done
-        grep -q '^/dev/zram' /proc/swaps && falhou "o zram continuou ligado depois de desfazer"
+        if grep -q '^/dev/zram' /proc/swaps; then
+            # O que ligou o zram de novo (ou não o deixou desligar).
+            swapon --show || true
+            systemctl status --no-pager 'dev-zram*.swap' 'systemd-zram-setup@*.service' || true
+            journalctl -b --no-pager -u 'dev-zram*.swap' -u 'systemd-zram-setup@*' | tail -n 30 || true
+            falhou "o zram continuou ligado depois de desfazer"
+        fi
         if command -v ufw >/dev/null; then
             grep -q 'Status: active' <<<"$(ufw status)" && falhou "o firewall continuou ligado depois de desfazer"
         fi

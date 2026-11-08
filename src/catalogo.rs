@@ -307,10 +307,16 @@ impl Receita {
         self.parametros.iter().find(|p| p.nome == nome)
     }
 
+    /// O teste que passou nessa distro e versão, preferindo o de uma máquina
+    /// virtual ou de verdade ao de contêiner, qualquer que seja a ordem no
+    /// registro.
     pub fn testada_em(&self, distro: &str, base: &str) -> Option<&Teste> {
+        let passou = |t: &&Teste| t.distro == distro && t.versao == base && t.resultado == "ok";
         self.testes
             .iter()
-            .find(|t| t.distro == distro && t.versao == base && t.resultado == "ok")
+            .filter(passou)
+            .find(|t| t.onde != "conteiner")
+            .or_else(|| self.testes.iter().find(passou))
     }
 
     pub fn secao_leiame(&self, titulo: &str) -> String {
@@ -902,6 +908,23 @@ mod testes {
         let c = Catalogo::carregar(&raiz());
         assert_eq!(c.erros, Vec::<String>::new());
         assert!(c.receitas.len() >= 3);
+    }
+
+    #[test]
+    fn testada_em_prefere_a_maquina_virtual() {
+        let c = Catalogo::carregar(&raiz());
+        let mut r = c.receita("sistema/zram").unwrap().clone();
+        let teste = |onde: &str| Teste {
+            distro: "ubuntu".into(),
+            versao: "26.04".into(),
+            onde: onde.into(),
+            resultado: "ok".into(),
+        };
+        r.testes = vec![teste("conteiner"), teste("vm")];
+        assert_eq!(r.testada_em("ubuntu", "26.04").unwrap().onde, "vm");
+        r.testes = vec![teste("conteiner")];
+        assert_eq!(r.testada_em("ubuntu", "26.04").unwrap().onde, "conteiner");
+        assert!(r.testada_em("debian", "13").is_none());
     }
 
     #[test]
