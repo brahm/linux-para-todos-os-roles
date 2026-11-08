@@ -4,21 +4,27 @@
     ferramentas/registros/registrar.py --onde vm --distro ubuntu --versao 24.04 \\
         --data 2026-11-08 sistema/zram seguranca/ssh ...
 
+    ferramentas/registros/registrar.py --onde conteiner --distro debian --versao 13 \
+        --data 2026-11-08 --testadas-na-familia debian
+
 Cada receita guarda um registro por distro, versão, lugar (contêiner, máquina
-virtual ou computador de verdade) e autor: se já existe um com os quatro iguais,
-ele é
-atualizado com a data e o resultado novos; se não, entra no fim da lista
-"testes:". Assim o teste semanal não faz a lista crescer sem fim.
+virtual ou computador de verdade) e autor. Se já existe um com os quatro
+iguais, ele só muda quando o resultado mudou ou quando a data dele passou de
+30 dias; se não existe, entra no fim da lista "testes:". Assim os testes
+automáticos não fazem a lista crescer sem fim nem fazem um commit por semana
+só para trocar a data.
 
 Mexe só no bloco "testes:", que é sempre o último do receita.yaml, e deixa o
 resto do arquivo como está.
 """
 import argparse
+import datetime
 import pathlib
 import re
 import sys
 
 RAIZ = pathlib.Path(__file__).resolve().parents[2]
+VALIDADE = datetime.timedelta(days=30)
 ORDEM = ["distro", "versao", "data", "por", "onde", "resultado"]
 
 
@@ -53,6 +59,22 @@ def escrever(registro):
     return texto
 
 
+def dias(data):
+    try:
+        return datetime.date.fromisoformat(data)
+    except ValueError:
+        return datetime.date.min
+
+
+def testadas_na_familia(familia):
+    """As receitas marcadas como "testada" na família: as que o CI em contêiner roda."""
+    achadas = []
+    for arquivo in sorted((RAIZ / "receitas").glob("*/*/receita.yaml")):
+        if re.search(rf"^  {re.escape(familia)}: testada\s*$", arquivo.read_text(), re.M):
+            achadas.append(str(arquivo.parent.relative_to(RAIZ / "receitas")))
+    return achadas
+
+
 def registrar(receita, novo):
     arquivo = RAIZ / "receitas" / receita / "receita.yaml"
     if not arquivo.is_file():
@@ -66,8 +88,10 @@ def registrar(receita, novo):
     chave = lambda r: (r.get("distro"), r.get("versao"), r.get("onde", "vm"), r.get("por"))
     for r in registros:
         if chave(r) == chave(novo):
-            mudou = any(r.get(k) != v for k, v in novo.items())
-            r.update(novo)
+            velho = r.get("resultado") == novo["resultado"] and dias(novo["data"]) - dias(r.get("data", "")) < VALIDADE
+            mudou = not velho and any(r.get(k) != v for k, v in novo.items())
+            if mudou:
+                r.update(novo)
             break
     else:
         registros.append(dict(novo))
@@ -86,8 +110,14 @@ def main():
     p.add_argument("--data", required=True)
     p.add_argument("--por", default="testes-automaticos")
     p.add_argument("--resultado", default="ok")
-    p.add_argument("receitas", nargs="+")
+    p.add_argument("--testadas-na-familia", metavar="FAMILIA",
+                   help="registra todas as receitas marcadas como testada nesta família")
+    p.add_argument("receitas", nargs="*")
     a = p.parse_args()
+    if a.testadas_na_familia:
+        a.receitas += testadas_na_familia(a.testadas_na_familia)
+    if not a.receitas:
+        p.error("diga as receitas ou use --testadas-na-familia")
     novo = {"distro": a.distro, "versao": a.versao, "data": a.data, "por": a.por, "onde": a.onde, "resultado": a.resultado}
     for receita in a.receitas:
         print(f"{receita}: {'registrado' if registrar(receita, novo) else 'já estava registrado'}")

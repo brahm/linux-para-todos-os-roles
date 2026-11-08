@@ -6,9 +6,11 @@
 # consegue provar. Um rolê novo em objetivos/ entra sozinho.
 #
 # Roda toda semana, à mão e nos pull requests que mexem nas receitas, nos
-# rolês ou no próprio teste. Na main (no agendamento ou à mão), quando passa,
-# grava nas receitas o registro com "onde: vm" e gera o site de novo; quando o
-# agendamento falha, abre uma issue com a etiqueta vm (ou comenta na aberta).
+# rolês, no código do bora ou no próprio teste. Na main (no agendamento ou à
+# mão), quando passa, grava nas receitas o registro com "onde: vm" (só quando
+# o resultado muda ou o registro passou de 30 dias) e gera o site de novo;
+# quando o agendamento falha, abre uma issue com a etiqueta vm (ou comenta na
+# que estiver aberta).
 name: Máquina virtual
 
 on:
@@ -21,6 +23,9 @@ on:
       - "testes/vm/qemu/**"
       - "receitas/**/*.sh"
       - "objetivos/*.yaml"
+      - "src/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
 
 permissions:
   contents: read
@@ -88,34 +93,10 @@ jobs:
             python3 ferramentas/registros/registrar.py --onde vm \
               --distro "${alvo%%-*}" --versao "${alvo#*-}" --data "$(date -u +%F)" "${receitas[@]}"
           done
-      - name: Gerar o site de novo
-        run: |
-          python3 -c 'import yaml' 2>/dev/null || pip install --quiet pyyaml
-          python3 ferramentas/catalogo/gerar.py
-      - name: Gravar na main
+      - name: Gravar na main e publicar o site
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          git add receitas docs
-          if git diff --cached --quiet; then
-            echo "Nada novo para registrar."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -q -m "Registra o teste na máquina virtual de $(date -u +%F)"
-          gravou=nao
-          for tentativa in 1 2 3; do
-            if git pull -q --rebase origin main && git push -q origin HEAD:main; then
-              gravou=sim
-              break
-            fi
-            sleep $((tentativa * 5))
-          done
-          [ "$gravou" = sim ] || { echo "Não consegui gravar na main." >&2; exit 1; }
-          # Um push feito pelo próprio workflow não dispara outros workflows,
-          # então o site é publicado por aqui.
-          gh workflow run site.yml --ref main
+        run: ferramentas/registros/gravar-na-main.sh "Registra o teste na máquina virtual de $(date -u +%F)"
 
   # No domingo ninguém está olhando: a falha vira uma issue.
   avisar:

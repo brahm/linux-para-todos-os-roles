@@ -32,7 +32,7 @@ jobs:
       - name: Catálogo
         run: cargo run --quiet -- conferir
       - name: shellcheck
-        run: shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh testes/conteiner/*.sh testes/vm/qemu/*.sh ferramentas/pipes/*.sh ferramentas/notas/*.sh
+        run: shellcheck -x -P SCRIPTDIR receitas/comum.sh receitas/*/*/*.sh testes/conteiner/*.sh testes/vm/qemu/*.sh ferramentas/pipes/*.sh ferramentas/notas/*.sh ferramentas/registros/*.sh
       - name: Pipes que quebram com pipefail
         run: ferramentas/pipes/conferir.sh
 
@@ -61,7 +61,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        imagem: ["ubuntu:24.04", "ubuntu:26.04", "debian:13"]
+        include:
+          - { imagem: "ubuntu:24.04", distro: ubuntu, versao: "24.04" }
+          - { imagem: "ubuntu:26.04", distro: ubuntu, versao: "26.04" }
+          - { imagem: "debian:13", distro: debian, versao: "13" }
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v7
@@ -86,3 +89,42 @@ jobs:
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -e PERFIL=web -v "$PWD":/bora bora-teste ./testes/conteiner/comecar-a-programar.sh
       - name: Histórico do /etc, SSH e Sem Snap
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/novas-capacidades.sh
+      - name: Marcar que a distro passou
+        run: mkdir -p passou && echo "${{ matrix.distro }} ${{ matrix.versao }}" >passou/distro.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: passou-${{ matrix.distro }}-${{ matrix.versao }}
+          path: passou/distro.txt
+          retention-days: 7
+
+  # Na main, grava o registro "onde: conteiner" de cada distro que passou, nas
+  # receitas marcadas como "testada" na família dela, que são as que os passos
+  # acima aplicam. Só muda o arquivo quando o resultado muda ou o registro
+  # passou de 30 dias.
+  registrar:
+    name: Gravar o registro nas receitas
+    needs: receitas
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: passou-*
+          path: passou
+      - name: Gravar nas receitas
+        run: |
+          shopt -s nullglob
+          for marca in passou/passou-*/distro.txt; do
+            read -r distro versao <"$marca"
+            echo "== $distro $versao"
+            python3 ferramentas/registros/registrar.py --onde conteiner \
+              --distro "$distro" --versao "$versao" --data "$(date -u +%F)" --testadas-na-familia "$distro"
+          done
+      - name: Gravar na main e publicar o site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ferramentas/registros/gravar-na-main.sh "Registra o teste em contêiner de $(date -u +%F)"

@@ -120,3 +120,14 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | As diferenças conhecidas do Linux Mint, do Pop!_OS e do Zorin OS ficam registradas em `familias/README.md` | O plano previa um `familias/derivadas.yaml`, mas o `bora` ainda não lê essas diferenças. Enquanto forem só informação, o README basta |
 | A issue #16 (segfault do Timeshift) é fechada em 8/2/2027 se não se repetir | Três meses de testes semanais sem o erro bastam para considerar que foi do contêiner |
 | O rolê 4, Vibecodar, começa quando Brahm pedir | Ele fecha a primeira versão útil, mas não tem data |
+
+## 8 de novembro de 2026: quinta rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| A versão sobe para 0.5.2. Escolhido por Brahm em 8/11/2026 | A 0.5.1 ainda trazia o binário ARM, e as notas em português só rodam numa versão nova |
+| A VM também roda nos pull requests que mexem no código do `bora` (`src/`) e no `Cargo.toml` ou no `Cargo.lock` | Uma mudança no executor pode quebrar o que só a VM confere, e antes ela só apareceria no domingo seguinte |
+| O workflow de testes grava sozinho, na `main`, o registro `onde: conteiner` das receitas marcadas como "testada" em cada família que passou | O registro em contêiner tinha sido escrito à mão em 6/11 e não acompanhava os testes que rodam a cada pull request |
+| Os registros automáticos só mudam quando o resultado muda ou quando passam de 30 dias | Assim, o histórico e a lista "Últimas mudanças" do site não ganham um commit por semana só para trocar a data. O site mostra a data do último registro, que nunca tem mais de um mês |
+| O `bora` como pacote nas distros compatíveis entra na fase "A casa, o Fedora e os agentes", junto do instalador único | Foi a direção dada ao tirar o ARM. Instalar e atualizar pelo gerenciador de pacotes é o caminho natural para quem não quer baixar binário |
+| Uma tarefa agendada confere a issue #16 em 8/2/2027 e a fecha se o segfault não voltou | O prazo precisava de alguém que lembrasse dele |
