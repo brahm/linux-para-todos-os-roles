@@ -131,3 +131,14 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | Os registros automáticos só mudam quando o resultado muda ou quando passam de 30 dias | Assim, o histórico e a lista "Últimas mudanças" do site não ganham um commit por semana só para trocar a data. O site mostra a data do último registro, que nunca tem mais de um mês |
 | O `bora` como pacote nas distros compatíveis entra na fase "A casa, o Fedora e os agentes", junto do instalador único | Foi a direção dada ao tirar o ARM. Instalar e atualizar pelo gerenciador de pacotes é o caminho natural para quem não quer baixar binário |
 | Uma tarefa agendada confere a issue #16 em 8/2/2027 e a fecha se o segfault não voltou | O prazo precisava de alguém que lembrasse dele |
+
+## 8 de novembro de 2026: a máquina virtual com tela
+
+| Decisão | Por quê |
+|---|---|
+| Um segundo workflow, Máquina virtual com tela, liga uma VM com a tela de login do GNOME e confere o ambiente leve, o navegador enxuto e o Sem Snap, com capturas da tela de cada passo. Pedido por Brahm em 8/11/2026 | Eram as três receitas que nenhum teste automático aplicava. Os roteiros manuais continuam em paralelo |
+| A tela de login é a do GNOME (GDM), instalada sobre a imagem de nuvem, com a entrada automática da pessoa ligada só durante o teste | É a tela de login do Ubuntu e do Debian com GNOME, onde a pessoa escolhe o ambiente leve. A entrada automática deixa conferir, sem teclado, que a receita fez o ambiente leve abrir por padrão |
+| O Xfce é testado no Ubuntu e o LXQt no Debian | É a mesma divisão dos testes em contêiner, e assim os dois ambientes passam por uma máquina de verdade |
+| A captura reprova uma tela quase toda de uma cor só ou ainda em modo texto; o resto é conferido de dentro da máquina (sessões do systemd-logind, processos e o perfil do Firefox) | Uma imagem não diz sozinha se é a tela certa, mas prova que algo foi desenhado. Quem quiser ver, abre o artefato |
+| O registro `onde: vm` dessas receitas conta para o `testado` como o das outras, mas não dispensa o roteiro manual | A regra de quando um rolê vira `testado` continua a mesma até Brahm decidir outra coisa |
+| A parte que liga a máquina saiu do `rodar.sh` para o `maquina.sh`, que as duas VMs usam | Assim, uma correção no boot ou no SSH vale para as duas |

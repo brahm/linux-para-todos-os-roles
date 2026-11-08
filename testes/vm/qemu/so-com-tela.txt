@@ -1,6 +1,8 @@
-# Receitas que a máquina virtual não aplica, porque o resultado só se confere
-# com tela, teclado e alguém olhando. Elas ficam para os roteiros manuais
-# (testes/vm/<rolê>.md). Uma por linha: o id e, depois, o motivo.
+# Receitas que a máquina virtual sem tela (rodar.sh) não aplica, porque o
+# resultado só se confere com tela. Elas rodam na máquina com tela de login
+# (tela.sh, workflow Máquina virtual com tela), que aplica todas desta lista,
+# e continuam nos roteiros manuais (testes/vm/<rolê>.md), para alguém olhar.
+# Uma por linha: o id e, depois, o motivo.
 desktop/ambiente-leve   o Xfce ou o LXQt aparecem na tela de login
 desktop/navegador-leve  o Firefox abre com o uBlock Origin e sem os atalhos patrocinados
 desktop/sem-snap        o Firefox e o Thunderbird da Mozilla abrem com os dados de antes

@@ -23,7 +23,15 @@ cargo build --release --target x86_64-unknown-linux-musl
 testes/vm/qemu/rodar.sh debian-13 target/x86_64-unknown-linux-musl/release/bora
 ```
 
-Ela não substitui os roteiros abaixo: a tela de login, o player de vídeo, a loja de aplicativos e os perfis do Firefox e do Thunderbird só se conferem olhando.
+### A máquina com tela
+
+As receitas de `so-com-tela.txt` rodam num segundo workflow, [Máquina virtual com tela](../../.github/workflows/vm-tela.yml), com o [`qemu/tela.sh`](qemu/tela.sh), nas mesmas três distros. Ele instala na imagem de nuvem a tela de login do GNOME (o GDM) e o Firefox, como num desktop (no Ubuntu, o Firefox do Snap), e confere a tela de login. Depois aplica as três receitas (duas vezes, a segunda sem mudar nada), com o Xfce no Ubuntu e o LXQt no Debian e com o ambiente leve como padrão da pessoa, liga a entrada automática e reinicia. Confere que a pessoa entrou sozinha no ambiente leve, abre o Firefox na sessão dela e espera o uBlock Origin ser instalado pela política da receita. No fim, desliga a entrada automática, reinicia, desfaz tudo e confere que a tela de login volta. Cada passo tira uma captura da tela pelo monitor do QEMU, que precisa mostrar alguma coisa (uma tela preta ou ainda em modo texto reprova). As capturas ficam por 30 dias no artefato `telas-<distro>` da execução, com a do momento da falha (`falhou.png`), quando há uma. O registro na `main` e a issue de domingo funcionam como no outro workflow.
+
+```sh
+testes/vm/qemu/tela.sh ubuntu-24.04 target/x86_64-unknown-linux-musl/release/bora
+```
+
+As duas não substituem os roteiros abaixo: se o painel do Xfce está no lugar, se o vídeo toca, se a loja de aplicativos abre e se os favoritos e as senhas vieram no perfil do Firefox, só alguém olhando confere.
 
 ## Distros
 
