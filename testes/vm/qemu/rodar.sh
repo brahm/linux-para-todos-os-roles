@@ -61,8 +61,11 @@ if [ ! -w /dev/kvm ]; then
 fi
 
 etapa "Ligar a máquina"
+# O bootindex é obrigatório: sem ele, a BIOS tenta só o primeiro disco que
+# acha, que pode ser o externo, e para em "No bootable device".
 qemu-system-x86_64 "${ACEL[@]}" -m 4096 -smp 2 \
-    -drive file=disco.qcow2,if=virtio,format=qcow2 \
+    -drive file=disco.qcow2,if=none,id=raiz,format=qcow2 \
+    -device virtio-blk-pci,drive=raiz,bootindex=0 \
     -drive file=seed.img,if=virtio,format=raw,readonly=on \
     -device virtio-scsi-pci,id=scsi \
     -blockdev driver=file,filename="$PASTA/externo.img",node-name=externo-arq \
