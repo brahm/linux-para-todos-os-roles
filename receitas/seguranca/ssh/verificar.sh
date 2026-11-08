@@ -16,7 +16,7 @@ if [ ! -f "$CONFIG" ] || ! cmp -s <(conteudo_config) "$CONFIG"; then
 fi
 if ufw_ativo; then
     rede=$(descobrir_rede_local)
-    if [ -n "$rede" ] && ! regra_existe "$(regra_ufw "$rede")"; then
+    if [ -n "$rede" ] && ! ssh_liberado "$rede"; then
         msg "O firewall ainda não libera o SSH para a rede local."
         exit 1
     fi

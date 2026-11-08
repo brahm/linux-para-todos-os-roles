@@ -34,7 +34,7 @@ if ufw_ativo; then
         falha "o firewall está ligado e não encontrei a rede local; informe rede_local no plano, por exemplo 192.168.0.0/24"
     fi
     regra=$(regra_ufw "$rede")
-    if ! regra_existe "$regra"; then
+    if ! ssh_liberado "$rede"; then
         # shellcheck disable=SC2086
         ufw $regra >/dev/null
         printf '%s\n' "$regra" >>"$BORA_ESTADO/regras-ufw"

@@ -2,11 +2,15 @@
 set -euo pipefail
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
+# shellcheck source=comum-ssh.sh
+source ./comum-ssh.sh
 exigir_apt
 
 if [ -f "$BORA_ESTADO/regras-ufw" ]; then
     while read -r regra; do
         [ -n "$regra" ] || continue
+        # Se a receita do firewall pôs o comentário dela na regra, a regra é dela agora.
+        regra_existe "$regra" || continue
         # shellcheck disable=SC2086
         ufw delete $regra >/dev/null 2>&1 || true
         msg "Regra do firewall removida: $regra"
