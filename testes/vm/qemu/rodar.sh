@@ -95,6 +95,14 @@ esperar_ssh() {
     tail -n 50 serial.log >&2 || true
     falhou "a máquina não respondeu pelo SSH"
 }
+# Roda uma fase do na-vm.sh. Se ela falha, mostra os avisos do boot atual,
+# que costumam dizer o porquê (uma unidade do systemd que não subiu, por exemplo).
+fase() {
+    vm "sudo /bora/testes/vm/qemu/na-vm.sh $1" && return 0
+    echo "--- avisos do journal na máquina ---" >&2
+    vm "sudo journalctl -b -p warning --no-pager | tail -n 60" >&2 || true
+    falhou "a fase $1 falhou"
+}
 esperar_ssh
 vm "uname -r; cat /etc/os-release | head -n 2"
 
@@ -105,23 +113,23 @@ scp -q -P "$PORTA" -i chave -o StrictHostKeyChecking=no -o UserKnownHostsFile=/d
 vm "sudo mkdir -p /bora && sudo tar -C /bora -xzf /tmp/repo.tar.gz && sudo install -m 0755 /tmp/bora /usr/local/bin/bora"
 
 etapa "Aplicar, na máquina"
-vm "sudo /bora/testes/vm/qemu/na-vm.sh aplicar"
+fase aplicar
 
 etapa "Reiniciar"
 boot=$(vm cat /proc/sys/kernel/random/boot_id)
 vm "sudo systemctl reboot" || true
 sleep 5
 esperar_ssh "$boot"
-vm "sudo /bora/testes/vm/qemu/na-vm.sh depois-do-reinicio"
+fase depois-do-reinicio
 
 etapa "Desconectar e conectar de novo o disco externo"
-vm "sudo /bora/testes/vm/qemu/na-vm.sh antes-de-conectar"
+fase antes-de-conectar
 monitor "device_del disco-externo"
 sleep 5
 monitor "device_add scsi-hd,bus=scsi.0,drive=externo,id=disco-externo,removable=on"
-vm "sudo /bora/testes/vm/qemu/na-vm.sh depois-de-conectar"
+fase depois-de-conectar
 
 etapa "Desfazer"
-vm "sudo /bora/testes/vm/qemu/na-vm.sh desfazer"
+fase desfazer
 
 etapa "Tudo certo em $DISTRO"

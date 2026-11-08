@@ -32,6 +32,10 @@ sysctl_esperado | escrever_arquivo "$CONF_SYSCTL"
 
 if systemd_rodando; then
     msg "Ligando o zram."
+    # O pacote só carrega o módulo no boot (por /usr/lib/modules-load.d). Sem
+    # carregar agora, o /dev/zram0 não aparece e o systemd desiste depois de
+    # 90 segundos, como a VM do CI mostrou no Ubuntu 24.04.
+    modprobe zram
     systemctl daemon-reload
     # Se já havia um zram desta receita com outro tamanho, ele é refeito.
     systemctl stop dev-zram0.swap 2>/dev/null || true
