@@ -1,0 +1,54 @@
+# Roda a parte dos rolês que não depende de tela numa máquina virtual de
+# verdade (QEMU com KVM), no Ubuntu 24.04 e no Debian 13: o boot com o zram,
+# o firewall e o SSH, o Timeshift na própria raiz, os temporizadores e o
+# backup ao conectar o disco. É o que o contêiner não consegue provar.
+# Leva uns 20 minutos, então roda toda semana, à mão e nos pull requests que
+# mexem nessas receitas ou no próprio teste.
+name: Máquina virtual
+
+on:
+  schedule:
+    - cron: "41 8 * * 0" # domingo, 5h41 em Brasília
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/vm.yml"
+      - "testes/vm/qemu/**"
+      - "receitas/comum.sh"
+      - "receitas/sistema/**"
+      - "receitas/seguranca/**"
+      - "objetivos/pronto-para-estudar.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  vm:
+    name: VM ${{ matrix.distro }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu-24.04, debian-13]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rust com musl
+        run: |
+          rustup toolchain install stable --profile minimal --target x86_64-unknown-linux-musl
+          rustup default stable
+      - name: Compilar o bora
+        run: cargo build --release --locked --target x86_64-unknown-linux-musl
+      - name: QEMU e KVM
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends qemu-system-x86 qemu-utils cloud-image-utils socat
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+      - name: Ligar, aplicar, reiniciar, reconectar o disco e desfazer
+        run: testes/vm/qemu/rodar.sh ${{ matrix.distro }} target/x86_64-unknown-linux-musl/release/bora
+      - name: Console da máquina
+        if: always()
+        run: tail -n 200 /tmp/bora-vm/serial.log || true

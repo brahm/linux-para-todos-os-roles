@@ -44,6 +44,5 @@ As cópias dos perfis em `~/.mozilla` e em `~/.var/app` ficam onde estão: são 
 ## Fontes
 
 - [Instalar o Firefox no Linux, pela Mozilla](https://support.mozilla.org/kb/install-firefox-linux)
-- [Repositório APT da Mozilla](https://packages.mozilla.org/apt)
 - [apt_preferences(5)](https://manpages.debian.org/stable/apt/apt_preferences.5.en.html)
-- [Snap, na documentação do Ubuntu](https://snapcraft.io/docs/getting-started)
+- [Pacotes snap e deb, na documentação do Ubuntu](https://ubuntu.com/desktop/docs/en/latest/explanation/snap-and-deb-packages/)

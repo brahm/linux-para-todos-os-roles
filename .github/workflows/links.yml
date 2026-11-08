@@ -23,6 +23,8 @@ jobs:
         with:
           # 403 e 429: sites que recusam robôs ou pedem calma, mas funcionam no navegador.
           # Os links de abrir issue e de histórico do GitHub pedem login.
+          # A página 404 usa endereços a partir da raiz do domínio (/linux-para-todos-os-roles/...),
+          # que só existem publicados, então fica de fora.
           args: >-
             --no-progress
             --max-concurrency 8
@@ -31,6 +33,7 @@ jobs:
             --accept 200..=299,403,429
             --exclude '^https://github\.com/brahm/linux-para-todos-os-roles/(issues/new|commits)'
             --root-dir ${{ github.workspace }}/docs
+            --exclude-path 'docs/404\.html'
             'docs/**/*.html'
             '*.md'
             'receitas/**/*.md'

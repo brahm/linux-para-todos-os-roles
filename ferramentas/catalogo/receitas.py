@@ -631,7 +631,7 @@ def pagina_codecs():
     corpo.append(secao("onde-testada", "Onde funciona", "Distros e testes", "", onde_testada(r)))
     corpo.append(secao("roles", "Onde ela entra", "Rolês que usam esta receita", "", roles_que_usam(rid)))
     corpo.append(secao("fontes", "Fontes", "Para ler mais", "", fontes([
-        ("Restricted formats", "Documentação do Ubuntu", "https://help.ubuntu.com/community/RestrictedFormats"),
+        ("ubuntu-restricted-extras", "O pacote, no arquivo do Ubuntu", "https://packages.ubuntu.com/noble/ubuntu-restricted-extras"),
         ("Multimedia codecs", "Wiki do Debian", "https://wiki.debian.org/MultimediaCodecs"),
         ("Plugins do GStreamer", "A lista oficial, com o que cada um toca", "https://gstreamer.freedesktop.org/documentation/plugins_doc.html"),
         ("LEIAME da receita", "O mesmo conteúdo, junto do código", f"{REPO}/blob/main/receitas/{rid}/LEIAME.md"),
@@ -1336,7 +1336,7 @@ def pagina_git():
         [("git config --global --list", "Mostra tudo o que está configurado no seu Git."),
          ("cat ~/.ssh/id_ed25519.pub", "Mostra a parte pública da chave, para colar no GitHub ou no GitLab."),
          ("ssh -T git@github.com", "Depois de cadastrar a chave, responde com o seu usuário do GitHub.")],
-        [("Configuração inicial do Git", "Pro Git, em português", "https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Configura%C3%A7%C3%A3o-Inicial-do-Git"),
+        [("Configuração inicial do Git", "Pro Git, em português", "https://git-scm.com/book/pt-br/v2/Primeiros-Passos-Configura%C3%A7%C3%A3o-inicial-do-Git"),
          ("Gerar uma chave SSH", "Documentação do GitHub", "https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"),
          ("Chaves SSH no GitLab", "Documentação do GitLab", "https://docs.gitlab.com/user/ssh/")])
 

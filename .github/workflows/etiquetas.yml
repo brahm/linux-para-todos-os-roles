@@ -1,0 +1,30 @@
+# Cria ou atualiza as etiquetas listadas em .github/etiquetas.txt, que os
+# formulários de issue e os workflows usam. Sem a etiqueta no repositório, o
+# GitHub abre a issue sem ela, sem avisar.
+name: Etiquetas
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/etiquetas.txt]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  etiquetas:
+    name: Sincronizar as etiquetas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Criar ou atualizar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          grep -v '^#' .github/etiquetas.txt | while IFS='|' read -r nome cor descricao; do
+            [ -n "$nome" ] || continue
+            gh label create "$nome" --color "$cor" --description "$descricao" --force
+            echo "ok: $nome"
+          done
