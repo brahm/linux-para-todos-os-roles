@@ -99,11 +99,14 @@ h1 code, h2 code, h3 code, .lema code, .legenda code { background: none; padding
 .marca-mini svg { width: 26px; height: 26px; color: var(--accent); }
 .marca-mini em { font-style: normal; color: var(--roles); }
 .topo nav { margin-left: auto; display: flex; gap: 4px; }
-.topo nav a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 600; padding: 7px 12px; border-radius: 99px; }
+.topo nav a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 600; padding: 7px 12px; border-radius: 99px; white-space: nowrap; }
 .topo nav a:hover { background: var(--line); }
 .topo .github { display: inline-flex; align-items: center; gap: 8px; }
 .topo .github svg { width: 18px; height: 18px; }
-@media (max-width: 860px) { .topo nav a:not(.github) { display: none; } }
+.topo .marca-mini { white-space: nowrap; flex-shrink: 0; }
+/* Em telas médias, o menu fica só com o essencial, para nada quebrar em duas linhas. */
+@media (max-width: 1200px) { .topo nav a.opcional { display: none; } }
+@media (max-width: 960px) { .topo nav a:not(.github) { display: none; } }
 @media (max-width: 420px) { .marca-mini span { display: none; } }
 
 /* Abertura */
