@@ -29,7 +29,8 @@ RECEITAS = {
     "seguranca/segredos": ("Verificação de segredos", "lupa", "l-vermelho", "O gitleaks confere cada commit, para nenhuma chave ir parar no GitHub."),
     "ia/caixa-de-areia": ("Caixa de areia para os agentes", "caixa", "l-marrom", "Os agentes escrevem só na pasta do projeto, sem ver as suas chaves e sem sudo."),
     "dev/editor": ("Editor de código", "janela", "l-azul", "O VS Code, o VSCodium ou o Zed, ou só o terminal."),
-    "ia/ollama": ("IA local com Ollama", "robo", "l-grafite", "Modelos de IA rodando no próprio computador, se ele aguentar."),
+    "ia/ollama": ("IA local com Ollama", "robo", "l-grafite", "Modelos de IA rodando no próprio computador, com o modelo que cabe nele."),
+    "ia/lm-studio": ("IA local com LM Studio", "janela", "l-roxo", "Modelos de IA no próprio computador, com janela para escolher e conversar."),
     "servicos/samba": ("Compartilhamento Samba", "pasta", "l-amarelo", "Uma pasta que Windows, Mac, Linux e celulares abrem pela rede."),
     "servicos/jellyfin": ("Servidor Jellyfin", "filme", "l-vermelho", "Filmes e séries para a TV e os celulares da casa."),
     "rede/tailscale": ("Tailscale", "vpn", "l-marrom", "Uma rede privada entre os seus aparelhos, sem abrir portas."),
@@ -40,7 +41,8 @@ PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/
            "sistema/etckeeper", "desktop/sem-snap",
            "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos", "seguranca/ssh",
            "dev/git", "dev/compilacao", "dev/python", "dev/node", "containers/podman",
-           "dev/ferramentas", "seguranca/segredos", "ia/chaves-de-api", "ia/agentes", "ia/caixa-de-areia", "dev/editor"]
+           "dev/ferramentas", "seguranca/segredos", "ia/chaves-de-api", "ia/agentes", "ia/caixa-de-areia", "dev/editor",
+           "ia/ollama", "ia/lm-studio"]
 
 AREAS = {
     "base": "Base",
@@ -194,7 +196,7 @@ ROLES = [
         "receitas": [("base/atualizar", ""), ("dev/git", ""), ("dev/compilacao", ""), ("dev/python", ""), ("dev/node", ""),
                      ("containers/podman", ""), ("dev/ferramentas", ""), ("seguranca/segredos", ""), ("ia/chaves-de-api", ""),
                      ("ia/agentes", ""), ("ia/caixa-de-areia", "recomendada"), ("desktop/flatpak", "com o VSCodium ou o Zed"),
-                     ("dev/editor", "")],
+                     ("dev/editor", ""), ("ia/ollama", "opcional, com o modelo que cabe na máquina"), ("ia/lm-studio", "opcional")],
         "faz": [
             "<strong>Tudo do “Começar a programar”</strong>, com o Python e o Node.js juntos, mais o ripgrep, o fd, o jq e o GitHub CLI, que os agentes usam o tempo todo.",
             "<strong>Instala os agentes que você escolher</strong> (Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe) na sua conta, sem sudo, pelos pacotes oficiais de cada fabricante.",
@@ -203,23 +205,26 @@ ROLES = [
             "<strong>Confere cada commit com o gitleaks</strong>, e o Git passa a ignorar os arquivos <code>.env</code> em todos os projetos.",
             "<strong>Coloca os agentes numa caixa de areia</strong>, se você quiser, onde eles só escrevem na pasta do projeto e não veem as suas chaves SSH.",
             "<strong>Instala o editor</strong> que você escolher: VS Code, VSCodium, Zed ou só o terminal.",
+            "<strong>Roda modelos no próprio computador</strong>, se você quiser, com o Ollama ou o LM Studio. O bora mede a memória da máquina, sugere o modelo que cabe e, no Ollama, baixa esse modelo se você aceitar.",
         ],
         "nao_faz": [
             "Nenhum agente recebe sudo. Quem aplica mudanças no sistema é sempre você, pelo bora.",
             "Não pergunta nem guarda a sua chave de API no plano: você cola a chave no arquivo, depois.",
             "Não assina planos pagos nem cria contas por você.",
-            "Ainda não traz o Antigravity CLI, que só tem instalador do tipo <code>curl | sh</code>, nem o Ollama, para modelos locais.",
+            "Ainda não traz o Antigravity CLI, que só tem instalador do tipo <code>curl | sh</code>.",
+            "Não promete milagre com modelo local: numa máquina com pouca memória, o bora diz que o agente fica melhor na nuvem.",
             "Não esconde que este é o rolê que mais quebra: os agentes mudam toda semana, e a máquina virtual do CI confere todos toda semana.",
         ],
         "porques": [
             ("Por que caixa de areia?", "Um agente roda comandos no seu computador. Na caixa, um comando errado, ou uma instrução escondida num arquivo do projeto, estraga no máximo a pasta do projeto, que está no Git."),
             ("Por que o gitleaks?", "Colar uma chave de API num arquivo e fazer commit é o acidente mais comum de quem começa com agentes. O gitleaks barra o commit antes."),
             ("Por que qualquer agente serve?", "O rolê não depende de um fornecedor. O OpenCode funciona com modelos gratuitos, o Codex com a conta gratuita do ChatGPT e o Copilot CLI com o plano gratuito do Copilot."),
+            ("Por que modelo local?", "Sem conta, sem cota e sem o código sair do computador. O preço é memória: o <code>bora modelos</code> mostra o que cabe, e os modelos que usam poucos parâmetros por vez andam bem até sem placa de vídeo."),
             ("Por que os agentes na minha conta?", "Assim eles nunca rodam como root e se atualizam sozinhos, sem sudo. É também o que deixa a caixa de areia fazer sentido."),
         ],
-        "pronto_quando": "Cada agente responde no terminal (na primeira vez, ele pede para entrar na sua conta), e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.",
-        "como_desfazer": "O bora remove os agentes, o editor, o gitleaks e a caixa de areia que instalou, e volta o Git e o .bashrc ao que eram. Os seus projetos, a chave SSH, os logins dos agentes e o arquivo de chaves, se você colou alguma, ficam onde estão.",
-        "perguntas": ["Quais agentes você quer: Claude Code, Codex, Copilot CLI, OpenCode ou Mistral Vibe? (o padrão é o OpenCode)", "Vai usar chave de API: OpenRouter, DeepSeek ou outra? (o padrão é não)", "Qual editor: VS Code, VSCodium, Zed ou só o terminal? (o padrão é o terminal)", "Quer rodar os agentes numa caixa de areia? (o padrão é sim)", "Que e-mail vai nos seus commits? Use o mesmo da sua conta no GitHub ou no GitLab."],
+        "pronto_quando": "Cada agente responde no terminal (na primeira vez, ele pede para entrar na sua conta), e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave. Com o Ollama, o modelo baixado responde a um <code>ollama run</code> no terminal.",
+        "como_desfazer": "O bora remove os agentes, o editor, o gitleaks, a caixa de areia, o Ollama (com os modelos dele) e o LM Studio que instalou, e volta o Git e o .bashrc ao que eram. Os seus projetos, a chave SSH, os logins dos agentes e o arquivo de chaves, se você colou alguma, ficam onde estão.",
+        "perguntas": ["Quais agentes você quer: Claude Code, Codex, Copilot CLI, OpenCode ou Mistral Vibe? (o padrão é o OpenCode)", "Vai usar chave de API: OpenRouter, DeepSeek ou outra? (o padrão é não)", "Qual editor: VS Code, VSCodium, Zed ou só o terminal? (o padrão é o terminal)", "Quer rodar os agentes numa caixa de areia? (o padrão é sim)", "Quer rodar modelos no próprio computador: Ollama, com o modelo que o bora sugere ou um seu, LM Studio ou os dois? (o padrão é não)", "Que e-mail vai nos seus commits? Use o mesmo da sua conta no GitHub ou no GitLab."],
     },
     {
         "id": "pasta-compartilhada", "num": "05", "icone": "pasta", "cor": "l-amarelo",

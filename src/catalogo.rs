@@ -880,7 +880,9 @@ impl Catalogo {
             if role.status == "planejado" {
                 continue;
             }
-            let faltam: Vec<String> = role
+            // Uma receita pode aparecer mais de uma vez no rolê, com outro "quando".
+            let mut faltam: Vec<String> = Vec::new();
+            for falta in role
                 .receitas
                 .iter()
                 .filter_map(|item| self.receita(&item.id))
@@ -892,7 +894,11 @@ impl Catalogo {
                         }
                     })
                 })
-                .collect();
+            {
+                if !faltam.contains(&falta) {
+                    faltam.push(falta);
+                }
+            }
             if role.status == "rascunho" && faltam.is_empty() {
                 problemas.push(format!(
                     "o rolê {} já passou nas máquinas virtuais no Ubuntu 24.04 e no Debian 13; troque o status para testado",
@@ -900,8 +906,6 @@ impl Catalogo {
                 ));
             }
             if role.status == "testado" && !faltam.is_empty() {
-                let mut faltam = faltam;
-                faltam.dedup();
                 problemas.push(format!(
                     "o rolê {} está como testado, mas falta o teste numa máquina virtual de: {}",
                     role.id,

@@ -6,3 +6,6 @@ dev/git.email=aluno@exemplo.com.br
 # o Zed, do Flathub, ficam no roteiro manual (testes/vm/vibecodar.md).
 ia/agentes.agentes=claude,codex,copilot,opencode,vibe
 dev/editor.editor=vscode
+# O Ollama sem modelo: a máquina tem 4 GB, e o teste de um modelo de verdade
+# fica no contêiner (testes/conteiner/vibecode-local.sh).
+ia/ollama.modelo=nenhum

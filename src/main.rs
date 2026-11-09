@@ -5,6 +5,7 @@ mod catalogo;
 mod diag;
 mod executor;
 mod fonte;
+mod modelos;
 mod plano;
 mod snapshot;
 mod ui;
@@ -124,6 +125,39 @@ fn cmd_diag(m: &ArgMatches) -> R<i32> {
     Ok(if d.suportada { 0 } else { 2 })
 }
 
+fn cmd_modelos(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
+    let d = coletar_diag();
+    let lista = modelos::carregar(&f.raiz).map_err(Erro::Msg)?;
+    let maq = modelos::Maquina::de(&d);
+    if m.get_flag("json") {
+        let avaliados: Vec<serde_json::Value> = lista
+            .modelos
+            .iter()
+            .map(|m| {
+                serde_json::json!({
+                    "modelo": m,
+                    "memoria_gb": m.memoria_gb(),
+                    "lugar": modelos::avaliar(m, &maq),
+                })
+            })
+            .collect();
+        let saida = serde_json::json!({
+            "maquina": maq,
+            "verificado_em": lista.verificado_em,
+            "modelos": avaliados,
+            "sugestao": modelos::sugerir(&lista, &maq),
+        });
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&saida).unwrap_or_default()
+        );
+    } else {
+        ui::titulo("Modelos de IA locais");
+        println!("{}", modelos::formatar(&lista, &maq, &d.hardware.video));
+    }
+    Ok(0)
+}
+
 fn cmd_lista(f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     let c = carregar_catalogo(f);
@@ -215,8 +249,10 @@ fn cmd_plano(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
         ui::erro("diga um rolê (bora plano ID) ou receitas avulsas (bora plano --receitas a,b)");
         return Ok(2);
     };
+    let mut cru = cru;
     let v = plano::validar(&cru, &c, &d)
         .map_err(|e| erros_do_plano("O plano gerado tem problemas:", e))?;
+    plano::fixar_modelo(&mut cru, &v);
     let saida = m
         .get_one::<String>("saida")
         .map(String::as_str)
@@ -332,7 +368,10 @@ fn cmd_ajuda(m: &ArgMatches) -> R<i32> {
 }
 
 fn cmd_conferir(f: &fonte::Fonte) -> R<i32> {
-    let c = Catalogo::carregar(&f.raiz);
+    let mut c = Catalogo::carregar(&f.raiz);
+    if let Err(e) = modelos::carregar(&f.raiz) {
+        c.erros.push(e);
+    }
     if !c.erros.is_empty() {
         for e in &c.erros {
             ui::erro(e);
@@ -371,13 +410,31 @@ fn pasta_planos() -> PathBuf {
     base.join("bora/planos")
 }
 
-fn perguntar_parametros(rec: &Receita, fixos: &[String]) -> R<Mapping> {
+/// Troca, no texto de uma pergunta, o que depende da máquina:
+/// {sugestao_de_modelo} vira o modelo que o "bora modelos" sugere.
+fn preencher_da_maquina(texto: &str, c: &Catalogo, d: &Diag) -> String {
+    const MARCA: &str = "{sugestao_de_modelo}";
+    if !texto.contains(MARCA) {
+        return texto.to_string();
+    }
+    let sugestao = match modelos::carregar(&c.raiz) {
+        Ok(l) => modelos::sugerir(&l, &modelos::Maquina::de(d)).motivo,
+        Err(_) => "o bora não conseguiu ler a lista de modelos".into(),
+    };
+    texto.replace(MARCA, &sugestao)
+}
+
+fn perguntar_parametros(rec: &Receita, fixos: &[String], c: &Catalogo, d: &Diag) -> R<Mapping> {
     let mut valores = Mapping::new();
     for p in &rec.parametros {
         if fixos.contains(&p.nome) || p.pergunta.is_empty() {
             continue;
         }
-        let pergunta = format!("\n{}: {}", rec.nome, p.pergunta);
+        let pergunta = format!(
+            "\n{}: {}",
+            rec.nome,
+            preencher_da_maquina(&p.pergunta, c, d)
+        );
         let padrao = p.padrao.as_ref().and_then(texto_de);
         let valor = loop {
             match p.tipo.as_str() {
@@ -443,7 +500,7 @@ fn reexecutar(args: &[&str]) -> R<i32> {
     )))
 }
 
-fn menu_finalizar(cru: Value, c: &Catalogo, d: &Diag) -> R<()> {
+fn menu_finalizar(mut cru: Value, c: &Catalogo, d: &Diag) -> R<()> {
     let v = match plano::validar(&cru, c, d) {
         Ok(v) => v,
         Err(erros) => {
@@ -453,6 +510,7 @@ fn menu_finalizar(cru: Value, c: &Catalogo, d: &Diag) -> R<()> {
             return Ok(());
         }
     };
+    plano::fixar_modelo(&mut cru, &v);
     mostrar_plano(&v);
     println!();
     let i = ui::escolher(
@@ -546,20 +604,21 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
                 ui::apagado(&format!("Para voltar atrás: {}", role.como_desfazer))
             );
             let mut respostas = BTreeMap::new();
+            let da_maquina = |t: &str| preencher_da_maquina(t, &c, &d);
             for p in &role.perguntas {
                 let resposta = if p.opcoes.is_empty() {
-                    ui::perguntar(&p.texto, p.padrao.as_deref())?
+                    ui::perguntar(&da_maquina(&p.texto), p.padrao.as_deref())?
                 } else {
                     let opcoes: Vec<Opcao> = p
                         .opcoes
                         .iter()
-                        .map(|o| Opcao::new(o, p.rotulo(o), true))
+                        .map(|o| Opcao::new(o, da_maquina(p.rotulo(o)), true))
                         .collect();
                     let padrao = p
                         .padrao
                         .as_ref()
                         .and_then(|d| p.opcoes.iter().position(|o| o == d));
-                    let i = ui::escolher(&format!("\n{}", p.texto), &opcoes, padrao)?;
+                    let i = ui::escolher(&format!("\n{}", da_maquina(&p.texto)), &opcoes, padrao)?;
                     p.opcoes[i].clone()
                 };
                 respostas.insert(p.id.clone(), resposta);
@@ -574,7 +633,7 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
             for item in role.receitas.iter().filter(|i| i.entra(&respostas)) {
                 let rec = c.receita(&item.id).unwrap();
                 let fixos: Vec<String> = item.parametros.iter().map(|(k, _)| k.clone()).collect();
-                let extra = perguntar_parametros(rec, &fixos)?;
+                let extra = perguntar_parametros(rec, &fixos, &c, &d)?;
                 plano::acrescentar_parametros(&mut cru, &item.id, &extra);
             }
             menu_finalizar(cru, &c, &d)?;
@@ -605,7 +664,7 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
                 let mut ids = Vec::new();
                 for j in escolhidas {
                     let r = &c.receitas[j];
-                    params.insert(r.id.clone(), perguntar_parametros(r, &[])?);
+                    params.insert(r.id.clone(), perguntar_parametros(r, &[], &c, &d)?);
                     ids.push(r.id.clone());
                 }
                 menu_finalizar(plano::montar_de_receitas(&ids, &fam, &params), &c, &d)?;
@@ -675,6 +734,18 @@ fn comando() -> Command {
             ),
         )
         .subcommand(sub("lista", "lista os rolês e as receitas do catálogo"))
+        .subcommand(
+            sub(
+                "modelos",
+                "mostra os modelos de IA locais que cabem nesta máquina e qual o bora sugere",
+            )
+            .arg(
+                Arg::new("json")
+                    .long("json")
+                    .action(ArgAction::SetTrue)
+                    .help("saída em JSON, para agentes e scripts"),
+            ),
+        )
         .subcommand(
             sub("plano", "monta um plano sem menus, para scripts e agentes")
                 .arg(Arg::new("role").value_name("ROLÊ").help("o id do rolê"))
@@ -817,6 +888,7 @@ fn principal() -> R<i32> {
     match m.subcommand() {
         Some(("diag", s)) => cmd_diag(s),
         Some(("lista", _)) => cmd_lista(&fonte),
+        Some(("modelos", s)) => cmd_modelos(s, &fonte),
         Some(("plano", s)) => cmd_plano(s, &fonte),
         Some(("validar", s)) => cmd_validar(s, &fonte),
         Some(("aplicar", s)) => cmd_aplicar(s, &fonte),
