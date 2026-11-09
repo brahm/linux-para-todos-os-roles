@@ -869,6 +869,53 @@ impl Catalogo {
         c
     }
 
+    /// Os rolês cujo status não bate com a regra de objetivos/README.md: um
+    /// rolê é `testado` quando cada receita dele passou numa máquina virtual
+    /// (ou de verdade) no Ubuntu 24.04 e no Debian 13. Só o `bora conferir`
+    /// olha isto, para ninguém esquecer de trocar o status.
+    pub fn status_fora_da_regra(&self) -> Vec<String> {
+        const BASES: &[(&str, &str)] = &[("ubuntu", "24.04"), ("debian", "13")];
+        let mut problemas = Vec::new();
+        for role in &self.roles {
+            if role.status == "planejado" {
+                continue;
+            }
+            // Uma receita pode aparecer mais de uma vez no rolê, com outro "quando".
+            let mut faltam: Vec<String> = Vec::new();
+            for falta in role
+                .receitas
+                .iter()
+                .filter_map(|item| self.receita(&item.id))
+                .flat_map(|r| {
+                    BASES.iter().filter_map(move |(distro, versao)| {
+                        match r.testada_em(distro, versao) {
+                            Some(t) if t.onde != "conteiner" => None,
+                            _ => Some(format!("{} em {distro} {versao}", r.id)),
+                        }
+                    })
+                })
+            {
+                if !faltam.contains(&falta) {
+                    faltam.push(falta);
+                }
+            }
+            if role.status == "rascunho" && faltam.is_empty() {
+                problemas.push(format!(
+                    "o rolê {} já passou nas máquinas virtuais no Ubuntu 24.04 e no Debian 13; troque o status para testado",
+                    role.id
+                ));
+            }
+            if role.status == "testado" && !faltam.is_empty() {
+                problemas.push(format!(
+                    "o rolê {} está como testado, mas falta o teste numa máquina virtual de: {}",
+                    role.id,
+                    faltam.join(", ")
+                ));
+            }
+        }
+        problemas
+    }
+
     pub fn lib(&self) -> PathBuf {
         self.raiz.join("receitas").join("comum.sh")
     }
@@ -934,6 +981,12 @@ mod testes {
         let c = Catalogo::carregar(&raiz());
         assert_eq!(c.erros, Vec::<String>::new());
         assert!(c.receitas.len() >= 3);
+    }
+
+    #[test]
+    fn status_dos_roles_segue_a_regra() {
+        let c = Catalogo::carregar(&raiz());
+        assert_eq!(c.status_fora_da_regra(), Vec::<String>::new());
     }
 
     #[test]

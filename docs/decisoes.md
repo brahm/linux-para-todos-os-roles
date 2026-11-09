@@ -155,6 +155,16 @@ Decididas por Brahm em 7/11/2026, a partir do levantamento do que ficou sem plan
 | As capturas da máquina com tela aparecem nas páginas das receitas, numa versão com metade do tamanho. Elas são trocadas só junto com o registro (no máximo uma vez por mês) ou quando a distro ainda não tem nenhuma | Elas sumiam em 30 dias nos artefatos. Trocar toda semana faria o repositório crescer à toa |
 | A captura só reprova uma tela com mais de 99,5% de uma cor | A tela de login do Ubuntu tem 97% de uma cor e ficava perto do limite antigo, de 98% |
 
+## 9 de novembro de 2026: oitava rodada de pendências
+
+| Decisão | Por quê |
+|---|---|
+| O rolê 4, Vibecodar, vira `testado` e sai na versão 0.6.0. Escolhido por Brahm em 9/11/2026 | Cada receita dele passou na máquina virtual do CI no Ubuntu 24.04 e no Debian 13, que é a regra. Como o catálogo vai dentro do `bora`, o rolê só chega a quem baixa a versão nova |
+| O `bora conferir` reprova um rolê `rascunho` que já cumpre a regra, e um `testado` que deixou de cumprir | Um rolê que passou nas máquinas virtuais podia ficar esquecido como `rascunho`, e um `testado` podia perder o registro sem ninguém notar |
+| Uma tarefa agendada confere, todo dia 1º, se o Antigravity CLI ganhou um instalador que o `bora` consiga conferir (um pacote no npm ou no PyPI, ou um repositório com chave) | Ele ficou de fora só por causa do `curl \| bash`; sem alguém olhando, ficaria de fora para sempre |
+| O Ollama e o LM Studio entram no rolê 4 como o vibecode local, com o comando `bora modelos`: o `bora` confere quais modelos cabem na máquina, sugere, e instala se a pessoa concordar, ou deixa a pessoa instalar por conta própria. Pedido por Brahm em 9/11/2026 | Os detalhes estão em "Vibecode local, com o Ollama e o LM Studio", mais abaixo. As duas receitas novas também passam pela máquina virtual antes de o rolê virar `testado` |
+| O roteiro manual no Linux Mint (#22) passa a incluir o Vibecodar | O Mint usa as receitas do Ubuntu, mas o Cinnamon e o editor merecem um olho |
+
 ## 8 de novembro de 2026: sétima rodada de pendências
 
 | Decisão | Por quê |

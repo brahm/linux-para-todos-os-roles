@@ -30,7 +30,8 @@ ORDEM = ["distro", "versao", "data", "por", "onde", "resultado"]
 
 def ler_testes(linhas):
     """Devolve (índice da linha "testes:", lista de registros como dicionários)."""
-    inicio = next((i for i, l in enumerate(linhas) if l.rstrip() == "testes:"), None)
+    # "testes: []" é a lista vazia, como a receita nova costuma trazer.
+    inicio = next((i for i, l in enumerate(linhas) if l.rstrip() in ("testes:", "testes: []")), None)
     if inicio is None:
         return None, []
     registros = []
@@ -84,6 +85,7 @@ def registrar(receita, novo):
     if inicio is None:
         linhas.append("testes:\n")
         inicio = len(linhas) - 1
+    linhas[inicio] = "testes:\n"
     # O autor entra na chave para o teste automático não apagar o relato de uma pessoa.
     chave = lambda r: (r.get("distro"), r.get("versao"), r.get("onde", "vm"), r.get("por"))
     for r in registros:

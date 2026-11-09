@@ -81,7 +81,7 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 | 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | testado |
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | testado |
 | 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | testado |
-| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional, editor e, se a pessoa quiser, modelos locais com o Ollama ou o LM Studio | rascunho |
+| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional, editor e, se a pessoa quiser, modelos locais com o Ollama ou o LM Studio | testado |
 | 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |
 | 7 | Acessar de fora sem abrir portas | Tailscale, com teste de CGNAT | planejado |
