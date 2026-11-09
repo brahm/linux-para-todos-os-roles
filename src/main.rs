@@ -339,6 +339,13 @@ fn cmd_conferir(f: &fonte::Fonte) -> R<i32> {
         }
         return Ok(1);
     }
+    let status = c.status_fora_da_regra();
+    if !status.is_empty() {
+        for e in &status {
+            ui::erro(e);
+        }
+        return Ok(1);
+    }
     let plural =
         |n: usize, um: &str, varios: &str| format!("{n} {}", if n == 1 { um } else { varios });
     ui::ok(&format!(

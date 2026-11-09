@@ -190,7 +190,7 @@ ROLES = [
         "resumo": "Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.",
         "para_quem": ["estudantes", "entusiastas"],
         "hardware": "4 GB de memória e 20 GB livres",
-        "status": "rascunho",
+        "status": "testado",
         "receitas": [("base/atualizar", ""), ("dev/git", ""), ("dev/compilacao", ""), ("dev/python", ""), ("dev/node", ""),
                      ("containers/podman", ""), ("dev/ferramentas", ""), ("seguranca/segredos", ""), ("ia/chaves-de-api", ""),
                      ("ia/agentes", ""), ("ia/caixa-de-areia", "recomendada"), ("desktop/flatpak", "com o VSCodium ou o Zed"),
