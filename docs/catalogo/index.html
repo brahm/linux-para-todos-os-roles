@@ -65,8 +65,8 @@
           <p class="lema">Um <strong>rolê</strong> é o que você quer fazer com o computador. Ele é feito de <strong>receitas</strong>: mudanças pequenas que o <code>bora</code> sabe verificar, aplicar, testar e desfazer.</p>
           <div class="fichas">
             <span class="ficha">7 rolês na primeira versão</span>
-            <span class="ficha feito">18 receitas prontas</span>
-            <span class="ficha planejado">9 planejadas</span>
+            <span class="ficha feito">24 receitas prontas</span>
+            <span class="ficha planejado">5 planejadas</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#roles">Ver os rolês</a>
@@ -131,8 +131,8 @@
         <a class="cartao role revelar" href="roles/vibecodar.html">
           <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
           <h3>Vibecodar</h3>
-          <p>Programar conversando com agentes de IA, com as chaves guardadas e os agentes numa caixa de areia.</p>
-          <div class="rodape"><span class="num">04</span><span class="ficha planejado">Planejado · 4 de 9 prontas</span></div>
+          <p>Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.</p>
+          <div class="rodape"><span class="num">04</span><span class="ficha agora">Em teste · 13 de 13 receitas prontas</span></div>
         </a>
         <a class="cartao role revelar" href="roles/pasta-compartilhada.html">
           <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 16.5v-3l3-2.5 3 2.5v3z"/></svg></span>
@@ -210,16 +210,16 @@
             <span><strong>Firewall</strong><span class="d">Bloqueia o que chega de fora e libera só o que o perfil pede. <code>seguranca/firewall</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/seguranca-segredos.html">
+            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5M8 10.5l2 2 3.5-3.5"/></svg></span>
+            <span><strong>Verificação de segredos</strong><span class="d">O gitleaks confere cada commit, para nenhuma chave ir parar no GitHub. <code>seguranca/segredos</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           <li><a class="cartao estacao revelar" href="receitas/seguranca-ssh.html">
             <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
             <span><strong>Acesso por SSH</strong><span class="d">Entrar nesta máquina pelo terminal de outra, só pela rede de casa. <code>seguranca/ssh</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
-          <li><div class="cartao estacao planejada">
-            <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5M8 10.5l2 2 3.5-3.5"/></svg></span>
-            <span><strong>Verificação de segredos</strong><span class="d">O gitleaks confere cada commit, para nenhuma chave ir parar no GitHub. Entra em: Vibecodar.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
           </ol>
         </div>
         <div class="area">
@@ -260,6 +260,16 @@
             <span><strong>Ferramentas de compilação</strong><span class="d">Compilador, make e o que mais os pacotes de programação pedem. <code>dev/compilacao</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/dev-editor.html">
+            <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18M6 6.3h.01M8.5 6.3h.01"/></svg></span>
+            <span><strong>Editor de código</strong><span class="d">O VS Code, o VSCodium ou o Zed, ou só o terminal. <code>dev/editor</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/dev-ferramentas.html">
+            <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></svg></span>
+            <span><strong>Ferramentas do terminal</strong><span class="d">O ripgrep, o fd, o jq e o GitHub CLI, que os agentes usam o tempo todo. <code>dev/ferramentas</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           <li><a class="cartao estacao revelar" href="receitas/dev-git.html">
             <span class="ladrilho l-vermelho" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M6 8.2v7.6M8 7.2c4.5 1 7.6 2.2 8 3.2"/></svg></span>
             <span><strong>Git</strong><span class="d">Git com seu nome, seu e-mail e uma chave SSH para o GitHub ou o GitLab. <code>dev/git</code></span></span>
@@ -285,29 +295,29 @@
             <span><strong>Contêineres com Podman</strong><span class="d">Contêineres que rodam na sua conta, sem permissão de administrador. <code>containers/podman</code></span></span>
             <span class="ficha feito">Pronta</span>
           </a></li>
-          <li><div class="cartao estacao planejada">
-            <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 8.5L12 4l8.5 4.5v7L12 20l-8.5-4.5z"/><path d="M8 6.3l8.5 4.5"/></svg></span>
-            <span><strong>Caixa de areia para os agentes</strong><span class="d">Os agentes rodam num contêiner, sem acesso ao sistema todo. Entra em: Vibecodar.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
           </ol>
         </div>
         <div class="area">
           <h3>IA <code>ia/</code></h3>
           <ol class="estacoes">
-          <li><div class="cartao estacao planejada">
+          <li><a class="cartao estacao revelar" href="receitas/ia-agentes.html">
             <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16.2h5"/><circle cx="12" cy="3.5" r="1"/></svg></span>
-            <span><strong>Agentes de IA no terminal</strong><span class="d">Claude Code, Codex, Copilot CLI, OpenCode e outros, pelos instaladores oficiais. Entra em: Vibecodar.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
-          <li><div class="cartao estacao planejada">
+            <span><strong>Agentes de IA no terminal</strong><span class="d">Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, na sua conta, sem sudo. <code>ia/agentes</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/ia-caixa-de-areia.html">
+            <span class="ladrilho l-marrom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 8.5L12 4l8.5 4.5v7L12 20l-8.5-4.5z"/><path d="M8 6.3l8.5 4.5"/></svg></span>
+            <span><strong>Caixa de areia para os agentes</strong><span class="d">Os agentes escrevem só na pasta do projeto, sem ver as suas chaves e sem sudo. <code>ia/caixa-de-areia</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
+          <li><a class="cartao estacao revelar" href="receitas/ia-chaves-de-api.html">
             <span class="ladrilho l-amarelo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8.5-8.5M16.5 6.5l2.5 2.5M14 9l2 2"/></svg></span>
-            <span><strong>Chaves de API guardadas</strong><span class="d">Um lugar para as chaves, com permissão só do dono. Entra em: Vibecodar.</span></span>
-            <span class="ficha planejado">Planejada</span>
-          </div></li>
+            <span><strong>Chaves de API guardadas</strong><span class="d">Um lugar para as chaves, com permissão só do dono. <code>ia/chaves-de-api</code></span></span>
+            <span class="ficha feito">Pronta</span>
+          </a></li>
           <li><div class="cartao estacao planejada">
             <span class="ladrilho l-grafite" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 16.2h5"/><circle cx="12" cy="3.5" r="1"/></svg></span>
-            <span><strong>IA local com Ollama</strong><span class="d">Modelos de IA rodando no próprio computador, se ele aguentar. Entra em: Vibecodar.</span></span>
+            <span><strong>IA local com Ollama</strong><span class="d">Modelos de IA rodando no próprio computador, se ele aguentar.</span></span>
             <span class="ficha planejado">Planejada</span>
           </div></li>
           </ol>

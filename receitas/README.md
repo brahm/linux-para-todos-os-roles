@@ -53,7 +53,7 @@ testes:
     resultado: ok
 ```
 
-Os tipos de parâmetro são `escolha` (com `opcoes` e, se quiser, `rotulos` que explicam cada opção no menu), `booleano` (chega ao script como `sim` ou `nao`), `inteiro`, `texto`, `caminho` (absoluto) e `cidr` (só redes privadas, ou `auto`).
+Os tipos de parâmetro são `escolha` (com `opcoes` e, se quiser, `rotulos` que explicam cada opção no menu), `lista` (várias das `opcoes`, separadas por vírgula, que chegam ao script como `a,b,c`), `booleano` (chega ao script como `sim` ou `nao`), `inteiro`, `texto`, `caminho` (absoluto) e `cidr` (só redes privadas, ou `auto`).
 
 ## Contrato dos scripts
 

@@ -2,3 +2,7 @@
 # perguntar. Um por linha, como no "bora plano -p": receita.parametro=valor.
 # Só entram nos rolês que têm a receita.
 dev/git.email=aluno@exemplo.com.br
+# Todos os agentes e o VS Code, para a máquina conferir cada um. O VSCodium e
+# o Zed, do Flathub, ficam no roteiro manual (testes/vm/vibecodar.md).
+ia/agentes.agentes=claude,codex,copilot,opencode,vibe
+dev/editor.editor=vscode

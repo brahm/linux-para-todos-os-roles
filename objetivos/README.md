@@ -81,7 +81,7 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 | 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | testado |
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | testado |
 | 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | testado |
-| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional | planejado |
+| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional e editor | rascunho |
 | 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |
 | 7 | Acessar de fora sem abrir portas | Tailscale, com teste de CGNAT | planejado |
@@ -90,25 +90,26 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 
 Perguntas:
 
-- Quais agentes você quer? Claude Code, Codex, Copilot CLI, Antigravity CLI, Mistral Vibe ou OpenCode. O menu mostra o que funciona com as contas que você tem.
-- Vai usar chave de API (OpenRouter, DeepSeek ou outra)? Se sim, o OpenCode já sai configurado com ela.
+- Quais agentes você quer? Claude Code (`claude`), Codex (`codex`), Copilot CLI (`copilot`), OpenCode (`opencode`) ou Mistral Vibe (`vibe`), separados por vírgula. O padrão é o OpenCode, que funciona com modelos gratuitos.
+- Vai usar chave de API (OpenRouter, DeepSeek ou outra)? Se sim, o arquivo de chaves já sai com a linha do provedor no topo, e o OpenCode encontra a chave sozinho.
 - Qual editor? VS Code, VSCodium, Zed ou só o terminal.
-- Quer isolar os agentes numa caixa de areia? É o recomendado.
+- Quer isolar os agentes numa caixa de areia? É o recomendado, e o padrão.
 
 O que é instalado e configurado:
 
-- a base do "Começar a programar";
-- os agentes escolhidos, pelos instaladores oficiais, que o `bora` baixa, confere e mostra antes de rodar, mais o `bubblewrap`, que o Codex usa como sandbox no Linux;
-- `ripgrep`, `fd`, `jq` e o GitHub CLI (`gh`);
-- git com chave SSH e um `.gitignore` global que já ignora `.env` e chaves;
-- um lugar para as chaves de API em `~/.config`, com permissão só do dono, e o `gitleaks` verificando segredos antes de cada commit;
-- quando escolhida, uma caixa de areia (distrobox ou toolbox) onde os agentes rodam sem acesso ao sistema todo; nenhum agente recebe `sudo`;
-- o Ollama, se o `bora diag` disser que a máquina aguenta modelo local;
-- a skill do `bora` nos agentes instalados.
+- a base do "Começar a programar", com o Python e o Node.js juntos (`base/atualizar`, `dev/git`, `dev/compilacao`, `dev/python`, `dev/node` e `containers/podman`);
+- `ripgrep`, `fd`, `jq` e o GitHub CLI (`dev/ferramentas`);
+- um `.gitignore` global que já ignora `.env` e chaves, e o `gitleaks` conferindo cada commit (`seguranca/segredos`);
+- um lugar para as chaves de API em `~/.config/chaves-de-api`, com permissão só do dono, carregado em cada terminal (`ia/chaves-de-api`);
+- os agentes escolhidos, na conta da pessoa e sem `sudo`, pelos pacotes oficiais no npm e no PyPI, e a skill do `bora` para eles (`ia/agentes`);
+- quando escolhida, a caixa de areia: o comando `caixa`, com o `bubblewrap`, onde o agente só escreve na pasta do projeto e não vê as chaves SSH, e a caixa de areia do próprio Claude Code ligada (`ia/caixa-de-areia`); nenhum agente recebe `sudo`;
+- o editor escolhido (`dev/editor`), com o Flatpak quando ele vem do Flathub.
 
-Pronto quando: cada agente responde a um "olá" no terminal, e um projeto de exemplo é criado, versionado e passa pela verificação de segredos.
+Ficaram para depois o Antigravity CLI, que só tem instalador do tipo `curl | sh`, e o Ollama, para modelos locais.
 
-É o rolê que mais vai quebrar, porque os agentes mudam de versão, de instalador e de plano o tempo todo. As receitas dele são conferidas a cada versão do `bora`.
+Pronto quando: cada agente responde no terminal, e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
+
+É o rolê que mais vai quebrar, porque os agentes mudam de versão, de instalador e de plano o tempo todo. A máquina virtual do CI aplica os cinco agentes toda semana.
 
 ## Ideias para depois
 

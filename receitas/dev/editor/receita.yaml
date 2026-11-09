@@ -1,0 +1,23 @@
+id: dev/editor
+nome: Editor de código
+descricao: Instala o VS Code, do repositório da Microsoft, ou o VSCodium ou o Zed, do Flathub.
+risco: baixo
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  editor:
+    tipo: escolha
+    opcoes: [terminal, vscode, vscodium, zed]
+    rotulos:
+      terminal: Só o terminal, sem editor novo.
+      vscode: VS Code, da Microsoft, o mais usado, com as extensões dos agentes.
+      vscodium: VSCodium, o VS Code sem a telemetria da Microsoft, pelo Flathub.
+      zed: Zed, leve e rápido, com agentes embutidos, pelo Flathub.
+    padrao: terminal
+    pergunta: Qual editor você quer?
