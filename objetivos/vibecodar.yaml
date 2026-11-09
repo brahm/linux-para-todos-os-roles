@@ -36,6 +36,16 @@ perguntas:
       sim: Sim, com o comando caixa e a caixa de areia do próprio agente.
       nao: Não, os agentes rodam direto na minha conta.
     padrao: sim
+  - id: local
+    texto: "Quer rodar modelos de IA no próprio computador, sem nuvem? Para esta máquina, o bora sugere: {sugestao_de_modelo}"
+    opcoes: [nenhum, ollama, ollama-sem-modelo, lmstudio, os-dois]
+    rotulos:
+      nenhum: Não, só os agentes com modelos na nuvem.
+      ollama: Ollama, e o bora baixa o modelo sugerido.
+      ollama-sem-modelo: Ollama, e eu baixo o modelo por conta própria.
+      lmstudio: LM Studio, com janela, e eu baixo o modelo nele.
+      os-dois: Os dois, e o bora baixa o modelo sugerido no Ollama.
+    padrao: nenhum
 receitas:
   - id: base/atualizar
   - id: dev/git
@@ -57,5 +67,18 @@ receitas:
     quando: {editor: zed}
   - id: dev/editor
     editor: "{editor}"
-pronto_quando: Cada agente responde no terminal (na primeira vez, ele pede para entrar na sua conta), e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
-como_desfazer: O bora remove os agentes, o editor, o gitleaks e a caixa de areia que instalou, e volta o Git e o .bashrc ao que eram. Os seus projetos, a chave SSH, os logins dos agentes e o arquivo de chaves, se você colou alguma, ficam onde estão.
+  - id: ia/ollama
+    modelo: sugerido
+    quando: {local: ollama}
+  - id: ia/ollama
+    modelo: nenhum
+    quando: {local: ollama-sem-modelo}
+  - id: ia/ollama
+    modelo: sugerido
+    quando: {local: os-dois}
+  - id: ia/lm-studio
+    quando: {local: lmstudio}
+  - id: ia/lm-studio
+    quando: {local: os-dois}
+pronto_quando: Cada agente responde no terminal (na primeira vez, ele pede para entrar na sua conta), e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave. Com o Ollama, o modelo baixado responde a um ollama run no terminal.
+como_desfazer: O bora remove os agentes, o editor, o gitleaks, a caixa de areia, o Ollama (com os modelos dele) e o LM Studio que instalou, e volta o Git e o .bashrc ao que eram. Os seus projetos, a chave SSH, os logins dos agentes e o arquivo de chaves, se você colou alguma, ficam onde estão.

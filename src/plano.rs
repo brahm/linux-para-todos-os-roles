@@ -178,6 +178,104 @@ pub fn salvar(plano: &Value, caminho: &Path) -> std::io::Result<()> {
     fs::write(caminho, texto)
 }
 
+/// A receita que baixa um modelo local, com o parâmetro modelo.
+pub const RECEITA_COM_MODELO: &str = "ia/ollama";
+
+/// Troca "sugerido" pelo modelo que cabe nesta máquina, para o plano mostrar
+/// exatamente o que vai ser baixado antes de a pessoa aceitar.
+fn resolver_modelo(
+    params: &mut [(String, Valor)],
+    catalogo: &Catalogo,
+    d: &Diag,
+    avisos: &mut Vec<String>,
+    erros: &mut Vec<String>,
+    n: usize,
+) {
+    let Some((_, Valor::Texto(valor))) = params.iter_mut().find(|(k, _)| k == "modelo") else {
+        return;
+    };
+    let lista = match crate::modelos::carregar(&catalogo.raiz) {
+        Ok(l) => l,
+        Err(e) => {
+            erros.push(format!("passo {n} ({RECEITA_COM_MODELO}): {e}"));
+            return;
+        }
+    };
+    let maq = crate::modelos::Maquina::de(d);
+    match valor.as_str() {
+        "nenhum" => {}
+        "sugerido" => {
+            let s = crate::modelos::sugerir(&lista, &maq);
+            match s.modelo {
+                Some(m) => {
+                    avisos.push(format!(
+                        "{RECEITA_COM_MODELO}: o modelo que o bora escolheu para esta máquina é {}",
+                        s.motivo
+                    ));
+                    *valor = m.ollama;
+                }
+                None => {
+                    avisos.push(format!(
+                        "{RECEITA_COM_MODELO}: o Ollama vai ser instalado sem modelo: {}",
+                        s.motivo
+                    ));
+                    *valor = "nenhum".into();
+                }
+            }
+        }
+        nome if !crate::modelos::nome_valido(nome) => erros.push(format!(
+            "passo {n} ({RECEITA_COM_MODELO}): {nome} não é um nome de modelo do Ollama; use sugerido, nenhum ou um nome como qwen3:4b"
+        )),
+        nome => {
+            if let Some(m) = lista.modelos.iter().find(|m| m.ollama == nome) {
+                let lugar = crate::modelos::avaliar(m, &maq);
+                if !lugar.usavel() {
+                    avisos.push(format!(
+                        "{RECEITA_COM_MODELO}: o modelo {nome} {} nesta máquina; veja bora modelos",
+                        match lugar {
+                            crate::modelos::Lugar::CpuLento => "fica lento demais",
+                            crate::modelos::Lugar::FaltaDisco => "não tem espaço no disco",
+                            _ => "não cabe na memória",
+                        }
+                    ));
+                }
+            }
+        }
+    }
+}
+
+/// Grava no plano o modelo que o bora escolheu no lugar de "sugerido", para o
+/// arquivo salvo dizer exatamente o que vai ser baixado.
+pub fn fixar_modelo(plano: &mut Value, v: &PlanoValidado) {
+    let Some(modelo) = v
+        .passos
+        .iter()
+        .find(|p| p.receita.id == RECEITA_COM_MODELO)
+        .and_then(|p| p.parametros.iter().find(|(k, _)| k == "modelo"))
+        .map(|(_, valor)| valor.to_string())
+    else {
+        return;
+    };
+    let Some(Value::Sequence(passos)) = plano.get_mut("passos") else {
+        return;
+    };
+    for passo in passos.iter_mut() {
+        let Value::Mapping(m) = passo else { continue };
+        if m.get("receita").and_then(texto_de).as_deref() != Some(RECEITA_COM_MODELO) {
+            continue;
+        }
+        let params = m
+            .entry(s("parametros"))
+            .or_insert_with(|| Value::Mapping(Mapping::new()));
+        if !matches!(params, Value::Mapping(_)) {
+            *params = Value::Mapping(Mapping::new());
+        }
+        if let Value::Mapping(p) = params {
+            p.insert(s("modelo"), s(&modelo));
+        }
+    }
+}
+
 /// Confere o plano contra o catálogo e a máquina. Devolve o plano validado ou a lista de erros.
 pub fn validar(plano: &Value, catalogo: &Catalogo, d: &Diag) -> Result<PlanoValidado, Vec<String>> {
     let mut erros = Vec::new();
@@ -294,6 +392,23 @@ pub fn validar(plano: &Value, catalogo: &Catalogo, d: &Diag) -> Result<PlanoVali
                 Err(e) => erros.push(format!("passo {n} ({id}): {e}")),
             }
         }
+        if id == RECEITA_COM_MODELO {
+            resolver_modelo(&mut params, catalogo, d, &mut avisos, &mut erros, n);
+        }
+        if id == "ia/lm-studio"
+            && let Ok(l) = crate::modelos::carregar(&catalogo.raiz)
+        {
+            let s = crate::modelos::sugerir(&l, &crate::modelos::Maquina::de(d));
+            avisos.push(match s.modelo {
+                Some(m) => format!(
+                    "ia/lm-studio: no LM Studio, você baixa o modelo na aba Discover; para esta máquina, procure \"{}\" ({} GB, {})",
+                    m.nome,
+                    crate::modelos::num(m.tamanho_gb),
+                    s.lugar.map(|l| l.descricao()).unwrap_or_default()
+                ),
+                None => format!("ia/lm-studio: {}", s.motivo),
+            });
+        }
         passos.push(Passo {
             receita: rec.clone(),
             parametros: params,
@@ -327,6 +442,45 @@ mod testes {
 
     fn yaml(t: &str) -> Value {
         serde_norway::from_str(t).unwrap()
+    }
+
+    #[test]
+    fn modelo_sugerido_vira_o_da_maquina() {
+        let (c, mut d) = base();
+        d.hardware.ram_gb = Some(32.0);
+        d.hardware.vram_gb = None;
+        d.hardware.disco_livre_gb = Some(200.0);
+        let mut cru = montar_de_receitas(&["ia/ollama".into()], "ubuntu", &BTreeMap::new());
+        let v = validar(&cru, &c, &d).unwrap();
+        assert_eq!(
+            v.passos[0].parametros,
+            vec![("modelo".to_string(), Valor::Texto("qwen3-coder:30b".into()))]
+        );
+        assert!(v.avisos.iter().any(|a| a.contains("Qwen3 Coder 30B")));
+        fixar_modelo(&mut cru, &v);
+        assert!(para_texto(&cru).contains("modelo: qwen3-coder:30b"));
+
+        // Numa máquina pequena demais, o Ollama entra sem modelo.
+        d.hardware.ram_gb = Some(2.0);
+        let v = validar(&cru_com_modelo("sugerido"), &c, &d).unwrap();
+        assert_eq!(v.passos[0].parametros[0].1, Valor::Texto("nenhum".into()));
+
+        // Um nome que não é de modelo não entra no plano.
+        assert!(validar(&cru_com_modelo("qwen3; rm -rf /"), &c, &d).is_err());
+        // Um modelo fora da lista entra como está.
+        let v = validar(&cru_com_modelo("qwen3:0.6b"), &c, &d).unwrap();
+        assert_eq!(
+            v.passos[0].parametros[0].1,
+            Valor::Texto("qwen3:0.6b".into())
+        );
+    }
+
+    fn cru_com_modelo(modelo: &str) -> Value {
+        let mut m = Mapping::new();
+        m.insert(s("modelo"), s(modelo));
+        let mut extra = BTreeMap::new();
+        extra.insert("ia/ollama".to_string(), m);
+        montar_de_receitas(&["ia/ollama".into()], "ubuntu", &extra)
     }
 
     #[test]

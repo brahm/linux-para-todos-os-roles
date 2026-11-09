@@ -258,6 +258,10 @@ pub struct Hardware {
     /// "ssd" ou "hdd", pelo disco onde está a raiz.
     pub disco_do_sistema: Option<String>,
     pub video: Vec<String>,
+    /// Memória da placa de vídeo, em GB, quando dá para medir: pelo
+    /// nvidia-smi (NVIDIA com driver) ou pelo amdgpu (AMD). Uma placa
+    /// integrada, que usa a RAM, fica de fora.
+    pub vram_gb: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -449,6 +453,54 @@ fn placas_de_video() -> Vec<String> {
     placas
 }
 
+/// Soma a memória das placas NVIDIA, em MiB, na saída do nvidia-smi.
+pub fn vram_nvidia_de(saida: &str) -> Option<f64> {
+    let mib: f64 = saida
+        .lines()
+        .filter_map(|l| l.trim().parse::<f64>().ok())
+        .sum();
+    (mib > 0.0).then(|| arred(mib / 1024.0))
+}
+
+fn memoria_de_video_gb() -> Option<f64> {
+    if comando_existe("nvidia-smi")
+        && let Ok(s) = Command::new("nvidia-smi")
+            .args(["--query-gpu=memory.total", "--format=csv,noheader,nounits"])
+            .output()
+        && s.status.success()
+        && let Some(gb) = vram_nvidia_de(&String::from_utf8_lossy(&s.stdout))
+    {
+        return Some(gb);
+    }
+    // AMD: o amdgpu informa a memória dedicada. Um processador com vídeo
+    // integrado reserva só um pedaço pequeno da RAM, que não conta.
+    let mut maior: f64 = 0.0;
+    for e in fs::read_dir("/sys/class/drm")
+        .into_iter()
+        .flatten()
+        .flatten()
+    {
+        let p = e.path();
+        let n = p.file_name().and_then(|n| n.to_str()).unwrap_or_default();
+        if !n.starts_with("card") || n.contains('-') {
+            continue;
+        }
+        if fs::read_to_string(p.join("device/vendor"))
+            .map(|v| v.trim() != "0x1002")
+            .unwrap_or(true)
+        {
+            continue;
+        }
+        if let Some(bytes) = fs::read_to_string(p.join("device/mem_info_vram_total"))
+            .ok()
+            .and_then(|t| t.trim().parse::<f64>().ok())
+        {
+            maior = maior.max(bytes / 1024.0 / 1024.0 / 1024.0);
+        }
+    }
+    (maior >= 2.0).then(|| arred(maior))
+}
+
 fn virtualizacao() -> Option<String> {
     if comando_existe("systemd-detect-virt")
         && let Ok(s) = Command::new("systemd-detect-virt").output()
@@ -571,6 +623,7 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
             disco_livre_gb: disco_livre_gb("/"),
             disco_do_sistema: disco_do_sistema(),
             video: placas_de_video(),
+            vram_gb: memoria_de_video_gb(),
         },
         rede: Rede {
             rota_padrao: tem_rota_padrao(),
@@ -679,6 +732,13 @@ pub fn formatar(d: &Diag) -> String {
                 "não identificado".into()
             } else {
                 d.hardware.video.join(", ")
+            }
+        ),
+        format!(
+            "  memória da placa de vídeo: {}",
+            match d.hardware.vram_gb {
+                Some(gb) => format!("{} GB", num(Some(gb))),
+                None => "nenhuma medida (vídeo integrado, ou placa sem driver)".into(),
             }
         ),
         String::new(),
@@ -805,6 +865,14 @@ mod testes {
             zram_de("Filename Type Size Used Priority\n/dev/sda3 partition 2097148 0 -2\n"),
             None
         );
+    }
+
+    #[test]
+    fn vram_da_nvidia() {
+        assert_eq!(vram_nvidia_de("8192\n"), Some(8.0));
+        assert_eq!(vram_nvidia_de("12288\n12288\n"), Some(24.0));
+        assert_eq!(vram_nvidia_de("[N/A]\n"), None);
+        assert_eq!(vram_nvidia_de(""), None);
     }
 
     #[test]

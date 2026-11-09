@@ -1,0 +1,14 @@
+id: ia/lm-studio
+nome: LM Studio, para modelos de IA com janela
+descricao: Instala o LM Studio oficial, conferido por SHA256, com atalho no menu de aplicativos. Você escolhe e baixa os modelos na própria janela, e o bora diz qual cabe na máquina.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros: {}
+testes: []

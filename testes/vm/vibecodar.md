@@ -49,6 +49,17 @@ Feche e abra o terminal antes, para o `PATH` e as chaves valerem.
 - [ ] `sudo apt update` não reclama de repositório duplicado da Microsoft.
 - [ ] Com o Zed ou o VSCodium: abre pelo menu de aplicativos. Anote se o terminal integrado acha o `opencode`.
 
+**Vibecode local (`ia/ollama` e `ia/lm-studio`)**
+
+Repita a aplicação, a partir do `limpa`, numa VM com pelo menos 16 GB de memória, respondendo "os dois" na pergunta sobre modelos locais.
+
+- [ ] Antes de aplicar, `bora modelos` mostra a memória da VM e uma sugestão, e o plano mostra o mesmo modelo, com o tamanho.
+- [ ] `ollama run <o modelo sugerido>` responde a um "olá".
+- [ ] `ollama launch opencode` abre o OpenCode usando o modelo local, e ele responde (devagar, sem placa de vídeo).
+- [ ] `ss -ltn | grep 11434` mostra só `127.0.0.1:11434`.
+- [ ] O LM Studio abre pelo menu de aplicativos. Na aba Discover, o modelo que o `bora` sugeriu aparece, baixa e responde no chat.
+- [ ] Numa máquina com placa NVIDIA e driver, `bora modelos` mostra a memória da placa, e `ollama ps` mostra o modelo na GPU.
+
 ## 3. Desfazer
 
 ```sh
@@ -59,5 +70,6 @@ sudo bora desfazer
 - [ ] O arquivo de chaves, com a chave colada, continua em `~/.config/chaves-de-api`.
 - [ ] `git config --global core.hooksPath` não mostra nada.
 - [ ] O VS Code sumiu do menu, e `/etc/apt/sources.list.d/vscode.sources` não existe.
+- [ ] Com o vibecode local: `ollama` não existe, `/usr/share/ollama` sumiu, o LM Studio sumiu do menu, e `~/.lmstudio` continua com os modelos baixados nele.
 
 Anote a distro, a data e o resultado num [relato de teste](https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=5-relato-de-teste.yml).

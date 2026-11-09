@@ -21,7 +21,7 @@ O `bora` pode estar no PATH ou ser o arquivo `bora-linux-x86_64` que a pessoa ba
 ## Passo a passo
 
 1. Entenda a máquina, sem mudar nada: `bora diag --json`. Mostra a distro, a família, a memória, o disco e o que já está instalado.
-2. Veja o que existe: `bora lista`. Mostra os rolês (o que a pessoa quer fazer) e as receitas (cada mudança), com o status de teste.
+2. Veja o que existe: `bora lista`. Mostra os rolês (o que a pessoa quer fazer) e as receitas (cada mudança), com o status de teste. Para um modelo de IA local, `bora modelos --json` mostra os que cabem na memória da máquina e qual o `bora` sugere; não sugira um modelo que ele marca como `nao-cabe`.
 3. Monte o plano, sem menus:
    - um rolê inteiro: `bora plano <rolê> -r <pergunta>=<resposta> -o plano.yaml`
    - receitas avulsas: `bora plano --receitas <a>,<b> -p <receita>.<parâmetro>=<valor> -o plano.yaml`
