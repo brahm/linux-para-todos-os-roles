@@ -43,6 +43,7 @@
       </a>
       <nav aria-label="Seções">
         <a href="#o-que-e">O que é</a>
+        <a href="#comecar">Começar</a>
         <a href="distro/">Escolher a distro</a>
         <a href="catalogo/">Rolês e receitas</a>
         <a href="#como-funciona">Como funciona</a>
@@ -84,16 +85,16 @@
           </h1>
           <p class="lema">A IA te passa os comandos. <strong>O <code>bora</code> te leva até o rolê</strong>, com passos testados e um jeito de voltar atrás.</p>
           <div class="acoes">
-            <a class="botao principal" href="https://github.com/brahm/linux-para-todos-os-roles">
+            <a class="botao principal" href="#comecar">Começar</a>
+            <a class="botao secundario" href="https://github.com/brahm/linux-para-todos-os-roles">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Acompanhar no GitHub
             </a>
-            <a class="botao secundario" href="#bora-junto">Como ajudar</a>
           </div>
         </div>
         <figure style="margin:0">
-          <div class="janela" role="img" aria-label="Prévia de uma sessão do bora no terminal: o comando bora abre um menu com os sete rolês da primeira versão.">
+          <div class="janela" role="img" aria-label="Prévia de uma sessão do bora no terminal: o comando sudo bora abre um menu com os sete rolês da primeira versão.">
             <div class="barra" aria-hidden="true">bora (prévia)<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
-<pre aria-hidden="true"><span class="p">você@computador:~$</span> <span class="c">bora</span>
+<pre aria-hidden="true"><span class="p">você@computador:~$</span> <span class="c">sudo bora</span>
 
   <span class="o">Bora!</span> O que vamos fazer com este computador?
   <span class="d">Ubuntu 26.04 LTS · 8 GB de memória · 120 GB livres</span>
@@ -136,7 +137,31 @@
           </ul>
         </article>
       </div>
-      <p class="nota">Ainda não instalou? <a href="distro/">Escolha a distro em três perguntas e veja o caminho do pendrive até o primeiro <code>bora diag</code></a>.</p>
+    </section>
+
+    <section id="comecar" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Começar</p>
+        <h2>Do pendrive ao primeiro rolê</h2>
+        <p>Hoje, o <code>bora</code> funciona no Ubuntu LTS (24.04 e 26.04), no Debian 13 e nas derivadas do Ubuntu, como o Linux Mint, o Pop!_OS e o Zorin OS, em computadores de 64 bits com processador Intel ou AMD.</p>
+      </div>
+      <div class="portas">
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">1</span><h3>Instale o Linux</h3></div>
+          <p>Responda três perguntas para ver qual distro combina com você e com a máquina, e siga o roteiro do pendrive até o primeiro boot.</p>
+          <p class="precisa"><a href="distro/">Escolher e instalar a distro</a></p>
+        </article>
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">2</span><h3>Instale o <code>bora</code></h3></div>
+          <p>É um arquivo só. No terminal, baixe, confira com o <code>sha256sum</code> e coloque em <code>/usr/local/bin</code>, para ele ficar à mão sempre que você precisar. O <code>bora diag</code> mostra o que ele encontrou, sem mudar nada.</p>
+          <p class="precisa"><a href="distro/#bora">Ver os comandos</a></p>
+        </article>
+        <article class="cartao porta">
+          <div class="rotulo"><span class="n">3</span><h3>Escolha o rolê</h3></div>
+          <p>Rode <code>sudo bora</code>, escolha o rolê, responda as perguntas e revise o plano antes de aplicar. Se não gostar, <code>sudo bora desfazer</code> volta atrás.</p>
+          <p class="precisa"><a href="catalogo/">Ver os rolês e as receitas</a></p>
+        </article>
+      </div>
     </section>
 
     <section id="roles" class="largura">
@@ -167,7 +192,7 @@
         <a class="cartao role" href="catalogo/roles/vibecodar.html" style="color:inherit;text-decoration:none">
           <span class="ladrilho l-roxo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.6 4.4 4.4 1.6-4.4 1.6L11 15.5l-1.6-4.4L5 9.5l4.4-1.6z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M6.5 16.5L4 19l2.5 2.5"/></svg></span>
           <h3>Vibecodar</h3>
-          <p>Tudo do “Começar a programar”, mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos e caixa de areia opcional.</p>
+          <p>Tudo do “Começar a programar”, mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia, editor e, se você quiser, modelos de IA no próprio computador.</p>
           <div class="rodape"><span class="num">04</span><span class="ficha feito">Testado</span></div>
         </a>
         <a class="cartao role" href="catalogo/roles/pasta-compartilhada.html" style="color:inherit;text-decoration:none">
@@ -189,12 +214,12 @@
           <div class="rodape"><span class="num">07</span><span class="ficha planejado">Planejado</span></div>
         </a>
       </div>
-      <p class="nota">Ideias para depois: bloqueador de anúncios da casa, fotos da família, backup da família, IA local, dual boot e ajustes brasileiros, como a cedilha no teclado internacional e o programa do IRPF. <a href="catalogo/">Ver os rolês e as receitas, com o passo a passo de cada um</a>.</p>
+      <p class="nota">Ideias para depois: bloqueador de anúncios da casa, fotos da família, backup da família, servidor de IA da casa, dual boot e ajustes brasileiros, como a cedilha no teclado internacional e o programa do IRPF. <a href="catalogo/">Ver os rolês e as receitas, com o passo a passo de cada um</a>.</p>
     </section>
 
     <section id="como-funciona" class="largura">
       <div class="cabeca">
-        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como vai funcionar</p>
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Como funciona</p>
         <h2>Um motor, três portas</h2>
         <p>O motor é o mesmo para todo mundo: rolês, receitas testadas e o <code>bora</code>. Muda só a porta por onde você entra.</p>
       </div>
@@ -211,7 +236,7 @@
         </article>
         <article class="cartao porta">
           <div class="rotulo"><span class="n">3</span><h3>Agente</h3></div>
-          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI e OpenCode, vão ler a skill do <code>bora</code>, que chega na fase da casa e do Fedora, conversar com você e escrever o plano. O <code>bora</code> valida, e quem aplica é você.</p>
+          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, leem a skill do <code>bora</code>, que o rolê <a href="catalogo/roles/vibecodar.html">Vibecodar</a> instala, conversam com você e escrevem o plano. O <code>bora</code> valida, e quem aplica é você.</p>
           <p class="precisa">Precisa de: <strong>um agente que leia skills</strong></p>
         </article>
       </div>
@@ -219,11 +244,14 @@
       <div class="bloco">
         <h3>Os comandos</h3>
         <ul class="caixa comandos">
-          <li class="linha"><code>bora</code><span>abre o menu de rolês</span></li>
+          <li class="linha"><code>sudo bora</code><span>abre o menu de rolês</span></li>
           <li class="linha"><code>bora diag</code><span>descobre distro, memória, disco, rede e placa de vídeo</span></li>
+          <li class="linha"><code>bora lista</code><span>lista os rolês e as receitas, com o status de teste</span></li>
+          <li class="linha"><code>bora modelos</code><span>mostra os modelos de IA locais que cabem na máquina e qual o <code>bora</code> sugere</span></li>
           <li class="linha"><code>bora ajuda</code><span>monta uma pergunta pronta para colar em qualquer chat de IA</span></li>
           <li class="linha"><code>sudo bora aplicar plano.yaml</code><span>aplica o plano, receita por receita, com snapshot antes</span></li>
-          <li class="linha"><code>bora desfazer</code><span>volta atrás</span></li>
+          <li class="linha"><code>sudo bora desfazer</code><span>volta atrás</span></li>
+          <li class="linha"><code>bora historico</code><span>mostra o que o <code>bora</code> já aplicou e desfez</span></li>
         </ul>
       </div>
 
@@ -282,7 +310,7 @@
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
               <h3>Testes automáticos em contêiner e em máquina virtual <span class="ficha feito">Feito</span></h3>
-              <p>A cada pull request, o GitHub Actions aplica, confere e desfaz cada receita em contêiner no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Todo domingo, e quando uma receita muda, uma máquina virtual de verdade nessas três distros aplica a parte dos rolês que não depende de tela, reinicia, confere que tudo voltou sozinho e desfaz. Outra máquina, com a tela de login do GNOME, aplica o ambiente leve, o navegador enxuto e o Sem Snap, entra no ambiente leve, abre o Firefox e tira uma captura da tela a cada passo. Quando passa, o resultado entra no registro de testes de cada receita; quando falha, vira uma issue.</p>
+              <p>A cada pull request, o GitHub Actions aplica, confere e desfaz cada receita em contêiner no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Todo domingo, e quando uma receita muda, uma máquina virtual de verdade nessas três distros aplica a parte dos rolês que não depende de tela, reinicia, confere que tudo voltou sozinho e desfaz. Outra máquina, com tela de login, aplica o ambiente leve, o navegador enxuto e o Sem Snap, entra no ambiente leve, abre o Firefox e tira uma captura da tela a cada passo; ela roda nas mesmas três distros com o GNOME e também no Debian 13 com o LightDM e o Xfce, o jeito mais comum de uma máquina antiga com Debian. Quando passa, o resultado entra no registro de testes de cada receita; quando falha, vira uma issue.</p>
               <p>Também rodam sozinhos a conferência mensal dos links deste site e a semanal da versão do Node.js.</p>
             </div>
           </li>
@@ -291,15 +319,15 @@
             <div class="corpo">
               <h3>Primeira versão útil <span class="voce-esta-aqui">Próximo passo</span></h3>
               <p>Rolês 1 a 4 no Ubuntu e no Debian, testados numa máquina virtual, e conferidos no Linux Mint, a derivada mais usada (o Pop!_OS e o Zorin OS usam as receitas do Ubuntu). A pergunta pronta, o modo passo a passo, o <a href="distro/">roteiro para escolher e instalar a distro</a>, e o site gerado a partir das receitas.</p>
-              <p>Já saíram a pergunta pronta, o modo passo a passo, as páginas das receitas, o roteiro da distro e os rolês 1 a 4: <a href="catalogo/roles/pronto-para-estudar.html">Pronto para estudar e trabalhar</a>, com codecs, Flatpak e backup da pasta pessoal, <a href="catalogo/roles/maquina-antiga.html">Dar vida nova a uma máquina antiga</a>, com zram, ambiente leve, navegador enxuto e serviços enxutos, <a href="catalogo/roles/comecar-a-programar.html">Começar a programar</a>, com Git, Python ou Node.js e contêineres com Podman, e <a href="catalogo/roles/vibecodar.html">Vibecodar</a>, com os agentes de IA, as chaves de API, o gitleaks, a caixa de areia, o editor e os modelos locais. O rolê 1 também guarda o <a href="catalogo/receitas/sistema-etckeeper.html">histórico do /etc</a> e, se você pedir, <a href="catalogo/receitas/desktop-sem-snap.html">tira o Snap</a>; o rolê 2, se você pedir, liga o <a href="catalogo/receitas/seguranca-ssh.html">acesso por SSH</a> na rede de casa.</p>
+              <p>Já saíram a pergunta pronta, o modo passo a passo, as páginas das receitas, o roteiro da distro e os rolês 1 a 4: <a href="catalogo/roles/pronto-para-estudar.html">Pronto para estudar e trabalhar</a>, com codecs, Flatpak e backup da pasta pessoal, <a href="catalogo/roles/maquina-antiga.html">Dar vida nova a uma máquina antiga</a>, com zram, ambiente leve, navegador enxuto e serviços enxutos, <a href="catalogo/roles/comecar-a-programar.html">Começar a programar</a>, com Git, Python ou Node.js e contêineres com Podman, e <a href="catalogo/roles/vibecodar.html">Vibecodar</a>, com os agentes de IA e a skill do <code>bora</code> para eles, as chaves de API, o gitleaks, a caixa de areia, o editor e os modelos locais com o Ollama ou o LM Studio. O rolê 1 também guarda o <a href="catalogo/receitas/sistema-etckeeper.html">histórico do /etc</a> e, se você pedir, <a href="catalogo/receitas/desktop-sem-snap.html">tira o Snap</a>; o rolê 2, se você pedir, liga o <a href="catalogo/receitas/seguranca-ssh.html">acesso por SSH</a> na rede de casa.</p>
               <p>Os quatro rolês já estão testados: cada receita passa toda semana nas máquinas virtuais do CI, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, inclusive a parte com tela de login. Falta o <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md">roteiro manual</a> no Linux Mint, que não tem imagem para o CI.</p>
             </div>
           </li>
           <li class="passo">
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
-              <h3>A casa, o Fedora e os agentes</h3>
-              <p>Rolês 5, 6 e 7. Fedora e Nobara. A skill para agentes de IA, um instalador único e o <code>bora</code> como pacote nas distros compatíveis, para instalar e atualizar pela loja ou pelo gerenciador de pacotes.</p>
+              <h3>A casa e o Fedora</h3>
+              <p>Rolês 5, 6 e 7. Fedora e Nobara. Um instalador único e o <code>bora</code> como pacote nas distros compatíveis, para instalar e atualizar pela loja ou pelo gerenciador de pacotes.</p>
             </div>
           </li>
           <li class="passo">
@@ -432,7 +460,7 @@
       <div class="largura">
         <div>
           <h2>O melhor rolê é o que a gente faz junto.</h2>
-          <p>O projeto está no começo, que é a melhor hora para chegar: dá para testar os três primeiros rolês e opinar nos próximos antes de virarem código.</p>
+          <p>O projeto está no começo, que é a melhor hora para chegar: dá para testar os quatro primeiros rolês e opinar nos próximos antes de virarem código.</p>
         </div>
         <a class="botao escuro" href="https://github.com/brahm/linux-para-todos-os-roles">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Bora pro GitHub

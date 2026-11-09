@@ -3,7 +3,7 @@
 import json
 from comum import REPO, cabeca, janela, bloco_pedidos
 
-# suporte: "testada" (o bora tem receitas testadas em contêiner nela), "herdada" (usa as receitas da base)
+# suporte: "testada" (o bora tem receitas testadas nela, em contêiner e em máquina virtual), "herdada" (usa as receitas da base)
 # ou "onda N" (o bora ainda não chegou à família).
 DISTROS = [
     {
@@ -97,7 +97,7 @@ FAMILIA_NOME = {"ubuntu": "família Ubuntu", "debian": "família Debian", "fedor
 def ficha_suporte(d):
     s = d["suporte"]
     if s == "testada":
-        return '<span class="ficha feito">✓ Testada em contêiner com o <code>bora</code></span>'
+        return '<span class="ficha feito">✓ Testada com o <code>bora</code>, em máquina virtual</span>'
     if s == "herdada":
         return '<span class="ficha herdada">Usa as receitas do Ubuntu</span>'
     return f'<span class="ficha planejado"><code>bora</code> na {s}</span>'
@@ -187,25 +187,28 @@ def corpo():
         ("cmd", P + '<span class="c">wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/SHA256SUMS</span>'),
         ("cmd", P + '<span class="c">sha256sum --check --ignore-missing SHA256SUMS</span>'),
         ("", 'bora-linux-x86_64: <span class="v">OK</span>'),
-        ("cmd", P + '<span class="c">chmod +x bora-linux-x86_64</span>'),
-        ("cmd", P + '<span class="c">./bora-linux-x86_64 diag</span>'),
+        ("cmd", P + '<span class="c">sudo install -m 755 bora-linux-x86_64 /usr/local/bin/bora</span>'),
+        ("cmd", P + '<span class="c">bora diag</span>'),
         ("", '<span class="o">Distro</span>'),
-        ("", '  Ubuntu 26.04 LTS'),
+        ("", '  Ubuntu 26.04.1 LTS'),
         ("", '  família: ubuntu, base 26.04'),
         ("", ''),
         ("", '<span class="o">Sistema</span>'),
+        ("", '  arquitetura: x86_64'),
         ("", '  systemd: sim, UEFI: sim'),
         ("", ''),
         ("", '<span class="o">Hardware</span>'),
         ("", '  memória: 7.6 GB'),
         ("", '  disco livre na raiz: 212.4 GB'),
+        ("", '  disco do sistema: SSD'),
         ("", ''),
         ("", '<span class="o">Já tem</span>'),
         ("", '  snapshot do sistema: <span class="a">não configurado</span>'),
         ("", '  firewall: ufw'),
+        ("", '  memória comprimida (zram): desligada'),
         ("", '  rede: <span class="v">conectada</span>'),
-        ("cmd", P + '<span class="c">sudo ./bora-linux-x86_64</span>'),
-    ], "Terminal: baixar o bora e o SHA256SUMS com wget, conferir com sha256sum, dar permissão de execução, rodar bora diag, que mostra Ubuntu 26.04 LTS da família ubuntu, e abrir o menu com sudo.")
+        ("cmd", P + '<span class="c">sudo bora</span>'),
+    ], "Terminal: baixar o bora e o SHA256SUMS com wget, conferir com sha256sum, instalar em /usr/local/bin/bora, rodar bora diag, que mostra Ubuntu 26.04 LTS da família ubuntu, e abrir o menu com sudo bora.")
 
     return f'''    <div class="abertura interna">
       <div class="largura">
@@ -425,7 +428,7 @@ def corpo():
     </section>
 
     <section id="bora" class="largura">
-{cabeca("Passo 4", "Instalar o <code>bora</code> e rodar <code>bora diag</code>", "O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e rode. O <code>diag</code> não muda nada: só mostra o que encontrou.")}
+{cabeca("Passo 4", "Instalar o <code>bora</code> e rodar <code>bora diag</code>", "O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e instale em <code>/usr/local/bin</code>, para ele ficar à mão como <code>bora</code> sempre que você precisar. O <code>diag</code> não muda nada: só mostra o que encontrou.")}
       <div class="bora-grade">
         <figure style="margin:0">
 {terminal}
@@ -434,11 +437,12 @@ def corpo():
           <ul class="caixa">
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9"/></svg><span class="txt"><strong>O <code>OK</code> do <code>sha256sum</code></strong><span>Garante que o arquivo é o mesmo que saiu do projeto. Se aparecer outra coisa, apague e baixe de novo.</span></span></li>
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2.5 19h19"/></svg><span class="txt"><strong>Processador ARM?</strong><span>O <code>bora</code> roda só em computadores de 64 bits com processador Intel ou AMD (x86_64).</span></span></li>
-            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg><span class="txt"><strong>Travou em algum ponto?</strong><span>Rode <code>./bora-linux-x86_64 ajuda</code>: ele monta uma pergunta pronta, sem dados sensíveis, para colar em qualquer chat de IA.</span></span></li>
+            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg><span class="txt"><strong>Travou em algum ponto?</strong><span>Rode <code>bora ajuda</code>: ele monta uma pergunta pronta, sem dados sensíveis, para colar em qualquer chat de IA.</span></span></li>
+            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg><span class="txt"><strong>Para atualizar</strong><span>Repita os mesmos comandos: o <code>install</code> troca o arquivo antigo pelo novo. O <code>bora versao</code> mostra qual você tem, e a <a href="{REPO}/releases">página de versões</a> conta o que mudou.</span></span></li>
           </ul>
           <a class="cartao proximo" href="../catalogo/roles/pronto-para-estudar.html">
             <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24">{IC["livro"]}</svg></span>
-            <span class="txt"><span class="sobretitulo">Próximo passo</span><strong>Pronto para estudar e trabalhar</strong><span>O primeiro rolê: atualização, firewall, codecs, Flatpak, snapshot e backup da pasta pessoal.</span></span>
+            <span class="txt"><span class="sobretitulo">Próximo passo</span><strong>Pronto para estudar e trabalhar</strong><span>O primeiro rolê: atualização, firewall, codecs, Flatpak, snapshot e backup da pasta pessoal. Os outros três rolês prontos estão no <code>sudo bora</code> também.</span></span>
             <svg class="ir" aria-hidden="true"><use href="#seta"/></svg>
           </a>
         </div>

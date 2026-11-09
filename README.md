@@ -30,26 +30,32 @@ O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acess
 <img align="right" src="marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg" width="112" alt="Ícone do bora: duas pegadas de pinguim brancas sobre um quadrado laranja">
 
 ```text
-bora                           abre o menu de rolês
+sudo bora                      abre o menu de rolês
 bora diag                      descobre distro, memória, disco, rede e placa de vídeo
+bora lista                     lista os rolês e as receitas, com o status de teste
 bora modelos                   mostra os modelos de IA locais que cabem na máquina
 bora ajuda                     monta uma pergunta pronta para colar em qualquer chat de IA
 sudo bora aplicar plano.yaml   aplica o plano, receita por receita, com snapshot antes
-bora desfazer                  volta atrás
+sudo bora desfazer             volta atrás
+bora historico                 mostra o que o bora já aplicou e desfez
 ```
 
 ## Experimentar
 
-O `bora` é um arquivo só, para computadores de 64 bits x86_64 (Intel ou AMD). Baixe o `bora-linux-x86_64` na [página de versões](https://github.com/brahm/linux-para-todos-os-roles/releases), junto com o `SHA256SUMS`, e confira antes de rodar:
+Ainda não instalou o Linux? O [site](https://brahm.github.io/linux-para-todos-os-roles/distro/) ajuda a escolher a distro e mostra o caminho do pendrive até o primeiro boot.
+
+O `bora` é um arquivo só, para computadores de 64 bits x86_64 (Intel ou AMD). Baixe o `bora-linux-x86_64` da [página de versões](https://github.com/brahm/linux-para-todos-os-roles/releases), junto com o `SHA256SUMS`, confira e instale em `/usr/local/bin`, para ele ficar à mão como `bora`:
 
 ```sh
+wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/bora-linux-x86_64
+wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
-chmod +x bora-linux-x86_64
-./bora-linux-x86_64 diag      # não muda nada, só mostra o que encontrou
-sudo ./bora-linux-x86_64      # abre o menu
+sudo install -m 755 bora-linux-x86_64 /usr/local/bin/bora
+bora diag      # não muda nada, só mostra o que encontrou
+sudo bora      # abre o menu
 ```
 
-O `bora` guarda o que fez em `/var/lib/bora` e o registro em `/var/log/bora/bora.log`. Para voltar atrás, use `sudo ./bora-linux-x86_64 desfazer`.
+Para atualizar, repita os mesmos comandos; `bora versao` mostra qual você tem. O `bora` guarda o que fez em `/var/lib/bora` e o registro em `/var/log/bora/bora.log`. Para voltar atrás, use `sudo bora desfazer`.
 
 ## Três jeitos de usar
 
@@ -57,7 +63,7 @@ O `bora` guarda o que fez em `/var/lib/bora` e o registro em `/var/log/bora/bora
 |---|---|---|
 | **Menus** | O `bora` pergunta o rolê, faz as perguntas necessárias, mostra o plano e aplica. No modo `--passo-a-passo`, explica cada etapa antes de rodar. | Só o `bora` |
 | **Pergunta pronta** | Travou? `bora ajuda` gera um texto com o diagnóstico (sem dados sensíveis), a etapa e o erro, para colar em qualquer chat de IA, gratuito ou pago. | Qualquer chat |
-| **Agente** | Agentes de terminal (Claude Code, Codex, Copilot CLI, OpenCode e outros) leem a skill do `bora`, conversam com você e escrevem o plano. O `bora` valida o plano, e quem aplica é você. | Um agente que leia skills |
+| **Agente** | Agentes de terminal (Claude Code, Codex, Copilot CLI, OpenCode e outros) leem a skill do `bora`, que o rolê "Vibecodar" instala, conversam com você e escrevem o plano. O `bora` valida o plano, e quem aplica é você. | Um agente que leia skills |
 
 ## Para quem
 

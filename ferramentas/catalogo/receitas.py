@@ -138,10 +138,28 @@ def capturas(rid):
       </div>'''
 
 
+def em_vm(r, familia):
+    """Se a receita tem um teste que passou em máquina virtual ou num computador de verdade nessa família."""
+    return any(t.get("distro") == familia and t.get("onde") in ("vm", "maquina") and t.get("resultado") == "ok"
+               for t in r.get("testes") or [])
+
+
+def nivel_texto(r, familia, nivel):
+    if nivel == "testada" and em_vm(r, familia):
+        return "Testada em VM"
+    return NIVEL_TEXTO.get(nivel)
+
+
+def ficha_testada(r):
+    if em_vm(r, "ubuntu") and em_vm(r, "debian"):
+        return "Testada em máquina virtual no Ubuntu e no Debian"
+    return "Testada em contêiner no Ubuntu e no Debian"
+
+
 def onde_testada(r):
     fam = r.get("familias") or {}
     cartoes = "\n".join(
-        f'''        <div class="cartao familia"><strong>{nome}</strong><span class="nivel {fam.get(f, 'planejada')}">{NIVEL_TEXTO.get(fam.get(f, 'planejada'))}</span><span style="color:var(--text-2);font-size:14px">{exemplos}</span></div>'''
+        f'''        <div class="cartao familia"><strong>{nome}</strong><span class="nivel {fam.get(f, 'planejada')}">{nivel_texto(r, f, fam.get(f, 'planejada'))}</span><span style="color:var(--text-2);font-size:14px">{exemplos}</span></div>'''
         for f, nome, exemplos in FAMILIAS)
     onde = {"conteiner": "Contêiner (teste automático)", "vm": "Máquina virtual", "maquina": "Computador de verdade"}
     distros = {"ubuntu": "Ubuntu", "debian": "Debian"}
@@ -159,7 +177,7 @@ def onde_testada(r):
             <tbody>{testes}</tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>{capturas(r.get('id', ''))}'''
 
 
@@ -199,7 +217,7 @@ def abertura(rid, r, ilustracao, legenda):
             <span class="ficha"><code>{rid}</code></span>
             <span class="ficha risco-{risco}">{risco_txt}</span>
             <span class="ficha">Pede a senha de administrador</span>
-            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+            <span class="ficha feito testada">{ficha_testada(r)}</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
