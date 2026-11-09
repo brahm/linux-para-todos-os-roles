@@ -32,6 +32,7 @@ O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acess
 ```text
 bora                           abre o menu de rolês
 bora diag                      descobre distro, memória, disco, rede e placa de vídeo
+bora modelos                   mostra os modelos de IA locais que cabem na máquina
 bora ajuda                     monta uma pergunta pronta para colar em qualquer chat de IA
 sudo bora aplicar plano.yaml   aplica o plano, receita por receita, com snapshot antes
 bora desfazer                  volta atrás

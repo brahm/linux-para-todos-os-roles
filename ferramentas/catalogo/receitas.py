@@ -2165,3 +2165,121 @@ PAGINAS.update({
     "ia/caixa-de-areia": pagina_caixa,
     "dev/editor": pagina_editor,
 })
+
+
+# ---------------------------------------------------------------- vibecode local: Ollama e LM Studio
+
+ILUSTRA_OLLAMA = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="iol-t">
+            <title id="iol-t">O bora mede a memória da máquina e confere cada modelo: os que cabem na placa de vídeo ou andam bem na memória, os que ficam devagar e os que não cabem. O melhor que roda bem vira a sugestão.</title>
+            <text x="20" y="28" font-size="14" font-weight="600">bora modelos</text>
+            <text x="20" y="50" font-size="12.5" class="t2">32 GB de RAM, sem placa de vídeo</text>
+            """ + "".join(f'''<g class="pacote" style="--i:{i}">
+              <rect x="20" y="{66 + i * 54}" width="440" height="44" rx="12" class="caixa-svg"/>
+              <text x="40" y="{93 + i * 54}" font-size="13" font-weight="600" class="mono">{m}</text>
+              <text x="250" y="{93 + i * 54}" font-size="12.5" class="t2">{d}</text>
+            </g>''' for i, (m, d) in enumerate([("qwen3:4b", "anda bem, só para conversar"), ("mimo-v2.6:9b", "agente, devagar"),
+                                                ("qwen3-coder:30b", "agente, anda bem: sugestão"), ("qwen3.8:27b", "cabe, mas lento demais"),
+                                                ("gpt-oss:120b", "não cabe")])) + """
+          </svg>"""
+
+
+def pagina_ollama():
+    return _pagina(
+        "ia/ollama", ILUSTRA_OLLAMA, "Ilustração. A sugestão é o modelo mais capaz que roda bem nesta máquina e dá conta de ser agente.",
+        ["<strong>Instala o Ollama oficial</strong>, baixado do GitHub, com a soma SHA256 conferida antes de instalar.",
+         "<strong>Mede a máquina e sugere um modelo</strong> que cabe nela, pela RAM, pela memória da placa de vídeo e pelo disco livre.",
+         "<strong>Baixa o modelo sugerido, se você quiser</strong>, e o plano mostra qual é e quanto pesa antes de você aceitar.",
+         "<strong>Roda como um serviço</strong> que só este computador acessa, numa conta própria."],
+        ["Não roda o instalador oficial, um script que se baixa e entrega direto ao shell.",
+         "Não abre a porta do Ollama para a rede da casa.",
+         "Não instala o driver da placa de vídeo NVIDIA: avisa quando ele falta.",
+         "Não passa por cima de um Ollama que você instalou de outro jeito.",
+         "Não guarda os modelos no desfazer: eles saem com a conta do serviço."],
+        ["<p>Confere se o Ollama da versão da receita está em <code>/opt/ollama</code>, se o comando <code>ollama</code> aponta para ele, se a conta <code>ollama</code> e o serviço estão como a receita escreve e, com um modelo escolhido, se ele já foi baixado.</p>",
+         "<ul><li>Para, sem mudar nada, se já houver um Ollama que não veio do <code>bora</code>.</li><li>Baixa o arquivo do GitHub (e o do ROCm, numa placa AMD), confere a soma SHA256 e abre em <code>/opt/ollama</code>.</li><li>Cria a conta <code>ollama</code> e o serviço, que escuta só em <code>127.0.0.1:11434</code>.</li><li>Com um modelo escolhido, roda <code>ollama pull</code>.</li></ul>",
+         "<p>Confere a versão, o serviço habilitado e só para este computador, que nenhuma porta do Ollama está aberta para a rede e que o modelo aparece no <code>ollama list</code>.</p>",
+         "<p>Para o serviço, apaga o Ollama, o link e o serviço, e remove a conta <code>ollama</code> com a pasta dos modelos.</p>"],
+        _no_terminal("Como fica a aplicação numa máquina de 32 GB sem placa de vídeo, encurtada nas linhas do apt e do download.", _saida("[1/1] Ollama, para modelos de IA no computador", [
+            "Baixando ollama-linux-amd64.tar.zst (https://github.com/ollama/ollama/releases/download/v0.40.9/ollama-linux-amd64.tar.zst)",
+            "Soma SHA256 conferida.", "Ollama 0.40.9 instalado em /opt/ollama/0.40.9",
+            "Conta do serviço criada: ollama, com os modelos em /usr/share/ollama/.ollama/models",
+            "Baixando o modelo qwen3-coder:30b. São alguns gigabytes; pode demorar.",
+            "Pronto: Ollama 0.40.9, atendendo só este computador em http://127.0.0.1:11434.",
+            ("ok", "Ollama 0.40.9 (ollama --version)"), ("ok", "o serviço ollama.service está habilitado"),
+            ("ok", "o Ollama atende só este computador (127.0.0.1:11434)"), ("ok", "nenhuma porta do Ollama aberta para a rede"),
+            ("ok", "o modelo qwen3-coder:30b está baixado (ollama list)"), "Tudo conferido."], "Ollama"),
+            "Terminal mostrando o bora aplicar a receita do Ollama: baixa o Ollama 0.40.9, confere a soma SHA256, cria o serviço, baixa o modelo qwen3-coder:30b e confere cinco testes."),
+        [("Como o bora sabe o que cabe?", "O modelo ocupa na memória o tamanho dele, mais 15% e mais 1,5 GB para a conversa. Se isso cabe na placa de vídeo, ele roda rápido. Se não, ele usa a RAM, deixando 3 GB para o sistema, e a velocidade depende de quantos parâmetros o modelo usa a cada palavra. Rode <code>bora modelos</code> para ver a conta da sua máquina."),
+         ("Por que sem placa de vídeo dá para usar?", "Os modelos “mixture of experts”, como o <code>gpt-oss:20b</code> e o <code>qwen3-coder:30b</code>, têm muitos parâmetros, mas usam só 3 ou 4 bilhões por palavra. Numa máquina com bastante RAM, eles andam bem até sem placa de vídeo."),
+         ("E se a máquina for pequena?", "Com menos de 16 GB, o <code>bora</code> sugere um modelo pequeno, que serve para conversar e tirar dúvidas, mas se perde como agente. Com 4 GB, não sugere nenhum. Aí o agente fica melhor com um modelo na nuvem, que é o que o resto do rolê já prepara."),
+         ("Por que só este computador?", "Sem senha nenhuma, quem alcança a porta do Ollama usa os seus modelos e a sua máquina. Servir os modelos para a casa vira outro rolê, com o firewall."),
+         ("Como uso com um agente?", "<code>ollama launch opencode</code> abre o OpenCode já usando o modelo local; também funciona com <code>claude</code> e <code>codex</code>.")],
+        [("pacote", "curl, zstd e ca-certificates", "Para baixar e abrir o arquivo, se faltarem."),
+         ("arquivo", "/opt/ollama/0.40.9", "O Ollama, com as bibliotecas para placas NVIDIA e, numa AMD, as do ROCm."),
+         ("arquivo", "/usr/local/bin/ollama", "Link para a versão instalada."),
+         ("servico", "conta ollama", "A conta do serviço, com os modelos em <code>/usr/share/ollama/.ollama/models</code>."),
+         ("servico", "/etc/systemd/system/ollama.service", "O serviço, só em <code>127.0.0.1:11434</code>.")],
+        [("bora modelos", "Mostra os modelos que cabem nesta máquina e qual o <code>bora</code> sugere."),
+         ("ollama run qwen3:4b", "Conversa com um modelo no terminal."),
+         ("ollama launch opencode", "Abre o OpenCode usando o modelo local."),
+         ("ss -ltn | grep 11434", "Mostra que o Ollama escuta só em <code>127.0.0.1</code>.")],
+        [("Ollama no Linux", "Documentação do Ollama", "https://docs.ollama.com/linux"),
+         ("Versões do Ollama", "GitHub", "https://github.com/ollama/ollama/releases"),
+         ("Biblioteca de modelos", "ollama.com", "https://ollama.com/library")])
+
+
+ILUSTRA_LM_STUDIO = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="ilm-t">
+            <title id="ilm-t">A janela do LM Studio com a aba Discover, onde você procura o modelo que o bora sugeriu para a máquina.</title>
+            <rect x="20" y="24" width="440" height="292" rx="14" class="caixa-svg"/>
+            <text x="44" y="54" font-size="14" font-weight="600">LM Studio · Discover</text>
+            <rect x="44" y="72" width="392" height="40" rx="10" class="caixa-svg"/>
+            <text x="62" y="97" font-size="13" class="mono">MiMo V2.6 9B</text>
+            """ + "".join(f'''<g class="pacote" style="--i:{i}">
+              <rect x="44" y="{128 + i * 58}" width="392" height="46" rx="10" class="caixa-svg"/>
+              <text x="62" y="{156 + i * 58}" font-size="13" font-weight="600">{n}</text>
+              <text x="270" y="{156 + i * 58}" font-size="12.5" class="t2">{d}</text>
+            </g>''' for i, (n, d) in enumerate([("Q4_K_M", "6,6 GB · cabe"), ("Q8_0", "10 GB · cabe"), ("BF16", "19 GB · grande demais")])) + """
+          </svg>"""
+
+
+def pagina_lm_studio():
+    return _pagina(
+        "ia/lm-studio", ILUSTRA_LM_STUDIO, "Ilustração. O bora diz qual modelo cabe; você procura o nome na aba Discover e baixa.",
+        ["<strong>Instala o LM Studio oficial</strong>, com a soma SHA256 do arquivo conferida antes de instalar.",
+         "<strong>Põe um atalho no menu de aplicativos</strong> e o comando <code>lm-studio</code>.",
+         "<strong>Diz qual modelo cabe na máquina</strong>, no plano e no <code>bora modelos</code>, para você procurar na aba Discover."],
+        ["Não baixa o modelo por você: no LM Studio, você escolhe na própria janela.",
+         "Não precisa do FUSE: o AppImage é aberto uma vez, na instalação.",
+         "Não apaga os modelos que você baixou no desfazer: eles ficam em <code>~/.lmstudio</code>."],
+        ["<p>Confere se o LM Studio da versão da receita está em <code>/opt/lm-studio</code>, se o comando <code>lm-studio</code> aponta para ele, se o atalho está como a receita escreve e se as bibliotecas da janela estão instaladas.</p>",
+         "<ul><li>Para, sem mudar nada, se já houver um <code>lm-studio</code> que não veio do <code>bora</code>.</li><li>Baixa o AppImage de installers.lmstudio.ai, confere a soma SHA256 e abre em <code>/opt/lm-studio</code>.</li><li>Cria o link e o atalho no menu.</li></ul>",
+         "<p>Confere o link, o atalho e o ícone, que o <code>ldd</code> não acusa biblioteca faltando, que o <code>chrome-sandbox</code> é do root com setuid e que só o root muda os arquivos do programa.</p>",
+         "<p>Apaga o atalho, o link e a pasta do LM Studio, e remove os pacotes que a receita instalou.</p>"],
+        _no_terminal("Como fica a aplicação, encurtada nas linhas do apt.", _saida("[1/1] LM Studio, para modelos de IA com janela", [
+            "Baixando o LM Studio 0.4.28-2 de https://installers.lmstudio.ai/linux/x64/0.4.28-2/LM-Studio-0.4.28-2-x64.AppImage",
+            "Soma SHA256 conferida.", "LM Studio 0.4.28-2 instalado em /opt/lm-studio/0.4.28-2",
+            "Arquivo atualizado: /usr/share/applications/lm-studio.desktop",
+            "Pronto: o LM Studio 0.4.28-2 está no menu de aplicativos, e abre também com o comando lm-studio.",
+            ("ok", "o comando lm-studio abre o LM Studio 0.4.28-2"), ("ok", "o atalho no menu de aplicativos (/usr/share/applications/lm-studio.desktop)"),
+            ("ok", "o ícone do atalho existe"), ("ok", "o sistema tem as bibliotecas que o LM Studio pede (ldd)"),
+            ("ok", "a caixa de areia do Chromium é do root, com setuid"), ("ok", "só o root muda os arquivos do LM Studio"), "Tudo conferido."], "LM Studio"),
+            "Terminal mostrando o bora aplicar a receita do LM Studio: baixa o AppImage, confere a soma SHA256, instala em /opt e confere seis testes."),
+        [("LM Studio ou Ollama?", "Os dois rodam os mesmos modelos. O LM Studio tem janela, para procurar, baixar e conversar sem terminal. O Ollama é um serviço, mais fácil de ligar aos agentes. Dá para escolher os dois no rolê."),
+         ("Por que o bora não baixa o modelo no LM Studio?", "Os modelos do LM Studio vêm da janela dele, e ele mostra na hora as versões que cabem na máquina. O <code>bora</code> diz o nome do modelo que cabe, e a escolha final é sua."),
+         ("De onde vem a soma SHA256?", "O LM Studio não publica as somas. A da receita foi conferida com a do pacote do LM Studio no nixpkgs. Se o arquivo que chegar não for exatamente esse, nada é instalado.")],
+        [("pacote", "curl, ca-certificates e as bibliotecas da janela", "<code>libgtk-3-0t64</code>, <code>libnss3</code>, <code>libgbm1</code> e <code>libasound2t64</code>, se faltarem."),
+         ("arquivo", "/opt/lm-studio/0.4.28-2", "O LM Studio, aberto do AppImage."),
+         ("arquivo", "/usr/local/bin/lm-studio", "Link para a versão instalada."),
+         ("arquivo", "/usr/share/applications/lm-studio.desktop", "O atalho no menu de aplicativos.")],
+        [("bora modelos", "Mostra qual modelo procurar na aba Discover."),
+         ("lm-studio", "Abre o LM Studio."),
+         ("du -sh ~/.lmstudio/models", "Mostra quanto os modelos baixados ocupam.")],
+        [("Download do LM Studio", "lmstudio.ai", "https://lmstudio.ai/download"),
+         ("Documentação do LM Studio", "lmstudio.ai", "https://lmstudio.ai/docs"),
+         ("O pacote do LM Studio no nixpkgs", "GitHub", "https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/lm/lmstudio/package.nix")])
+
+
+PAGINAS.update({
+    "ia/ollama": pagina_ollama,
+    "ia/lm-studio": pagina_lm_studio,
+})

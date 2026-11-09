@@ -81,7 +81,7 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 | 1 | Pronto para estudar e trabalhar | Atualização, firewall, codecs, Flatpak, snapshot do sistema e backup da pasta pessoal | testado |
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | testado |
 | 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | testado |
-| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional e editor | rascunho |
+| 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional, editor e, se a pessoa quiser, modelos locais com o Ollama ou o LM Studio | rascunho |
 | 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |
 | 7 | Acessar de fora sem abrir portas | Tailscale, com teste de CGNAT | planejado |
@@ -94,6 +94,7 @@ Perguntas:
 - Vai usar chave de API (OpenRouter, DeepSeek ou outra)? Se sim, o arquivo de chaves já sai com a linha do provedor no topo, e o OpenCode encontra a chave sozinho.
 - Qual editor? VS Code, VSCodium, Zed ou só o terminal.
 - Quer isolar os agentes numa caixa de areia? É o recomendado, e o padrão.
+- Quer rodar modelos no próprio computador? Não (o padrão), o Ollama com o modelo que o `bora` sugere, o Ollama com um modelo que a pessoa baixa por conta própria, o LM Studio, ou os dois. A pergunta já mostra a sugestão para a máquina.
 
 O que é instalado e configurado:
 
@@ -103,9 +104,12 @@ O que é instalado e configurado:
 - um lugar para as chaves de API em `~/.config/chaves-de-api`, com permissão só do dono, carregado em cada terminal (`ia/chaves-de-api`);
 - os agentes escolhidos, na conta da pessoa e sem `sudo`, pelos pacotes oficiais no npm e no PyPI, e a skill do `bora` para eles (`ia/agentes`);
 - quando escolhida, a caixa de areia: o comando `caixa`, com o `bubblewrap`, onde o agente só escreve na pasta do projeto e não vê as chaves SSH, e a caixa de areia do próprio Claude Code ligada (`ia/caixa-de-areia`); nenhum agente recebe `sudo`;
-- o editor escolhido (`dev/editor`), com o Flatpak quando ele vem do Flathub.
+- o editor escolhido (`dev/editor`), com o Flatpak quando ele vem do Flathub;
+- quando escolhido, o vibecode local: o Ollama (`ia/ollama`), baixado do GitHub e conferido por SHA256, como um serviço que só este computador acessa, e o LM Studio (`ia/lm-studio`), com janela.
 
-Ficaram para depois o Antigravity CLI, que só tem instalador do tipo `curl | sh`, e o Ollama, para modelos locais.
+No vibecode local, o `bora` mede a máquina antes (a RAM, a memória da placa de vídeo e o disco) e confere cada modelo da lista [`receitas/ia/ollama/modelos.yaml`](../receitas/ia/ollama/modelos.yaml). O `bora modelos` mostra a conta. A sugestão é o modelo mais capaz que roda bem e serve para agente; numa máquina sem memória para isso, um modelo só de conversa, ou nenhum. No plano, `modelo: sugerido` vira o nome do modelo, com o tamanho do download, antes de a pessoa aceitar. No Ollama, o `bora` baixa o modelo; no LM Studio, a pessoa baixa na aba Discover, com o nome que o `bora` mostrou. Escolhido por Brahm em 9/11/2026.
+
+Ficou para depois o Antigravity CLI, que só tem instalador do tipo `curl | sh`.
 
 Pronto quando: cada agente responde no terminal, e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
 
@@ -113,4 +117,4 @@ Pronto quando: cada agente responde no terminal, e um projeto de exemplo é cria
 
 ## Ideias para depois
 
-Bloqueador de anúncios da casa, fotos da família (Immich), backup da família, IA local, dual boot e ajustes brasileiros (cedilha no teclado internacional, programa do IRPF).
+Bloqueador de anúncios da casa, fotos da família (Immich), backup da família, servidor de IA da casa (o Ollama servindo os modelos para a rede, com o firewall), dual boot e ajustes brasileiros (cedilha no teclado internacional, programa do IRPF).
