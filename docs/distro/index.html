@@ -291,7 +291,7 @@
             <span class="ladrilho selo-distro" style="--c1:#ffa348;--c2:#e66100" aria-hidden="true"><b>U</b></span>
             <div><h3>Ubuntu</h3><span class="edicao">LTS (24.04 ou 26.04) · família Ubuntu</span></div>
           </div>
-          <span class="ficha feito">✓ Testada em contêiner com o <code>bora</code></span>
+          <span class="ficha feito">✓ Testada com o <code>bora</code>, em máquina virtual</span>
           <p>Quem quer a distro mais documentada: quase todo tutorial e todo programa para Linux pensa no Ubuntu primeiro. Boa para estudar e programar.</p>
           <dl>
             <dt>Confortável com</dt><dd>4 GB de memória e 30 GB de disco</dd>
@@ -323,7 +323,7 @@
             <span class="ladrilho selo-distro" style="--c1:#f66151;--c2:#a51d2d" aria-hidden="true"><b>D</b></span>
             <div><h3>Debian</h3><span class="edicao">13, com Xfce ou LXQt · família Debian</span></div>
           </div>
-          <span class="ficha feito">✓ Testada em contêiner com o <code>bora</code></span>
+          <span class="ficha feito">✓ Testada com o <code>bora</code>, em máquina virtual</span>
           <p>Máquina antiga, servidor da casa ou quem quer um sistema que muda pouco e dura anos sem surpresa.</p>
           <dl>
             <dt>Confortável com</dt><dd>2 GB de memória e 20 GB de disco com Xfce; 1 GB e 10 GB sem ambiente gráfico</dd>
@@ -521,13 +521,13 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Passo 4</p>
         <h2>Instalar o <code>bora</code> e rodar <code>bora diag</code></h2>
-        <p>O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e rode. O <code>diag</code> não muda nada: só mostra o que encontrou.</p>
+        <p>O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e instale em <code>/usr/local/bin</code>, para ele ficar à mão como <code>bora</code> sempre que você precisar. O <code>diag</code> não muda nada: só mostra o que encontrou.</p>
       </div>
       <div class="bora-grade">
         <figure style="margin:0">
-        <div class="janela replay" role="img" aria-label="Terminal: baixar o bora e o SHA256SUMS com wget, conferir com sha256sum, dar permissão de execução, rodar bora diag, que mostra Ubuntu 26.04 LTS da família ubuntu, e abrir o menu com sudo.">
+        <div class="janela replay" role="img" aria-label="Terminal: baixar o bora e o SHA256SUMS com wget, conferir com sha256sum, instalar em /usr/local/bin/bora, rodar bora diag, que mostra Ubuntu 26.04 LTS da família ubuntu, e abrir o menu com sudo bora.">
           <div class="barra" aria-hidden="true">Terminal<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
-<pre aria-hidden="true"><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/bora-linux-x86_64</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/SHA256SUMS</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sha256sum --check --ignore-missing SHA256SUMS</span></span><span class="l ">bora-linux-x86_64: <span class="v">OK</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">chmod +x bora-linux-x86_64</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">./bora-linux-x86_64 diag</span></span><span class="l "><span class="o">Distro</span></span><span class="l ">  Ubuntu 26.04 LTS</span><span class="l ">  família: ubuntu, base 26.04</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Sistema</span></span><span class="l ">  systemd: sim, UEFI: sim</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Hardware</span></span><span class="l ">  memória: 7.6 GB</span><span class="l ">  disco livre na raiz: 212.4 GB</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Já tem</span></span><span class="l ">  snapshot do sistema: <span class="a">não configurado</span></span><span class="l ">  firewall: ufw</span><span class="l ">  rede: <span class="v">conectada</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo ./bora-linux-x86_64</span></span></pre>
+<pre aria-hidden="true"><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/bora-linux-x86_64</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">wget https://github.com/brahm/linux-para-todos-os-roles/releases/latest/download/SHA256SUMS</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sha256sum --check --ignore-missing SHA256SUMS</span></span><span class="l ">bora-linux-x86_64: <span class="v">OK</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo install -m 755 bora-linux-x86_64 /usr/local/bin/bora</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">bora diag</span></span><span class="l "><span class="o">Distro</span></span><span class="l ">  Ubuntu 26.04.1 LTS</span><span class="l ">  família: ubuntu, base 26.04</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Sistema</span></span><span class="l ">  arquitetura: x86_64</span><span class="l ">  systemd: sim, UEFI: sim</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Hardware</span></span><span class="l ">  memória: 7.6 GB</span><span class="l ">  disco livre na raiz: 212.4 GB</span><span class="l ">  disco do sistema: SSD</span><span class="l ">&nbsp;</span><span class="l "><span class="o">Já tem</span></span><span class="l ">  snapshot do sistema: <span class="a">não configurado</span></span><span class="l ">  firewall: ufw</span><span class="l ">  memória comprimida (zram): desligada</span><span class="l ">  rede: <span class="v">conectada</span></span><span class="l cmd"><span class="p">você@computador:~$</span> <span class="c">sudo bora</span></span></pre>
         </div>
         <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
         </figure>
@@ -535,11 +535,12 @@
           <ul class="caixa">
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9"/></svg><span class="txt"><strong>O <code>OK</code> do <code>sha256sum</code></strong><span>Garante que o arquivo é o mesmo que saiu do projeto. Se aparecer outra coisa, apague e baixe de novo.</span></span></li>
             <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2.5 19h19"/></svg><span class="txt"><strong>Processador ARM?</strong><span>O <code>bora</code> roda só em computadores de 64 bits com processador Intel ou AMD (x86_64).</span></span></li>
-            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg><span class="txt"><strong>Travou em algum ponto?</strong><span>Rode <code>./bora-linux-x86_64 ajuda</code>: ele monta uma pergunta pronta, sem dados sensíveis, para colar em qualquer chat de IA.</span></span></li>
+            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3h.01"/></svg><span class="txt"><strong>Travou em algum ponto?</strong><span>Rode <code>bora ajuda</code>: ele monta uma pergunta pronta, sem dados sensíveis, para colar em qualquer chat de IA.</span></span></li>
+            <li class="linha"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg><span class="txt"><strong>Para atualizar</strong><span>Repita os mesmos comandos: o <code>install</code> troca o arquivo antigo pelo novo. O <code>bora versao</code> mostra qual você tem, e a <a href="https://github.com/brahm/linux-para-todos-os-roles/releases">página de versões</a> conta o que mudou.</span></span></li>
           </ul>
           <a class="cartao proximo" href="../catalogo/roles/pronto-para-estudar.html">
             <span class="ladrilho l-azul" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 5.5c2.6-.9 5.4-.6 8.5 1.2v12.6c-3.1-1.8-5.9-2.1-8.5-1.2z"/><path d="M20.5 5.5c-2.6-.9-5.4-.6-8.5 1.2v12.6c3.1-1.8 5.9-2.1 8.5-1.2z"/></svg></span>
-            <span class="txt"><span class="sobretitulo">Próximo passo</span><strong>Pronto para estudar e trabalhar</strong><span>O primeiro rolê: atualização, firewall, codecs, Flatpak, snapshot e backup da pasta pessoal.</span></span>
+            <span class="txt"><span class="sobretitulo">Próximo passo</span><strong>Pronto para estudar e trabalhar</strong><span>O primeiro rolê: atualização, firewall, codecs, Flatpak, snapshot e backup da pasta pessoal. Os outros três rolês prontos estão no <code>sudo bora</code> também.</span></span>
             <svg class="ir" aria-hidden="true"><use href="#seta"/></svg>
           </a>
         </div>

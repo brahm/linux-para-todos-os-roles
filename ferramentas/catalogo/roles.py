@@ -159,7 +159,7 @@ def pagina_role(r):
         perguntas = "<p>Este rolê não faz perguntas além das que cada receita precisa, e todas têm um padrão pensado para quem está começando.</p>"
     lista = [
         ("menu", "azul", "Escolha o rolê", "no menu",
-         "<p>Rode <code>sudo bora</code> no terminal. O menu mostra só os rolês que cabem na sua máquina e na sua distro, e você escolhe pelo número.</p>"),
+         "<p>Rode <code>sudo bora</code> no terminal. O menu mostra só os rolês que cabem na sua máquina e na sua distro, e você escolhe pelo número. Ainda não tem o <code>bora</code>? <a href=\"../../distro/#bora\">Veja como instalar</a>.</p>"),
         ("pergunta", "azul", "Responda o que for preciso", "em português", perguntas),
         ("plano", "", "Revise o plano", "nada mudou ainda",
          "<p>O <code>bora</code> mostra o plano: as receitas, na ordem, com os parâmetros. Você pode aplicar agora, só simular, ou salvar o plano para revisar com calma, versionar ou aplicar em outra máquina.</p>"),
@@ -174,32 +174,40 @@ def pagina_role(r):
 
     if rid == "pronto-para-estudar":
         corpo.append(f'''    <section class="largura" aria-label="O menu de verdade">
-{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz as duas perguntas que precisa e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora, encurtada nas descrições.")}
+{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz as três perguntas que precisa, todas com um padrão, e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora 0.6, sem as descrições de cada receita no plano.")}
       <figure style="margin:0">
 {janela("sudo bora", [
             ("cmd", P + '<span class="c">sudo bora</span>'),
-            ("", '<span class="c">bora 0.3.0 · Linux para todos os rolês</span>'),
-            ("", '<span class="d">Ubuntu 26.04.1 LTS, família ubuntu, 8 GB de RAM, 120 GB livres</span>'),
+            ("", '<span class="c">bora 0.6.0 · Linux para todos os rolês</span>'),
+            ("", '<span class="d">Ubuntu 26.04.1 LTS, família ubuntu, 7.6 GB de RAM, 212.4 GB livres</span>'),
             ("", ""),
             ("", 'O que você quer fazer com este computador?'),
-            ("", '   1. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador…</span>'),
-            ("", '   2. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</span>'),
-            ("", '   3. Receitas avulsas  <span class="d">escolher uma ou mais receitas do catálogo</span>'),
-            ("", '   4. Ver o diagnóstico completo'),
-            ("", '   5. Desfazer a última aplicação'),
-            ("", '   6. Montar uma pergunta para a IA  <span class="d">bora ajuda</span>'),
-            ("", '   7. Sair'),
-            ("cmd", 'Número: <span class="c">2</span>'),
+            ("", '   1. Começar a programar  <span class="d">Git, Python, Node.js e contêineres prontos, do jeito que os tutoriais esperam encontrar.</span>'),
+            ("", '   2. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador…</span>'),
+            ("", '   3. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás se algo der errado.</span>'),
+            ("", '   4. Vibecodar  <span class="d">Programar conversando com agentes de IA, com as chaves guardadas…</span>'),
+            ("", '   5. Receitas avulsas  <span class="d">escolher uma ou mais receitas do catálogo</span>'),
+            ("", '   6. Ver o diagnóstico completo'),
+            ("", '   7. Desfazer a última aplicação'),
+            ("", '   8. Montar uma pergunta para a IA  <span class="d">bora ajuda</span>'),
+            ("", '   9. Sair'),
+            ("cmd", 'Número: <span class="c">3</span>'),
+            ("", ""),
+            ("", 'Tirar o Snap e usar o Firefox da Mozilla e os aplicativos do Flathub no lugar?'),
+            ("", '   1. nao  <span class="d">Não, deixar o Snap como está (o recomendado para começar).</span>'),
+            ("", '   2. sim  <span class="d">Sim, tirar o Snap. O Firefox e o Thunderbird continuam, com os seus dados.</span>'),
+            ("cmd", 'Número [1]: <span class="c">1</span>'),
             ("", 'Sistema atualizado: Instalar as atualizações de segurança sozinho, todo dia? [S/n] <span class="c">s</span>'),
             ("", 'Backup da pasta pessoal: Em que disco externo guardar a cópia? "auto" usa o disco USB conectado agora; ou informe a partição, como /dev/sdb1. [auto]: <span class="c">auto</span>'),
             ("", ""),
             ("", 'Plano: pronto-para-estudar'),
-            ("", '  1. Sistema atualizado'),
-            ("", '  2. Firewall · risco médio  <span class="d">perfil=desktop</span>'),
-            ("", '  3. Snapshot do sistema · risco médio'),
-            ("", '  4. Codecs de áudio e vídeo'),
-            ("", '  5. Flatpak e Flathub'),
-            ("", '  6. Backup da pasta pessoal · risco médio  <span class="d">destino=auto, manter=7</span>'),
+            ("", '  1. Sistema atualizado  <span class="d">automaticas=sim</span>'),
+            ("", '  2. Histórico do /etc'),
+            ("", '  3. Firewall · risco médio  <span class="d">perfil=desktop, rede_local=auto</span>'),
+            ("", '  4. Snapshot do sistema · risco médio  <span class="d">dispositivo=auto, diarios=5, semanais=3, criar_agora=sim</span>'),
+            ("", '  5. Codecs de áudio e vídeo'),
+            ("", '  6. Flatpak e Flathub  <span class="d">integrar_loja=sim</span>'),
+            ("", '  7. Backup da pasta pessoal · risco médio  <span class="d">destino=auto, usuarios=auto, manter=7, fazer_agora=sim</span>'),
             ("", ""),
             ("", 'O que fazer com o plano?'),
             ("", '   1. Aplicar agora  <span class="d">pede a senha de administrador</span>'),
@@ -207,24 +215,29 @@ def pagina_role(r):
             ("", '   3. Salvar para depois  <span class="d">para revisar, versionar ou aplicar em outra máquina</span>'),
             ("", '   4. Voltar'),
             ("", 'Número [1]: <span class="cursor"></span>'),
-        ], "Terminal mostrando o menu do bora: o rolê Pronto para estudar e trabalhar é escolhido, o bora faz duas perguntas e mostra o plano com as seis receitas.")}
+        ], "Terminal mostrando o menu do bora 0.6.0 com os quatro rolês: Pronto para estudar e trabalhar é escolhido, o bora faz três perguntas e mostra o plano com as sete receitas, sem o Sem Snap, que não foi pedido.")}
       </figure>
     </section>''')
 
     if rid == "maquina-antiga":
         corpo.append(f'''    <section class="largura" aria-label="O menu de verdade">
-{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz quatro perguntas, todas com um padrão, e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora, encurtada nas descrições, numa máquina de 4 GB.")}
+{cabeca("No terminal", "O menu, hoje", "O rolê aparece no menu, faz seis perguntas, todas com um padrão, e mostra o plano antes de mudar qualquer coisa. Esta é a saída de verdade do bora 0.6, encurtada nas descrições, numa máquina de 4 GB.")}
       <figure style="margin:0">
 {janela("sudo bora", [
             ("cmd", P + '<span class="c">sudo bora</span>'),
-            ("", '<span class="c">bora 0.3.0 · Linux para todos os rolês</span>'),
+            ("", '<span class="c">bora 0.6.0 · Linux para todos os rolês</span>'),
             ("", '<span class="d">Debian GNU/Linux 13 (trixie), família debian, 3.8 GB de RAM, 96 GB livres</span>'),
             ("", ""),
             ("", 'O que você quer fazer com este computador?'),
-            ("", '   1. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</span>'),
-            ("", '   2. Pronto para estudar e trabalhar  <span class="d">O computador atualizado, protegido e com um jeito fácil de voltar atrás…</span>'),
+            ("", '   1. Começar a programar  <span class="d">Git, Python, Node.js e contêineres prontos…</span>'),
+            ("", '   2. Dar vida nova a uma máquina antiga  <span class="d">Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.</span>'),
             ("", '   <span class="d">…</span>'),
-            ("cmd", 'Número: <span class="c">1</span>'),
+            ("cmd", 'Número: <span class="c">2</span>'),
+            ("", ""),
+            ("", 'Quer entrar nesta máquina pelo terminal de outro computador da casa (SSH)?'),
+            ("", '   1. nao  <span class="d">Não, ela vai ser usada com tela e teclado.</span>'),
+            ("", '   2. sim  <span class="d">Sim, ela vai ficar num canto, servindo a casa. Só a rede local entra.</span>'),
+            ("cmd", 'Número [1]: <span class="c">1</span>'),
             ("", 'Sistema atualizado: Instalar as atualizações de segurança sozinho, todo dia? [S/n] <span class="c">s</span>'),
             ("", 'Ambiente gráfico leve: Qual ambiente leve você quer?'),
             ("", '   1. xfce  <span class="d">Xfce. Leve, completo e com cara de sempre; o mais fácil para quem vem do Windows.</span>'),
@@ -236,7 +249,7 @@ def pagina_role(r):
             ("", ""),
             ("", 'Plano: maquina-antiga'),
             ("", '  1. Sistema atualizado  <span class="d">automaticas=sim</span>'),
-            ("", '  2. Snapshot do sistema · risco médio  <span class="d">dispositivo=auto, diarios=5, semanais=3</span>'),
+            ("", '  2. Snapshot do sistema · risco médio  <span class="d">dispositivo=auto, diarios=5, semanais=3, criar_agora=sim</span>'),
             ("", '  3. Memória comprimida (zram)  <span class="d">porcentagem=50</span>'),
             ("", '  4. Ambiente gráfico leve  <span class="d">ambiente=xfce, entrar_no_leve=sim</span>'),
             ("", '  5. Navegador enxuto  <span class="d">bloquear_anuncios=sim</span>'),
@@ -248,7 +261,7 @@ def pagina_role(r):
             ("", '   3. Salvar para depois  <span class="d">para revisar, versionar ou aplicar em outra máquina</span>'),
             ("", '   4. Voltar'),
             ("", 'Número [1]: <span class="cursor"></span>'),
-        ], "Terminal mostrando o menu do bora: o rolê Dar vida nova a uma máquina antiga é escolhido, o bora faz quatro perguntas e mostra o plano com as seis receitas.")}
+        ], "Terminal mostrando o menu do bora 0.6.0: o rolê Dar vida nova a uma máquina antiga é escolhido, o bora faz seis perguntas e mostra o plano com as seis receitas, sem o SSH, que não foi pedido.")}
       </figure>
     </section>''')
 
@@ -338,6 +351,7 @@ def pagina_catalogo():
           <p class="lema">Um <strong>rolê</strong> é o que você quer fazer com o computador. Ele é feito de <strong>receitas</strong>: mudanças pequenas que o <code>bora</code> sabe verificar, aplicar, testar e desfazer.</p>
           <div class="fichas">
             <span class="ficha">7 rolês na primeira versão</span>
+            <span class="ficha feito">{sum(r["status"] == "testado" for r in ROLES)} rolês testados</span>
             <span class="ficha feito">{prontas} receitas prontas</span>
             <span class="ficha planejado">{planejadas} planejadas</span>
           </div>
@@ -353,7 +367,7 @@ def pagina_catalogo():
       </div>
     </div>''']
     corpo.append(f'''    <section id="roles" class="largura">
-{cabeca("Rolês", "Sete rolês para começar", "Cada página mostra o que o rolê faz e o que ele não faz, as receitas, o passo a passo e os porquês. O <code>bora</code> mostra no menu só os rolês que cabem na sua máquina.")}
+{cabeca("Rolês", "Sete rolês para começar", "Cada página mostra o que o rolê faz e o que ele não faz, as receitas, o passo a passo e os porquês. Os testados já estão no menu do <code>sudo bora</code>, que mostra só os rolês que cabem na sua máquina. Ainda não tem o <code>bora</code>? <a href=\"../distro/#bora\">Veja como instalar</a>.")}
       <div class="grade">
 {chr(10).join(cartao_role(r) for r in ROLES)}
       </div>

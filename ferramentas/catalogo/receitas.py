@@ -138,10 +138,28 @@ def capturas(rid):
       </div>'''
 
 
+def em_vm(r, familia):
+    """Se a receita tem um teste que passou em máquina virtual ou num computador de verdade nessa família."""
+    return any(t.get("distro") == familia and t.get("onde") in ("vm", "maquina") and t.get("resultado") == "ok"
+               for t in r.get("testes") or [])
+
+
+def nivel_texto(r, familia, nivel):
+    if nivel == "testada" and em_vm(r, familia):
+        return "Testada em VM"
+    return NIVEL_TEXTO.get(nivel)
+
+
+def ficha_testada(r):
+    if em_vm(r, "ubuntu") and em_vm(r, "debian"):
+        return "Testada em máquina virtual no Ubuntu e no Debian"
+    return "Testada em contêiner no Ubuntu e no Debian"
+
+
 def onde_testada(r):
     fam = r.get("familias") or {}
     cartoes = "\n".join(
-        f'''        <div class="cartao familia"><strong>{nome}</strong><span class="nivel {fam.get(f, 'planejada')}">{NIVEL_TEXTO.get(fam.get(f, 'planejada'))}</span><span style="color:var(--text-2);font-size:14px">{exemplos}</span></div>'''
+        f'''        <div class="cartao familia"><strong>{nome}</strong><span class="nivel {fam.get(f, 'planejada')}">{nivel_texto(r, f, fam.get(f, 'planejada'))}</span><span style="color:var(--text-2);font-size:14px">{exemplos}</span></div>'''
         for f, nome, exemplos in FAMILIAS)
     onde = {"conteiner": "Contêiner (teste automático)", "vm": "Máquina virtual", "maquina": "Computador de verdade"}
     distros = {"ubuntu": "Ubuntu", "debian": "Debian"}
@@ -159,7 +177,7 @@ def onde_testada(r):
             <tbody>{testes}</tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>{capturas(r.get('id', ''))}'''
 
 
@@ -199,7 +217,7 @@ def abertura(rid, r, ilustracao, legenda):
             <span class="ficha"><code>{rid}</code></span>
             <span class="ficha risco-{risco}">{risco_txt}</span>
             <span class="ficha">Pede a senha de administrador</span>
-            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+            <span class="ficha feito testada">{ficha_testada(r)}</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
@@ -276,12 +294,19 @@ def pagina_atualizar():
 {cabeca("No terminal", "Uma aplicação de verdade", "Montada com as mensagens reais do bora e da receita, num Ubuntu 26.04. O número de pacotes muda de máquina para máquina.")}
       <figure style="margin:0">
 {janela("bora aplicar", [
-        ("cmd", P + '<span class="c">sudo bora plano --receitas base/atualizar</span>'),
+        ("cmd", P + '<span class="c">bora plano --receitas base/atualizar</span>'),
+        ("", ""),
+        ("", '<span class="c">Plano: receitas avulsas</span>'),
+        ("", '  1. Sistema atualizado'),
+        ("", '<span class="d">     automaticas=sim</span>'),
+        ("", ""),
         ("", '<span class="v">✓</span> Plano salvo em plano.yaml. Para aplicar: sudo bora aplicar plano.yaml'),
         ("cmd", P + '<span class="c">sudo bora aplicar plano.yaml</span>'),
+        ("", '<span class="d">  (o bora mostra o plano de novo)</span>'),
+        ("", 'Aplicar este plano? [s/N] <span class="c">s</span>'),
         ("", ""),
         ("", '<span class="c">Aplicando o plano (20261104-205625)</span>'),
-        ("", 'Criando um snapshot do sistema antes de mudar qualquer coisa.'),
+        ("", '  Criando um snapshot do sistema antes de mudar qualquer coisa. Pode levar alguns minutos.'),
         ("", '<span class="v">✓</span> Snapshot criado: timeshift, 2026-11-04 20:56'),
         ("", ""),
         ("", '<span class="c">[1/1] Sistema atualizado</span>'),
@@ -395,12 +420,21 @@ def pagina_snapshot():
          "<p>Desliga e remove o timer, apaga o snapshot que esta receita criou, volta o <code>timeshift.json</code> ao que era e remove o Timeshift, se foi ela que instalou. Fotos criadas depois ficam guardadas, e a receita diz onde estão, para você decidir.</p>"),
     ]) + "\n" + dentro_fora))
     corpo.append(f'''    <section class="largura" aria-label="Uma aplicação de verdade">
-{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt e do Timeshift, com o disco de teste trocado por um disco comum.")}
+{cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, dentro do rolê Pronto para estudar e trabalhar, encurtada nas linhas do apt e do Timeshift e nas receitas de antes, com o disco de teste trocado por um disco comum.")}
       <figure style="margin:0">
 {janela("bora aplicar", [
-        ("cmd", P + '<span class="c">sudo bora aplicar plano.yaml</span>'),
+        ("cmd", P + '<span class="c">sudo bora aplicar pronto-para-estudar.yaml</span>'),
+        ("", '<span class="d">  (o bora mostra o plano, com as sete receitas)</span>'),
+        ("", 'Aplicar este plano? [s/N] <span class="c">s</span>'),
         ("", ""),
-        ("", '<span class="c">[2/3] Snapshot do sistema</span>'),
+        ("", '<span class="c">Aplicando o plano (20261104-205412)</span>'),
+        ("", '<span class="a">!</span> Esta máquina ainda não tem snapshot do sistema configurado.'),
+        ("", '  O plano configura o snapshot; a partir dele, as próximas mudanças terão um ponto de volta.'),
+        ("", '  Cada receita sabe se desfazer, mas sem snapshot não há como voltar o sistema inteiro.'),
+        ("", 'Continuar mesmo assim? [S/n] <span class="c">s</span>'),
+        ("", '<span class="d">  (as receitas 1 a 3: Sistema atualizado, Histórico do /etc e Firewall)</span>'),
+        ("", ""),
+        ("", '<span class="c">[4/7] Snapshot do sistema</span>'),
         ("", '<span class="bar">  │</span> Os snapshots vão para /dev/sda2 (ext4, modo rsync).'),
         ("", '<span class="bar">  │</span> Instalando: timeshift'),
         ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/timeshift/timeshift.json'),
@@ -520,6 +554,16 @@ def pagina_firewall():
         <div data-quando="casa">
 {janela("bora aplicar · perfil servidor-lan", [
         ("cmd", P + '<span class="c">sudo bora aplicar plano.yaml</span>'),
+        ("", ""),
+        ("", '<span class="c">Plano: receitas avulsas</span>'),
+        ("", '  1. Firewall <span class="d">· risco médio</span>'),
+        ("", '<span class="d">     perfil=servidor-lan, rede_local=auto</span>'),
+        ("", ""),
+        ("", 'Aplicar este plano? [s/N] <span class="c">s</span>'),
+        ("", ""),
+        ("", '<span class="c">Aplicando o plano (20261105-101530)</span>'),
+        ("", '<span class="d">  (o aviso de que esta máquina ainda não tem snapshot, e a confirmação)</span>'),
+        ("", ""),
         ("", '<span class="c">[1/1] Firewall</span>'),
         ("", '<span class="bar">  │</span> Rede local: 192.168.0.0/24'),
         ("", '<span class="bar">  │</span> Instalando: ufw'),
@@ -536,12 +580,20 @@ def pagina_firewall():
         <div data-quando="fora">
 {janela("bora aplicar · perfil desktop", [
         ("cmd", P + '<span class="c">sudo bora aplicar plano.yaml</span>'),
+        ("", ""),
+        ("", '<span class="c">Plano: receitas avulsas</span>'),
+        ("", '  1. Firewall <span class="d">· risco médio</span>'),
+        ("", '<span class="d">     perfil=desktop, rede_local=auto</span>'),
+        ("", ""),
+        ("", 'Aplicar este plano? [s/N] <span class="c">s</span>'),
+        ("", ""),
+        ("", '<span class="c">Aplicando o plano (20261105-101530)</span>'),
+        ("", '<span class="d">  (o aviso de que esta máquina ainda não tem snapshot, e a confirmação)</span>'),
+        ("", ""),
         ("", '<span class="c">[1/1] Firewall</span>'),
         ("", '<span class="bar">  │</span> Rede local: 192.168.0.0/24'),
         ("", '<span class="bar">  │</span> <span class="x">Erro:</span> há uma sessão SSH vinda de 203.0.113.5, fora da rede local; ligar o firewall cortaria o acesso. Conecte-se pela rede local ou use o perfil tailscale.'),
-        ("", '<span class="x">✗</span> Firewall: a etapa aplicar falhou (código 1).'),
-        ("", '  Para voltar ao estado anterior: sudo bora desfazer'),
-        ("", '  Para pedir ajuda a uma IA: bora ajuda'),
+        ("", '<span class="x">✗</span> Firewall: a etapa aplicar falhou (código 1). Para voltar ao estado anterior: sudo bora desfazer. Para pedir ajuda a uma IA: bora ajuda.'),
     ], "Terminal: com uma sessão SSH vinda de fora da rede local, a receita para antes de ligar o firewall e explica o motivo.")}
         </div>
         <figcaption class="legenda-palco">Saídas de verdade, dos testes automáticos da receita, com o endereço da rede trocado por um de casa.</figcaption>
@@ -635,7 +687,7 @@ def pagina_codecs():
 {cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.")}
       <figure style="margin:0">
 {janela("bora aplicar", [
-        ("", '<span class="c">[4/6] Codecs de áudio e vídeo</span>'),
+        ("", '<span class="c">[5/7] Codecs de áudio e vídeo</span>'),
         ("", '<span class="bar">  │</span> Instalando: gstreamer1.0-libav gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly'),
         ("", '<span class="bar">  │</span> <span class="d">Setting up gstreamer1.0-plugins-ugly:amd64 (1.28.2-1) ...</span>'),
         ("", '<span class="bar">  │</span> Pronto. Feche e abra de novo o player de vídeo ou o navegador para eles verem os codecs novos.'),
@@ -723,7 +775,7 @@ def pagina_flatpak():
 {cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt, e o primeiro aplicativo instalado depois.")}
       <figure style="margin:0">
 {janela("bora aplicar", [
-        ("", '<span class="c">[5/6] Flatpak e Flathub</span>'),
+        ("", '<span class="c">[6/7] Flatpak e Flathub</span>'),
         ("", '<span class="bar">  │</span> Instalando: flatpak'),
         ("", '<span class="bar">  │</span> <span class="d">Setting up flatpak (1.16.6-1) ...</span>'),
         ("", '<span class="bar">  │</span> Ligando o Flathub.'),
@@ -824,7 +876,7 @@ def pagina_backup():
 {cabeca("No terminal", "Uma aplicação de verdade", "A saída de um teste no Ubuntu 26.04, com o disco de teste trocado por um disco USB comum.")}
       <figure style="margin:0">
 {janela("bora aplicar", [
-        ("", '<span class="c">[6/6] Backup da pasta pessoal</span>'),
+        ("", '<span class="c">[7/7] Backup da pasta pessoal</span>'),
         ("", '<span class="bar">  │</span> As cópias vão para /dev/sdb1 (ext4, UUID 737d257f-b139-4c78-bb36-94917984426d).'),
         ("", '<span class="bar">  │</span> Pastas pessoais copiadas: ana'),
         ("", '<span class="bar">  │</span> Arquivo atualizado: /etc/bora/backup-pessoal.conf'),
@@ -1353,7 +1405,7 @@ def pagina_git():
          "<ul><li>Instala <code>git</code> e <code>openssh-client</code>, se faltarem.</li><li>Guarda uma cópia do <code>~/.gitconfig</code> e grava <code>user.name</code>, <code>user.email</code> e, se não existirem, <code>init.defaultBranch</code> e <code>pull.rebase</code>, como a própria pessoa.</li><li>Cria <code>~/.ssh/id_ed25519</code>, se não houver chave, e mostra a parte pública.</li></ul>",
          "<p>Confere cada configuração, faz um commit de verdade num repositório de teste, apagado no fim, e confere a chave com <code>ssh-keygen -l</code>.</p>",
          "<p>Volta o <code>~/.gitconfig</code> ao que era, ou apaga o arquivo, se foi a receita que o criou, e remove os pacotes que ela instalou. A chave SSH fica.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta que nunca tinha usado o Git, encurtada nas linhas do apt.", _saida("[1/4] Git", [
+        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta que nunca tinha usado o Git, encurtada nas linhas do apt.", _saida("[2/5] Git", [
             "Instalando: git openssh-client",
             "Git: user.name = Ana Aluna", "Git: user.email = ana@exemplo.com.br",
             "Git: init.defaultBranch = main", "Git: pull.rebase = false",
@@ -1418,7 +1470,7 @@ def pagina_compilacao():
          "<p>Instala os dois, com as dependências que faltarem, e anota tudo o que entrou.</p>",
          "<p>Roda <code>gcc</code>, <code>g++</code>, <code>make</code> e <code>pkg-config</code>, e compila e roda um programa de uma linha em C e outro em C++, numa pasta temporária.</p>",
          "<p>Remove os pacotes que a receita instalou, com as dependências que vieram junto, menos o que outro programa passou a usar.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[2/4] Ferramentas de compilação", [
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[3/5] Ferramentas de compilação", [
             "Instalando: build-essential pkg-config", '<span class="d">0 upgraded, 95 newly installed, 0 to remove and 0 not upgraded.</span>',
             "Pronto: gcc, g++, make e pkg-config instalados.",
             ("ok", "compilador de C (gcc --version)"), ("ok", "compilador de C++ (g++ --version)"), ("ok", "make (make --version)"),
@@ -1476,7 +1528,7 @@ def pagina_python():
          "<p>Instala os pacotes que faltarem e cria <code>~/.local/bin</code>, como a própria pessoa. O <code>~/.profile</code> põe essa pasta no PATH a cada login.</p>",
          "<p>Confere que <code>python</code> e <code>python3</code> mostram a mesma versão, cria um ambiente virtual de verdade numa pasta temporária e roda o <code>pip</code> de dentro dele, e confere o <code>Python.h</code> e o <code>pipx</code>.</p>",
          "<p>Remove os pacotes que a receita instalou e a pasta <code>~/.local/bin</code>, se ainda estiver vazia. Os ambientes dos projetos ficam.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[3/4] Python com ambientes virtuais", [
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[4/5] Python com ambientes virtuais", [
             "Instalando: python3-venv python3-pip python3-dev pipx python-is-python3",
             "Pasta criada: /home/aluna/.local/bin (entra no PATH no próximo login)",
             "Pronto: Python 3.14.4. Para cada projeto, crie um ambiente com: python3 -m venv .venv &amp;&amp; source .venv/bin/activate",
@@ -1548,7 +1600,7 @@ def pagina_node():
          "<ul><li>Para, sem mudar nada, se já houver um <code>node</code> em <code>/usr/local/bin</code> que não veio do <code>bora</code>.</li><li>Baixa o arquivo de nodejs.org, confere a soma SHA256 gravada na receita e abre em <code>/usr/local/lib/nodejs</code>.</li><li>Cria os links em <code>/usr/local/bin</code>, escreve <code>prefix=${HOME}/.local</code> no <code>npmrc</code> do Node.js e cria <code>~/.local/bin</code>.</li></ul>",
          "<p>Como a pessoa: confere a versão do <code>node</code>, o <code>npm</code> e o <code>npx</code>, roda um programa e confere que o <code>npm prefix -g</code> é <code>~/.local</code>.</p>",
          "<p>Apaga os links e a pasta do Node.js, remove os pacotes que a receita instalou e a pasta <code>~/.local/bin</code>, se ainda estiver vazia.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[3/4] Node.js", [
+        _no_terminal("A saída de um teste no Ubuntu 26.04, encurtada nas linhas do apt.", _saida("[4/5] Node.js", [
             "Baixando o Node.js 26.13.0 de https://nodejs.org/dist/v26.13.0/node-v26.13.0-linux-x64.tar.xz",
             "Soma SHA256 conferida.", "Node.js instalado em /usr/local/lib/nodejs/node-v26.13.0-linux-x64",
             "Arquivo atualizado: /usr/local/lib/nodejs/node-v26.13.0-linux-x64/etc/npmrc",
@@ -1615,7 +1667,7 @@ def pagina_podman():
          "<ul><li>Instala <code>podman</code> e <code>uidmap</code>.</li><li>Escreve <code>/etc/containers/registries.conf.d/50-bora-docker-hub.conf</code>, com o Docker Hub para os nomes curtos.</li><li>Se a conta não tiver faixa de IDs, guarda uma cópia de <code>/etc/subuid</code> e <code>/etc/subgid</code> e acrescenta 65536 IDs depois das faixas que já existem.</li></ul>",
          "<p>Confere o <code>podman --version</code>, a faixa de IDs, a permissão do <code>newuidmap</code>, que o <code>podman info</code> da pessoa diz <code>rootless: true</code> e que o Docker Hub está nos registros.</p>",
          "<p>Apaga a configuração dos registros, volta <code>/etc/subuid</code> e <code>/etc/subgid</code> ao que eram e remove os pacotes que a receita instalou.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta sem faixa de IDs, encurtada nas linhas do apt.", _saida("[4/4] Contêineres com Podman", [
+        _no_terminal("A saída de um teste no Ubuntu 26.04, numa conta sem faixa de IDs, encurtada nas linhas do apt.", _saida("[5/5] Contêineres com Podman", [
             "Instalando: podman uidmap",
             "Arquivo atualizado: /etc/containers/registries.conf.d/50-bora-docker-hub.conf",
             "Faixa de IDs para os contêineres de aluna: 165536 a 231071",
@@ -1860,7 +1912,7 @@ def pagina_ferramentas():
          "<p>Instala os pacotes que faltarem e cria o link <code>/usr/local/bin/fd</code> para o <code>fdfind</code>.</p>",
          "<p>Numa pasta de teste, procura um texto com <code>rg</code>, acha um arquivo com <code>fd</code>, lê um JSON com <code>jq</code> e roda <code>gh --version</code>.</p>",
          "<p>Apaga o link do <code>fd</code> e remove os pacotes que a receita instalou, menos o que outro programa passou a usar.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[6/11] Ferramentas do terminal", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[7/12] Ferramentas do terminal", [
             "Instalando: ripgrep fd-find jq gh", "Comando criado: fd (o fdfind do Debian)",
             "Pronto: rg, fd, jq e gh instalados. Para entrar no GitHub pelo terminal: gh auth login",
             ("ok", "ripgrep acha um texto num projeto (rg)"), ("ok", "fd acha um arquivo pelo nome (fd)"),
@@ -1918,7 +1970,7 @@ def pagina_segredos():
          "<ul><li>Para, sem mudar nada, se a conta já usar outro <code>core.hooksPath</code>.</li><li>Acrescenta o bloco do bora ao <code>~/.config/git/ignore</code> (ou ao arquivo do <code>core.excludesFile</code>).</li><li>Cria <code>~/.config/git/ganchos-bora</code>, com o gancho e um link para cada nome de gancho, e configura o <code>core.hooksPath</code>.</li></ul>",
          "<p>Num repositório de teste, como a pessoa: um <code>.env</code> fica fora do Git, um commit com um token do GitHub inventado é barrado, um commit sem segredo passa e um gancho do próprio projeto continua rodando.</p>",
          "<p>Tira o <code>core.hooksPath</code> e o bloco do bora, apaga os ganchos e remove os pacotes que a receita instalou. As suas outras linhas ficam.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[7/11] Verificação de segredos", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04, encurtada nas linhas do apt.", _saida("[8/12] Verificação de segredos", [
             "Instalando: gitleaks",
             "O Git de dani passa a ignorar .env e chaves em todos os projetos (/home/dani/.config/git/ignore).",
             "O gitleaks passa a conferir cada commit de dani (ganchos em /home/dani/.config/git/ganchos-bora).",
@@ -1974,7 +2026,7 @@ def pagina_chaves():
          "<ul><li>Cria a pasta e o arquivo, se não existirem, já com a permissão só da pessoa.</li><li>Acrescenta ao <code>.bashrc</code> o bloco que carrega o arquivo.</li></ul>",
          "<p>Confere as permissões, que outra conta não lê o arquivo, que ele não tem erro de sintaxe e, com uma chave de teste num arquivo temporário, que a chave chega ao terminal.</p>",
          "<p>Tira o bloco do <code>.bashrc</code>. O arquivo só sai se continuar sem nenhuma chave.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04, com o OpenRouter escolhido.", _saida("[8/11] Chaves de API guardadas", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com o OpenRouter escolhido.", _saida("[9/12] Chaves de API guardadas", [
             "Arquivo de chaves criado: /home/dani/.config/chaves-de-api/chaves.env",
             "Cada terminal novo de dani passa a carregar as chaves (/home/dani/.bashrc).",
             "Para usar a sua chave, abra o arquivo num editor, tire o # da linha OPENROUTER_API_KEY= e cole a chave depois do =.",
@@ -2025,7 +2077,7 @@ def pagina_agentes():
          "<ul><li>Para cada agente que falta, roda como a pessoa <code>npm install -g</code> ou <code>pipx install</code>, e anota o que instalou.</li><li>Escreve a skill em <code>~/.claude/skills/bora</code> e em <code>~/.agents/skills/bora</code>.</li></ul>",
          "<p>Para cada agente: o comando responde a <code>--version</code> e está na conta da pessoa, e não na do root. A conversa de verdade precisa da sua conta, e fica com você.</p>",
          "<p>Desinstala os agentes que a receita instalou e apaga a skill, se ela não mudou.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04, com os cinco agentes, encurtada nas linhas do npm.", _saida("[9/11] Agentes de IA no terminal", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04, com os cinco agentes, encurtada nas linhas do npm.", _saida("[10/12] Agentes de IA no terminal", [
             "Instalando @anthropic-ai/claude-code, do npm, em /home/dani/.local", "Instalado: claude (2.1.319 (Claude Code))",
             "Instalando @openai/codex, do npm, em /home/dani/.local", "Instalado: codex (codex-cli 0.167.0)",
             "Instalando mistral-vibe, do PyPI, com o pipx", "Instalado: vibe (vibe 3.1.0)",
@@ -2089,7 +2141,7 @@ def pagina_caixa():
          "<ul><li>Instala os pacotes e escreve <code>/usr/local/bin/caixa</code>.</li><li>Se o bubblewrap não abrir por causa do AppArmor, como no Ubuntu 24.04, escreve e carrega o perfil <code>/etc/apparmor.d/bora-bwrap</code>.</li><li>Liga <code>sandbox.enabled</code> em <code>~/.claude/settings.json</code>, sem mexer no resto.</li></ul>",
          "<p>Como a pessoa, numa pasta de teste: dentro da caixa, escreve no projeto, não escreve fora, não lê um arquivo de mentira em <code>~/.ssh</code>, não usa sudo, e a caixa recusa abrir na pasta pessoal.</p>",
          "<p>Apaga o comando e o perfil, volta o <code>settings.json</code> do Claude Code e remove os pacotes que a receita instalou.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04.", _saida("[10/11] Caixa de areia para os agentes", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04.", _saida("[11/12] Caixa de areia para os agentes", [
             "Instalando: bubblewrap socat", "Arquivo atualizado: /usr/local/bin/caixa",
             "A caixa de areia do Claude Code foi ligada (/home/dani/.claude/settings.json).",
             ("ok", "o bubblewrap abre uma caixa de areia sem root"), ("ok", "dentro da caixa, o agente escreve na pasta do projeto"),
@@ -2138,7 +2190,7 @@ def pagina_editor():
          "<ul><li>VS Code: baixa a chave, confere a impressão digital, escreve <code>/etc/apt/sources.list.d/vscode.sources</code> e instala o <code>code</code>. Se a chave não for a publicada, nada muda.</li><li>VSCodium ou Zed: instala do Flathub, que precisa estar ligado.</li></ul>",
          "<p>VS Code: o pacote veio da Microsoft, a chave é a publicada e <code>code --version</code> responde. VSCodium ou Zed: o <code>flatpak info</code> acha o aplicativo.</p>",
          "<p>Remove o editor e, no VS Code, o repositório e a chave da Microsoft.</p>"],
-        _no_terminal("A saída de um teste no Ubuntu 24.04, com o VS Code, encurtada nas linhas do apt.", _saida("[11/11] Editor de código", [
+        _no_terminal("A saída de um teste no Ubuntu 24.04, no rolê Vibecodar com o VS Code, encurtada nas linhas do apt.", _saida("[12/12] Editor de código", [
             "Arquivo atualizado: /etc/apt/keyrings/packages.microsoft.asc", "Arquivo atualizado: /etc/apt/sources.list.d/vscode.sources",
             "Atualizando a lista de pacotes, com o repositório da Microsoft.", "Instalando: code",
             ("ok", "VS Code instalado pelo repositório da Microsoft"), ("ok", "a chave da Microsoft é a publicada (BC528686B50D79E339D3721CEB3E94ADBE1229CF)"),
@@ -2199,7 +2251,7 @@ def pagina_ollama():
          "<ul><li>Para, sem mudar nada, se já houver um Ollama que não veio do <code>bora</code>.</li><li>Baixa o arquivo do GitHub (e o do ROCm, numa placa AMD), confere a soma SHA256 e abre em <code>/opt/ollama</code>.</li><li>Cria a conta <code>ollama</code> e o serviço, que escuta só em <code>127.0.0.1:11434</code>.</li><li>Com um modelo escolhido, roda <code>ollama pull</code>.</li></ul>",
          "<p>Confere a versão, o serviço habilitado e só para este computador, que nenhuma porta do Ollama está aberta para a rede e que o modelo aparece no <code>ollama list</code>.</p>",
          "<p>Para o serviço, apaga o Ollama, o link e o serviço, e remove a conta <code>ollama</code> com a pasta dos modelos.</p>"],
-        _no_terminal("Como fica a aplicação numa máquina de 32 GB sem placa de vídeo, encurtada nas linhas do apt e do download.", _saida("[1/1] Ollama, para modelos de IA no computador", [
+        _no_terminal("Como fica a aplicação no rolê Vibecodar, com o VS Code e o Ollama, numa máquina de 32 GB sem placa de vídeo, encurtada nas linhas do apt e do download.", _saida("[13/13] Ollama, para modelos de IA no computador", [
             "Baixando ollama-linux-amd64.tar.zst (https://github.com/ollama/ollama/releases/download/v0.40.9/ollama-linux-amd64.tar.zst)",
             "Soma SHA256 conferida.", "Ollama 0.40.9 instalado em /opt/ollama/0.40.9",
             "Conta do serviço criada: ollama, com os modelos em /usr/share/ollama/.ollama/models",
@@ -2255,7 +2307,7 @@ def pagina_lm_studio():
          "<ul><li>Para, sem mudar nada, se já houver um <code>lm-studio</code> que não veio do <code>bora</code>.</li><li>Baixa o AppImage de installers.lmstudio.ai, confere a soma SHA256 e abre em <code>/opt/lm-studio</code>.</li><li>Cria o link e o atalho no menu.</li></ul>",
          "<p>Confere o link, o atalho e o ícone, que o <code>ldd</code> não acusa biblioteca faltando, que o <code>chrome-sandbox</code> é do root com setuid e que só o root muda os arquivos do programa.</p>",
          "<p>Apaga o atalho, o link e a pasta do LM Studio, e remove os pacotes que a receita instalou.</p>"],
-        _no_terminal("Como fica a aplicação, encurtada nas linhas do apt.", _saida("[1/1] LM Studio, para modelos de IA com janela", [
+        _no_terminal("Como fica a aplicação no rolê Vibecodar, com o VS Code e o LM Studio, encurtada nas linhas do apt.", _saida("[13/13] LM Studio, para modelos de IA com janela", [
             "Baixando o LM Studio 0.4.28-2 de https://installers.lmstudio.ai/linux/x64/0.4.28-2/LM-Studio-0.4.28-2-x64.AppImage",
             "Soma SHA256 conferida.", "LM Studio 0.4.28-2 instalado em /opt/lm-studio/0.4.28-2",
             "Arquivo atualizado: /usr/share/applications/lm-studio.desktop",

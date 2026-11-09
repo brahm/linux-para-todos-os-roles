@@ -29,6 +29,7 @@ e abra <http://localhost:8000>. A lista de últimas mudanças vem da API públic
 ## Como manter
 
 - **Status de um rolê:** quando um rolê mudar de `planejado` para `rascunho` ou `testado` em [`objetivos/`](../objetivos/README.md), troque a ficha dele no `index.html` (classe `ficha`).
+- **Versão e instalação:** quando sair uma versão nova, troque o selo da abertura no `index.html` (classe `selo`) e confira as transcrições do `bora` em `ferramentas/catalogo/roles.py`. Os comandos de instalação ficam em `ferramentas/catalogo/distro.py` e no README; mantenha os dois iguais.
 - **Trilha do status:** cada etapa é um `<li class="passo">`. Use `feito` nas concluídas e `agora` na que está em andamento.
 - **Marca:** o ícone e a imagem social vêm de `marca/`. Se a marca mudar, copie de novo `marca/icones/hicolor/scalable/apps/br.com.brahm.Bora.svg` para `imagens/icone.svg`, `marca/png/icone-256.png` para `imagens/icone-256.png` e `marca/png/imagem-social.png` para `imagens/imagem-social.png`.
 - **Domínio próprio:** a `404.html` usa caminhos absolutos começando em `/linux-para-todos-os-roles/`. Se o site ganhar um domínio próprio, troque esse prefixo por `/`, e ajuste também os endereços completos no `<head>` do `index.html`.

@@ -68,7 +68,7 @@
             <span class="ficha"><code>dev/ferramentas</code></span>
             <span class="ficha risco-baixo">Risco baixo</span>
             <span class="ficha">Pede a senha de administrador</span>
-            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+            <span class="ficha feito testada">Testada em máquina virtual no Ubuntu e no Debian</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
@@ -175,7 +175,7 @@
       <figure style="margin:0">
         <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Ferramentas do terminal: instala o ripgrep, o fd, o jq e o GitHub CLI e confere quatro testes.">
           <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
-<pre aria-hidden="true"><span class="l "><span class="c">[6/11] Ferramentas do terminal</span></span><span class="l "><span class="bar">  │</span> Instalando: ripgrep fd-find jq gh</span><span class="l "><span class="bar">  │</span> Comando criado: fd (o fdfind do Debian)</span><span class="l "><span class="bar">  │</span> Pronto: rg, fd, jq e gh instalados. Para entrar no GitHub pelo terminal: gh auth login</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> ripgrep acha um texto num projeto (rg)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> fd acha um arquivo pelo nome (fd)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> jq lê um JSON (jq)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> GitHub CLI (gh --version)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Ferramentas do terminal: aplicada e testada</span></pre>
+<pre aria-hidden="true"><span class="l "><span class="c">[7/12] Ferramentas do terminal</span></span><span class="l "><span class="bar">  │</span> Instalando: ripgrep fd-find jq gh</span><span class="l "><span class="bar">  │</span> Comando criado: fd (o fdfind do Debian)</span><span class="l "><span class="bar">  │</span> Pronto: rg, fd, jq e gh instalados. Para entrar no GitHub pelo terminal: gh auth login</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> ripgrep acha um texto num projeto (rg)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> fd acha um arquivo pelo nome (fd)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> jq lê um JSON (jq)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> GitHub CLI (gh --version)</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Ferramentas do terminal: aplicada e testada</span></pre>
         </div>
         <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
       </figure>
@@ -229,8 +229,8 @@
         <h2>Distros e testes</h2>
       </div>
       <div class="familias revelar">
-        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
-        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em VM</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em VM</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
         <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
         <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
         <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
@@ -244,7 +244,7 @@
             <tbody><tr><td>Debian 13</td><td>Contêiner (teste automático)</td><td>09/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Contêiner (teste automático)</td><td>09/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>09/11/2026</td><td>Passou</td></tr><tr><td>Debian 13</td><td>Máquina virtual</td><td>09/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Máquina virtual</td><td>09/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 26.04</td><td>Máquina virtual</td><td>09/11/2026</td><td>Passou</td></tr></tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>
     </section>
 

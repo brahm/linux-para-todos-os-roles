@@ -68,7 +68,7 @@
             <span class="ficha"><code>dev/compilacao</code></span>
             <span class="ficha risco-baixo">Risco baixo</span>
             <span class="ficha">Pede a senha de administrador</span>
-            <span class="ficha feito testada">Testada em contêiner no Ubuntu e no Debian</span>
+            <span class="ficha feito testada">Testada em máquina virtual no Ubuntu e no Debian</span>
           </div>
           <div class="acoes">
             <a class="botao principal" href="#passo-a-passo">Ver o passo a passo</a>
@@ -176,7 +176,7 @@
       <figure style="margin:0">
         <div class="janela replay" role="img" aria-label="Terminal mostrando o bora aplicar a receita Ferramentas de compilação: instala o build-essential e o pkg-config e confere seis testes, dois deles compilando e rodando programas de verdade.">
           <div class="barra" aria-hidden="true">bora aplicar<span class="fechar"><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="#deddda" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
-<pre aria-hidden="true"><span class="l "><span class="c">[2/4] Ferramentas de compilação</span></span><span class="l "><span class="bar">  │</span> Instalando: build-essential pkg-config</span><span class="l "><span class="bar">  │</span> <span class="d">0 upgraded, 95 newly installed, 0 to remove and 0 not upgraded.</span></span><span class="l "><span class="bar">  │</span> Pronto: gcc, g++, make e pkg-config instalados.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> compilador de C (gcc --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> compilador de C++ (g++ --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> make (make --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> pkg-config acha as bibliotecas do sistema</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> um programa em C compila e roda</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> um programa em C++ compila e roda</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Ferramentas de compilação: aplicada e testada</span></pre>
+<pre aria-hidden="true"><span class="l "><span class="c">[3/5] Ferramentas de compilação</span></span><span class="l "><span class="bar">  │</span> Instalando: build-essential pkg-config</span><span class="l "><span class="bar">  │</span> <span class="d">0 upgraded, 95 newly installed, 0 to remove and 0 not upgraded.</span></span><span class="l "><span class="bar">  │</span> Pronto: gcc, g++, make e pkg-config instalados.</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> compilador de C (gcc --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> compilador de C++ (g++ --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> make (make --version)</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> pkg-config acha as bibliotecas do sistema</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> um programa em C compila e roda</span><span class="l "><span class="bar">  │</span> <span class="v">ok:</span> um programa em C++ compila e roda</span><span class="l "><span class="bar">  │</span> Tudo conferido.</span><span class="l "><span class="v">✓</span> Ferramentas de compilação: aplicada e testada</span></pre>
         </div>
         <div class="replay-controles"><button class="botao-mini" type="button" data-rever><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>Rever</button></div>
       </figure>
@@ -229,8 +229,8 @@
         <h2>Distros e testes</h2>
       </div>
       <div class="familias revelar">
-        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
-        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em contêiner</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
+        <div class="cartao familia"><strong>Ubuntu</strong><span class="nivel testada">Testada em VM</span><span style="color:var(--text-2);font-size:14px">Ubuntu, Mint, Pop!_OS, Zorin</span></div>
+        <div class="cartao familia"><strong>Debian</strong><span class="nivel testada">Testada em VM</span><span style="color:var(--text-2);font-size:14px">Debian 13</span></div>
         <div class="cartao familia"><strong>Fedora</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Fedora, Nobara</span></div>
         <div class="cartao familia"><strong>Arch</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Arch, CachyOS, EndeavourOS, Manjaro</span></div>
         <div class="cartao familia"><strong>Fedora imutável</strong><span class="nivel planejada">Planejada</span><span style="color:var(--text-2);font-size:14px">Bazzite, Silverblue, Kinoite</span></div>
@@ -244,7 +244,7 @@
             <tbody><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr><tr><td>Debian 13</td><td>Contêiner (teste automático)</td><td>06/11/2026</td><td>Passou</td></tr><tr><td>Debian 13</td><td>Máquina virtual</td><td>08/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Máquina virtual</td><td>08/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 26.04</td><td>Máquina virtual</td><td>08/11/2026</td><td>Passou</td></tr></tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner, sem kernel, disco nem tela de login de verdade. Quando ela passar numa máquina virtual ou num computador de verdade, o registro acima mostra; até lá, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>
     </section>
 
