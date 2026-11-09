@@ -81,8 +81,23 @@ grep -q '^Exec=/usr/local/bin/lm-studio' /usr/share/applications/lm-studio.deskt
 
 etapa "Desfazer"
 bora desfazer --sem-perguntar
-pacotes >/tmp/pacotes-depois
-diff /tmp/pacotes-antes /tmp/pacotes-depois || falhou "sobraram ou faltaram pacotes"
+# Um pacote essencial ou importante do sistema que veio junto fica, de
+# propósito (veja remover_pacotes_instalados no comum.sh), como no Debian o
+# linux-sysctl-defaults, que chega com o procps.
+do_sistema() {
+    case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
+        yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
+    esac
+    return 1
+}
+pacotes | while read -r p; do
+    if ! grep -qxF "$p" /tmp/pacotes-antes && do_sistema "$p"; then
+        echo "(mantido por ser do sistema: $p)" >&2
+        continue
+    fi
+    echo "$p"
+done >/tmp/pacotes-depois
+diff -u /tmp/pacotes-antes /tmp/pacotes-depois || falhou "sobraram ou faltaram pacotes"
 ls /usr/local/bin /usr/local/lib /opt >/tmp/local-depois
 diff /tmp/local-antes /tmp/local-depois || falhou "sobrou alguma coisa em /usr/local ou /opt"
 ls /usr/share/applications >/tmp/atalhos-depois 2>/dev/null || true
