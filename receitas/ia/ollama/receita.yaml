@@ -16,7 +16,6 @@ parametros:
     padrao: sugerido
     pergunta: "Qual modelo baixar? sugerido, para o bora escolher pela memória da máquina ({sugestao_de_modelo}), nenhum, para você baixar depois com ollama pull, ou o nome de um modelo, como qwen3:4b."
     descricao: O modelo que a receita baixa. "sugerido" vira, no plano, o modelo que o bora modelos sugere para esta máquina; "nenhum" instala só o Ollama.
-testes: []
 testes:
   - distro: debian
     versao: "13"

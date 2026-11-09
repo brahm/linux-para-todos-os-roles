@@ -11,7 +11,6 @@ familias:
   fedora-imutavel: planejada
   opensuse: planejada
 parametros: {}
-testes: []
 testes:
   - distro: debian
     versao: "13"
