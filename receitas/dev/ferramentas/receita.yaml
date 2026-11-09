@@ -10,3 +10,22 @@ familias:
   arch: planejada
   fedora-imutavel: planejada
   opensuse: planejada
+testes:
+  - distro: debian
+    versao: "13"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

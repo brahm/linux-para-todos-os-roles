@@ -26,3 +26,22 @@ parametros:
     tipo: texto
     padrao: auto
     descricao: A conta que vai programar. "auto" é quem rodou o bora com sudo.
+testes:
+  - distro: debian
+    versao: "13"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-09
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
