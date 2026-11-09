@@ -155,12 +155,12 @@ def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo", extra_h
         <span>Linux para todos os <em>rolês</em></span>
       </a>
       <nav aria-label="Seções">
-        <a href="{raiz}#o-que-e">O que é</a>
+        <a class="opcional" href="{raiz}#o-que-e">O que é</a>
         <a href="{raiz}distro/"{' aria-current="page"' if ativo == "distro" else ""}>Escolher a distro</a>
         <a href="{cat}"{' aria-current="page"' if ativo == "inicio" else ""}>Rolês e receitas</a>
         <a href="{raiz}#como-funciona">Como funciona</a>
         <a href="{raiz}#status">Status</a>
-        <a href="{raiz}#bora-junto">Bora junto</a>
+        <a class="opcional" href="{raiz}#bora-junto">Bora junto</a>
         <a class="github" href="{REPO}">
           {GITHUB_SVG}GitHub
         </a>
