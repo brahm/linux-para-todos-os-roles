@@ -42,7 +42,7 @@ cria_arquivo_pela_rede() {
     printf 'username = %s\npassword = %s\n' "$n" "$senha" >"$auth"
     echo "teste do bora" >"$arquivo"
     smbclient "//127.0.0.1/$nome" -A "$auth" -c "put $arquivo $teste" >/dev/null 2>&1 || r=1
-    [ "$r" = 0 ] && [ -f "$pasta/$teste" ] && [ "$(stat -c %U "$pasta/$teste")" = "$(dono_atual "$pasta")" ] || r=1
+    if [ ! -f "$pasta/$teste" ] || [ "$(stat -c %U "$pasta/$teste")" != "$(dono_atual "$pasta")" ]; then r=1; fi
     smbclient "//127.0.0.1/$nome" -A "$auth" -c "del $teste" >/dev/null 2>&1 || r=1
     [ ! -e "$pasta/$teste" ] || r=1
     rm -f "$auth" "$arquivo"
