@@ -10,6 +10,7 @@ Os roteiros manuais desta pasta, um por rolê, são o complemento: conferem olha
 | Dar vida nova a uma máquina antiga | [`maquina-antiga.md`](maquina-antiga.md) | cerca de 1 hora |
 | Começar a programar | [`comecar-a-programar.md`](comecar-a-programar.md) | cerca de 40 minutos |
 | Vibecodar | [`vibecodar.md`](vibecodar.md) | cerca de 1 hora |
+| Pasta compartilhada da casa | [`pasta-compartilhada.md`](pasta-compartilhada.md) | cerca de 30 minutos, com outro aparelho na mesma rede |
 
 ## A parte automática, no CI
 

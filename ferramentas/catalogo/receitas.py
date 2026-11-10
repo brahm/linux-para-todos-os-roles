@@ -2335,3 +2335,91 @@ PAGINAS.update({
     "ia/ollama": pagina_ollama,
     "ia/lm-studio": pagina_lm_studio,
 })
+
+
+# ---------------------------------------------------------------- rolê 5: pasta compartilhada
+
+ILUSTRA_SAMBA = """          <svg class="ilustra" viewBox="0 0 480 340" role="img" aria-labelledby="isa-t">
+            <title id="isa-t">Um notebook com Windows e um celular da casa abrem a pasta compartilhada pela rede local, cada um com o nome e a senha da pasta. Uma conexão vinda da internet fica de fora.</title>
+            <rect x="160" y="20" width="160" height="96" rx="14" class="caixa-svg"/>
+            <text x="240" y="56" font-size="14" font-weight="600" text-anchor="middle">Computador da casa</text>
+            <text x="240" y="80" font-size="12" text-anchor="middle" class="t2 mono">/srv/compartilhado</text>
+            <text x="240" y="100" font-size="12" text-anchor="middle" class="t2">dono: ana</text>
+            <g class="pacote" style="--i:0">
+              <path d="M110 170L200 116" class="traco"/>
+              <rect x="20" y="170" width="170" height="70" rx="12" class="caixa-svg"/>
+              <text x="105" y="198" font-size="13" font-weight="600" text-anchor="middle">Notebook (Windows)</text>
+              <text x="105" y="220" font-size="12" text-anchor="middle" class="t2 mono">beto + senha da pasta</text>
+            </g>
+            <g class="pacote" style="--i:1">
+              <path d="M370 170L280 116" class="traco"/>
+              <rect x="290" y="170" width="170" height="70" rx="12" class="caixa-svg"/>
+              <text x="375" y="198" font-size="13" font-weight="600" text-anchor="middle">Celular</text>
+              <text x="375" y="220" font-size="12" text-anchor="middle" class="t2 mono">ana + senha da pasta</text>
+            </g>
+            <g class="volta">
+              <rect x="20" y="262" width="440" height="60" rx="12" class="caixa-svg"/>
+              <text x="44" y="288" font-size="12.5" class="t2">só a rede de casa · sem visitante · sem SMB1</text>
+              <text x="44" y="308" font-size="12.5" class="t2">a senha da pasta não abre o computador</text>
+            </g>
+          </svg>"""
+
+
+def pagina_samba():
+    return _pagina(
+        "servicos/samba", ILUSTRA_SAMBA, "Ilustração. Cada pessoa abre a pasta pela rede de casa com o próprio nome e uma senha que só serve para a pasta.",
+        ["<strong>Cria a pasta</strong> que você escolher, por padrão <code>/srv/compartilhado</code>, ou usa uma que já existe, com os arquivos dela.",
+         "<strong>Compartilha pela rede com o Samba</strong>, que Windows, Mac, Linux, Android e iPhone já sabem abrir, sem instalar nada neles.",
+         "<strong>Cria um acesso para cada pessoa</strong>, com uma senha que só serve para a pasta. Quem não tem conta no computador ganha uma conta sem login.",
+         "<strong>Faz a pasta aparecer em “Rede”</strong> no Windows e no Linux, com o <code>wsdd2</code>.",
+         "<strong>Aceita só a rede de casa</strong>, no próprio Samba e no firewall."],
+        ["Não deixa a pasta acessível pela internet. Para abrir de fora, há o rolê “Acessar de fora sem abrir portas”.",
+         "Não aceita visitante sem senha nem o protocolo antigo SMB1.",
+         "Não usa nem troca a senha de ninguém no computador.",
+         "Não compartilha a pasta pessoal inteira nem as pastas do sistema.",
+         "Não mostra as senhas na tela nem no log: elas ficam num arquivo que só o root lê.",
+         "Não apaga os arquivos da pasta quando a receita é desfeita."],
+        ["<p>Confere se o Samba está instalado, se a configuração do <code>bora</code> está no lugar, se cada pessoa tem acesso e, com o firewall ligado, se a rede local está liberada.</p>",
+         "<p>Cria a pasta, instala o <code>samba</code>, o <code>smbclient</code> e o <code>wsdd2</code>, escreve <code>/etc/samba/bora-pasta-compartilhada.conf</code>, confere com <code>testparm</code>, cria as contas que faltam, gera e cadastra uma senha para cada pessoa e libera as portas só para a rede local.</p>",
+         "<p>Confere os valores que valem de verdade com <code>testparm</code>, o Samba ligado no boot e, com o <code>smbclient</code>, entra com o nome e a senha de uma pessoa, cria um arquivo e apaga. Uma senha errada e um visitante não entram.</p>",
+         "<p>Remove as regras do firewall, os acessos, as contas que criou, as senhas e a configuração, e os pacotes que instalou. A pasta e os arquivos ficam.</p>"],
+        _no_terminal("A saída de um teste em contêiner no Ubuntu 24.04, encurtada nas linhas do apt e com o endereço trocado por um de casa. Numa máquina de verdade, o teste também entra na pasta pelo <code>smbclient</code>.", _saida("[4/4] Pasta compartilhada com Samba", [
+            "Pasta criada: /srv/compartilhado, de ana.", "Instalando: samba smbclient wsdd2",
+            "Arquivo atualizado: /etc/samba/bora-pasta-compartilhada.conf", "Arquivo atualizado: /etc/samba/smb.conf",
+            "Acesso à pasta criado para ana.", "Conta criada só para a pasta: beto", "Acesso à pasta criado para beto.",
+            "Firewall: o Samba aceita só a rede local (192.168.0.0/24).",
+            "Pronto. Nos outros aparelhos da casa, abra \\\\192.168.0.20\\Compartilhado no Windows ou smb://192.168.0.20/Compartilhado no Mac, no Linux e no celular.",
+            "A senha de cada pessoa está em /var/lib/bora/pasta-compartilhada/senhas: veja com sudo cat /var/lib/bora/pasta-compartilhada/senhas e troque com sudo smbpasswd nome.",
+            ("ok", "Samba instalado (samba e smbclient)"), ("ok", "o Samba aceita a configuração (testparm)"),
+            ("ok", "a pasta /srv/compartilhado está compartilhada como Compartilhado"),
+            ("ok", "ninguém entra sem nome e senha (map to guest = Never)"), ("ok", "o protocolo antigo SMB1 está desligado"),
+            ("ok", "o Samba só aceita esta máquina e a rede local (192.168.0.0/24)"),
+            ("ok", "a senha da pasta não troca a senha do computador (unix password sync = No)"),
+            ("ok", "cada pessoa tem acesso: ana beto"),
+            ("ok", "as senhas estão num arquivo que só o root lê (/var/lib/bora/pasta-compartilhada/senhas)"),
+            ("ok", "o Samba liga junto com o computador (smbd)"), ("ok", "a pasta aparece na Rede do Windows e do Linux (wsdd2)"),
+            ("ok", "o firewall libera o Samba só para a rede local"), "Tudo conferido."], "Pasta compartilhada com Samba"),
+            "Terminal mostrando o bora aplicar a receita Pasta compartilhada com Samba: cria a pasta, instala o Samba, cria o acesso de duas pessoas, libera a rede local no firewall e confere doze testes."),
+        [("Por que Samba?", "É o jeito que todo sistema já entende de abrir pastas pela rede. O Windows, o Mac, o Linux e os celulares falam SMB sem instalar nada."),
+         ("Por que uma senha só para a pasta?", "Se a senha do compartilhamento vazar, ela não abre o computador. Cada pessoa tem a sua, e dá para tirar o acesso de uma sem mexer nas outras. Por isso a receita também impede que trocar a senha da pasta pelo Windows troque a senha do computador, que é o padrão do Ubuntu e do Debian."),
+         ("Por que o bora gera as senhas?", "O plano é um arquivo que pode ir para o Git ou para uma IA, então não pode levar senha, e a receita não para no meio para perguntar. As senhas geradas são fáceis de ditar e ficam num arquivo que só o root lê. Para trocar a de alguém: <code>sudo smbpasswd nome</code>."),
+         ("Por que sem SMB1 e sem visitante?", "O SMB1 é a versão antiga do protocolo, com as falhas mais graves, e o Windows 10 e 11 já não usam. Visitante sem senha deixaria qualquer aparelho que entra na rede da casa, como o celular de uma visita, ver a pasta."),
+         ("De quem ficam os arquivos?", "De quem é dono da pasta neste computador, quem quer que tenha criado o arquivo pela rede. Assim ninguém fica sem conseguir abrir ou apagar o que outra pessoa criou.")],
+        [("pacote", "samba, smbclient e wsdd2", "Dos repositórios da distro, sem os recomendados. O <code>wsdd2</code> só com <code>aparecer_na_rede</code>."),
+         ("arquivo", "/etc/samba/bora-pasta-compartilhada.conf", "O compartilhamento e os ajustes de segurança, incluídos no fim do <code>smb.conf</code>."),
+         ("arquivo", "/var/lib/bora/pasta-compartilhada/senhas", "A senha de cada pessoa, que só o root lê."),
+         ("servico", "smbd e wsdd2", "O Samba e a descoberta na rede ligam junto com o computador."),
+         ("escudo", "Regras do ufw bora-samba", "A porta 445 e as da descoberta liberadas só para a rede local, quando o firewall está ligado.")],
+        [("sudo cat /var/lib/bora/pasta-compartilhada/senhas", "Mostra a senha de cada pessoa."),
+         ("sudo smbpasswd beto", "Troca a senha da pasta de uma pessoa."),
+         ("\\\\192.168.0.20\\Compartilhado", "No Explorador de Arquivos do Windows, com o endereço que o bora mostrou."),
+         ("smbclient //127.0.0.1/Compartilhado -U beto", "Entra na pasta pelo terminal, neste computador.")],
+        [("smb.conf(5)", "Samba", "https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html"),
+         ("Samba como servidor de arquivos", "Documentação do Ubuntu Server", "https://documentation.ubuntu.com/server/how-to/samba/file-server/"),
+         ("Samba/ServerSimple", "Wiki do Debian", "https://wiki.debian.org/Samba/ServerSimple"),
+         ("wsdd2", "GitHub", "https://github.com/Netgear/wsdd2")])
+
+
+PAGINAS.update({
+    "servicos/samba": pagina_samba,
+})

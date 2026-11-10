@@ -103,6 +103,12 @@ case "${1:?fase}" in
             grep -qx 'permitrootlogin no' <<<"$(sshd -T)" || falhou "o SSH voltou aceitando o root"
             systemctl is-active --quiet ssh.service ssh.socket || falhou "o SSH não voltou ligado"
         fi
+        if coberta servicos/samba; then
+            systemctl is-active --quiet smbd.service || falhou "o Samba não voltou ligado"
+            systemctl is-active --quiet wsdd2.service || falhou "o wsdd2 não voltou ligado"
+            [ -n "$(ss -Hltn 'sport = :445')" ] || falhou "o Samba não voltou a esperar conexões na porta 445"
+            grep -q 'bora-samba' <<<"$(ufw status)" || falhou "o firewall não voltou liberando o Samba"
+        fi
         [ "$(git -C /etc rev-list --count HEAD)" -ge 2 ] || falhou "o histórico do /etc não registrou as mudanças"
         git -C /etc log --oneline -n 5
         systemctl is-active --quiet bora-backup-pessoal.timer || falhou "o temporizador do backup não voltou"

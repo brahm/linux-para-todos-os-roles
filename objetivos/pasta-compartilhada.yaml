@@ -1,0 +1,25 @@
+id: pasta-compartilhada
+nome: Pasta compartilhada da casa
+descricao: Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir, só pela rede local.
+para_quem: [curiosos, entusiastas]
+status: rascunho
+hardware_minimo:
+  ram_gb: 2
+  disco_livre_gb: 10
+familias: [ubuntu, debian]
+perguntas:
+  - id: pasta
+    texto: Qual pasta você quer compartilhar? Se ela não existir, o bora cria.
+    padrao: /srv/compartilhado
+  - id: usuarios
+    texto: Quem vai abrir a pasta pelos outros aparelhos? Escreva os nomes separados por vírgula, como ana,beto. Cada nome ganha uma senha só para a pasta.
+receitas:
+  - id: base/atualizar
+  - id: sistema/snapshot
+  - id: seguranca/firewall
+    perfil: servidor-lan
+  - id: servicos/samba
+    pasta: "{pasta}"
+    usuarios: "{usuarios}"
+pronto_quando: Outro computador ou celular da casa abre a pasta com o nome e a senha de uma pessoa e consegue criar um arquivo nela.
+como_desfazer: O bora tira o compartilhamento, os acessos que criou e as regras do firewall, sem apagar os arquivos da pasta.
