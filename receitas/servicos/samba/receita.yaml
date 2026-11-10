@@ -34,4 +34,22 @@ parametros:
     tipo: cidr
     padrao: auto
     descricao: A rede da casa, como 192.168.0.0/24, a única que o Samba e o firewall aceitam.
-testes: []
+testes:
+  - distro: debian
+    versao: "13"
+    data: 2026-11-10
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "24.04"
+    data: 2026-11-10
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok
+  - distro: ubuntu
+    versao: "26.04"
+    data: 2026-11-10
+    por: testes-automaticos
+    onde: conteiner
+    resultado: ok

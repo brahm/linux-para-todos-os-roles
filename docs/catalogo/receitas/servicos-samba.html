@@ -263,7 +263,7 @@
         <div class="tabela-envolta revelar">
           <table class="tabela">
             <thead><tr><th>Distro</th><th>Onde</th><th>Data</th><th>Resultado</th></tr></thead>
-            <tbody></tbody>
+            <tbody><tr><td>Debian 13</td><td>Contêiner (teste automático)</td><td>10/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 24.04</td><td>Contêiner (teste automático)</td><td>10/11/2026</td><td>Passou</td></tr><tr><td>Ubuntu 26.04</td><td>Contêiner (teste automático)</td><td>10/11/2026</td><td>Passou</td></tr></tbody>
           </table>
         </div>
         <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
