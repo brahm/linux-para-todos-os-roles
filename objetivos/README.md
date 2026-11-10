@@ -82,7 +82,7 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 | 2 | Dar vida nova a uma máquina antiga | Ambiente leve, zram, navegador enxuto e serviços desnecessários desligados | testado |
 | 3 | Começar a programar | Git, ferramentas de compilação, Python com ambientes virtuais, Node.js e contêineres, em dois perfis (web e Python) | testado |
 | 4 | Vibecodar | Tudo do "Começar a programar", mais agentes de IA, chaves de API guardadas com segurança, verificação de segredos, caixa de areia opcional, editor e, se a pessoa quiser, modelos locais com o Ollama ou o LM Studio | testado |
-| 5 | Pasta compartilhada da casa | Samba, apenas na rede local | planejado |
+| 5 | Pasta compartilhada da casa | Samba, apenas na rede local, com um nome e uma senha só da pasta para cada pessoa | rascunho |
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |
 | 7 | Acessar de fora sem abrir portas | Tailscale, com teste de CGNAT | planejado |
 
@@ -114,6 +114,23 @@ Ficou para depois o Antigravity CLI, que só tem instalador do tipo `curl | sh`.
 Pronto quando: cada agente responde no terminal, e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
 
 É o rolê que mais vai quebrar, porque os agentes mudam de versão, de instalador e de plano o tempo todo. A máquina virtual do CI aplica os cinco agentes toda semana.
+
+### O rolê "Pasta compartilhada da casa"
+
+Perguntas:
+
+- Qual pasta compartilhar? O padrão é `/srv/compartilhado`, que o `bora` cria se não existir.
+- Quem vai abrir a pasta pelos outros aparelhos? Os nomes, separados por vírgula.
+
+O que é instalado e configurado:
+
+- a atualização, o snapshot de antes e o firewall no perfil de servidor da casa (`base/atualizar`, `sistema/snapshot` e `seguranca/firewall`);
+- o Samba (`servicos/samba`), com a pasta compartilhada só para este computador e a rede local, sem visitante, sem SMB1 e sem NetBIOS, e a pasta aparecendo em "Rede" no Windows e no Linux, pelo `wsdd2`;
+- um acesso para cada nome, com uma senha só para a pasta, que a receita gera e guarda num arquivo que só o root lê (`sudo cat /var/lib/bora/pasta-compartilhada/senhas`). Quem não tem conta no computador ganha uma conta sem login, que só serve para a pasta.
+
+Pronto quando: outro computador ou celular da casa abre a pasta com o nome e a senha de uma pessoa e cria um arquivo nela. O teste da receita faz o mesmo pelo `smbclient`.
+
+O desfazer tira o compartilhamento, os acessos e as contas que criou e as regras do firewall, e nunca apaga os arquivos da pasta.
 
 ## Ideias para depois
 

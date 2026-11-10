@@ -96,6 +96,8 @@ jobs:
           docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/vibecodar.sh
       - name: Rolê Vibecodar, vibecode local com o Ollama e o LM Studio
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/vibecode-local.sh
+      - name: Rolê Pasta compartilhada da casa
+        run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/pasta-compartilhada.sh
       - name: Histórico do /etc, SSH e Sem Snap
         run: docker run --rm --privileged -e BORA=/bora/binario/bora -v "$PWD":/bora bora-teste ./testes/conteiner/novas-capacidades.sh
       - name: Marcar que a distro passou

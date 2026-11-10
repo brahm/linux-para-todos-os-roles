@@ -31,7 +31,7 @@ RECEITAS = {
     "dev/editor": ("Editor de código", "janela", "l-azul", "O VS Code, o VSCodium ou o Zed, ou só o terminal."),
     "ia/ollama": ("IA local com Ollama", "robo", "l-grafite", "Modelos de IA rodando no próprio computador, com o modelo que cabe nele."),
     "ia/lm-studio": ("IA local com LM Studio", "janela", "l-roxo", "Modelos de IA no próprio computador, com janela para escolher e conversar."),
-    "servicos/samba": ("Compartilhamento Samba", "pasta", "l-amarelo", "Uma pasta que Windows, Mac, Linux e celulares abrem pela rede."),
+    "servicos/samba": ("Pasta compartilhada com Samba", "pasta", "l-amarelo", "Uma pasta que Windows, Mac, Linux e celulares abrem pela rede de casa, com uma senha só da pasta para cada pessoa."),
     "servicos/jellyfin": ("Servidor Jellyfin", "filme", "l-vermelho", "Filmes e séries para a TV e os celulares da casa."),
     "rede/tailscale": ("Tailscale", "vpn", "l-marrom", "Uma rede privada entre os seus aparelhos, sem abrir portas."),
     "rede/teste-cgnat": ("Teste de CGNAT", "rede", "l-grafite", "Mostra se a sua internet está atrás de CGNAT, e por que isso não importa com a VPN."),
@@ -42,7 +42,8 @@ PRONTAS = ["base/atualizar", "sistema/snapshot", "seguranca/firewall", "desktop/
            "sistema/zram", "desktop/ambiente-leve", "desktop/navegador-leve", "sistema/servicos-enxutos", "seguranca/ssh",
            "dev/git", "dev/compilacao", "dev/python", "dev/node", "containers/podman",
            "dev/ferramentas", "seguranca/segredos", "ia/chaves-de-api", "ia/agentes", "ia/caixa-de-areia", "dev/editor",
-           "ia/ollama", "ia/lm-studio"]
+           "ia/ollama", "ia/lm-studio",
+           "servicos/samba"]
 
 AREAS = {
     "base": "Base",
@@ -229,29 +230,34 @@ ROLES = [
     {
         "id": "pasta-compartilhada", "num": "05", "icone": "pasta", "cor": "l-amarelo",
         "nome": "Pasta compartilhada da casa",
-        "resumo": "Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir.",
+        "resumo": "Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir, só pela rede local.",
         "para_quem": ["curiosos", "entusiastas"],
-        "hardware": "2 GB de memória e 10 GB livres",
-        "status": "planejado",
+        "hardware": "2 GB de memória e 10 GB livres, mais o espaço dos arquivos",
+        "status": "rascunho",
         "receitas": [("base/atualizar", ""), ("sistema/snapshot", ""), ("seguranca/firewall", "perfil servidor-lan"), ("servicos/samba", "")],
         "faz": [
-            "<strong>Cria a pasta</strong> que você escolher, por padrão <code>/srv/compartilhado</code>.",
-            "<strong>Compartilha pela rede com o Samba</strong>, que Windows, Mac, Linux, Android e iPhone já sabem abrir.",
-            "<strong>Cria um acesso para cada pessoa</strong>, com nome e senha, sem usar a senha de ninguém no computador.",
-            "<strong>Libera o compartilhamento só para a rede de casa</strong> no firewall.",
+            "<strong>Atualiza tudo e guarda uma foto do sistema</strong> antes de mexer.",
+            "<strong>Liga o firewall de servidor da casa</strong>: nada que chega de fora entra, e cada serviço libera a própria porta só para a rede local.",
+            "<strong>Cria a pasta</strong> que você escolher, por padrão <code>/srv/compartilhado</code>, ou usa uma que já existe.",
+            "<strong>Compartilha pela rede com o Samba</strong>, que Windows, Mac, Linux, Android e iPhone já sabem abrir, e faz a pasta aparecer em “Rede” no Windows.",
+            "<strong>Cria um acesso para cada pessoa</strong>, com nome e uma senha só da pasta, sem usar a senha de ninguém no computador.",
         ],
         "nao_faz": [
             "Não deixa a pasta acessível pela internet. Para abrir de fora, há o rolê “Acessar de fora sem abrir portas”.",
+            "Não aceita visitante sem senha nem o protocolo antigo SMB1, que só aparelhos muito antigos usam.",
             "Não compartilha a sua pasta pessoal inteira.",
+            "Não mostra as senhas na tela: elas ficam num arquivo que só o administrador lê.",
             "Não apaga os arquivos da pasta quando o rolê é desfeito.",
         ],
         "porques": [
             ("Por que Samba?", "É o jeito que todo sistema já entende de abrir pastas pela rede, sem instalar nada nos outros aparelhos."),
             ("Por que uma senha só para a pasta?", "Se a senha do compartilhamento vazar, ela não abre o computador. Cada pessoa tem a sua, e dá para tirar o acesso de uma sem mexer nas outras."),
+            ("Onde vejo as senhas?", "No fim, o <code>bora</code> mostra o endereço da pasta e onde estão as senhas: <code>sudo cat /var/lib/bora/pasta-compartilhada/senhas</code>. Para trocar a de alguém, <code>sudo smbpasswd nome</code>."),
+            ("Por que só a rede de casa?", "Uma pasta aberta na internet é um alvo. O próprio Samba e o firewall aceitam só os aparelhos da rede de casa; de fora, o caminho é a VPN do rolê 7."),
         ],
-        "pronto_quando": "Outro computador da rede abre a pasta e consegue criar um arquivo nela.",
-        "como_desfazer": "O bora desfaz o compartilhamento e as regras de firewall, sem apagar os arquivos da pasta.",
-        "perguntas": ["Qual pasta você quer compartilhar?", "Quem vai acessar? Escreva os nomes separados por vírgula."],
+        "pronto_quando": "Outro computador ou celular da casa abre a pasta com o nome e a senha de uma pessoa e consegue criar um arquivo nela.",
+        "como_desfazer": "O bora tira o compartilhamento, os acessos que criou e as regras do firewall, sem apagar os arquivos da pasta.",
+        "perguntas": ["Qual pasta você quer compartilhar? (o padrão é /srv/compartilhado)", "Quem vai abrir a pasta pelos outros aparelhos? Escreva os nomes separados por vírgula."],
     },
     {
         "id": "filmes-e-series", "num": "06", "icone": "filme", "cor": "l-vermelho",

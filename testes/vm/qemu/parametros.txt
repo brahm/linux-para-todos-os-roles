@@ -9,3 +9,6 @@ dev/editor.editor=vscode
 # O Ollama sem modelo: a máquina tem 4 GB, e o teste de um modelo de verdade
 # fica no contêiner (testes/conteiner/vibecode-local.sh).
 ia/ollama.modelo=nenhum
+# A pasta compartilhada para o aluno, que tem conta no computador, e para o
+# beto, que ganha uma conta só para a pasta.
+servicos/samba.usuarios=aluno,beto

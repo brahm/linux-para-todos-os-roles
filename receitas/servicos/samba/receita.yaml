@@ -1,0 +1,37 @@
+id: servicos/samba
+nome: Pasta compartilhada com Samba
+descricao: Compartilha uma pasta com os outros computadores e celulares da casa, só pela rede local, com um nome e uma senha para cada pessoa, separada da senha do computador.
+risco: medio
+precisa_root: true
+familias:
+  ubuntu: testada
+  debian: testada
+  fedora: planejada
+  arch: planejada
+  fedora-imutavel: planejada
+  opensuse: planejada
+parametros:
+  pasta:
+    tipo: caminho
+    padrao: /srv/compartilhado
+    pergunta: Qual pasta você quer compartilhar? Se ela não existir, o bora cria.
+  usuarios:
+    tipo: texto
+    pergunta: Quem vai abrir a pasta pelos outros aparelhos? Escreva os nomes separados por vírgula, como ana,beto. Cada nome ganha uma senha só para a pasta.
+  nome:
+    tipo: texto
+    padrao: Compartilhado
+    descricao: O nome que aparece nos outros aparelhos, como \\computador\Compartilhado. Letras sem acento, números, - e _.
+  aparecer_na_rede:
+    tipo: booleano
+    padrao: true
+    descricao: Aparecer sozinho em "Rede" no Windows e no Linux (WS-Discovery, com o wsdd2). Sem isso, a pasta abre pelo endereço.
+  usuario:
+    tipo: texto
+    padrao: auto
+    descricao: A conta dona dos arquivos, quando o bora cria a pasta. Com auto, é quem rodou o bora com sudo. Numa pasta que já existe, o dono continua o mesmo.
+  rede_local:
+    tipo: cidr
+    padrao: auto
+    descricao: A rede da casa, como 192.168.0.0/24, a única que o Samba e o firewall aceitam.
+testes: []

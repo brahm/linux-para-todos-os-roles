@@ -208,3 +208,21 @@ Brahm pediu o Ollama e o LM Studio como cenário de vibecode local no rolê "Vib
 | No plano, `modelo: sugerido` vira o nome do modelo antes de a pessoa aceitar, e o plano salvo grava esse nome | "Instala se a pessoa concordar" é aceitar o plano, que mostra exatamente o que vai ser baixado e quanto pesa |
 | No Ollama, o `bora` baixa o modelo; no LM Studio, a pessoa baixa na aba Discover, com o nome que o `bora` mostrou | O LM Studio escolhe a versão do modelo na própria janela e mostra na hora as que cabem. O Ollama tem um nome exato por modelo, que a receita fixa com a quantização |
 | O desfazer do Ollama apaga os modelos dele; o do LM Studio deixa os modelos em `~/.lmstudio` | Os modelos do Ollama ficam na conta do serviço, que sai junto e deixaria gigabytes sem dono. Os do LM Studio estão na pasta pessoal, como os projetos |
+
+## 10 de novembro de 2026: rolê "Pasta compartilhada da casa"
+
+Brahm pediu o próximo rolê do plano em 10/11/2026. É o 5, o primeiro da fase 2 ("casa").
+
+| Decisão | Por quê |
+|---|---|
+| O rolê sai com uma receita nova, `servicos/samba`, depois de `base/atualizar`, `sistema/snapshot` e `seguranca/firewall` no perfil `servidor-lan`, como o plano previa | O firewall de servidor da casa já existia esperando este rolê. As perguntas são as do plano: a pasta (padrão `/srv/compartilhado`) e quem vai acessar |
+| Cada pessoa tem um nome e uma senha só para a pasta. Quem não tem conta no computador ganha uma conta sem login e sem pasta pessoal; quem tem usa a mesma conta, com outra senha. O `unix password sync` fica desligado | Se a senha da pasta vazar, ela não abre o computador, e dá para tirar o acesso de uma pessoa sem mexer nas outras. No padrão do Ubuntu e do Debian, trocar a senha da pasta pelo Windows trocaria também a do computador |
+| A receita gera as senhas e guarda num arquivo que só o root lê, em `/var/lib/bora/pasta-compartilhada/senhas`. Elas não aparecem na tela nem no log | O plano não pode levar senha, e a receita não pode perguntar no meio. A saída das receitas vai para o log do `bora`; o `/etc` vai para o histórico do etckeeper. A pessoa vê as senhas com `sudo cat` e troca com `sudo smbpasswd` |
+| Sem visitante, sem acesso anônimo, sem SMB1 e sem NetBIOS; o Samba só escuta na porta 445 | O Windows 10 e 11 já bloqueiam visitante e não usam SMB1 nem NetBIOS, que são a parte do protocolo com as falhas mais graves. Um aparelho muito antigo, que só fala SMB1, fica de fora |
+| O compartilhamento só aceita este computador e a rede local (`hosts allow`), além das regras do firewall | Duas camadas: a pasta continua fechada para fora da casa mesmo se o firewall for desligado |
+| Os arquivos criados pela rede ficam com o dono da pasta (`force user`) | Ninguém fica sem conseguir abrir ou apagar o que outra pessoa criou, e a pasta continua sendo de uma pessoa da casa neste computador, inclusive numa pasta dentro da pasta pessoal |
+| A configuração vai num arquivo próprio, incluído no fim do `smb.conf`, e não num `smb.conf` novo | Um Samba que já existia continua com as próprias pastas, e o desfazer só tira a linha e o arquivo |
+| A pasta aparece sozinha em "Rede" no Windows e no Linux com o `wsdd2`, que é opcional (`aparecer_na_rede`, ligado por padrão). O Mac e o celular abrem pelo endereço, que o `bora` mostra no fim | O Windows 10 e 11 só listam a rede pelo WS-Discovery, e o `wsdd2` é o pacote da distro com a unidade do systemd pronta. O pacote `wsdd` do Ubuntu 24.04 não traz unidade. O Avahi, que o Mac usa para achar a pasta, fica de fora: ele já vem nos desktops, e o Samba se anuncia sozinho quando ele está ligado |
+| A receita recusa pastas do sistema, a raiz de `/srv`, `/mnt`, `/media` e `/home`, a pasta pessoal inteira de uma conta e uma pasta do root que já tem arquivos | São os jeitos de abrir para a casa inteira mais do que a pessoa queria. Numa pasta do root com arquivos, mudar o dono de tudo seria uma surpresa; a receita explica o `chown` |
+| O desfazer nunca apaga os arquivos da pasta | É a promessa do plano: só sai a pasta que a receita criou e que continua vazia |
+| O rolê sai como `rascunho` | Ele vira `testado` pela regra de sempre, quando a receita tiver o registro `onde: vm` no Ubuntu 24.04 e no Debian 13. A VM do CI já aplica a receita, entra na pasta com o `smbclient` e confere, depois do reinício, que o Samba voltou ligado |
