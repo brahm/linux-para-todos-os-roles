@@ -19,6 +19,8 @@ case "$DISTRO" in
     *) echo "distro desconhecida: $DISTRO" >&2; exit 2 ;;
 esac
 
+# Atalhos: `etapa` imprime um título para achar o passo no log do CI, e
+# `falhou` para tudo com a mensagem.
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() { echo "FALHOU: $*" >&2; exit 1; }
 
@@ -72,6 +74,8 @@ vm() { ssh "${SSH_OPCOES[@]}" "$USUARIO@127.0.0.1" "$@"; }
 # conexão fechar (o screendump grava o arquivo depois de responder).
 monitor() { printf '%s\n' "$*" | socat -t 5 - "UNIX-CONNECT:$PASTA/monitor.sock" >/dev/null; }
 
+# Espera o SSH da máquina responder (90 tentativas, uns 8 minutos). Com o boot_id anterior em $1,
+# só aceita quando ele muda, o que prova que a máquina reiniciou de verdade.
 esperar_ssh() {
     local antes=${1:-} boot
     for _ in $(seq 1 90); do
@@ -85,6 +89,7 @@ esperar_ssh() {
     falhou "a máquina não respondeu pelo SSH"
 }
 
+# Reinicia a máquina e espera ela voltar.
 reiniciar() {
     local boot
     boot=$(vm cat /proc/sys/kernel/random/boot_id)

@@ -11,19 +11,26 @@
 set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
     echo "FALHOU: $*"
     exit 1
 }
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
     esac
     return 1
 }
+# Os pacotes de agora que não estavam na lista $1, tirando os do sistema.
+# Saída vazia quer dizer que o desfazer voltou os pacotes ao que eram.
 mesmos_pacotes() {
     pacotes | while read -r p; do
         if ! grep -qxF "$p" "$1" && do_sistema "$p"; then continue; fi
@@ -33,6 +40,7 @@ mesmos_pacotes() {
 }
 # O valor que vale de verdade para uma conexão do aluno vinda da rede local.
 efetivo() { sshd -T -C user=aluno,host=x,addr=192.168.50.2 | awk -v op="$1" '$1 == op {print $2}'; }
+# Aplica o plano duas vezes e confere que a segunda não mudou nada.
 aplicar_duas_vezes() {
     bora aplicar "$1" --sem-perguntar --sem-snapshot
     local saida

@@ -12,6 +12,7 @@ saida = DOCS + "catalogo/"
 os.makedirs(saida + "receitas", exist_ok=True)
 os.makedirs(saida + "roles", exist_ok=True)
 
+# Grava uma página em docs/catalogo/ e avisa no terminal.
 def escrever(rel, html):
     open(saida + rel, "w", encoding="utf-8").write(html)
     print("escrito", rel)

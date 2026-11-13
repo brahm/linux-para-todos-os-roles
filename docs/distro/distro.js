@@ -5,6 +5,8 @@
   var saida = document.getElementById("resultado");
   var bruto = document.getElementById("distros-dados");
   if (!form || !saida || !bruto) return;
+  // Os dados das distros vêm da própria página, num <script type="application/json">
+  // que o gerar.py escreve a partir da lista DISTROS do distro.py.
   var D = JSON.parse(bruto.textContent);
 
   // Cada regra devolve [principal, alternativa, por que a principal, por que a alternativa].
@@ -30,6 +32,8 @@
     return ["mint", "ubuntu", "Tudo no lugar, sem Snap e com a base do Ubuntu LTS, onde o bora já roda.", "A mais documentada de todas, testada pelo bora."];
   }
 
+  // Cria um elemento com classe e conteúdo. O HTML aqui é sempre texto do
+  // próprio projeto (as regras acima e o JSON da página), nunca algo digitado.
   function el(tag, cls, html) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -37,12 +41,14 @@
     return e;
   }
 
+  // A frase que diz o quanto o bora já funciona na distro.
   function suporte(d) {
     if (d.suporte === "testada") return "Testada com o bora.";
     if (d.suporte === "herdada") return "Usa as receitas do bora para o Ubuntu, que ainda não foram testadas nela.";
     return "O bora chega na família dela na " + d.suporte + ".";
   }
 
+  // Um cartão de sugestão: rótulo, nome, o porquê e os botões.
   function bloco(id, rotulo, porque, cls) {
     var d = D[id];
     var b = el("div", cls);
@@ -60,11 +66,14 @@
     return b;
   }
 
+  // A opção marcada numa pergunta, ou null se a pessoa ainda não respondeu.
   function valor(nome) {
     var m = form.querySelector('input[name="' + nome + '"]:checked');
     return m ? m.value : null;
   }
 
+  // Monta a sugestão quando as três perguntas têm resposta, com os avisos
+  // de NVIDIA e de família ainda sem receitas, e destaca o cartão da distro.
   function atualizar() {
     var maq = valor("maquina"), uso = valor("uso"), exp = valor("experiencia");
     if (!maq || !uso || !exp) return;

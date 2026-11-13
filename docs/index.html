@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="pt-BR">
+<!-- Página inicial do site (GitHub Pages, pasta docs/). Escrita à mão: as
+     páginas do catálogo e da distro são geradas pelo ferramentas/catalogo/gerar.py,
+     mas esta não. O estilo está em estilo.css, e o site.js só busca os commits. -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,6 +38,7 @@
 
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
+  <!-- Barra do topo, com o menu das seções. -->
   <header class="topo">
     <div class="largura">
       <a class="marca-mini" href="#" aria-label="Linux para todos os rolês, início">
@@ -56,6 +60,9 @@
     </div>
   </header>
 
+  <!-- Conteúdo. Cada <section> tem um id, que é a âncora do menu. A abertura
+       vem primeiro; depois: o que é, como começar, os rolês, como funciona,
+       status, projetos parecidos, princípios e como ajudar. -->
   <main id="conteudo">
     <div class="abertura">
       <svg class="trilha" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -277,6 +284,8 @@
       </div>
     </section>
 
+    <!-- Status: a trilha do que já funciona, do que está em teste e do que vem
+         depois. Atualize junto com o README quando um rolê mudar de status. -->
     <section id="status" class="largura">
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Status do desenvolvimento</p>
@@ -387,6 +396,8 @@
       </div>
     </section>
 
+    <!-- Projetos parecidos e quando cada um serve melhor. É aqui, e não no
+         README, que o site recomenda o Linux Toys. -->
     <section id="parecidos" class="largura">
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Qual ferramenta usar</p>
@@ -526,6 +537,7 @@
     </div>
   </main>
 
+  <!-- Rodapé. -->
   <footer class="rodape-site">
     <div class="largura">
       <div>

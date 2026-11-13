@@ -6,6 +6,7 @@ ao ícone simbólico e ao logotipo, em qualquer escala e rotação.
 """
 import math
 
+# Pequena álgebra de vetores 2D: girar, somar, multiplicar, subtrair e normalizar.
 def rot(v, ang):
     c, s = math.cos(ang), math.sin(ang)
     return (v[0]*c - v[1]*s, v[0]*s + v[1]*c)
@@ -34,6 +35,7 @@ def hull_two_circles(a, ra, b, rb):
     large_a = 1 if (2*math.pi - 2*alpha) > math.pi else 0
     return [p1, ('L', q1), ('A', rb, large_b, 0, q2), ('L', p2), ('A', ra, large_a, 0, p1)]
 
+# Um círculo como dois arcos.
 def circle(c, r):
     p0 = add(c, (r, 0)); p1 = add(c, (-r, 0))
     return [p0, ('A', r, 0, 0, p1), ('A', r, 0, 0, p0)]
@@ -81,6 +83,8 @@ def sample(prim, n=24):
             cur = p
     return pts
 
+# Área com sinal de um polígono (fórmula do laço). O sinal diz o sentido
+# do contorno: horário ou anti-horário.
 def signed_area(pts):
     s = 0.0
     for i in range(len(pts)):
@@ -100,6 +104,8 @@ def reverse(prim):
         elif seg[0] == 'A': out.append(('A', seg[1], seg[2], 1-seg[3], start))
     return out
 
+# Garante o sentido do contorno, para os furos e as partes cheias se
+# combinarem certo no SVG.
 def orient(prim, positive=True):
     a = signed_area(sample(prim))
     if (a > 0) != positive:
@@ -133,8 +139,10 @@ def footprint(params=None):
         prims.append(web(c, t1, t2, P['web_dip']))
     return [orient(p) for p in prims]
 
+# Aplica escala, rotação (em graus) e translação a todas as primitivas.
 def transform(prims, scale=1.0, angle_deg=0.0, translate=(0, 0)):
     ang = math.radians(angle_deg)
+    # Transforma um ponto: escala, gira e desloca, nessa ordem.
     def T(p):
         q = rot(mul(p, scale), ang)
         return (q[0]+translate[0], q[1]+translate[1])
@@ -148,10 +156,12 @@ def transform(prims, scale=1.0, angle_deg=0.0, translate=(0, 0)):
         out.append(np_)
     return out
 
+# Número com até nd casas, sem zeros sobrando.
 def fmt(v, nd=2):
     s = f"{v:.{nd}f}".rstrip('0').rstrip('.')
     return '0' if s in ('-0', '') else s
 
+# Converte as primitivas no atributo d de um <path> SVG.
 def to_path(prims, nd=2):
     parts = []
     for prim in prims:
@@ -169,9 +179,11 @@ def to_path(prims, nd=2):
         parts.append(s)
     return "".join(parts)
 
+# Atalho: a pegada pronta como caminho SVG, já transformada.
 def footprint_path(scale=1.0, angle_deg=0.0, translate=(0, 0), params=None, nd=2):
     return to_path(transform(footprint(params), scale, angle_deg, translate), nd)
 
+# A caixa que envolve as primitivas (x mínimo, y mínimo, x máximo, y máximo).
 def bbox(prims):
     pts = [p for prim in prims for p in sample(prim, 32)]
     xs = [p[0] for p in pts]; ys = [p[1] for p in pts]

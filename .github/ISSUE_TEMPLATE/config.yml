@@ -1,3 +1,5 @@
+# Configura a tela de "nova issue" do GitHub: libera a issue em branco e
+# mostra o link do catálogo antes dos formulários.
 blank_issues_enabled: true
 contact_links:
   - name: Rolês e receitas

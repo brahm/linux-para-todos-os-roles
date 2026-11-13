@@ -7,6 +7,8 @@
   var URL = "https://api.github.com/repos/brahm/linux-para-todos-os-roles/commits?sha=main&per_page=5";
   var CHAVE = "lptr-commits";
 
+  // Data em texto relativo, em português ("há 3 dias"), usando o
+  // Intl.RelativeTimeFormat do próprio navegador.
   function quando(iso) {
     var seg = (new Date(iso).getTime() - Date.now()) / 1000;
     var rtf = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
@@ -17,6 +19,8 @@
     return "agora há pouco";
   }
 
+  // Troca o link de reserva pela lista de commits. Usa textContent, nunca
+  // innerHTML: a mensagem do commit vem de fora e não pode virar HTML.
   function mostrar(itens) {
     lista.textContent = "";
     itens.forEach(function (c) {
@@ -36,11 +40,15 @@
     vazio.hidden = true;
   }
 
+  // Guarda a resposta por 10 minutos na sessão. A API do GitHub sem login
+  // aceita só 60 pedidos por hora por IP, e um F5 animado acaba com isso.
   try {
     var salvo = JSON.parse(sessionStorage.getItem(CHAVE) || "null");
     if (salvo && Date.now() - salvo.em < 10 * 60 * 1000) { mostrar(salvo.itens); return; }
   } catch (e) {}
 
+  // Pede os últimos commits da main, sem os de merge. Qualquer erro deixa a
+  // página como estava (o .catch vazio é de propósito).
   fetch(URL, { headers: { Accept: "application/vnd.github+json" } })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (dados) {

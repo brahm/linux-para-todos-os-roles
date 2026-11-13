@@ -1,3 +1,5 @@
+# Formulário de issue do GitHub (a sintaxe é a dos issue forms). O texto que a
+# pessoa vê segue o docs/estilo.md, como o resto do projeto.
 name: Relatar um problema
 description: Algo no bora, num rolê ou numa receita não funcionou como esperado.
 title: "Problema: "

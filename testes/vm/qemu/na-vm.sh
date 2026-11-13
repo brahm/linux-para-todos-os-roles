@@ -14,19 +14,25 @@
 # têm padrão. As receitas de testes/vm/qemu/so-com-tela.txt ficam de fora. No fim, /root/cobertas.txt lista as receitas que passaram por aqui.
 set -euo pipefail
 cd /bora
+# Atalhos: `etapa` imprime um título para achar o passo no log do CI, e
+# `falhou` para tudo com a mensagem.
 etapa() { printf '\n--- %s ---\n' "$*"; }
 falhou() {
     echo "FALHOU: $*"
     exit 1
 }
+# Aplica o plano de novo e confere que nada mudou: toda receita precisa dizer
+# "já estava aplicada" na segunda vez.
 aplicar_sem_mudar() {
     local saida
     saida=$(bora aplicar "$1" --sem-perguntar)
     printf '%s\n' "$saida"
     grep -q "Tudo já estava aplicado" <<<"$saida" || falhou "aplicar de novo mudou alguma coisa ($1)"
 }
+# Quantos snapshots o Timeshift tem agora.
 snapshots() { { LC_ALL=C timeshift --list --scripted 2>/dev/null || true; } | awk '$1 ~ /^[0-9]+$/ && $2 == ">"' | wc -l; }
 CONECTAR=bora-backup-pessoal-conectar.service
+# A receita já foi aplicada por um rolê anterior?
 coberta() { grep -qx "$1" /root/cobertas.txt; }
 # As receitas de um plano, uma por linha.
 receitas_do_plano() { awk '$1 == "-" && $2 == "receita:" { print $3 }' "$1"; }

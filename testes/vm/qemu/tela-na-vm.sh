@@ -22,6 +22,8 @@
 # receitas que passaram por aqui.
 set -euo pipefail
 cd /bora
+# Atalhos: `etapa` imprime um título para achar o passo no log do CI, e
+# `falhou` para tudo com a mensagem.
 etapa() { printf '\n--- %s ---\n' "$*"; }
 falhou() {
     echo "FALHOU: $*"
@@ -62,6 +64,7 @@ sessoes() {
     done
 }
 
+# Espera a tela de login aparecer (até uns 10 minutos) e imprime a sessão dela.
 esperar_tela_de_login() {
     for _ in $(seq 1 60); do
         if systemctl is-active --quiet display-manager.service && [ -n "$(sessoes greeter)" ]; then
@@ -87,6 +90,8 @@ ublock_instalado() {
     return 1
 }
 
+# Aplica o plano de novo e confere que nada mudou: toda receita precisa dizer
+# "já estava aplicada" na segunda vez.
 aplicar_sem_mudar() {
     local saida
     saida=$(bora aplicar "$1" --sem-perguntar)

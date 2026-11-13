@@ -14,6 +14,7 @@ ICONE_ETAPA.update({
 })
 
 
+# O caminho da página de uma receita, visto de docs/catalogo/roles/.
 def link_receita(rid):
     return "../receitas/" + rid.replace("/", "-") + ".html"
 
@@ -70,6 +71,7 @@ def trilha(r):
           </svg>'''
 
 
+# As receitas do rolê como estações de uma linha, na ordem em que são aplicadas.
 def estacoes(r):
     itens = []
     for i, (rid, nota) in enumerate(r["receitas"]):
@@ -87,6 +89,7 @@ def estacoes(r):
     return '      <ol class="estacoes">\n' + "\n".join(itens) + "\n      </ol>"
 
 
+# A etiqueta de status do rolê: testado, em teste ou planejado.
 def status_ficha(r):
     prontas = sum(1 for rid, _ in r["receitas"] if rid in PRONTAS)
     total = len(r["receitas"])
@@ -101,6 +104,7 @@ def status_ficha(r):
     return '<span class="ficha planejado">Planejado</span>'
 
 
+# A página de um rolê no catálogo do site.
 def pagina_role(r):
     rid = r["id"]
     prontas = [x for x, _ in r["receitas"] if x in PRONTAS]
@@ -293,6 +297,7 @@ CICLO = '''          <svg class="ilustra ciclo" viewBox="0 0 500 220" role="img"
           </svg>'''
 
 
+# O cartão de um rolê na página do catálogo.
 def cartao_role(r):
     return f'''        <a class="cartao role revelar" href="roles/{r['id']}.html">
           {ladrilho(r['icone'], r['cor'])}
@@ -302,6 +307,7 @@ def cartao_role(r):
         </a>'''
 
 
+# A página de entrada do catálogo: os rolês e todas as receitas.
 def pagina_catalogo():
     usos = {}
     for r in ROLES:
@@ -393,6 +399,7 @@ def pagina_catalogo():
     return "\n\n".join(corpo)
 
 
+# Os cartões do fim do catálogo, que abrem os formulários de issue.
 def pedidos_catalogo():
     cartoes = [
         (pedido("3-novo-role.yml", "Rolê: "), '<path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>', "Propor um rolê", "Conte o objetivo em linguagem de gente, para quem ele serve e em que máquina você pensou.", "Propor"),

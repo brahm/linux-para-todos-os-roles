@@ -1,6 +1,7 @@
 // Linux para todos os rolês: animações e alternâncias das páginas do catálogo.
 // Tudo funciona sem isto: sem JavaScript, as ilustrações aparecem paradas e completas.
 (function () {
+  // Quem pediu menos movimento no sistema vê tudo pronto, sem animação.
   var parado = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Terminal que se escreve sozinho, linha por linha.
@@ -18,6 +19,7 @@
     });
   }
 
+  // O botão "rever" ao lado de cada terminal toca a animação de novo.
   document.querySelectorAll(".janela.replay").forEach(function (janela) {
     var botao = janela.parentNode.querySelector("[data-rever]");
     if (botao) botao.addEventListener("click", function () { tocar(janela); });
@@ -29,6 +31,8 @@
     if (el.hasAttribute("data-anima")) el.classList.add("anima");
     if (el.classList.contains("replay") && !el._tocou) { el._tocou = true; tocar(el); }
   }
+  // Anima cada elemento quando um quarto dele aparece na tela, uma vez só.
+  // Navegador sem IntersectionObserver (ou com movimento reduzido) mostra tudo de cara.
   var alvos = document.querySelectorAll(".revelar, [data-anima], .janela.replay");
   if (!("IntersectionObserver" in window) || parado) {
     alvos.forEach(ver);
@@ -46,6 +50,8 @@
     var alvo = document.getElementById(grupo.getAttribute("data-alternar"));
     if (!alvo) return;
     var botoes = grupo.querySelectorAll("button[data-mostrar]");
+    // Marca o botão escolhido e esconde o que não vale para esse valor.
+    // data-quando pode ter vários valores, separados por espaço.
     function escolher(valor) {
       botoes.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-mostrar") === valor)); });
       alvo.querySelectorAll("[data-quando]").forEach(function (el) {

@@ -94,6 +94,7 @@ FAMILIA_NOME = {"ubuntu": "família Ubuntu", "debian": "família Debian", "fedor
                 "fedora-imutavel": "Fedora imutável", "arch": "família Arch"}
 
 
+# A etiqueta que diz o quanto o bora já foi testado nesta distro.
 def ficha_suporte(d):
     s = d["suporte"]
     if s == "testada":
@@ -103,12 +104,14 @@ def ficha_suporte(d):
     return f'<span class="ficha planejado"><code>bora</code> na {s}</span>'
 
 
+# O selo redondo da distro, com a letra e as duas cores dela.
 def selo(d, tamanho=""):
     c1, c2 = d["cor"]
     return (f'<span class="ladrilho selo-distro{tamanho}" style="--c1:{c1};--c2:{c2}" aria-hidden="true">'
             f'<b>{d["letra"]}</b></span>')
 
 
+# O cartão de uma distro na lista do resultado.
 def cartao(d):
     return f'''        <article class="cartao distro" id="d-{d["id"]}">
           <div class="distro-topo">
@@ -128,6 +131,7 @@ def cartao(d):
         </article>'''
 
 
+# Uma opção de resposta do questionário (um botão de rádio estilizado).
 def opcao(nome, valor, titulo, texto, icone):
     return f'''            <label class="opcao">
               <input type="radio" name="{nome}" value="{valor}">
@@ -152,6 +156,8 @@ IC = {
 }
 
 
+# A página inteira: questionário, resultado e o caminho até o primeiro boot.
+# Os dados das distros vão também em JSON, para o distro.js montar o resultado.
 def corpo():
     dados = json.dumps({d["id"]: {k: d[k] for k in ("nome", "edicao", "suporte", "baixar", "guia")} for d in DISTROS}, ensure_ascii=False)
     cartoes = "\n".join(cartao(d) for d in DISTROS)
@@ -176,6 +182,7 @@ def corpo():
         ("Quer jogar e está começando", "bazzite", "pop"),
         ("Joga e já se vira no Linux", "cachyos", "bazzite"),
     ]
+    # Link para o cartão da distro na mesma página.
     def link(i):
         return f'<a href="#d-{i}">{POR_ID[i]["nome"]}</a>'
     linhas_resumo = "\n".join(

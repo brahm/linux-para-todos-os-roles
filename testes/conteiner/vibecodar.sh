@@ -9,6 +9,8 @@ cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
 AGENTES="${AGENTES:-claude,codex,copilot,opencode,vibe}"
 EDITOR_="${EDITOR_:-vscode}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
@@ -21,6 +23,7 @@ etapa "Preparar uma pessoa no computador"
 # uma configuração do Claude Code, para conferir que o desfazer volta cada um.
 id dev >/dev/null 2>&1 || useradd -m -s /bin/bash -c "Dani Dev,,," dev
 casa=/home/dev
+# Roda um comando como a pessoa dev, com o PATH de uma sessão comum.
 como() { runuser -u dev -- env HOME=$casa PATH=$casa/.local/bin:/usr/local/bin:/usr/bin:/bin "$@"; }
 [ -f $casa/.bashrc ] || cp /etc/skel/.bashrc $casa/.bashrc
 como mkdir -p $casa/.config/git $casa/.claude
@@ -28,6 +31,7 @@ echo '*.swp' >$casa/.config/git/ignore
 echo '{"theme": "dark"}' >$casa/.claude/settings.json
 chown -R dev:dev $casa
 for f in .bashrc .config/git/ignore .claude/settings.json; do cp "$casa/$f" "/tmp/antes-$(basename "$f")"; done
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "O rolê monta o plano"
@@ -92,6 +96,8 @@ etapa "Desfazer"
 bora desfazer --sem-perguntar
 
 etapa "Conferir que voltou"
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;

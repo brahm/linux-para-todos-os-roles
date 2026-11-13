@@ -9,6 +9,8 @@
 set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
@@ -16,7 +18,9 @@ falhou() {
     exit 1
 }
 SENHAS=/var/lib/bora/pasta-compartilhada/senhas
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
+# A senha que a receita gerou para uma pessoa.
 senha_de() { awk -v n="$1" '$1 == n {print $2}' "$SENHAS"; }
 # Sem systemd no contêiner, o smbd não liga sozinho: o teste liga à mão.
 ligar_smbd() {
@@ -30,11 +34,14 @@ ligar_smbd() {
     done
     falhou "o smbd não abriu a porta 445"
 }
+# Desliga o smbd ligado à mão, antes de desfazer.
 desligar_smbd() {
     pkill -x smbd 2>/dev/null || true
     sleep 1
 }
+# Entra na pasta $1 como $2 com a senha $3 e roda o comando $4 (padrão: ls).
 entra() { smbclient "//127.0.0.1/$1" -U "$2%$3" -c "${4:-ls}" >/dev/null 2>&1; }
+# Confere que a receita recusa os parâmetros dados, com a mensagem esperada.
 recusa() {
     local saida
     if saida=$(bora plano --receitas servicos/samba "$@" -o /tmp/recusa.yaml 2>&1) &&
@@ -136,6 +143,8 @@ bora desfazer --sem-perguntar
 
 etapa "Conferir que voltou"
 hash -r
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
@@ -171,6 +180,7 @@ bora aplicar /tmp/plano-hd.yaml --sem-perguntar --sem-snapshot
 [ "$(stat -c %U /mnt/hd)" = aluno ] || falhou "a pasta vazia do root não passou para o aluno"
 testparm -s 2>/dev/null | grep -qx '\[fotos\]' || falhou "a pasta que já existia no Samba sumiu"
 [ "$(testparm -s --section-name=HD --parameter-name='hosts allow' 2>/dev/null)" = "127.0.0.1 ::1 192.168.50.0/24" ] || falhou "o Samba aceita outra rede"
+# O pacote está instalado?
 pacote() { [ "$(dpkg-query -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null)" = "ii " ]; }
 if pacote wsdd2; then falhou "instalou o wsdd2 sem pedir para aparecer na rede"; fi
 ligar_smbd

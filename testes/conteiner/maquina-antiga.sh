@@ -7,6 +7,8 @@ set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
 AMBIENTE="${AMBIENTE:-xfce}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
@@ -31,11 +33,13 @@ mkdir -p /etc/firefox/policies
 echo '{"policies": {"DisableAppUpdate": true}}' >/etc/firefox/policies/policies.json
 cp /etc/firefox/policies/policies.json /tmp/politicas-antes
 
+# O estado (enabled, disabled...) dos serviços que a receita servicos-enxutos mexe.
 servicos() {
     for u in bluetooth.service ModemManager.service NetworkManager-wait-online.service; do
         printf '%s %s\n' "$u" "$(systemctl is-enabled "$u" 2>/dev/null || true)"
     done
 }
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "Diagnóstico"
@@ -89,6 +93,8 @@ etapa "Desfazer"
 bora desfazer --sem-perguntar
 
 etapa "Conferir que voltou"
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;

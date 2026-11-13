@@ -49,6 +49,7 @@ def ler_testes(linhas):
     return inicio, registros
 
 
+# Um registro no formato do receita.yaml, com os campos sempre na mesma ordem.
 def escrever(registro):
     texto = []
     chaves = [c for c in ORDEM if c in registro] + [c for c in registro if c not in ORDEM]
@@ -60,6 +61,7 @@ def escrever(registro):
     return texto
 
 
+# Converte a data do registro; uma data ilegível conta como muito antiga.
 def dias(data):
     try:
         return datetime.date.fromisoformat(data)
@@ -76,6 +78,7 @@ def testadas_na_familia(familia):
     return achadas
 
 
+# Grava um registro numa receita. Devolve True se o arquivo mudou.
 def registrar(receita, novo):
     arquivo = RAIZ / "receitas" / receita / "receita.yaml"
     if not arquivo.is_file():
@@ -104,6 +107,7 @@ def registrar(receita, novo):
     return mudou
 
 
+# Lê a linha de comando e registra cada receita.
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--onde", required=True, choices=["vm", "conteiner", "maquina"])

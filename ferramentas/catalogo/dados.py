@@ -75,10 +75,12 @@ NIVEL_TEXTO = {
 }
 
 
+# O caminho da página de uma receita, relativo a docs/catalogo/.
 def pagina_receita(rid):
     return "receitas/" + rid.replace("/", "-") + ".html"
 
 
+# O receita.yaml de uma receita, como dicionário.
 def ler_receita(rid):
     return yaml.safe_load(open(f"{RAIZ}receitas/{rid}/receita.yaml", encoding="utf-8"))
 
