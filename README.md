@@ -122,25 +122,19 @@ Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, 
 
 O porquê de cada decisão está em [`docs/decisoes.md`](docs/decisoes.md).
 
-## Parecido, mas diferente: o Linux Toys
-
-O [Linux Toys](https://linux.toys) é um projeto vizinho, e dos bons. É uma caixa de ferramentas com janela gráfica: você escolhe um programa, um driver ou um ajuste num catálogo de uns 200 itens, e ele instala com um clique, em umas quinze famílias de distro. Tem muita coisa para jogos e hardware específico.
-
-| | Linux Toys | `bora` |
-|---|---|---|
-| Pergunta que responde | "Como instalo isto sem dor?" | "Quero que este computador sirva para isto" |
-| Unidade | Um programa ou ajuste | Um rolê, feito de receitas |
-| Alcance | Muito: ~200 itens, ~15 famílias de distro | Pouco, mas conferido: 5 rolês, Ubuntu e Debian por enquanto |
-| De onde vêm os pacotes | Da distro, de COPR, AUR, repositórios de terceiros e instaladores da internet | Da distro e do Flathub, com poucas exceções de fabricante, conferidas |
-| Depois de aplicar | Desfaz o que registrou | Testa se funcionou, desfaz e explica o porquê de cada mudança |
-| Interface | Janela gráfica e terminal | Terminal, com menus |
-| Licença | GPL-3.0 | 0BSD |
-
-Quer instalar um programa, um driver ou um ajuste de jogos agora? O Linux Toys provavelmente já tem. Quer levar o computador até um objetivo, entender o que mudou e poder voltar atrás? Bora.
-
 ## Marca
 
 Pegadas de pinguim: o pinguim é o Linux, e as pegadas são o rolê e os passos testados que o `bora` segue, um de cada vez. Logotipo, ícone, paleta e regras de uso estão em [`marca/`](marca/README.md).
+
+## Compilar
+
+Com o [Rust](https://rustup.rs/) instalado:
+
+```sh
+cargo build --release
+```
+
+O binário fica em `target/release/bora`. Os testes e o binário estático estão no [`CONTRIBUTING.md`](CONTRIBUTING.md#rodar-os-testes).
 
 ## Licença
 

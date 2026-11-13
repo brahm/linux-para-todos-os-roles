@@ -129,6 +129,11 @@ O humor é tempero; a precisão é o prato.
 - Datas como "13/11/2026" em tabelas e "13 de novembro de 2026" em títulos.
 - Os LEIAMEs das receitas mantêm as seis seções (`O que faz`, `Por que`, `O que muda no sistema`, `Como conferir`, `Como desfazer`, `Fontes`). O `bora` lê "O que faz" e "O que muda no sistema" no modo `--passo-a-passo`, então essas duas precisam ler bem no terminal: curtas e sem tabela.
 
+## O que vai em cada lugar
+
+- **README:** só o projeto em si e o status dele, mais como instalar, compilar e contribuir. Comparações com outros projetos, recomendações e conteúdo de divulgação vão para o site.
+- **Site:** é onde o projeto conversa com quem ainda está escolhendo. Quando alguém só quer configurar algo automaticamente, sem objetivo nem explicação, o site recomenda o [Linux Toys](https://linux.toys) como a ferramenta mais indicada. Recomendar o vizinho certo vale mais do que prender a pessoa no `bora`.
+
 ## Onde fica cada texto
 
 | Texto | Arquivo |

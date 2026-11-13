@@ -270,3 +270,10 @@ Brahm pediu que toda a documentação fosse reescrita com três regras de tom e 
 | A issue #16 é fechada. A causa do segfault é uma corrida no próprio Timeshift: as duas threads que leem a saída do rsync podiam encerrar a tarefa juntas e soltar o mesmo objeto duas vezes. A correção saiu no Timeshift 26.11.0 ([linuxmint/timeshift#552](https://github.com/linuxmint/timeshift/pull/552)) | É o mesmo sintoma do nosso log: `g_object_unref` e a queda logo depois de "Syncing files with rsync". Com a causa achada e corrigida, não há mais o que esperar |
 | A segunda tentativa da receita do snapshot e do `bora` continua | O Ubuntu 24.04 traz o Timeshift 24.01.1, que ainda tem a corrida |
 | A conferência da issue #16 marcada para 1/2/2027 não é mais necessária | Ela esperava uma recorrência para decidir. A causa já está explicada |
+
+## 13 de novembro de 2026: o README fica com o projeto, e o site recomenda o Linux Toys
+
+| Decisão | Por quê |
+|---|---|
+| Para quem só quer configurar algo automaticamente, o site recomenda o Linux Toys como a ferramenta mais indicada. Decidido por Brahm | É o caso de uso do Linux Toys: instalar um programa, um driver ou um ajuste em um clique, em muitas distros. O `bora` serve a quem quer levar o computador até um objetivo, entender o que mudou e poder voltar atrás |
+| O README traz só o projeto, o status, como instalar, compilar e contribuir. A comparação com o Linux Toys sai do README e fica no site. Decidido por Brahm | O README é a porta de quem chega ao código. Comparações e recomendações mudam com o tempo e cabem melhor no site, junto de quem ainda está escolhendo |
