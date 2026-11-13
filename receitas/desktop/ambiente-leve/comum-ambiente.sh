@@ -1,8 +1,11 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita desktop/ambiente-leve.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 PASTA_CONTAS=/var/lib/AccountsService/users
 
+# O ambiente pedido no parâmetro (xfce ou lxqt). Qualquer outro valor para tudo.
 ambiente() {
     case "${BORA_AMBIENTE:-xfce}" in
         xfce | lxqt) echo "${BORA_AMBIENTE:-xfce}" ;;
@@ -53,6 +56,7 @@ primeiro_disponivel() {
     echo "$1"
 }
 
+# O programa que abre a sessão do ambiente.
 programa_da_sessao() {
     case "$(ambiente)" in
         xfce) echo startxfce4 ;;

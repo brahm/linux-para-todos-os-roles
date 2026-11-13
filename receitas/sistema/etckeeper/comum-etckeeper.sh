@@ -1,5 +1,7 @@
 # shellcheck shell=bash
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita sistema/etckeeper.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # O /etc já tem um histórico do etckeeper, com pelo menos um registro?
 etc_versionado() {

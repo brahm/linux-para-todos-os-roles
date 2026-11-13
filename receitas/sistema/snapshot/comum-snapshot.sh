@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita sistema/snapshot.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 CONFIG=/etc/timeshift/timeshift.json
 UNIDADE=bora-snapshot
@@ -43,6 +45,7 @@ listar_snapshots() {
     { LC_ALL=C timeshift --list --scripted 2>/dev/null || true; } | awk '$1 ~ /^[0-9]+$/ && $2 == ">" {print $3}'
 }
 
+# O timeshift.json já tem o disco, o modo e quantos snapshots guardar, como a receita pede?
 config_certa() {
     local uuid=$1 modo=$2
     [ -f "$CONFIG" ] || return 1

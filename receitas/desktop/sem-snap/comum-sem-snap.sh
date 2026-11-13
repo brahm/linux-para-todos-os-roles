@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita desktop/sem-snap.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 PIN_SNAPD=/etc/apt/preferences.d/bora-sem-snap.pref
 CHAVE_MOZILLA=/etc/apt/keyrings/packages.mozilla.org.asc
@@ -32,6 +34,8 @@ snaps_instalados() {
     done | sort -u
 }
 
+# Snaps que a pessoa instalou e que a receita não sabe trocar. Se houver,
+# a receita para e pede para a pessoa decidir o que fazer com eles.
 snaps_sem_troca() { snaps_instalados | grep -Ev "$SNAPS_DO_SISTEMA|$SNAPS_TROCADOS" || true; }
 
 # O apt não instala o snapd de jeito nenhum?

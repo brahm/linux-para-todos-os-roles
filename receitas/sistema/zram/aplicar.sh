@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# aplicar.sh da receita sistema/zram (Memória comprimida (zram)).
+# Faz a mudança no sistema. Tudo o que precisa voltar atrás fica anotado em
+# $BORA_ESTADO, pelas funções do comum.sh. Rodar duas vezes não muda nada na segunda.
+# Os parâmetros da receita chegam como variáveis BORA_<NOME>.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-zram.sh

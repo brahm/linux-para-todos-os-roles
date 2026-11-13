@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita ia/chaves-de-api.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 PESSOA=$(descobrir_pessoa "${BORA_USUARIO:-auto}")
 CASA=$(pasta_pessoal "$PESSOA")
@@ -25,6 +27,8 @@ linhas_dos_provedores() {
     return 0
 }
 
+# O arquivo de chaves inicial: as instruções e uma linha comentada por provedor.
+# Nenhuma chave de verdade: quem cola a chave é a pessoa.
 modelo_de_chaves() {
     cat <<'TOPO'
 # Chaves de API dos agentes de IA. Criado pelo bora (receita ia/chaves-de-api).
@@ -43,6 +47,8 @@ TOPO
     done < <(linhas_dos_provedores)
 }
 
+# O trecho que vai no ~/.bashrc e carrega as chaves em cada terminal novo.
+# Fica entre as marcas $INICIO e $FIM para o desfazer achar e tirar.
 bloco_bashrc() {
     cat <<BLOCO
 $INICIO
@@ -55,8 +61,10 @@ $FIM
 BLOCO
 }
 
+# O ~/.bashrc já tem o trecho do bora?
 tem_bloco() { [ -f "$BASHRC" ] && grep -qxF "$INICIO" "$BASHRC"; }
 
+# Tira o trecho do bora do ~/.bashrc, sem mexer no resto do arquivo.
 tirar_bloco() {
     local tmp
     tem_bloco || return 0
@@ -66,6 +74,7 @@ tirar_bloco() {
     rm -f "$tmp"
 }
 
+# A pasta e o arquivo de chaves só abrem para a pessoa (700 e 600)?
 permissoes_certas() {
     [ -d "$PASTA" ] && [ -f "$ARQUIVO" ] || return 1
     [ "$(stat -c '%a %U' "$PASTA")" = "700 $PESSOA" ] || return 1

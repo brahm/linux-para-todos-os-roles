@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita ia/lm-studio (LM Studio, para modelos de IA com janela).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
 # shellcheck source=comum-lm-studio.sh
 source ./comum-lm-studio.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 nada_faltando() { [ -z "$(bibliotecas_faltando)" ]; }
 sandbox_do_root() { [ ! -f "$LMS_DIR/chrome-sandbox" ] || [ "$(stat -c '%U %a' "$LMS_DIR/chrome-sandbox")" = "root 4755" ]; }
 ninguem_escreve() { [ -z "$(find "$LMS_DIR" -perm -o+w ! -type l -print -quit)" ]; }

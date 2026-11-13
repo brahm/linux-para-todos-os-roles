@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita containers/podman.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # uidmap traz o newuidmap e o newgidmap, que os contêineres sem root usam.
 PACOTES="podman uidmap"
@@ -10,6 +12,7 @@ FAIXA=65536
 
 PESSOA=$(descobrir_pessoa "${BORA_USUARIO:-auto}")
 
+# O conteúdo que o arquivo $REGISTROS precisa ter.
 registros_esperado() {
     cat <<'CONF'
 # Configurado pelo bora (receita containers/podman): imagens com nome curto,

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita servicos/samba (Pasta compartilhada com Samba).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-samba.sh
@@ -11,6 +14,8 @@ nome=$(nome_do_compartilhamento)
 mapfile -t pessoas < <(pessoas_da_pasta)
 rede=$(descobrir_rede_local)
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 valor() { testparm -s --section-name="$1" --parameter-name="$2" 2>/dev/null; }
 config_valida() { testparm -s >/dev/null 2>&1; }
 pasta_certa() { [ "$(valor "$nome" path)" = "$pasta" ] && [ -d "$pasta" ]; }

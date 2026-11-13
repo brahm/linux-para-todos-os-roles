@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# aplicar.sh da receita desktop/codecs (Codecs de áudio e vídeo).
+# Faz a mudança no sistema. Tudo o que precisa voltar atrás fica anotado em
+# $BORA_ESTADO, pelas funções do comum.sh. Rodar duas vezes não muda nada na segunda.
+# Os parâmetros da receita chegam como variáveis BORA_<NOME>.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-codecs.sh
 source ./comum-codecs.sh
 exigir_apt
 
+# O pacote existe nos repositórios ligados? No Ubuntu, parte dos codecs fica no
+# universe; sem ele ligado, a receita para com a explicação de como ligar.
 disponivel() {
     local candidato
     candidato=$(LC_ALL=C apt-cache policy "$1" 2>/dev/null | awk '/Candidate:/ {print $2}')

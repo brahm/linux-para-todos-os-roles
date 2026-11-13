@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita sistema/zram.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 CONF_ZRAM=/etc/systemd/zram-generator.conf
 CONF_SYSCTL=/etc/sysctl.d/99-bora-zram.conf
@@ -8,6 +10,7 @@ MARCA="receita sistema/zram"
 # trocar para a memória comprimida é barato, então o kernel pode trocar cedo.
 AJUSTES=(vm.swappiness=180 vm.watermark_boost_factor=0 vm.watermark_scale_factor=125 vm.page-cluster=0)
 
+# A porcentagem da memória para o zram, conferida (de 10 a 100).
 porcentagem() {
     local p=${BORA_PORCENTAGEM:-50}
     case "$p" in '' | *[!0-9]*) falha "porcentagem precisa ser um número de 10 a 100 (veio $p)" ;; esac
@@ -17,6 +20,7 @@ porcentagem() {
     echo "$p"
 }
 
+# O arquivo de configuração do zram-generator que a receita escreve.
 conf_esperada() {
     cat <<CONF
 # Memória comprimida, ligada pelo bora ($MARCA).
@@ -29,6 +33,7 @@ swap-priority = 100
 CONF
 }
 
+# Os ajustes do kernel para o zram, no formato do sysctl.d.
 sysctl_esperado() {
     printf '# Ajustes para o zram, do bora (%s).\n' "$MARCA"
     printf '%s\n' "${AJUSTES[@]}" | sed 's/=/ = /'
@@ -58,6 +63,7 @@ outro_zram() {
     return 1
 }
 
+# O /dev/zram0 está em uso como swap?
 zram_ligado() { grep -q '^/dev/zram0 ' /proc/swaps 2>/dev/null; }
 
 # O kernel tem o módulo do zram? No Ubuntu Server e nas imagens de nuvem, o

@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita dev/git.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 CHAVES="id_ed25519 id_ecdsa id_rsa"
 
@@ -14,6 +16,7 @@ arquivo_do_git() {
     fi
 }
 
+# Uma opção global do Git da pessoa, ou vazio se não estiver configurada.
 valor_do_git() { como_pessoa "$PESSOA" git config --global --get "$1" 2>/dev/null || true; }
 
 # O nome que vai nos commits: o pedido, o que já está configurado ou o da conta.
@@ -32,6 +35,7 @@ nome_desejado() {
     echo "${completo:-$PESSOA}"
 }
 
+# O e-mail dos commits: o pedido ou o que já está configurado. Nunca inventa um.
 email_desejado() {
     if [ -n "${BORA_EMAIL:-}" ]; then echo "$BORA_EMAIL"; else valor_do_git user.email; fi
 }

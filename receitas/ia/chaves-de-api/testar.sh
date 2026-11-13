@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita ia/chaves-de-api (Chaves de API guardadas).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-chaves.sh
 source ./comum-chaves.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 so_da_pessoa() { [ "$(stat -c '%a %U' "$1")" = "$2 $PESSOA" ]; }
 # Um terminal novo, com uma chave de teste num arquivo de chaves temporário,
 # lido pelo mesmo trecho que foi para o .bashrc.

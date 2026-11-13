@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita desktop/navegador-leve (Navegador enxuto).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-navegador.sh
 source ./comum-navegador.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 json_valido() { python3 -c 'import json, sys; json.load(open(sys.argv[1]))' "$POLITICAS"; }
 com_ublock() { grep -q "$UBLOCK" "$POLITICAS"; }
 conferir "o arquivo de políticas é um JSON que o Firefox lê ($POLITICAS)" json_valido

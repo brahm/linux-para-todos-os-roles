@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita dev/editor.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 EDITOR_PEDIDO=${BORA_EDITOR:-terminal}
 
@@ -19,8 +21,10 @@ flatpak_do_editor() {
     esac
 }
 
+# O aplicativo Flatpak está instalado para o sistema todo?
 flatpak_instalado() { flatpak info --system "$1" >/dev/null 2>&1; }
 
+# O arquivo de repositório do VS Code, no formato deb822.
 fonte_ms() {
     cat <<'FONTE'
 # Escrito pelo bora (receita dev/editor): o VS Code oficial da Microsoft.
@@ -33,6 +37,7 @@ Signed-By: /etc/apt/keyrings/packages.microsoft.asc
 FONTE
 }
 
+# O editor pedido já está instalado do jeito que a receita instala?
 editor_pronto() {
     case $EDITOR_PEDIDO in
         terminal) return 0 ;;

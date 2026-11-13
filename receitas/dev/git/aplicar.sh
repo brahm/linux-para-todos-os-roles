@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# aplicar.sh da receita dev/git (Git).
+# Faz a mudança no sistema. Tudo o que precisa voltar atrás fica anotado em
+# $BORA_ESTADO, pelas funções do comum.sh. Rodar duas vezes não muda nada na segunda.
+# Os parâmetros da receita chegam como variáveis BORA_<NOME>.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
@@ -19,6 +23,8 @@ instalar_pacotes git openssh-client
 echo "$PESSOA" >"$BORA_ESTADO/pessoa"
 
 arquivo=$(arquivo_do_git "$CASA")
+# Muda uma opção do Git só se ela estiver diferente, guardando antes uma
+# cópia do arquivo de configuração para o desfazer.
 mudar() {
     if [ "$(valor_do_git "$1")" != "$2" ]; then
         guardar_arquivo "$arquivo"

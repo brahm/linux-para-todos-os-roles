@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita dev/git (Git).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
 # shellcheck source=comum-git.sh
 source ./comum-git.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 tem() { [ -n "$(valor_do_git "$1")" ]; }
 # Um commit de verdade, num repositório de teste que some no fim.
 commit_de_teste() {

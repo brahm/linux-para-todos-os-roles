@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita desktop/flatpak.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 FLATHUB_URL=https://dl.flathub.org/repo/
 FLATHUB_ARQUIVO=https://dl.flathub.org/repo/flathub.flatpakrepo

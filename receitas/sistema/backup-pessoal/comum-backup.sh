@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita sistema/backup-pessoal.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 CONFIG=/etc/bora/backup-pessoal.conf
 PROGRAMA=/usr/local/lib/bora/backup-pessoal
@@ -17,11 +19,13 @@ achar_disco() {
     [ -n "$d" ] && [ "$(blkid -c /dev/null -p -o value -s UUID "$d" 2>/dev/null || true)" = "$1" ] && echo "$d"
 }
 
+# O valor de uma chave do arquivo de configuração do backup, ou vazio.
 valor_da_config() {
     [ -f "$CONFIG" ] || return 0
     sed -n "s/^$1=//p" "$CONFIG" | tr -d '"' | awk 'NR == 1'
 }
 
+# O sistema de arquivos guarda dono e permissões, como o backup precisa?
 fs_linux() { [[ " $FS_LINUX " == *" $1 "* ]]; }
 
 # Para a receita explicando por que um disco em exFAT, NTFS ou FAT não serve.

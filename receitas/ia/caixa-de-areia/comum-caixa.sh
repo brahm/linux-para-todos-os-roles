@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita ia/caixa-de-areia.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 PACOTES="bubblewrap socat"
 CAIXA=/usr/local/bin/caixa
@@ -12,6 +14,7 @@ PESSOA=$(descobrir_pessoa "${BORA_USUARIO:-auto}")
 CASA=$(pasta_pessoal "$PESSOA")
 CONFIG_CLAUDE=$CASA/.claude/settings.json
 
+# O conteúdo do perfil do AppArmor para o bubblewrap.
 perfil_apparmor() {
     cat <<'PERFIL'
 # Escrito pelo bora (receita ia/caixa-de-areia). Deixa o bubblewrap criar o
@@ -36,6 +39,8 @@ bwrap_abre() {
     como_pessoa "$PESSOA" bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --die-with-parent true >/dev/null 2>&1
 }
 
+# O Claude Code está instalado na conta da pessoa? Se estiver, a receita
+# liga a caixa de areia dele também.
 claude_instalado() {
     como_pessoa "$PESSOA" env PATH="$CASA/.local/bin:/usr/local/bin:/usr/bin:/bin" sh -c 'command -v claude' >/dev/null 2>&1
 }

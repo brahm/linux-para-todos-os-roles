@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# aplicar.sh da receita desktop/sem-snap (Sem Snap).
+# Faz a mudança no sistema. Tudo o que precisa voltar atrás fica anotado em
+# $BORA_ESTADO, pelas funções do comum.sh. Rodar duas vezes não muda nada na segunda.
+# Os parâmetros da receita chegam como variáveis BORA_<NOME>.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-sem-snap.sh
@@ -13,6 +17,7 @@ if [ -n "$outros" ]; then
     falha "estes snaps não têm um substituto que a receita conheça: $(tr '\n' ' ' <<<"$outros"). Instale a versão do Flathub ou do apt de cada um, remova o snap com 'sudo snap remove <nome>' e rode o bora de novo"
 fi
 [ -f "$BORA_ESTADO/snaps-removidos" ] || snaps_instalados >"$BORA_ESTADO/snaps-removidos"
+# O snap estava instalado antes de a receita tirar? A lista fica no estado.
 tinha() { grep -qx "$1" "$BORA_ESTADO/snaps-removidos"; }
 
 if tinha thunderbird; then

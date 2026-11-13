@@ -1,6 +1,7 @@
 # shellcheck shell=bash
 # As unidades do systemd desta receita. Usado por aplicar e verificar.
 
+# O serviço do systemd que roda o backup, chamado pelo temporizador abaixo.
 servico() {
     cat <<UNIT
 [Unit]
@@ -34,6 +35,7 @@ WantedBy=$1
 UNIT
 }
 
+# O temporizador que acorda de hora em hora e roda o serviço se o backup venceu.
 temporizador() {
     cat <<'UNIT'
 [Unit]

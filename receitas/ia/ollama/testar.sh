@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita ia/ollama (Ollama, para modelos de IA no computador).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
 # shellcheck source=comum-ollama.sh
 source ./comum-ollama.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 versao_certa() { "$OLLAMA_BIN" --version 2>&1 | grep -qF "$OLLAMA_VERSAO"; }
 so_neste_computador() { grep -qx "Environment=OLLAMA_HOST=$OLLAMA_ENDERECO" "$OLLAMA_UNIDADE"; }
 sem_porta_aberta() { ss -Hltn 2>/dev/null | awk '$4 ~ /^(0\.0\.0\.0|\[::\]|\*):11434$/ {aberta = 1} END {exit aberta}'; }

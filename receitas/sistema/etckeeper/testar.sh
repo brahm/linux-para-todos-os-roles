@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita sistema/etckeeper (Histórico do /etc).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-etckeeper.sh
 source ./comum-etckeeper.sh
 exigir_apt
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 so_o_root() { [ "$(stat -c %a /etc/.git)" = 700 ]; }
 permissoes_guardadas() { [ -f /etc/.etckeeper ]; }
 

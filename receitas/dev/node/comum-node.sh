@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita dev/node.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # A versão LTS que esta receita instala e testa. Ao trocar, troque também a
 # soma, copiada de https://nodejs.org/dist/v<versão>/SHASUMS256.txt.
@@ -23,6 +25,7 @@ NPMRC=$NODE_DIR/etc/npmrc
 PESSOA=$(descobrir_pessoa "${BORA_USUARIO:-auto}")
 BIN_DA_PESSOA=$(pasta_pessoal "$PESSOA")/.local/bin
 
+# O conteúdo que o $NPMRC precisa ter.
 npmrc_esperado() {
     cat <<'NPMRC'
 # Configurado pelo bora (receita dev/node): "npm install -g" instala na pasta
@@ -39,6 +42,7 @@ comandos_ligados() {
     done
 }
 
+# A versão certa do Node.js está na pasta e responde?
 node_instalado() {
     [ -x "$NODE_DIR/bin/node" ] && [ "$("$NODE_DIR/bin/node" --version 2>/dev/null)" = "v$NODE_VERSAO" ]
 }

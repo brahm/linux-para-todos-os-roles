@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita ia/ollama.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # A versão que esta receita instala e testa. Ao trocar, troque também as
 # somas, copiadas do sha256sum.txt da página da versão em
@@ -32,6 +34,7 @@ case "$MODELO" in
         ;;
 esac
 
+# O serviço do systemd que mantém o Ollama rodando, só neste computador.
 unidade_esperada() {
     cat <<UNIDADE
 # Instalado pelo bora (receita ia/ollama).
@@ -58,6 +61,7 @@ WantedBy=multi-user.target
 UNIDADE
 }
 
+# A versão certa está na pasta e o comando aponta para ela?
 ollama_instalado() {
     [ -x "$OLLAMA_DIR/bin/ollama" ] && [ "$(readlink "$OLLAMA_BIN" 2>/dev/null)" = "$OLLAMA_DIR/bin/ollama" ]
 }
@@ -80,6 +84,7 @@ manifesto_do_modelo() {
     echo "$OLLAMA_MODELOS/manifests/registry.ollama.ai/$nome/$etiqueta"
 }
 
+# O servidor do Ollama responde no endereço local?
 api_responde() { curl -fsS --max-time 3 "http://$OLLAMA_ENDERECO/api/version" >/dev/null 2>&1; }
 
 # Roda o comando com o servidor do Ollama no ar. Sem o serviço (num contêiner,
