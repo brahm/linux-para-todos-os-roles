@@ -133,7 +133,7 @@
           <p>Uma ferramenta de terminal que aplica o rolê escolhido com receitas testadas. Cada receita sabe verificar, aplicar, testar e desfazer o que muda.</p>
           <ul class="lista-pontos">
             <li><svg aria-hidden="true"><use href="#pegada"/></svg>Funciona sozinho, sem conta, sem cartão e sem IA.</li>
-            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Com IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada como administrador.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Com IA, ela ajuda a decidir e a montar o plano. Quem executa é sempre o <code>bora</code>, e a senha é você que digita.</li>
           </ul>
         </article>
       </div>
@@ -236,7 +236,7 @@
         </article>
         <article class="cartao porta">
           <div class="rotulo"><span class="n">3</span><h3>Agente</h3></div>
-          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, leem a skill do <code>bora</code>, que o rolê <a href="catalogo/roles/vibecodar.html">Vibecodar</a> instala, conversam com você e escrevem o plano. O <code>bora</code> valida, e quem aplica é você.</p>
+          <p>Agentes de terminal, como Claude Code, Codex, Copilot CLI, OpenCode e Mistral Vibe, leem a skill do <code>bora</code>, que o rolê <a href="catalogo/roles/vibecodar.html">Vibecodar</a> instala, conversam com você e escrevem o plano. O <code>bora</code> valida, e quem aplica é você. Em breve, o agente também poderá pedir ao <code>bora</code> para aplicar, com o plano à vista e a senha digitada por você.</p>
           <p class="precisa">Precisa de: <strong>um agente que leia skills</strong></p>
         </article>
       </div>
@@ -271,7 +271,7 @@
           <article class="cartao publico">
             <span class="convite-ic bolha-p" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.8"/><path d="M8 7.3h.01M8 16.8h.01M12 7.3h4M12 16.8h4"/></svg></span>
             <h3>Entusiastas</h3>
-            <p>Várias máquinas e planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com <code>ssh</code>.</p>
+            <p>Várias máquinas e planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com <code>ssh</code>. Em breve, o agente que você já tem, de terminal ou de desktop, poderá pedir ao <code>bora</code> para aplicar por você.</p>
           </article>
         </div>
       </div>
@@ -341,6 +341,13 @@
           <li class="passo">
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
+              <h3>Agentes que aplicam e rolês de jogos</h3>
+              <p>O agente que você já tem, de terminal ou de desktop, pede ao <code>bora</code> para aplicar o plano, sem nunca receber a sua senha. Um caminho de um clique, com a explicação de cada mudança disponível depois. Uma receita de driver de vídeo, testada em máquina de verdade, e os rolês de jogos: console, emulação, realidade virtual e outros.</p>
+            </div>
+          </li>
+          <li class="passo">
+            <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
+            <div class="corpo">
               <h3>Comunidade</h3>
               <p>openSUSE mantido pela comunidade e os rolês da segunda versão. Os formulários para <a href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=5-relato-de-teste.yml">relatar um teste</a> e <a href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=2-nova-receita.yml">pedir uma receita</a> já estão no GitHub.</p>
             </div>
@@ -368,14 +375,51 @@
       </div>
     </section>
 
+    <section id="parecidos" class="largura">
+      <div class="cabeca">
+        <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parecido, mas diferente</p>
+        <h2>Conheça também o Linux Toys</h2>
+        <p>O <a href="https://linux.toys">Linux Toys</a> é um projeto vizinho que vale conhecer. Os dois facilitam a vida depois da instalação, mas por caminhos diferentes.</p>
+      </div>
+      <div class="duas">
+        <article class="cartao">
+          <span class="ladrilho" style="--c1:#99c1f1;--c2:#3584e4" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8.5 8V6a1.5 1.5 0 0 1 1.5-1.5h4A1.5 1.5 0 0 1 15.5 6v2M3 13h18M10.5 13v2h3v-2"/></svg></span>
+          <h3>Linux Toys: “como instalo isto sem dor?”</h3>
+          <p>Uma caixa de ferramentas com janela gráfica. Você escolhe um programa, um driver ou um ajuste num catálogo de uns 200 itens, e ele instala com um clique.</p>
+          <ul class="lista-pontos">
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Funciona em umas quinze famílias de distro, do Debian ao Solus.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Tem muita coisa para jogos, drivers e hardware específico.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Busca o pacote onde ele estiver: na distro, em COPR, no AUR ou em repositórios de terceiros.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Registra o que mudou para poder desfazer.</li>
+          </ul>
+          <p><a class="botao secundario" href="https://linux.toys">Visitar o Linux Toys</a></p>
+        </article>
+        <article class="cartao">
+          <img src="imagens/icone.svg" alt="" width="64" height="64">
+          <h3>O <code>bora</code>: “quero que este computador sirva para isto”</h3>
+          <p>Leva o computador até um rolê, com poucas receitas, cada uma conferida em máquinas virtuais toda semana.</p>
+          <ul class="lista-pontos">
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Por enquanto, só no Ubuntu e no Debian, com o Fedora a caminho.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Cada receita verifica, aplica, testa se funcionou e desfaz.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Só pacotes da distro e do Flathub, com poucas exceções de fabricante, conferidas.</li>
+            <li><svg aria-hidden="true"><use href="#pegada"/></svg>Explica o porquê de cada mudança, antes ou depois, como você preferir.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="bloco">
+        <p>Quer instalar um programa, um driver ou um ajuste de jogos agora? O Linux Toys provavelmente já tem. Quer levar o computador até um objetivo, entender o que mudou e poder voltar atrás? Bora. O Linux Toys é GPL-3.0; por isso, nenhum trecho dele vem para cá, só as ideias.</p>
+      </div>
+    </section>
+
     <section id="principios" class="largura">
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Princípios</p>
         <h2>O que não muda</h2>
       </div>
       <div class="principios">
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.3c3.2 2.3 7.8 2.3 11 0v-4.3"/></svg><div><strong>Aprender é opcional, mas está à mão.</strong><span>Resolva em um clique e entenda depois, ou vá no passo a passo.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg><div><strong>Funciona sem IA.</strong><span>A IA acelera, mas nunca é requisito.</span></div></div>
-        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg><div><strong>A IA nunca executa com privilégio.</strong><span>No máximo, escreve e valida um plano.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg><div><strong>A IA não roda comando solto como administrador.</strong><span>Ela monta o plano e, se você deixar, pede ao <code>bora</code> para aplicar. A senha é sempre você que digita.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></svg><div><strong>Só receitas do catálogo.</strong><span>O <code>bora</code> não roda comando livre.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><div><strong>Toda mudança tem volta.</strong><span>Snapshot antes de aplicar, e cada receita sabe se desfazer.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.2c0 4.4-2.9 7.9-7 9.8-4.1-1.9-7-5.4-7-9.8V6z"/><path d="M9 12l2 2 4-4"/></svg><div><strong>Nada exposto à internet.</strong><span>Acesso de fora só por VPN.</span></div></div>

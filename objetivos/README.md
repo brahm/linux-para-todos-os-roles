@@ -86,6 +86,8 @@ Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste
 | 6 | Filmes e séries da casa | Jellyfin, apenas na rede local | planejado |
 | 7 | Acessar de fora sem abrir portas | Tailscale, com teste de CGNAT | planejado |
 
+Depois da primeira versão vêm rolês de jogos (console, emulação, realidade virtual e outros), decididos por Brahm em 13/11/2026. Antes deles, uma receita de driver de vídeo, testada em máquina de verdade, porque as máquinas virtuais do CI não têm placa de vídeo.
+
 ### O rolê "Vibecodar"
 
 Perguntas:

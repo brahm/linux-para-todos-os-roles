@@ -23,7 +23,7 @@ Você acabou de instalar o Linux. E agora?
 - um catálogo de **rolês**, que são objetivos concretos para um computador com Linux: "pronto para estudar e trabalhar", "dar vida nova a uma máquina antiga", "pasta compartilhada da casa";
 - o **`bora`**, uma ferramenta de terminal que leva você até o rolê escolhido, com receitas testadas que sabem verificar, aplicar, testar e desfazer cada mudança.
 
-O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acesso a uma IA, ela ajuda a decidir e a montar o plano, mas nunca executa nada com privilégio de administrador.
+O `bora` funciona sozinho, sem conta, sem cartão e sem IA. Se você tiver acesso a uma IA, ela ajuda a decidir e a montar o plano. Quem executa é sempre o `bora`, só com receitas do catálogo, e a senha de administrador é você que digita.
 
 ## Como funciona
 
@@ -63,13 +63,13 @@ Para atualizar, repita os mesmos comandos; `bora versao` mostra qual você tem. 
 |---|---|---|
 | **Menus** | O `bora` pergunta o rolê, faz as perguntas necessárias, mostra o plano e aplica. No modo `--passo-a-passo`, explica cada etapa antes de rodar. | Só o `bora` |
 | **Pergunta pronta** | Travou? `bora ajuda` gera um texto com o diagnóstico (sem dados sensíveis), a etapa e o erro, para colar em qualquer chat de IA, gratuito ou pago. | Qualquer chat |
-| **Agente** | Agentes de terminal (Claude Code, Codex, Copilot CLI, OpenCode e outros) leem a skill do `bora`, que o rolê "Vibecodar" instala, conversam com você e escrevem o plano. O `bora` valida o plano, e quem aplica é você. | Um agente que leia skills |
+| **Agente** | Agentes de terminal (Claude Code, Codex, Copilot CLI, OpenCode e outros) leem a skill do `bora`, que o rolê "Vibecodar" instala, conversam com você e escrevem o plano. O `bora` valida o plano, e quem aplica é você. Em breve, o agente também poderá pedir ao `bora` para aplicar, com a senha digitada por você e o plano à vista. | Um agente que leia skills |
 
 ## Para quem
 
 - **Curiosos:** máquina antiga ou doada, sem plano pago de nada. Menus e pergunta pronta, custo zero.
 - **Estudantes:** notebook comum, vontade de aprender. Modo passo a passo, e agentes gratuitos quando quiserem.
-- **Entusiastas:** várias máquinas, planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com `ssh maquina sudo bora aplicar plano.yaml`.
+- **Entusiastas:** várias máquinas, planos pagos. O plano é um arquivo: vai para o git e é reaplicado em outra máquina com `ssh maquina sudo bora aplicar plano.yaml`. Em breve, o agente que você já tem (de terminal ou de desktop) poderá pedir ao `bora` para aplicar o plano por você.
 
 ## Rolês da primeira versão
 
@@ -82,6 +82,8 @@ Para atualizar, repita os mesmos comandos; `bora versao` mostra qual você tem. 
 7. Acessar de fora sem abrir portas
 
 Os detalhes estão em [`objetivos/`](objetivos/README.md).
+
+Depois deles, vêm rolês de jogos (console, emulação, realidade virtual e outros), começando por uma receita de driver de vídeo testada em máquina de verdade.
 
 ## Distros
 
@@ -99,7 +101,8 @@ Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, 
 ## Princípios
 
 - **Funciona sem IA.** A IA acelera, mas nunca é requisito.
-- **A IA nunca executa com privilégio.** No máximo, escreve e valida um plano.
+- **Aprender é opcional, mas está sempre à mão.** Resolva em um clique e entenda depois, ou vá no passo a passo, com o porquê de cada etapa.
+- **A IA não roda comando solto como administrador.** Ela monta o plano e, se você deixar, pede ao `bora` para aplicar; quem executa é o `bora`, e a senha é você que digita.
 - **Só receitas do catálogo.** O `bora` não roda comando livre.
 - **Toda mudança tem volta.** Snapshot antes de aplicar, e cada receita sabe se desfazer.
 - **Nada exposto à internet.** Acesso de fora só por VPN.
@@ -107,6 +110,22 @@ Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, 
 - **Em português do Brasil,** para quem está começando e para quem já sabe sair do Vim.
 
 As decisões tomadas até aqui, com o porquê de cada uma, estão em [`docs/decisoes.md`](docs/decisoes.md).
+
+## Parecido, mas diferente: o Linux Toys
+
+O [Linux Toys](https://linux.toys) é um ótimo projeto vizinho, e vale conhecer. É uma caixa de ferramentas com interface gráfica: você escolhe um programa, um driver ou um ajuste num catálogo de uns 200 itens, e ele instala com um clique, em umas quinze famílias de distro, incluindo muita coisa para jogos e para hardware específico.
+
+| | Linux Toys | `bora` |
+|---|---|---|
+| Pergunta que responde | "Como instalo isto sem dor?" | "Quero que este computador sirva para isto" |
+| Unidade | Um programa ou ajuste | Um rolê, feito de receitas |
+| Alcance | Muito: ~200 itens, ~15 famílias de distro | Pouco, mas conferido: 5 rolês, Ubuntu e Debian por enquanto |
+| De onde vêm os pacotes | Da distro, de COPR, AUR, repositórios de terceiros e instaladores da internet | Da distro e do Flathub, com poucas exceções de fabricante, conferidas |
+| Depois de aplicar | Desfaz o que registrou | Testa se funcionou, desfaz e explica o porquê de cada mudança |
+| Interface | Janela gráfica e terminal | Terminal, com menus |
+| Licença | GPL-3.0 | 0BSD |
+
+Se você quer instalar um programa específico, um driver ou um ajuste de jogos agora, o Linux Toys provavelmente já tem. Se você quer levar o computador até um objetivo, entender o que mudou e poder voltar atrás, bora.
 
 ## Marca
 
