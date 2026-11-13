@@ -24,7 +24,7 @@ Todo código que você escrever ou mudar (Rust, bash, Python, JavaScript, CSS, H
 
 ## Arquitetura: mantenha o diagrama em dia
 
-O diagrama fica em [`docs/arquitetura.md`](docs/arquitetura.md), e o README só tem o link. Toda evolução do projeto (comando, módulo, pasta, workflow ou fluxo novo ou mudado) atualiza o diagrama no mesmo pull request.
+O diagrama é o SVG [`docs/arquitetura.svg`](docs/arquitetura.svg), mostrado e explicado em [`docs/arquitetura.md`](docs/arquitetura.md), e o README só tem o link. Toda evolução do projeto (comando, módulo, pasta, workflow ou fluxo novo ou mudado) atualiza o diagrama no mesmo pull request.
 
 ## Regras do projeto que não se negociam
 

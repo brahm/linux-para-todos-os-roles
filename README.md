@@ -134,7 +134,7 @@ Com o [Rust](https://rustup.rs/) instalado:
 cargo build --release
 ```
 
-O binário fica em `target/release/bora`. Os testes e o binário estático estão no [`CONTRIBUTING.md`](CONTRIBUTING.md#rodar-os-testes).
+O binário fica em `target/release/bora`. Como as peças se encaixam: [arquitetura](docs/arquitetura.md). Os testes e o binário estático estão no [`CONTRIBUTING.md`](CONTRIBUTING.md#rodar-os-testes).
 
 ## Licença
 

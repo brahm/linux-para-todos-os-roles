@@ -16,7 +16,7 @@ Chegou ontem no Linux? Ótimo, você é exatamente quem a gente precisa. Quem ac
 3. Rode o `desfazer.sh` e confira que o sistema voltou ao estado anterior.
 4. Registre no `receita.yaml` a distro, a versão, a data e onde foi o teste (`vm`, `conteiner` ou `maquina`).
 5. Comente o código novo ou mudado, do jeito que o [guia de estilo](docs/estilo.md#comentários-no-código) pede.
-6. Se a mudança mexe em como as peças se encaixam, atualize o diagrama em [`docs/arquitetura.md`](docs/arquitetura.md).
+6. Se a mudança mexe em como as peças se encaixam, atualize o diagrama ([`docs/arquitetura.svg`](docs/arquitetura.svg)) e o texto do [`docs/arquitetura.md`](docs/arquitetura.md).
 7. Na descrição do pull request, diga o que foi testado, onde, e o que ainda falta validar.
 
 ## Rodar os testes

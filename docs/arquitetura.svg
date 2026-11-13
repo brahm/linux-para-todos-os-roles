@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 960" width="1200" height="960" role="img" aria-labelledby="titulo desc">
+  <!--
+    O mapa da arquitetura do Linux para todos os rolês, mostrado no docs/arquitetura.md.
+    Escrito à mão: cada bloco abaixo é uma parte do desenho, de cima para baixo.
+
+    Para mudar:
+    - As caixas são <rect> com x, y, largura e altura; o texto de cada uma fica logo abaixo.
+    - As setas são <line> ou <path> com marker-end="url(#ponta)".
+    - Mudou uma peça do projeto (comando, módulo, pasta, workflow)? Mude aqui e
+      no texto do arquitetura.md no mesmo pull request.
+    - Confira no navegador, no tema claro e no escuro, antes de mandar.
+  -->
+  <title id="titulo">Arquitetura do bora</title>
+  <desc id="desc">Quem usa o bora, os módulos do binário, o catálogo embutido, o que fica no computador e o que roda no GitHub.</desc>
+
+  <style>
+    /* Cores do tema claro. O bloco @media logo abaixo troca tudo no tema escuro,
+       e o GitHub respeita isso quando mostra a imagem. */
+    .fundo { fill: #ffffff; }
+    .caixa { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.5; }
+    .sub { fill: #ffffff; stroke: #d0d7de; stroke-width: 1; }
+    .bora { fill: #fff4ec; stroke: #e8590c; stroke-width: 2; }
+    .modulo { fill: #ffffff; stroke: #e8590c; stroke-width: 1; }
+    .t { fill: #1f2328; font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .tit { fill: #1f2328; font: 600 16px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .tit2 { fill: #1f2328; font: 600 14px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .grande { fill: #1f2328; font: 700 22px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .mudo { fill: #59636e; font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .mono { fill: #1f2328; font: 12px ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+    .laranja { fill: #c2410c; }
+    .seta { stroke: #59636e; stroke-width: 1.5; fill: none; }
+    .ponta { fill: #59636e; }
+    @media (prefers-color-scheme: dark) {
+      .fundo { fill: #0d1117; }
+      .caixa { fill: #161b22; stroke: #3d444d; }
+      .sub { fill: #0d1117; stroke: #3d444d; }
+      .bora { fill: #26170e; stroke: #ff8a3d; }
+      .modulo { fill: #0d1117; stroke: #ff8a3d; }
+      .t, .tit, .tit2, .grande, .mono { fill: #e6edf3; }
+      .mudo { fill: #9198a1; }
+      .laranja { fill: #ff8a3d; }
+      .seta { stroke: #9198a1; }
+      .ponta { fill: #9198a1; }
+    }
+  </style>
+
+  <!-- A ponta de flecha usada por todas as setas. -->
+  <defs>
+    <marker id="ponta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="ponta" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+
+  <rect class="fundo" x="0" y="0" width="1200" height="960"/>
+
+  <!-- Título -->
+  <text class="grande" x="600" y="36" text-anchor="middle">Como o bora funciona</text>
+  <text class="mudo" x="600" y="58" text-anchor="middle">Do pedido da pessoa até a receita aplicada, e do pull request até o binário e o site</text>
+
+  <!-- 1. Quem usa: a pessoa, um agente de IA ou um chat de IA. -->
+  <rect class="caixa" x="20" y="80" width="360" height="80" rx="8"/>
+  <text class="tit2" x="40" y="106">Um chat de IA, qualquer um</text>
+  <text class="t" x="40" y="126">recebe a pergunta pronta do bora ajuda,</text>
+  <text class="t" x="40" y="145">sem IPs, nomes nem senhas</text>
+
+  <rect class="caixa" x="420" y="80" width="360" height="80" rx="8"/>
+  <text class="tit2" x="440" y="106">Você, no terminal</text>
+  <text class="t" x="440" y="126">sudo bora abre os menus: rolê, perguntas,</text>
+  <text class="t" x="440" y="145">plano e confirmação. Ou um comando direto</text>
+
+  <rect class="caixa" x="820" y="80" width="360" height="80" rx="8"/>
+  <text class="tit2" x="840" y="106">Um agente de IA, no terminal</text>
+  <text class="t" x="840" y="126">lê a skill do bora e escreve o plano.yaml;</text>
+  <text class="t" x="840" y="145">o bora confere, e quem aplica é você</text>
+
+  <!-- 2a. O catálogo: rolês, receitas e famílias, embutidos no binário. -->
+  <rect class="caixa" x="20" y="200" width="300" height="360" rx="8"/>
+  <text class="tit" x="40" y="228">Catálogo</text>
+  <text class="mudo" x="40" y="246">vai dentro do binário na compilação</text>
+
+  <rect class="sub" x="40" y="260" width="260" height="66" rx="6"/>
+  <text class="mono" x="52" y="282">objetivos/&lt;id&gt;.yaml</text>
+  <text class="t" x="52" y="301">um rolê: perguntas e a lista</text>
+  <text class="t" x="52" y="318">de receitas, em ordem</text>
+
+  <rect class="sub" x="40" y="340" width="260" height="150" rx="6"/>
+  <text class="mono" x="52" y="362">receitas/&lt;grupo&gt;/&lt;id&gt;/</text>
+  <text class="mono" x="52" y="384">receita.yaml</text>
+  <text class="mudo" x="160" y="384">parâmetros, testes</text>
+  <text class="mono" x="52" y="404">verificar.sh</text>
+  <text class="mudo" x="160" y="404">já está feito?</text>
+  <text class="mono" x="52" y="424">aplicar.sh</text>
+  <text class="mudo" x="160" y="424">faz a mudança</text>
+  <text class="mono" x="52" y="444">testar.sh</text>
+  <text class="mudo" x="160" y="444">deu certo?</text>
+  <text class="mono" x="52" y="464">desfazer.sh</text>
+  <text class="mudo" x="160" y="464">volta atrás</text>
+  <text class="mono" x="52" y="482">LEIAME.md</text>
+  <text class="mudo" x="160" y="482">o porquê</text>
+
+  <text class="mono" x="40" y="516">receitas/comum.sh</text>
+  <text class="mudo" x="176" y="516">funções comuns</text>
+  <text class="mono" x="40" y="540">familias/</text>
+  <text class="mudo" x="176" y="540">distros suportadas</text>
+
+  <!-- Seta do catálogo para o módulo fonte. -->
+  <line class="seta" x1="320" y1="357" x2="368" y2="357" marker-end="url(#ponta)"/>
+
+  <!-- 2b. O bora: o binário Rust e seus módulos (src/*.rs). -->
+  <rect class="bora" x="350" y="200" width="500" height="360" rx="10"/>
+  <text class="tit" x="370" y="228">bora</text>
+  <text class="mudo" x="414" y="228">um binário Rust</text>
+
+  <rect class="modulo" x="370" y="240" width="460" height="70" rx="6"/>
+  <text class="mono laranja" x="384" y="262">main.rs</text>
+  <text class="t" x="450" y="262">lê a linha de comando e chama os módulos</text>
+  <text class="mono" x="384" y="282">diag · lista · modelos · plano · validar · aplicar</text>
+  <text class="mono" x="384" y="300">desfazer · historico · ajuda · conferir · versao</text>
+
+  <!-- Setas das pessoas para o bora (e do bora para o chat).
+       Vêm depois da caixa do bora para ficarem por cima dela. -->
+  <line class="seta" x1="600" y1="160" x2="600" y2="238" marker-end="url(#ponta)"/>
+  <line class="seta" x1="960" y1="160" x2="790" y2="238" marker-end="url(#ponta)"/>
+  <line class="seta" x1="400" y1="200" x2="260" y2="162" marker-end="url(#ponta)"/>
+
+  <!-- Linha a: de onde vêm as informações. -->
+  <rect class="modulo" x="370" y="330" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="384" y="352">fonte.rs</text>
+  <text class="mudo" x="384" y="372">binário ou BORA_RAIZ</text>
+  <rect class="modulo" x="530" y="330" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="544" y="352">catalogo.rs</text>
+  <text class="mudo" x="544" y="372">lê rolês e receitas</text>
+  <rect class="modulo" x="690" y="330" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="704" y="352">diag.rs</text>
+  <text class="mudo" x="704" y="372">distro, RAM, disco</text>
+
+  <!-- Linha b: o que se faz com elas. -->
+  <rect class="modulo" x="370" y="404" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="384" y="426">ajuda.rs</text>
+  <text class="mudo" x="384" y="446">pergunta pronta</text>
+  <rect class="modulo" x="530" y="404" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="544" y="426">modelos.rs</text>
+  <text class="mudo" x="544" y="446">IA local que cabe</text>
+  <rect class="modulo" x="690" y="404" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="704" y="426">plano.rs</text>
+  <text class="mudo" x="704" y="446">monta e confere</text>
+
+  <!-- Linha c: quem mexe no sistema, e a tela. -->
+  <rect class="modulo" x="370" y="478" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="384" y="500">ui.rs</text>
+  <text class="mudo" x="384" y="520">menus, usado por todos</text>
+  <rect class="modulo" x="530" y="478" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="544" y="500">snapshot.rs</text>
+  <text class="mudo" x="544" y="520">Timeshift, Snapper</text>
+  <rect class="modulo" x="690" y="478" width="140" height="54" rx="6"/>
+  <text class="mono laranja" x="704" y="500">executor.rs</text>
+  <text class="mudo" x="704" y="520">aplica e desfaz</text>
+
+  <!-- Setas entre os módulos: o caminho de um plano. -->
+  <line class="seta" x1="510" y1="357" x2="528" y2="357" marker-end="url(#ponta)"/>
+  <line class="seta" x1="640" y1="384" x2="710" y2="402" marker-end="url(#ponta)"/>
+  <line class="seta" x1="760" y1="384" x2="760" y2="402" marker-end="url(#ponta)"/>
+  <line class="seta" x1="670" y1="431" x2="688" y2="431" marker-end="url(#ponta)"/>
+  <line class="seta" x1="760" y1="458" x2="760" y2="476" marker-end="url(#ponta)"/>
+  <line class="seta" x1="690" y1="505" x2="672" y2="505" marker-end="url(#ponta)"/>
+
+  <!-- Seta do executor para o computador. -->
+  <line class="seta" x1="830" y1="505" x2="878" y2="505" marker-end="url(#ponta)"/>
+
+  <!-- 2c. O que fica no computador da pessoa. -->
+  <rect class="caixa" x="880" y="200" width="300" height="360" rx="8"/>
+  <text class="tit" x="900" y="228">No computador</text>
+  <text class="mudo" x="900" y="246">com sudo, e a senha é você que digita</text>
+
+  <rect class="sub" x="900" y="260" width="260" height="112" rx="6"/>
+  <text class="tit2" x="912" y="282">Cada receita do plano</text>
+  <text class="t" x="912" y="302">verificar, aplicar e testar;</text>
+  <text class="t" x="912" y="320">desfazer na volta, de trás para frente</text>
+  <text class="mono" x="912" y="342">BORA_&lt;NOME&gt;</text>
+  <text class="mudo" x="1012" y="342">parâmetros</text>
+  <text class="mono" x="912" y="362">$BORA_ESTADO</text>
+  <text class="mudo" x="1012" y="362">o que desfazer</text>
+
+  <rect class="sub" x="900" y="386" width="260" height="104" rx="6"/>
+  <text class="mono" x="912" y="408">/var/lib/bora/execucoes/&lt;id&gt;/</text>
+  <text class="mono" x="912" y="430">execucao.json</text>
+  <text class="mudo" x="1024" y="430">como foi</text>
+  <text class="mono" x="912" y="450">plano.yaml</text>
+  <text class="mudo" x="1024" y="450">o que rodou</text>
+  <text class="mono" x="912" y="470">passos/NN-…/</text>
+  <text class="mudo" x="1024" y="470">cópia e estado</text>
+
+  <text class="mono" x="900" y="516">/var/log/bora/bora.log</text>
+  <text class="t" x="900" y="540">e um snapshot antes de aplicar</text>
+
+  <!-- Seta do GitHub para o bora: o binário publicado. -->
+  <line class="seta" x1="600" y1="598" x2="600" y2="562" marker-end="url(#ponta)"/>
+  <text class="mudo" x="612" y="585">o binário publicado em cada versão</text>
+
+  <!-- 3. No GitHub: testes, workflows, registro dos testes, site e marca. -->
+  <rect class="caixa" x="20" y="600" width="1160" height="340" rx="8"/>
+  <text class="tit" x="40" y="628">No GitHub</text>
+  <text class="mudo" x="126" y="628">testes, versões e site</text>
+
+  <rect class="sub" x="40" y="644" width="265" height="210" rx="6"/>
+  <text class="tit2" x="52" y="666">Testes</text>
+  <text class="mono" x="52" y="690">cargo test</text>
+  <text class="t" x="52" y="708">os módulos e o executor</text>
+  <text class="mono" x="52" y="732">testes/conteiner/</text>
+  <text class="t" x="52" y="750">aplica, repete e desfaz no Docker</text>
+  <text class="mono" x="52" y="774">testes/vm/qemu/</text>
+  <text class="t" x="52" y="792">máquina virtual, com e sem tela</text>
+  <text class="mudo" x="52" y="818">Ubuntu 24.04 e 26.04, Debian 13</text>
+  <text class="mudo" x="52" y="836">roteiros à mão em testes/vm/</text>
+
+  <rect class="sub" x="325" y="644" width="265" height="210" rx="6"/>
+  <text class="tit2" x="337" y="666">Workflows</text>
+  <text class="mono" x="337" y="690">testes.yml</text>
+  <text class="mudo" x="451" y="690">push e pull request</text>
+  <text class="mono" x="337" y="710">vm.yml</text>
+  <text class="mudo" x="451" y="710">VM sem tela</text>
+  <text class="mono" x="337" y="730">vm-tela.yml</text>
+  <text class="mudo" x="451" y="730">VM com tela</text>
+  <text class="mono" x="337" y="750">publicar.yml</text>
+  <text class="mudo" x="451" y="750">versão nova</text>
+  <text class="mono" x="337" y="770">site.yml</text>
+  <text class="mudo" x="451" y="770">GitHub Pages</text>
+  <text class="mono" x="337" y="790">links.yml</text>
+  <text class="mudo" x="451" y="790">links quebrados</text>
+  <text class="mono" x="337" y="810">node.yml</text>
+  <text class="mudo" x="451" y="810">Node.js LTS novo</text>
+  <text class="mono" x="337" y="830">etiquetas.yml</text>
+  <text class="mudo" x="451" y="830">etiquetas</text>
+
+  <rect class="sub" x="610" y="644" width="265" height="210" rx="6"/>
+  <text class="tit2" x="622" y="666">Registro e site</text>
+  <text class="mono" x="622" y="690">registros/registrar.py</text>
+  <text class="t" x="622" y="708">grava cada teste que passou</text>
+  <text class="t" x="622" y="726">no receita.yaml</text>
+  <text class="mono" x="622" y="750">catalogo/gerar.py</text>
+  <text class="t" x="622" y="768">gera docs/catalogo e docs/distro</text>
+  <text class="t" x="622" y="786">a partir do catálogo</text>
+  <text class="mono" x="622" y="810">docs/</text>
+  <text class="t" x="666" y="810">vira o site no Pages;</text>
+  <text class="t" x="622" y="828">a index.html é escrita à mão</text>
+
+  <rect class="sub" x="895" y="644" width="265" height="210" rx="6"/>
+  <text class="tit2" x="907" y="666">Conferências e marca</text>
+  <text class="mono" x="907" y="690">estilo/conferir.sh</text>
+  <text class="t" x="907" y="708">barra os clichês proibidos</text>
+  <text class="mono" x="907" y="732">pipes/conferir.sh</text>
+  <text class="t" x="907" y="750">barra pipes que quebram</text>
+  <text class="mono" x="907" y="774">notas/escrever.sh</text>
+  <text class="t" x="907" y="792">notas da versão, em português</text>
+  <text class="mono" x="907" y="816">marca/</text>
+  <text class="t" x="955" y="816">logotipo e ícones</text>
+
+  <!-- Os dois caminhos que ligam tudo, escritos por extenso. -->
+  <text class="t" x="40" y="886"><tspan class="tit2">Teste:</tspan> push → testes.yml e as VMs → registrar.py grava no receita.yaml → gerar.py → site.yml publica o site</text>
+  <text class="t" x="40" y="912"><tspan class="tit2">Versão:</tspan> a versão do Cargo.toml muda na main → publicar.yml compila o binário estático e cria a página da versão</text>
+</svg>

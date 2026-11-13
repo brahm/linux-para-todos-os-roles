@@ -159,7 +159,7 @@ Definido por Brahm em 13/11/2026. Quem baixa o projeto do GitHub precisa consegu
 
 ## O diagrama da arquitetura
 
-O mapa de como as peças se encaixam fica em [`arquitetura.md`](arquitetura.md), num diagrama Mermaid que o GitHub desenha sozinho. O README só tem o link.
+O mapa de como as peças se encaixam fica em [`arquitetura.md`](arquitetura.md), num desenho SVG feito à mão ([`arquitetura.svg`](arquitetura.svg)), com uma explicação curta de cada parte. O README só tem o link. O SVG é texto: mude as caixas e as setas num editor qualquer e confira no navegador, no tema claro e no escuro.
 
 Definido por Brahm em 13/11/2026: **toda evolução do projeto atualiza o diagrama no mesmo pull request.** Peça nova, comando novo, pasta nova, workflow novo ou fluxo que mudou: se o desenho ficou desatualizado, o pull request não está pronto.
 
