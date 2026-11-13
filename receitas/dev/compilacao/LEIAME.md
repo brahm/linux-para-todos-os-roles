@@ -6,7 +6,7 @@ Instala o compilador de C e C++ (`gcc` e `g++`), o `make` e o `pkg-config`.
 
 ## Por que
 
-Mesmo quem programa só em Python ou em JavaScript esbarra no compilador. Muitos pacotes do `pip` e do `npm` trazem um pedaço escrito em C ou C++, e quando não existe uma versão pronta para a sua máquina, eles são compilados na hora da instalação. Sem o compilador, a instalação para com um erro como `gcc: command not found` ou `make: not found`, que não diz nada para quem está começando.
+Mesmo quem programa só em Python ou em JavaScript esbarra no compilador. Muitos pacotes do `pip` e do `npm` trazem um pedaço escrito em C ou C++, e quando não existe uma versão pronta para a sua máquina, eles são compilados na hora da instalação. Sem o compilador, a instalação para com um erro como `gcc: command not found` ou `make: not found`, que não diz nada para quem está começando (e pouco para quem não está).
 
 O `build-essential` é o pacote que o Debian e o Ubuntu fazem para isso: ele traz o `gcc`, o `g++`, o `make` e as bibliotecas básicas do C. O `pkg-config` é o programa que os scripts de compilação usam para achar as outras bibliotecas instaladas no sistema.
 

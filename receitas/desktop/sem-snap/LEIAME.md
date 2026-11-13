@@ -6,7 +6,14 @@ Tira o Snap do Ubuntu e impede que o apt o traga de volta. O Firefox do Snap vir
 
 ## Por que
 
-O Snap é o jeito do Ubuntu de distribuir aplicativos, e funciona. Mas ele tem custos que pesam numa máquina modesta: cada snap é uma imagem montada no boot, os programas abrem mais devagar na primeira vez, o `snapd` fica rodando o tempo todo, e as atualizações acontecem quando ele decide. Com o Flatpak já ligado pelo rolê, há duas lojas fazendo o mesmo trabalho.
+O Snap é o jeito do Ubuntu de distribuir aplicativos, e funciona. Mas ele tem custos que pesam numa máquina modesta:
+
+- cada snap é uma imagem montada no boot;
+- os programas abrem mais devagar na primeira vez;
+- o `snapd` fica rodando o tempo todo;
+- as atualizações acontecem quando ele decide, não quando você quer.
+
+Com o Flatpak já ligado pelo rolê, são duas lojas fazendo o mesmo trabalho.
 
 É uma escolha, e não um conserto, por isso a receita só entra quando você pede. Ela é a mais arriscada do rolê: mexe no navegador e nos metapacotes do Ubuntu. Por isso ela para, sem mudar nada, quando encontra um snap que não sabe trocar, ou quando tirar o `snapd` levaria junto um pacote que não é do Snap.
 

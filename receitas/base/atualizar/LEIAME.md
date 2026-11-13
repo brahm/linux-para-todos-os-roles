@@ -6,7 +6,7 @@ Atualiza a lista de pacotes e os programas instalados, e liga as atualizações 
 
 ## Por que
 
-A maioria dos problemas de segurança é corrigida por atualizações que já existem, mas que ainda não foram instaladas. Um computador recém-instalado também costuma estar semanas atrás, porque a imagem de instalação foi gerada antes. Atualizar primeiro evita correr atrás de defeitos que já foram corrigidos.
+A maioria dos problemas de segurança é corrigida por atualizações que já existem, mas que ainda não foram instaladas. Um computador recém-instalado também costuma estar semanas atrás, porque a imagem de instalação foi gerada antes. Atualizar primeiro evita caçar um bug que alguém já consertou.
 
 As atualizações automáticas instalam só o que vem dos repositórios de segurança da distro. Elas não trocam a versão da distro e não instalam programas novos.
 

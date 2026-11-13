@@ -8,7 +8,14 @@ Instala e liga o servidor SSH, para entrar neste computador pelo terminal de out
 
 Uma máquina antiga que vira servidor da casa costuma ficar num canto, sem tela nem teclado. O SSH é o jeito de cuidar dela de outro computador: atualizar, ver o espaço em disco, reiniciar um serviço.
 
-A configuração padrão do OpenSSH é segura, mas pensada para qualquer uso. A receita fecha o que uma máquina de casa não precisa: o login direto do root (cada pessoa entra com a própria conta e usa `sudo`), o login por teclado interativo, as senhas vazias e o encaminhamento de janelas gráficas. E, como nenhuma receita abre porta para a internet, a liberação no firewall vale só para a rede local. Para entrar de fora de casa, o caminho é uma VPN, como o Tailscale do rolê "Acessar de fora sem abrir portas".
+A configuração padrão do OpenSSH é segura, mas pensada para qualquer uso. A receita fecha o que uma máquina de casa não precisa:
+
+- o login direto do root (cada pessoa entra com a própria conta e usa `sudo`);
+- o login por teclado interativo;
+- as senhas vazias;
+- o encaminhamento de janelas gráficas.
+
+Como nenhuma receita abre porta para a internet, a liberação no firewall vale só para a rede local. Para entrar de fora de casa, o caminho é uma VPN, como o Tailscale do rolê "Acessar de fora sem abrir portas".
 
 Senha ou chave? A senha funciona na hora e serve para começar. A chave é mais segura, porque não dá para adivinhar, e é o recomendado depois que você copiar a sua com `ssh-copy-id`. A receita só desliga a senha se a conta já tiver uma chave, para ninguém ficar trancado do lado de fora.
 

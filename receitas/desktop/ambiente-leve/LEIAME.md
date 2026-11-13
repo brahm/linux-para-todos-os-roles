@@ -6,7 +6,7 @@ Instala um ambiente gráfico leve, o Xfce ou o LXQt, ao lado do que o computador
 
 ## Por que
 
-O GNOME, do Ubuntu e do Debian, e o KDE Plasma são bonitos e completos, mas pedem uma placa de vídeo com aceleração e uns 1,5 GB de memória só para a área de trabalho. Numa máquina de dez anos, com 2 ou 4 GB, sobra pouco para o navegador.
+O GNOME, do Ubuntu e do Debian, e o KDE Plasma são bonitos e completos, mas pedem uma placa de vídeo com aceleração e uns 1,5 GB de memória só para a área de trabalho. Numa máquina de dez anos, com 2 ou 4 GB, sobra pouco para o navegador, que é justamente o que você queria abrir.
 
 O Xfce e o LXQt gastam de 400 a 600 MB, desenham as janelas sem efeitos e funcionam bem com placas de vídeo antigas. O Xfce é o mais completo, com o jeito de sempre: menu, barra de tarefas e área de trabalho com ícones. O LXQt é ainda mais leve, para quem tem 2 GB ou menos.
 

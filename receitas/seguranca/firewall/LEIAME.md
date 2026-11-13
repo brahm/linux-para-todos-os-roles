@@ -8,7 +8,7 @@ Liga o firewall (ufw) para bloquear as conexões que chegam de fora e libera só
 
 Muitos programas abrem portas sem avisar: compartilhamento de tela, servidores de desenvolvimento, serviços de impressão. Numa rede de casa isso costuma passar despercebido, mas numa rede pública (café, faculdade, aeroporto) qualquer pessoa conectada consegue tentar falar com essas portas. Com o firewall, nada entra sem ter sido liberado.
 
-O Ubuntu traz o ufw instalado, mas desligado, e o Debian não traz firewall nenhum.
+O Ubuntu traz o ufw instalado, mas desligado, como um extintor ainda na caixa. O Debian não traz firewall nenhum.
 
 ## O que muda no sistema
 
