@@ -1,11 +1,20 @@
 //! Snapshot do sistema antes de aplicar um plano.
+//!
+//! O `executor` chama `criar` antes da primeira receita. Se algo der muito
+//! errado, o snapshot é o plano B do `bora desfazer`: volta o sistema inteiro.
+//! O `bora` não instala nem configura a ferramenta; isso é trabalho da receita
+//! `sistema/snapshot`. Aqui só se usa o que já está pronto.
 
 use std::fs;
 use std::os::unix::process::ExitStatusExt;
 use std::path::Path;
 use std::process::Command;
 
-/// Qual ferramenta de snapshot está pronta para uso.
+/// Qual ferramenta de snapshot está pronta para uso, na ordem de preferência:
+///
+/// - Timeshift, só se já tiver um disco de destino escolhido no `timeshift.json`;
+/// - Snapper, se existir a configuração `root` (comum no Btrfs do openSUSE e Fedora);
+/// - ostree, nas distros imutáveis, onde o próprio sistema guarda a versão anterior.
 pub fn ferramenta() -> Option<&'static str> {
     if crate::diag::comando_existe("timeshift")
         && let Ok(t) = fs::read_to_string("/etc/timeshift/timeshift.json")
@@ -58,6 +67,8 @@ pub fn criar(descricao: &str) -> Result<String, String> {
         _ => return Err("nenhuma ferramenta de snapshot configurada".into()),
     }
     .map_err(|e| e.to_string())?;
+    // Quando falha, devolve só o fim da mensagem (os últimos 800 caracteres):
+    // é ali que a ferramenta costuma dizer o motivo.
     let texto = String::from_utf8_lossy(&saida.stdout).to_string();
     if !saida.status.success() {
         let erro = String::from_utf8_lossy(&saida.stderr).to_string();
@@ -92,6 +103,8 @@ pub fn criar(descricao: &str) -> Result<String, String> {
     }
 }
 
+/// O comando para restaurar o snapshot, para mostrar na tela quando algo falha.
+/// No ostree não precisa: basta escolher a versão anterior no boot.
 pub fn como_restaurar() -> Option<&'static str> {
     match ferramenta() {
         Some("timeshift") => Some("sudo timeshift --restore (ou o aplicativo Timeshift)"),

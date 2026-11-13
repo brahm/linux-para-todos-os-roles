@@ -1,4 +1,24 @@
 //! Aplica e desfaz planos, receita por receita, guardando o necessário para voltar atrás.
+//!
+//! Cada aplicação vira uma **execução**, numa pasta própria:
+//!
+//! ```text
+//! /var/lib/bora/execucoes/20261113-142501/
+//!   execucao.json          situação geral e de cada passo
+//!   plano.yaml             o plano como foi aplicado
+//!   passos/01-base-atualizar/
+//!     receita/             cópia da receita (os scripts que rodaram)
+//!     comum.sh             cópia das funções comuns
+//!     estado/              o que a receita guardou para desfazer ($BORA_ESTADO)
+//!     saida.log            tudo o que os scripts escreveram
+//! ```
+//!
+//! A cópia da receita é de propósito: o `desfazer` roda os mesmos scripts que
+//! aplicaram, mesmo que o `bora` tenha sido atualizado no meio do caminho.
+//!
+//! O contrato com os scripts: `verificar.sh` sai com 0 se já está aplicado e 1
+//! se precisa aplicar; `aplicar.sh`, `testar.sh` e `desfazer.sh` saem com 0
+//! quando dá certo. Os parâmetros chegam como variáveis `BORA_<NOME>`.
 
 use crate::ajuda::{self, UltimoErro};
 use crate::catalogo::{Catalogo, Receita, Valor};
@@ -32,24 +52,31 @@ const HERDADAS: &[&str] = &[
     "NO_PROXY",
     "BORA_PERMITIR_SEM_SYSTEMD",
 ];
+/// O `PATH` de sistema, para os scripts acharem `apt`, `ufw` e companhia mesmo
+/// quando o `sudo` entrega um `PATH` curto.
 const PATH_PADRAO: &str = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 
+/// Onde o `bora` guarda as execuções. `BORA_DIR_ESTADO` muda isso nos testes,
+/// para não precisar de root nem sujar `/var/lib`.
 pub fn dir_estado() -> PathBuf {
     std::env::var_os("BORA_DIR_ESTADO")
         .map(PathBuf::from)
         .unwrap_or_else(|| "/var/lib/bora".into())
 }
 
+/// Onde fica o log geral. `BORA_DIR_LOG` muda isso nos testes.
 pub fn dir_log() -> PathBuf {
     std::env::var_os("BORA_DIR_LOG")
         .map(PathBuf::from)
         .unwrap_or_else(|| "/var/log/bora".into())
 }
 
+/// Data e hora local, no formato dos registros.
 fn agora() -> String {
     chrono::Local::now().format("%Y-%m-%dT%H:%M:%S").to_string()
 }
 
+/// Se o `bora` está rodando como root.
 pub fn e_root() -> bool {
     // SAFETY: geteuid não tem pré-condições.
     unsafe { libc::geteuid() == 0 }
@@ -59,6 +86,8 @@ pub fn e_root() -> bool {
 pub struct Trava(#[allow(dead_code)] File);
 
 impl Trava {
+    /// Pega a trava em `/var/lib/bora/bora.trava`, sem esperar. O `flock` solta
+    /// sozinho quando o processo termina, até se ele cair no meio.
     pub fn pegar() -> R<Trava> {
         fs::create_dir_all(dir_estado())?;
         let f = OpenOptions::new()
@@ -85,6 +114,9 @@ fn registrar(texto: &str) {
     }
 }
 
+/// Um passo da execução, como fica no `execucao.json`. A `situacao` vai de
+/// "pendente" para "ja-aplicada", "pulada", "aplicando", "aplicada", "falhou",
+/// "desfeita" ou "erro-ao-desfazer". `pasta` é o nome da pasta do passo.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PassoExec {
     pub receita: String,
@@ -98,6 +130,7 @@ pub struct PassoExec {
 }
 
 impl PassoExec {
+    /// Os parâmetros de volta como `Valor`, para montar o ambiente do desfazer.
     fn valores(&self) -> Vec<(String, Valor)> {
         self.parametros
             .iter()
@@ -106,6 +139,8 @@ impl PassoExec {
     }
 }
 
+/// O conteúdo do `execucao.json`. A `situacao` geral vai de "em-andamento" para
+/// "concluida", "falhou", "sem-mudancas", "desfeita" ou "desfeita-em-parte".
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DadosExec {
     pub id: String,
@@ -118,12 +153,15 @@ pub struct DadosExec {
     pub passos: Vec<PassoExec>,
 }
 
+/// Uma execução: a pasta dela e os dados do `execucao.json`.
 pub struct Execucao {
     pub pasta: PathBuf,
     pub dados: DadosExec,
 }
 
 impl Execucao {
+    /// Cria a pasta da execução, com o id tirado da data e hora (e um número no
+    /// fim se duas caírem no mesmo segundo), e grava o plano e os passos pendentes.
     fn nova(pv: &PlanoValidado, cru: &Value) -> R<Execucao> {
         let base = dir_estado().join("execucoes");
         fs::create_dir_all(&base)?;
@@ -174,6 +212,7 @@ impl Execucao {
         Ok(e)
     }
 
+    /// Lê uma execução do disco. Pasta sem `execucao.json` legível é ignorada.
     fn carregar(pasta: &Path) -> Option<Execucao> {
         let texto = fs::read_to_string(pasta.join("execucao.json")).ok()?;
         Some(Execucao {
@@ -182,6 +221,8 @@ impl Execucao {
         })
     }
 
+    /// Grava o `execucao.json` num arquivo temporário e troca de nome depois.
+    /// Assim, se a energia cair no meio, fica o arquivo velho inteiro, nunca um pela metade.
     fn salvar(&self) -> R<()> {
         let tmp = self.pasta.join("execucao.json.tmp");
         fs::write(
@@ -192,10 +233,12 @@ impl Execucao {
         Ok(())
     }
 
+    /// A pasta do passo `i`.
     fn pasta_passo(&self, i: usize) -> PathBuf {
         self.pasta.join("passos").join(&self.dados.passos[i].pasta)
     }
 
+    /// Marca a situação final e a hora do fim.
     fn encerrar(&mut self, situacao: &str) -> R<()> {
         self.dados.situacao = situacao.into();
         self.dados.fim = Some(agora());
@@ -203,6 +246,8 @@ impl Execucao {
     }
 }
 
+/// Todas as execuções, da mais antiga para a mais nova. O id começa pela data,
+/// então a ordem alfabética das pastas já é a ordem do tempo.
 pub fn listar_execucoes() -> Vec<Execucao> {
     let base = dir_estado().join("execucoes");
     let mut pastas: Vec<PathBuf> = fs::read_dir(base)
@@ -244,6 +289,10 @@ fn pessoa() -> String {
     String::new()
 }
 
+/// Monta as variáveis de ambiente dos scripts. O ambiente começa vazio
+/// (`env_clear` em `rodar`): só passam as variáveis de `HERDADAS`, mais as do
+/// `bora` (`BORA_FAMILIA`, `BORA_ESTADO`, `BORA_LIB`...) e um `BORA_<NOME>` por
+/// parâmetro. Assim nenhuma variável estranha de quem chamou muda a receita.
 fn ambiente(
     params: &[(String, Valor)],
     familia: &str,
@@ -311,6 +360,9 @@ fn rodar(
         script.file_name().unwrap_or_default().to_string_lossy(),
         agora()
     ));
+    // A saída e os erros do script vão para o mesmo cano, na ordem em que
+    // saem. Cada linha vai para o log, para a tela (se `mostrar`) e para as
+    // últimas 60, que viram a mensagem de erro e o `bora ajuda`.
     let (leitor, escritor) = match std::io::pipe() {
         Ok(p) => p,
         Err(e) => return (126, vec![e.to_string()]),
@@ -360,6 +412,7 @@ fn rodar(
     (codigo, ultimas.into())
 }
 
+/// Copia uma pasta inteira, recursivamente.
 fn copiar_pasta(de: &Path, para: &Path) -> std::io::Result<()> {
     fs::create_dir_all(para)?;
     for e in fs::read_dir(de)? {
@@ -384,6 +437,7 @@ fn copiar_receita(rec: &Receita, destino: &Path, lib: &Path) -> R<()> {
     Ok(())
 }
 
+/// Recusa o plano se alguma receita precisa de root e o `bora` não está como root.
 pub fn conferir_root(pv: &PlanoValidado) -> R<()> {
     if pv.passos.iter().any(|p| p.receita.precisa_root) && !e_root() {
         return Err(
@@ -394,6 +448,8 @@ pub fn conferir_root(pv: &PlanoValidado) -> R<()> {
     Ok(())
 }
 
+/// Guarda o erro de um passo para o `bora ajuda`, com as últimas 40 linhas
+/// da saída já limpas de dados pessoais.
 fn guardar_erro(d: &DadosExec, i: usize, etapa: &str, ultimas: &[String]) {
     let p = &d.passos[i];
     let inicio = ultimas.len().saturating_sub(40);
@@ -457,6 +513,7 @@ pub fn simular(pv: &PlanoValidado, d: &Diag, c: &Catalogo) -> R<usize> {
     Ok(mudariam)
 }
 
+/// As opções do `bora aplicar` que mudam o jeito de aplicar.
 pub struct Opcoes {
     pub sem_snapshot: bool,
     pub passo_a_passo: bool,
@@ -475,6 +532,8 @@ pub fn aplicar(pv: &PlanoValidado, cru: &Value, d: &Diag, c: &Catalogo, op: &Opc
     ));
     ui::titulo(&format!("Aplicando o plano ({id})"));
 
+    // Fase 1: copia cada receita para a pasta da execução e roda o verificar.
+    // Se algum verificar quebra, nada mudou ainda, e o bora para por aqui.
     // Primeiro, o que já está aplicado.
     let mut pendentes: Vec<String> = Vec::new();
     for (i, p) in pv.passos.iter().enumerate() {
@@ -523,6 +582,8 @@ pub fn aplicar(pv: &PlanoValidado, cru: &Value, d: &Diag, c: &Catalogo, op: &Opc
         return Ok("sem-mudancas".into());
     }
 
+    // Fase 2: snapshot do sistema antes da primeira mudança. Se ele falha,
+    // o bora para sem mudar nada. Sem ferramenta de snapshot, pergunta.
     // Snapshot do sistema antes da primeira mudança.
     if op.sem_snapshot {
         ui::aviso("Sem snapshot do sistema, como você pediu. Cada receita ainda sabe se desfazer.");
@@ -561,6 +622,9 @@ pub fn aplicar(pv: &PlanoValidado, cru: &Value, d: &Diag, c: &Catalogo, op: &Opc
         }
     }
 
+    // Fase 3: aplica e testa cada receita pendente, na ordem do plano. A
+    // situação é salva antes e depois de cada etapa: se a máquina desligar no
+    // meio, o `desfazer` sabe até onde foi ("aplicando" também é desfeito).
     let total = pv.passos.len();
     for (i, p) in pv.passos.iter().enumerate() {
         let rotulo = format!("[{}/{total}] {}", i + 1, p.receita.nome);
@@ -639,6 +703,8 @@ pub fn desfazer(mut e: Execucao, d: &Diag, perguntar: bool) -> R<bool> {
     }
     let _trava = Trava::pegar()?;
     let id = e.dados.id.clone();
+    // Só desfaz o que pode ter mudado algo e ainda tem a cópia da receita.
+    // "erro-ao-desfazer" entra para dar para tentar de novo depois de corrigir.
     let alvos: Vec<usize> = (0..e.dados.passos.len())
         .filter(|&i| {
             ["aplicada", "aplicando", "falhou", "erro-ao-desfazer"]
@@ -660,6 +726,8 @@ pub fn desfazer(mut e: Execucao, d: &Diag, perguntar: bool) -> R<bool> {
         return Err(Erro::Cancelado);
     }
     registrar(&format!("desfazer {id}: início"));
+    // Desfaz de trás para a frente. Se um desfazer falha, para: os anteriores
+    // podem depender deste, e seguir em frente pioraria a bagunça.
     let mut tudo_certo = true;
     for &i in alvos.iter().rev() {
         let pasta = e.pasta_passo(i);
@@ -716,6 +784,7 @@ pub fn desfazer(mut e: Execucao, d: &Diag, perguntar: bool) -> R<bool> {
     Ok(tudo_certo)
 }
 
+/// `bora historico`: uma linha por execução e uma por passo, com a situação.
 pub fn imprimir_historico() {
     let execucoes = listar_execucoes();
     if execucoes.is_empty() {

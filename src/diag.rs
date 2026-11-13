@@ -1,4 +1,12 @@
 //! Diagnóstico da máquina: distro, família, hardware e o que já está instalado.
+//!
+//! O `bora diag` mostra tudo isto, e todo outro comando começa por aqui: é o
+//! diagnóstico que diz se a distro é suportada, de que família ela é (e portanto
+//! quais scripts rodam) e se o rolê cabe na memória e no disco.
+//!
+//! Nada aqui muda o sistema nem precisa de root. A maior parte vem de arquivos
+//! do kernel em `/proc` e `/sys`; programas externos (`lspci`, `nvidia-smi`,
+//! `systemd-detect-virt`) só são chamados se existirem.
 
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -44,6 +52,8 @@ const FAMILIA_POR_ID: &[(&str, &str)] = &[
     ("opensuse-slowroll", "opensuse"),
 ];
 
+/// Distros que o projeto conhece, mas que são derivadas de outra. As receitas
+/// são testadas na de origem, e o `bora` avisa isso no plano.
 const DERIVADAS_CONHECIDAS: &[&str] = &[
     "linuxmint",
     "pop",
@@ -60,6 +70,8 @@ const DERIVADAS_CONHECIDAS: &[&str] = &[
     "aurora",
 ];
 
+/// Codinomes do Ubuntu, para achar a base das derivadas (o Mint 22.2 tem
+/// `UBUNTU_CODENAME=noble`, então a base é 24.04).
 const CODINOMES_UBUNTU: &[(&str, &str)] = &[
     ("focal", "20.04"),
     ("jammy", "22.04"),
@@ -67,9 +79,11 @@ const CODINOMES_UBUNTU: &[(&str, &str)] = &[
     ("resolute", "26.04"),
 ];
 
+/// Versões de base já testadas. Fora delas, o `bora` funciona, mas avisa.
 const BASES_SUPORTADAS: &[(&str, &[&str])] =
     &[("ubuntu", &["24.04", "26.04"]), ("debian", &["13"])];
 
+/// Valores de `VARIANT_ID` do Fedora que indicam sistema imutável (ostree).
 const VARIANTES_IMUTAVEIS: &[&str] = &[
     "silverblue",
     "kinoite",
@@ -80,6 +94,7 @@ const VARIANTES_IMUTAVEIS: &[&str] = &[
     "coreos",
 ];
 
+/// Busca numa tabela de pares (chave, valor).
 fn procurar<'a>(tabela: &'a [(&str, &str)], chave: &str) -> Option<&'a str> {
     tabela.iter().find(|(k, _)| *k == chave).map(|(_, v)| *v)
 }
@@ -132,6 +147,9 @@ pub fn descobrir_familia(
     let variante = campo("VARIANT_ID").to_lowercase();
     let versao = campo("VERSION_ID");
 
+    // Primeiro o que está fora de propósito. O `ID_LIKE` só conta quando o `ID`
+    // não é conhecido: uma derivada do Void continua fora, mas o Ubuntu não fica
+    // de fora por ter algo estranho no `ID_LIKE`.
     if let Some(motivo) = procurar(FORA_DO_ESCOPO, &ident) {
         return (None, None, Some(motivo.to_string()));
     }
@@ -143,6 +161,8 @@ pub fn descobrir_familia(
         }
     }
 
+    // Depois a família: pelo `ID`, se for conhecido, ou pelo `ID_LIKE`. A ordem
+    // importa: uma derivada do Ubuntu tem "ubuntu debian" no `ID_LIKE` e é Ubuntu.
     let mut familia = procurar(FAMILIA_POR_ID, &ident).map(str::to_string);
     if familia.is_none() {
         let tem = |x: &str| parecidas.contains(&x);
@@ -186,6 +206,8 @@ pub fn descobrir_familia(
         familia = "fedora-imutavel".into();
     }
 
+    // A base é a versão da distro de origem, que é o que as receitas e os testes
+    // usam. No Ubuntu e no Debian ela sai do codinome quando a distro é derivada.
     let mut base = versao.clone();
     if familia == "ubuntu" {
         let codinome = campo("UBUNTU_CODENAME").to_lowercase();
@@ -217,6 +239,7 @@ pub fn descobrir_familia(
     (Some(familia), Some(base), None)
 }
 
+/// Se o systemd é o processo 1. Toda receita depende dele para ligar serviços.
 pub fn tem_systemd() -> bool {
     Path::new("/run/systemd/system").is_dir()
         || fs::read_to_string("/proc/1/comm")
@@ -224,6 +247,8 @@ pub fn tem_systemd() -> bool {
             .unwrap_or(false)
 }
 
+/// O que se sabe da distro. `familia` e `base` ficam vazias quando ela não é
+/// suportada.
 #[derive(Debug, Clone, Serialize)]
 pub struct Distro {
     pub id: String,
@@ -234,6 +259,8 @@ pub struct Distro {
     pub derivada: bool,
 }
 
+/// Dados do sistema: arquitetura, kernel, systemd, UEFI, virtualização e o
+/// sistema de arquivos da raiz (ext4, btrfs...).
 #[derive(Debug, Clone, Serialize)]
 pub struct Sistema {
     pub arquitetura: String,
@@ -244,12 +271,14 @@ pub struct Sistema {
     pub sistema_de_arquivos_raiz: Option<String>,
 }
 
+/// Modelo e número de núcleos do processador.
 #[derive(Debug, Clone, Serialize)]
 pub struct Processador {
     pub modelo: Option<String>,
     pub nucleos: usize,
 }
 
+/// Memória, disco e vídeo. Os campos `Option` ficam vazios quando não dá para medir.
 #[derive(Debug, Clone, Serialize)]
 pub struct Hardware {
     pub processador: Processador,
@@ -264,11 +293,13 @@ pub struct Hardware {
     pub vram_gb: Option<f64>,
 }
 
+/// Se a máquina tem rota para fora (sem ela, nenhuma receita baixa nada).
 #[derive(Debug, Clone, Serialize)]
 pub struct Rede {
     pub rota_padrao: bool,
 }
 
+/// O que já está configurado e muda o comportamento do `bora`.
 #[derive(Debug, Clone, Serialize)]
 pub struct JaTem {
     pub snapshot: Option<String>,
@@ -277,6 +308,10 @@ pub struct JaTem {
     pub zram_gb: Option<f64>,
 }
 
+/// O diagnóstico completo. Vira JSON no `bora diag --json`, então mudar um
+/// nome de campo aqui quebra quem lê esse JSON (agentes e scripts).
+///
+/// `problemas` impedem o uso (`suportada` fica falso); `avisos` só informam.
 #[derive(Debug, Clone, Serialize)]
 pub struct Diag {
     pub distro: Distro,
@@ -289,10 +324,12 @@ pub struct Diag {
     pub avisos: Vec<String>,
 }
 
+/// Arredonda para uma casa decimal.
 fn arred(x: f64) -> f64 {
     (x * 10.0).round() / 10.0
 }
 
+/// Memória total, em GB, de `/proc/meminfo`.
 fn memoria_gb() -> Option<f64> {
     let texto = fs::read_to_string("/proc/meminfo").ok()?;
     let linha = texto.lines().find(|l| l.starts_with("MemTotal:"))?;
@@ -300,6 +337,8 @@ fn memoria_gb() -> Option<f64> {
     Some(arred(kb / 1024.0 / 1024.0))
 }
 
+/// Espaço livre em GB para usuário comum no sistema de arquivos do caminho.
+/// Usa o `statvfs` da libc, o mesmo que o `df` usa.
 pub fn disco_livre_gb(caminho: &str) -> Option<f64> {
     let c = std::ffi::CString::new(caminho).ok()?;
     let mut st: libc::statvfs = unsafe { std::mem::zeroed() };
@@ -312,6 +351,8 @@ pub fn disco_livre_gb(caminho: &str) -> Option<f64> {
     ))
 }
 
+/// O tipo do sistema de arquivos montado em `/`. Pega a última linha, porque
+/// pode haver mais de uma montagem empilhada na raiz.
 fn sistema_de_arquivos_raiz() -> Option<String> {
     let texto = fs::read_to_string("/proc/mounts").ok()?;
     texto
@@ -362,6 +403,7 @@ fn gira(nome: &str, fundo: u8) -> Option<bool> {
     Some(v.trim() == "1")
 }
 
+/// "ssd" ou "hdd" para o disco onde está a raiz.
 fn disco_do_sistema() -> Option<String> {
     let nome = dispositivo_da_raiz()?;
     gira(&nome, 0).map(|g| if g { "hdd" } else { "ssd" }.to_string())
@@ -378,6 +420,7 @@ pub fn zram_de(swaps: &str) -> Option<f64> {
     (kb > 0.0).then(|| arred(kb / 1024.0 / 1024.0))
 }
 
+/// O modelo do processador ("model name" nos PCs, "Hardware" em alguns ARM).
 fn processador() -> Processador {
     let modelo = fs::read_to_string("/proc/cpuinfo").ok().and_then(|t| {
         t.lines()
@@ -393,6 +436,8 @@ fn processador() -> Processador {
     Processador { modelo, nucleos }
 }
 
+/// Se um programa existe no `PATH` ou nas pastas de sistema. As pastas `sbin`
+/// entram porque o `PATH` de usuário comum às vezes não tem elas.
 pub fn comando_existe(nome: &str) -> bool {
     std::env::var_os("PATH")
         .map(|p| std::env::split_paths(&p).any(|d| d.join(nome).is_file()))
@@ -402,6 +447,9 @@ pub fn comando_existe(nome: &str) -> bool {
             .any(|d| Path::new(d).join(nome).is_file())
 }
 
+/// As placas de vídeo. Primeiro pelo `lspci`, que dá o nome completo; sem ele,
+/// pelo código do fabricante em `/sys/class/drm` (`card0`, sem os conectores
+/// como `card0-HDMI-A-1`).
 fn placas_de_video() -> Vec<String> {
     let mut placas = Vec::new();
     if comando_existe("lspci")
@@ -462,6 +510,8 @@ pub fn vram_nvidia_de(saida: &str) -> Option<f64> {
     (mib > 0.0).then(|| arred(mib / 1024.0))
 }
 
+/// Memória da placa de vídeo, em GB. NVIDIA pelo `nvidia-smi`; AMD pelo
+/// `amdgpu`. Menos de 2 GB é vídeo integrado e não conta.
 fn memoria_de_video_gb() -> Option<f64> {
     if comando_existe("nvidia-smi")
         && let Ok(s) = Command::new("nvidia-smi")
@@ -501,6 +551,8 @@ fn memoria_de_video_gb() -> Option<f64> {
     (maior >= 2.0).then(|| arred(maior))
 }
 
+/// Se a máquina é virtual (kvm, qemu, docker...). O `systemd-detect-virt` sai
+/// com erro quando não há virtualização, por isso o teste do "none".
 fn virtualizacao() -> Option<String> {
     if comando_existe("systemd-detect-virt")
         && let Ok(s) = Command::new("systemd-detect-virt").output()
@@ -518,6 +570,7 @@ fn virtualizacao() -> Option<String> {
         .then(|| "docker".to_string())
 }
 
+/// Se há rota padrão (destino 00000000 em `/proc/net/route`).
 fn tem_rota_padrao() -> bool {
     fs::read_to_string("/proc/net/route")
         .map(|t| {
@@ -528,6 +581,7 @@ fn tem_rota_padrao() -> bool {
         .unwrap_or(false)
 }
 
+/// Qual firewall está instalado: ufw (Ubuntu e Debian) ou firewalld (Fedora e openSUSE).
 fn firewall() -> Option<String> {
     if comando_existe("ufw") {
         Some("ufw".into())
@@ -538,6 +592,7 @@ fn firewall() -> Option<String> {
     }
 }
 
+/// A versão do kernel, como no `uname -r`.
 fn kernel() -> String {
     fs::read_to_string("/proc/sys/kernel/osrelease")
         .map(|s| s.trim().to_string())
@@ -561,6 +616,8 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
             "a arquitetura {maquina} não é suportada; o bora precisa de um computador de 64 bits x86_64 (Intel ou AMD)"
         ));
     }
+    // `BORA_PERMITIR_SEM_SYSTEMD=1` existe só para os testes em contêiner sem
+    // systemd. Numa máquina de verdade, sem systemd, o `bora` se recusa.
     if !systemd {
         if std::env::var("BORA_PERMITIR_SEM_SYSTEMD").as_deref() == Ok("1") {
             avisos.push("sem systemd, permitido só para testes em contêiner".into());
@@ -641,6 +698,7 @@ pub fn coletar(os_release: Option<&Path>) -> Diag {
     }
 }
 
+/// Número para mostrar: sem casas quando é inteiro, "?" quando não foi medido.
 fn num(x: Option<f64>) -> String {
     match x {
         Some(v) if v.fract() == 0.0 => format!("{v:.0}"),
@@ -785,6 +843,7 @@ mod testes {
     use super::*;
     use std::path::PathBuf;
 
+    /// Lê um `os-release` de exemplo da pasta `testes/os-release`.
     fn fixo(nome: &str) -> BTreeMap<String, String> {
         let p = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("testes/os-release")
@@ -792,6 +851,7 @@ mod testes {
         ler_os_release(Some(&p))
     }
 
+    // Cada `os-release` de exemplo cai na família e na base certas.
     #[test]
     fn familias() {
         let casos = [
@@ -823,6 +883,7 @@ mod testes {
         }
     }
 
+    // Distros fora de propósito saem com o motivo certo.
     #[test]
     fn fora_do_escopo() {
         for (nome, trecho) in [
@@ -845,6 +906,7 @@ mod testes {
         );
     }
 
+    // Distro que ninguém conhece: recusada, com o nome dela na mensagem.
     #[test]
     fn desconhecida() {
         let mut osr = BTreeMap::new();
@@ -855,6 +917,7 @@ mod testes {
         assert!(motivo.unwrap().contains("Inventada 1"));
     }
 
+    // Só as swaps em zram contam; a partição de swap comum fica de fora.
     #[test]
     fn zram_em_proc_swaps() {
         let swaps = "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n\
@@ -867,6 +930,7 @@ mod testes {
         );
     }
 
+    // Soma de várias placas, e saída sem número quando não há driver.
     #[test]
     fn vram_da_nvidia() {
         assert_eq!(vram_nvidia_de("8192\n"), Some(8.0));
@@ -875,6 +939,7 @@ mod testes {
         assert_eq!(vram_nvidia_de(""), None);
     }
 
+    // O Kali é uma derivada do Debian que o bora não lista: funciona, com avisos.
     #[test]
     fn coletar_e_formatar() {
         let p = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("testes/os-release/kali");

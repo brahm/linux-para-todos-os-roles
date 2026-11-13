@@ -1,4 +1,9 @@
 //! A pergunta pronta: um texto para colar em qualquer chat de IA, sem dados sensíveis.
+//!
+//! O `bora ajuda` junta o diagnóstico da máquina, o último erro (se houver) e a
+//! dúvida da pessoa, e pede à IA respostas que sigam as regras do projeto. Antes
+//! de mostrar qualquer coisa, `limpar` tira IPs, MACs, nomes de usuário, nome do
+//! computador e coisas com cara de senha ou token.
 
 use crate::diag::Diag;
 use regex::{Captures, Regex};
@@ -9,23 +14,29 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 use std::sync::LazyLock;
 
+/// Onde fica o último erro: `/var/lib/bora/ultimo-erro.json`.
 fn arquivo_erro() -> PathBuf {
     crate::executor::dir_estado().join("ultimo-erro.json")
 }
 
+// Os padrões compilam uma vez só, na primeira vez que são usados.
 static IPV4: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\b(?:\d{1,3}\.){3}\d{1,3}\b").unwrap());
 // Candidatos a IPv6 (com pelo menos dois ":"); só vira IP o que o parser aceita.
 static IPV6: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"[0-9a-fA-F]{0,4}(?::[0-9a-fA-F]{0,4}){2,7}").unwrap());
+// Endereço físico de placa de rede (aa:bb:cc:dd:ee:ff).
 static MAC: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\b(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b").unwrap());
+// Tokens com formato conhecido: OpenAI e parecidos (sk-), GitHub (ghp_ e
+// irmãos), Slack (xox), chave de acesso da AWS (AKIA) e JWT (eyJ...).
 static SEGREDO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r"(?i)\b(sk-[a-z0-9_-]{16,}|gh[pousr]_[a-z0-9]{20,}|xox[abpr]-[a-z0-9-]{10,}|AKIA[0-9A-Z]{16}|eyJ[a-z0-9_-]{10,}\.[a-z0-9_-]{10,}\.[a-z0-9_-]{10,})",
     )
     .unwrap()
 });
+// Qualquer "senha=...", "token: ..." e afins: troca só o valor, mantém o nome.
 static ATRIBUICAO: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
         r"(?i)\b(senha|password|passwd|token|secret|segredo|api[_-]?key|chave)(\s*[:=]\s*)(\S+)",
@@ -33,6 +44,9 @@ static ATRIBUICAO: LazyLock<Regex> = LazyLock::new(|| {
     .unwrap()
 });
 
+/// Decide o que fazer com algo que parece IP. Loopback (127.0.0.1) fica, porque
+/// não identifica ninguém e ajuda a entender o erro. Rede local vira `IP-LOCAL`
+/// (inclui o 100.64.0.0/10 do CGNAT e da Tailscale) e o resto vira `IP-PUBLICO`.
 fn trocar_ip(c: &Captures) -> String {
     let texto = &c[0];
     // Trechos curtos como "d::f" também são IPv6 válidos, mas quase sempre são outra coisa.
@@ -58,6 +72,10 @@ fn trocar_ip(c: &Captures) -> String {
     }
 }
 
+/// Os nomes de usuário que podem aparecer no texto: as contas de gente do
+/// `/etc/passwd` (UID de 1000 a 65533) e quem está rodando o `bora`.
+/// Nomes com menos de 3 letras ficam de fora, senão "a" viraria USUARIO em todo canto.
+/// Os mais longos vêm primeiro, para "ana" não estragar "mariana" antes da hora.
 fn usuarios() -> Vec<String> {
     let mut nomes = Vec::new();
     if let Ok(t) = fs::read_to_string("/etc/passwd") {
@@ -109,6 +127,9 @@ pub fn limpar(texto: &str) -> String {
     t
 }
 
+/// O que o `executor` guarda quando uma receita falha: qual execução, qual
+/// rolê e receita, com que parâmetros, em que etapa (`aplicar`, `testar`...) e
+/// as últimas linhas da saída, já limpas.
 #[derive(Serialize, Deserialize)]
 pub struct UltimoErro {
     pub execucao: String,
@@ -132,11 +153,13 @@ pub fn guardar_erro(erro: UltimoErro) {
     }
 }
 
+/// Lê o último erro guardado, se houver.
 pub fn ler_ultimo_erro() -> Option<UltimoErro> {
     serde_json::from_str(&fs::read_to_string(arquivo_erro()).ok()?).ok()
 }
 
-/// Monta o texto da pergunta pronta.
+/// Monta o texto da pergunta pronta: apresentação do projeto, a máquina, o
+/// último erro, a dúvida (limpa) e as regras que a resposta precisa seguir.
 pub fn montar(d: &Diag, pergunta: Option<&str>) -> String {
     let dist = &d.distro;
     let fam = dist.familia.as_deref();
@@ -227,6 +250,7 @@ pub fn montar(d: &Diag, pergunta: Option<&str>) -> String {
 mod testes {
     use super::*;
 
+    // Confere que nada sensível vaza e que o loopback continua no texto.
     #[test]
     fn limpa_dados_sensiveis() {
         let texto = "conectado de 189.10.20.30 e 192.168.0.5, mac aa:bb:cc:dd:ee:ff, token=abc123 \

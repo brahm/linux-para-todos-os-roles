@@ -10,6 +10,8 @@ use std::io;
 use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 
+// O `include_dir!` copia as pastas para dentro do binário na compilação.
+// O `build.rs` avisa o cargo para recompilar quando algo nelas muda.
 static RECEITAS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/receitas");
 static OBJETIVOS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/objetivos");
 
@@ -20,6 +22,8 @@ pub struct Fonte {
     temporaria: bool,
 }
 
+// Apaga a cópia temporária quando o `bora` termina. A conferência do
+// `temp_dir` é cinto de segurança: nunca apagar uma pasta que não é nossa.
 impl Drop for Fonte {
     fn drop(&mut self) {
         if self.temporaria && self.raiz.starts_with(std::env::temp_dir()) {
@@ -28,6 +32,8 @@ impl Drop for Fonte {
     }
 }
 
+/// Copia uma pasta embutida para o disco, recursivamente, com permissões
+/// fechadas (0700 nas pastas) e o bit de execução só nos scripts.
 fn extrair(dir: &Dir, destino: &Path) -> io::Result<()> {
     for entrada in dir.entries() {
         let caminho = destino.join(entrada.path().file_name().unwrap_or_default());
@@ -51,6 +57,8 @@ fn extrair(dir: &Dir, destino: &Path) -> io::Result<()> {
     Ok(())
 }
 
+/// Abre o catálogo: a pasta de `BORA_RAIZ`, se existir, ou uma cópia nova do
+/// que veio embutido no binário, numa pasta temporária.
 pub fn abrir() -> io::Result<Fonte> {
     if let Some(raiz) = std::env::var_os("BORA_RAIZ") {
         return Ok(Fonte {

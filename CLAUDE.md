@@ -14,6 +14,18 @@ O leitor é o protagonista; o `bora` é o mentor. Resumo primeiro, detalhe depoi
 
 Antes de terminar, rode `ferramentas/estilo/conferir.sh`.
 
+## Código: comente tudo
+
+Todo código que você escrever ou mudar (Rust, bash, Python, JavaScript, CSS, HTML, YAML, workflows) sai comentado, para que quem baixe o projeto do GitHub entenda sem perguntar. As regras estão em [`docs/estilo.md`](docs/estilo.md#comentários-no-código) e são as mesmas do texto: direto, sem clichê, humor só de leve.
+
+- Todo arquivo começa dizendo o que é e onde se encaixa.
+- Toda função ou bloco que não é óbvio diz o que faz e, se precisar, por quê.
+- Mudou o comportamento, mude o comentário junto.
+
+## Arquitetura: mantenha o diagrama em dia
+
+O diagrama fica em [`docs/arquitetura.md`](docs/arquitetura.md), e o README só tem o link. Toda evolução do projeto (comando, módulo, pasta, workflow ou fluxo novo ou mudado) atualiza o diagrama no mesmo pull request.
+
 ## Regras do projeto que não se negociam
 
 - **Versão:** o projeto segue em 0.x. Nunca suba para fora da 0.x nem sugira isso; quem decide é o Brahm.
