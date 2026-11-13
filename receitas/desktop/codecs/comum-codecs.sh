@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita desktop/codecs.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # Os plugins do GStreamer, que os players do GNOME, do KDE e do Xfce usam.
 # O libav traz os decodificadores do FFmpeg (H.264, H.265, AAC); o ugly, o bad
@@ -28,6 +30,7 @@ arquivo_do_plugin() {
     return 1
 }
 
+# O plugin está instalado e o arquivo dele existe?
 plugin_presente() {
     local f
     f=$(arquivo_do_plugin "$1") && [ -f "$f" ]

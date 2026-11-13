@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita ia/lm-studio.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # A versão que esta receita instala e testa. O LM Studio não publica as somas,
 # então a soma abaixo é a do arquivo baixado de installers.lmstudio.ai e
@@ -18,6 +20,7 @@ LMS_ATALHO=/usr/share/applications/lm-studio.desktop
 # O que o Electron precisa para abrir a janela. Um desktop já tem quase tudo.
 LMS_PACOTES="libgtk-3-0t64 libnss3 libgbm1 libasound2t64"
 
+# O AppImage está extraído na pasta e o comando aponta para ele?
 lms_instalado() {
     [ -x "$LMS_DIR/AppRun" ] && [ "$(readlink "$LMS_BIN" 2>/dev/null)" = "$LMS_DIR/AppRun" ]
 }
@@ -33,6 +36,7 @@ lms_icone() {
     done
 }
 
+# O atalho do menu de aplicativos (arquivo .desktop).
 atalho_esperado() {
     cat <<ATALHO
 [Desktop Entry]

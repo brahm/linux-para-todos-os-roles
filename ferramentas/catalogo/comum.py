@@ -51,10 +51,12 @@ ICONES = {
 }
 
 
+# O quadradinho colorido com um ícone, que abre cartões e títulos.
 def ladrilho(icone, cor, extra=""):
     return f'<span class="ladrilho {cor}"{extra} aria-hidden="true"><svg viewBox="0 0 24 24">{ICONES[icone]}</svg></span>'
 
 
+# Link para abrir uma issue já com o formulário e os campos preenchidos.
 def pedido(template, titulo, **campos):
     q = f"template={template}&title={quote(titulo)}"
     for k, v in campos.items():
@@ -193,6 +195,7 @@ def pagina(*, raiz, caminho, titulo, descricao, corpo, ativo="catalogo", extra_h
 '''
 
 
+# O cabeçalho de uma seção: sobretítulo com a pegada, título e um texto opcional.
 def cabeca(sobre, titulo, texto=""):
     p = f"\n        <p>{texto}</p>" if texto else ""
     return f'''      <div class="cabeca">

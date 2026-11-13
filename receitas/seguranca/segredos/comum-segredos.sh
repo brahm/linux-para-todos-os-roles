@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita seguranca/segredos.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 PACOTES="git gitleaks"
 INICIO="# >>> bora (seguranca/segredos): arquivos que nunca vão para o Git"
@@ -10,6 +12,7 @@ FIM="# <<< bora (seguranca/segredos)"
 # funcionando os ganchos que cada projeto já tinha.
 GANCHOS="applypatch-msg pre-applypatch post-applypatch pre-commit pre-merge-commit prepare-commit-msg commit-msg post-commit pre-rebase post-checkout post-merge pre-push post-rewrite pre-auto-gc push-to-checkout"
 
+# Uma opção global do Git da pessoa, ou vazio.
 valor_global() { como_pessoa "$PESSOA" git config --global --get "$1" 2>/dev/null || true; }
 
 # O arquivo de exclusões globais: o que a pessoa já configurou, ou o padrão
@@ -25,6 +28,7 @@ arquivo_ignore() {
     esac
 }
 
+# Os padrões de arquivos de segredo que o Git passa a ignorar em todo projeto.
 bloco_ignore() {
     cat <<BLOCO
 $INICIO
@@ -44,6 +48,7 @@ $FIM
 BLOCO
 }
 
+# O arquivo já tem o bloco do bora?
 tem_bloco() { [ -f "$1" ] && grep -qxF "$INICIO" "$1"; }
 
 # Tira o bloco do bora de um arquivo, sem mexer no resto.
@@ -56,6 +61,7 @@ tirar_bloco() {
     rm -f "$tmp"
 }
 
+# O gancho do Git que roda o gitleaks antes de cada commit.
 gancho() {
     cat <<'GANCHO'
 #!/bin/sh
@@ -90,6 +96,7 @@ PESSOA=$(descobrir_pessoa "${BORA_USUARIO:-auto}")
 CASA=$(pasta_pessoal "$PESSOA")
 GANCHOS_DIR=$CASA/.config/git/ganchos-bora
 
+# O Git usa a pasta de ganchos do bora, e cada gancho aponta para o script certo?
 ganchos_prontos() {
     [ "$(valor_global core.hooksPath)" = "$GANCHOS_DIR" ] || return 1
     cmp -s <(gancho) "$GANCHOS_DIR/gancho" || return 1

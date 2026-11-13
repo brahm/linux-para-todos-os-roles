@@ -146,10 +146,29 @@ O humor é tempero; a precisão é o prato.
 
 As decisões antigas em [`decisoes.md`](decisoes.md) e os registros de teste ficam como foram escritos: são histórico.
 
+## Comentários no código
+
+Definido por Brahm em 13/11/2026. Quem baixa o projeto do GitHub precisa conseguir ler qualquer arquivo e entender o que ele faz sem perguntar para ninguém. Vale para Rust, bash, Python, JavaScript, CSS, HTML, YAML e workflows do CI.
+
+- **Todo arquivo começa dizendo o que é.** Para que serve, quem chama e onde ele se encaixa no projeto.
+- **Toda função, tipo ou bloco que não é óbvio ganha comentário.** Diga o que faz e, quando não for evidente, por quê. O "como" o código já mostra.
+- **Explique as gambiarras.** Contorno de bug de distro, ordem que importa, `|| true` proposital: escreva o motivo, senão alguém "conserta" e quebra.
+- **Mesmas regras de texto deste guia.** Português do Brasil, direto, frases curtas, sem clichê de IA. Humor só se couber numa linha, e nunca em aviso de segurança.
+- **Comentário acompanha o código.** Mudou o comportamento, mude o comentário no mesmo commit. Comentário errado é pior do que nenhum.
+- **Código gerado por IA segue a mesma regra.** Não entra sem comentário.
+
+## O diagrama da arquitetura
+
+O mapa de como as peças se encaixam fica em [`arquitetura.md`](arquitetura.md), num desenho SVG feito à mão ([`arquitetura.svg`](arquitetura.svg)), com uma explicação curta de cada parte. O README só tem o link. O SVG é texto: mude as caixas e as setas num editor qualquer e confira no navegador, no tema claro e no escuro.
+
+Definido por Brahm em 13/11/2026: **toda evolução do projeto atualiza o diagrama no mesmo pull request.** Peça nova, comando novo, pasta nova, workflow novo ou fluxo que mudou: se o desenho ficou desatualizado, o pull request não está pronto.
+
 ## Antes de abrir o pull request
 
 ```sh
 ferramentas/estilo/conferir.sh     # barra as palavras proibidas
 ```
+
+Confira também se o código novo tem comentários e se o [`arquitetura.md`](arquitetura.md) ainda descreve o projeto.
 
 E leia o texto em voz alta uma vez. Se você tomou fôlego no meio de uma frase, ela está longa. Se riu, ótimo; se riu e não entendeu o comando, reescreva.

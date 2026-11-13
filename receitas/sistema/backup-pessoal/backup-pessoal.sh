@@ -19,6 +19,8 @@ INTERVALO_MIN=$((20 * 60))
 ESPACO_MINIMO_MB=1024
 
 modo=${1:-normal}
+# Este programa roda sozinho, pelo systemd, sem o comum.sh: as mensagens
+# ficam aqui mesmo e vão para o journal.
 msg() { printf '%s\n' "$*"; }
 falha() {
     printf 'Erro: %s\n' "$*" >&2
@@ -57,6 +59,7 @@ if [ -z "$dev" ]; then
     exit 0
 fi
 
+# Onde o disco de backup está montado agora, ou vazio.
 ponto_de_montagem() { findmnt -n -f -o TARGET --source "$dev" 2>/dev/null || true; }
 
 # Ao conectar o disco, a sessão gráfica costuma montá-lo em /media. Espera
@@ -80,6 +83,7 @@ if [ -z "$ponto" ]; then
     ponto=$MONTAGEM_PROPRIA
     montei=sim
 fi
+# Desmonta o disco no fim, mas só se foi este programa que montou.
 desmontar() {
     if [ "$montei" = sim ]; then
         sync
@@ -91,6 +95,8 @@ trap desmontar EXIT
 
 base="$ponto/bora-backup/$COMPUTADOR"
 padrao_versao='^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}$'
+# As versões de backup de uma pessoa (pastas com data no nome), da mais antiga
+# para a mais nova.
 versoes() { find "$1" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | { grep -E "$padrao_versao" || true; } | sort; }
 
 if [ "$modo" = --conferir ]; then

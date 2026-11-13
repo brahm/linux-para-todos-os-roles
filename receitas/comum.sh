@@ -7,7 +7,20 @@
 #
 # Tudo o que muda o sistema e precisa ser desfeito fica registrado em
 # $BORA_ESTADO, a pasta que o bora reserva para cada receita em cada execução.
+# Os arquivos que estas funções deixam lá:
+#
+#   pacotes-pedidos, pacotes-novos   o que instalar_pacotes pediu e o que entrou
+#   arquivos/<caminho>               cópia de cada arquivo antes da mudança
+#   arquivos-novos                   arquivos que não existiam e foram criados
+#   unidades-habilitadas             serviços do systemd ligados pela receita
+#   pastas-novas                     pastas criadas na pasta pessoal
+#
+# A regra de ouro: o aplicar só muda o sistema por estas funções (ou anota à
+# mão no mesmo formato), e o desfazer chama as funções de volta. Assim o
+# desfazer nunca precisa adivinhar como o sistema estava.
 
+# Mensagens. Tudo vai para a saída que o bora mostra e guarda no saida.log.
+# falha() encerra o script com erro, então o bora para e oferece o desfazer.
 msg() { printf '%s\n' "$*"; }
 aviso() { printf 'Aviso: %s\n' "$*"; }
 falha() {
@@ -15,16 +28,25 @@ falha() {
     exit 1
 }
 
+# Sem estas variáveis, o script não foi chamado pelo bora: para logo, em vez
+# de espalhar arquivos de estado num lugar qualquer.
 : "${BORA_ESTADO:?o bora não informou BORA_ESTADO}"
 : "${BORA_FAMILIA:?o bora não informou BORA_FAMILIA}"
 mkdir -p "$BORA_ESTADO"
 
+# O systemd está de pé? Nos contêineres de teste sem systemd, os serviços são
+# habilitados mas não iniciados.
 systemd_rodando() { [ -d /run/systemd/system ]; }
 
 # --- Pacotes -------------------------------------------------------------
 
+# Espera até 5 minutos se outro apt estiver rodando (a atualização automática
+# adora começar bem na hora), e mantém os arquivos de configuração que a pessoa
+# já mexeu, sem perguntar nada.
 _APT_OPCOES=(-o DPkg::Lock::Timeout=300 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold)
 
+# Para com uma mensagem clara se a família não usa apt. Toda função de
+# pacotes chama isto primeiro.
 exigir_apt() {
     case "$BORA_FAMILIA" in
         ubuntu | debian) ;;
@@ -32,13 +54,18 @@ exigir_apt() {
     esac
 }
 
+# apt-get sem perguntas, com as opções acima.
 apt_get() { DEBIAN_FRONTEND=noninteractive apt-get "${_APT_OPCOES[@]}" "$@"; }
 
+# O pacote está instalado de verdade ("ii")? Pacote removido com
+# configuração sobrando ("rc") não conta.
 pacote_instalado() {
     exigir_apt
     [ "$(dpkg-query -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null)" = "ii " ]
 }
 
+# Lista ordenada dos pacotes instalados. instalar_pacotes compara o antes e
+# o depois para saber o que entrou, dependências inclusive.
 _pacotes_no_sistema() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 2>/dev/null | awk '$1 == "ii" {print $2}' | sort -u; }
 
 # Atualiza a lista de pacotes, se ela tiver mais de uma hora.
@@ -208,6 +235,8 @@ habilitar_unidade() {
     fi
 }
 
+# Desabilita (e para) os serviços que habilitar_unidade ligou. O `|| true`
+# é proposital: se a pessoa já removeu o serviço, não há o que desligar.
 desabilitar_unidades_habilitadas() {
     [ -f "$BORA_ESTADO/unidades-habilitadas" ] || return 0
     local unidade
@@ -238,6 +267,7 @@ conferir() {
     fi
 }
 
+# Última linha de todo testar.sh: sai com 1 se algum conferir falhou.
 resultado_dos_testes() {
     if [ "$_FALHAS" -gt 0 ]; then
         msg "$_FALHAS conferência(s) falharam."
@@ -277,6 +307,8 @@ descobrir_pessoa() {
     echo "$alvo"
 }
 
+# A pasta pessoal de uma conta, pelo /etc/passwd (não confie no $HOME, que
+# debaixo do sudo pode ser o do root).
 pasta_pessoal() { getent passwd "$1" | cut -d: -f6; }
 
 # Roda um comando como a pessoa, a partir da pasta pessoal dela, e não da

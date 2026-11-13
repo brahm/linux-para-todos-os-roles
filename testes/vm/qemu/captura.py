@@ -16,6 +16,7 @@ import zlib
 from collections import Counter
 
 
+# Lê um PPM binário (P6) e devolve largura, altura e os pixels em RGB.
 def ler_ppm(caminho):
     dados = open(caminho, "rb").read()
     campos, pos = [], 0
@@ -39,10 +40,12 @@ def ler_ppm(caminho):
     return largura, altura, dados[pos : pos + largura * altura * 3]
 
 
+# Grava os pixels num PNG, montado à mão com zlib (sem Pillow).
 def gravar_png(caminho, largura, altura, pixels):
     linha = largura * 3
     cru = b"".join(b"\x00" + pixels[y * linha : (y + 1) * linha] for y in range(altura))
 
+    # Um bloco do PNG: tamanho, tipo, conteúdo e o CRC que o formato exige.
     def pedaco(tipo, conteudo):
         return (
             struct.pack(">I", len(conteudo))
@@ -74,6 +77,7 @@ def reduzir(largura, altura, pixels):
     return nl, na, bytes(saida)
 
 
+# Lê, confere se a tela não está vazia e grava o PNG (e a versão pequena).
 def main():
     if len(sys.argv) not in (3, 4):
         sys.exit(__doc__.strip().splitlines()[2].strip())

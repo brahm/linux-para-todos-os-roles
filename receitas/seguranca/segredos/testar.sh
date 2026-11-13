@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita seguranca/segredos (Verificação de segredos).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
@@ -8,6 +11,8 @@ source ./comum-segredos.sh
 
 d=$(como_pessoa "$PESSOA" mktemp -d)
 trap 'rm -rf "${d:?}"' EXIT
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 git_() { como_pessoa "$PESSOA" git -C "$d" "$@"; }
 git_ init -q
 git_ config user.name "Teste do bora"

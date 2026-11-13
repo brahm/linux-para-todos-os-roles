@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita sistema/servicos-enxutos (Serviços enxutos).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-servicos.sh
 source ./comum-servicos.sh
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 desligado() { [ "$(estado_de "$1")" != enabled ]; }
 parado() { ! systemctl is-active --quiet "$1"; }
 n=0

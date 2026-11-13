@@ -1,4 +1,23 @@
 //! bora: leva você até o rolê, com receitas testadas e um jeito de voltar atrás.
+//!
+//! Este arquivo é a porta de entrada. Ele lê a linha de comando (com o `clap`),
+//! escolhe o subcomando e chama os outros módulos. A lógica de verdade mora neles:
+//!
+//! - `diag`: descobre a distro, a memória, o disco e o que já está instalado.
+//! - `fonte` e `catalogo`: acham e leem as receitas e os rolês (embutidos no
+//!   binário ou, com `BORA_RAIZ`, direto da pasta do repositório).
+//! - `plano`: monta um plano a partir de um rolê ou de receitas avulsas e confere
+//!   se ele vale para esta máquina.
+//! - `executor`: roda os scripts de cada receita, guarda o estado em
+//!   `/var/lib/bora` e sabe desfazer.
+//! - `snapshot`: tira o snapshot do sistema antes de aplicar.
+//! - `modelos`: escolhe os modelos de IA locais que cabem na máquina.
+//! - `ajuda`: monta a pergunta pronta para colar num chat de IA.
+//! - `ui`: cores, menus e perguntas no terminal.
+//!
+//! O fluxo típico do menu é: diagnóstico, escolha do rolê, perguntas, plano,
+//! validação e, por fim, `sudo bora aplicar`. O mapa completo está em
+//! `docs/arquitetura.md`.
 
 mod ajuda;
 mod catalogo;
@@ -19,13 +38,20 @@ use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use ui::{Erro, Opcao, R};
 
+/// A versão vem do `Cargo.toml` na hora de compilar; não existe outro lugar para mudar.
 const VERSAO: &str = env!("CARGO_PKG_VERSION");
 
+/// Roda o diagnóstico da máquina.
+///
+/// `BORA_OS_RELEASE` aponta para outro `os-release`. Os testes usam isso para
+/// fingir que estão no Fedora, no Arch ou numa distro que o `bora` recusa.
 fn coletar_diag() -> Diag {
     let osr = std::env::var_os("BORA_OS_RELEASE").map(PathBuf::from);
     diag::coletar(osr.as_deref())
 }
 
+/// Lê o catálogo e avisa, sem parar, se alguma receita ou rolê veio com erro.
+/// Os itens com problema ficam de fora; o `bora conferir` diz quais são.
 fn carregar_catalogo(f: &fonte::Fonte) -> Catalogo {
     let c = Catalogo::carregar(&f.raiz);
     if !c.erros.is_empty() {
@@ -36,6 +62,8 @@ fn carregar_catalogo(f: &fonte::Fonte) -> Catalogo {
     c
 }
 
+/// Para tudo (código de saída 2) se a distro não for suportada, mostrando o
+/// motivo. Se for suportada mas com ressalvas, só mostra os avisos.
 fn exigir_suportada(d: &Diag) -> R<()> {
     if !d.suportada {
         for p in &d.problemas {
@@ -49,6 +77,8 @@ fn exigir_suportada(d: &Diag) -> R<()> {
     Ok(())
 }
 
+/// Imprime o plano validado: uma linha por receita, com o risco quando ele não
+/// é baixo, e os parâmetros escolhidos logo abaixo.
 fn mostrar_plano(v: &plano::PlanoValidado) {
     ui::titulo(&format!(
         "Plano: {}",
@@ -81,6 +111,7 @@ fn mostrar_plano(v: &plano::PlanoValidado) {
     }
 }
 
+/// Mostra a lista de problemas de um plano e devolve o erro com código 2.
 fn erros_do_plano(titulo: &str, erros: Vec<String>) -> Erro {
     ui::erro(titulo);
     for e in erros {
@@ -89,6 +120,8 @@ fn erros_do_plano(titulo: &str, erros: Vec<String>) -> Erro {
     Erro::Codigo(2)
 }
 
+/// Lê um plano do disco e confere contra o catálogo e a máquina.
+/// Devolve o YAML cru (que vai junto para o registro da execução) e o validado.
 fn carregar_validado(caminho: &Path, c: &Catalogo, d: &Diag) -> R<(Value, plano::PlanoValidado)> {
     let cru = plano::ler(caminho).map_err(|e| {
         ui::erro(&e);
@@ -98,6 +131,8 @@ fn carregar_validado(caminho: &Path, c: &Catalogo, d: &Diag) -> R<(Value, plano:
     Ok((cru, v))
 }
 
+/// Separa uma lista de `nome=valor` em pares. `rotulo` é o nome da opção
+/// (`--resposta`, `--parametro`) e só aparece na mensagem de erro.
 fn pares(valores: Option<Vec<String>>, rotulo: &str) -> R<Vec<(String, String)>> {
     let mut saida = Vec::new();
     for par in valores.unwrap_or_default() {
@@ -109,12 +144,15 @@ fn pares(valores: Option<Vec<String>>, rotulo: &str) -> R<Vec<(String, String)>>
     Ok(saida)
 }
 
+/// Atalho para ler uma opção que pode aparecer várias vezes na linha de comando.
 fn lista(m: &ArgMatches, nome: &str) -> Option<Vec<String>> {
     m.get_many::<String>(nome).map(|v| v.cloned().collect())
 }
 
 // Comandos ---------------------------------------------------------------
 
+/// `bora diag`: mostra o diagnóstico, em texto ou em JSON.
+/// Sai com 2 se a distro não é suportada, para scripts poderem testar.
 fn cmd_diag(m: &ArgMatches) -> R<i32> {
     let d = coletar_diag();
     if m.get_flag("json") {
@@ -125,6 +163,8 @@ fn cmd_diag(m: &ArgMatches) -> R<i32> {
     Ok(if d.suportada { 0 } else { 2 })
 }
 
+/// `bora modelos`: lista os modelos de IA locais, diz quais cabem na máquina
+/// e qual o `bora` sugere. A lista vem de `receitas/ia/ollama/modelos.yaml`.
 fn cmd_modelos(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     let lista = modelos::carregar(&f.raiz).map_err(Erro::Msg)?;
@@ -158,6 +198,8 @@ fn cmd_modelos(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     Ok(0)
 }
 
+/// `bora lista`: mostra os rolês (● disponível, ○ não, com o motivo) e as
+/// receitas com o nível de teste na família de distro desta máquina.
 fn cmd_lista(f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     let c = carregar_catalogo(f);
@@ -192,11 +234,19 @@ fn cmd_lista(f: &fonte::Fonte) -> R<i32> {
     Ok(0)
 }
 
+/// `bora plano`: monta um plano sem menus, para scripts e agentes.
+///
+/// Aceita um rolê com respostas (`-r pergunta=valor`) ou receitas avulsas
+/// (`--receitas a,b`), mais parâmetros (`-p receita.nome=valor`). O plano é
+/// validado antes de ser salvo, então um plano salvo sempre é aplicável aqui.
 fn cmd_plano(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     exigir_suportada(&d)?;
     let c = carregar_catalogo(f);
     let familia = d.distro.familia.clone().unwrap_or_default();
+    // Agrupa os parâmetros por receita. O id da receita tem barra
+    // ("seguranca/firewall"), então o nome do parâmetro é o que vem depois
+    // do último ponto.
     let mut params: BTreeMap<String, Mapping> = BTreeMap::new();
     for (chave, valor) in pares(lista(m, "parametro"), "--parametro")? {
         let Some((rid, nome)) = chave.rsplit_once('.') else {
@@ -252,6 +302,8 @@ fn cmd_plano(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     let mut cru = cru;
     let v = plano::validar(&cru, &c, &d)
         .map_err(|e| erros_do_plano("O plano gerado tem problemas:", e))?;
+    // Se o plano tem um modelo de IA "automático", grava no arquivo o modelo
+    // escolhido, para a aplicação não mudar de ideia depois.
     plano::fixar_modelo(&mut cru, &v);
     let saida = m
         .get_one::<String>("saida")
@@ -270,6 +322,7 @@ fn cmd_plano(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     Ok(0)
 }
 
+/// `bora validar`: confere um plano sem aplicar nada.
 fn cmd_validar(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     exigir_suportada(&d)?;
@@ -281,6 +334,12 @@ fn cmd_validar(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     Ok(0)
 }
 
+/// `bora aplicar`: aplica um plano, receita por receita.
+///
+/// Com `--simular`, só roda o `verificar.sh` de cada receita e conta quantas
+/// mudariam. Sem ele, pede confirmação e entrega para o `executor`, que tira o
+/// snapshot e aplica. Se uma receita falha, ele para ali e a pessoa decide se
+/// roda `sudo bora desfazer`.
 fn cmd_aplicar(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     exigir_suportada(&d)?;
@@ -319,6 +378,10 @@ fn cmd_aplicar(m: &ArgMatches, f: &fonte::Fonte) -> R<i32> {
     Ok(0)
 }
 
+/// `bora desfazer`: volta atrás a última execução, ou uma escolhida pelo id.
+///
+/// Só deixa desfazer da mais nova para a mais antiga. Desfazer fora de ordem
+/// pode deixar o sistema num estado que nenhuma das duas execuções conhece.
 fn cmd_desfazer(m: &ArgMatches) -> R<i32> {
     let d = coletar_diag();
     let alvo = if let Some(id) = m.get_one::<String>("execucao") {
@@ -354,6 +417,8 @@ fn cmd_desfazer(m: &ArgMatches) -> R<i32> {
     Ok(if ok { 0 } else { 1 })
 }
 
+/// `bora ajuda`: imprime a pergunta pronta para o chat de IA. O texto vai para a
+/// saída padrão (dá para redirecionar) e o lembrete vai para a saída de erro.
 fn cmd_ajuda(m: &ArgMatches) -> R<i32> {
     let pergunta = lista(m, "pergunta").map(|v| v.join(" "));
     println!("{}", ajuda::montar(&coletar_diag(), pergunta.as_deref()));
@@ -367,6 +432,9 @@ fn cmd_ajuda(m: &ArgMatches) -> R<i32> {
     Ok(0)
 }
 
+/// `bora conferir`: confere o catálogo inteiro, para quem contribui e para o CI.
+/// Erros de formato, a lista de modelos e o status de teste fora da regra
+/// fazem o comando sair com 1.
 fn cmd_conferir(f: &fonte::Fonte) -> R<i32> {
     let mut c = Catalogo::carregar(&f.raiz);
     if let Err(e) = modelos::carregar(&f.raiz) {
@@ -397,6 +465,8 @@ fn cmd_conferir(f: &fonte::Fonte) -> R<i32> {
 
 // Menu -------------------------------------------------------------------
 
+/// Onde o menu salva os planos: em `/var/lib/bora/planos` quando roda como
+/// root, e em `~/.local/share/bora/planos` (ou `$XDG_DATA_HOME`) quando não.
 fn pasta_planos() -> PathBuf {
     if executor::e_root() {
         return executor::dir_estado().join("planos");
@@ -424,6 +494,11 @@ fn preencher_da_maquina(texto: &str, c: &Catalogo, d: &Diag) -> String {
     texto.replace(MARCA, &sugestao)
 }
 
+/// Faz, no menu, as perguntas dos parâmetros de uma receita.
+///
+/// Pula os parâmetros que o rolê já fixou (`fixos`) e os que não têm pergunta.
+/// O tipo do parâmetro decide o jeito de perguntar: lista de opções, sim ou não,
+/// ou texto livre, que repete a pergunta até o valor ser aceito.
 fn perguntar_parametros(rec: &Receita, fixos: &[String], c: &Catalogo, d: &Diag) -> R<Mapping> {
     let mut valores = Mapping::new();
     for p in &rec.parametros {
@@ -474,6 +549,9 @@ fn perguntar_parametros(rec: &Receita, fixos: &[String], c: &Catalogo, d: &Diag)
     Ok(valores)
 }
 
+/// Roda o próprio `bora` de novo com outros argumentos, trocando o processo atual
+/// (`exec`). Se não for root, passa pelo `sudo`, levando junto as variáveis que
+/// mudam o comportamento do `bora`. Só volta daqui se o `exec` falhar.
 fn reexecutar(args: &[&str]) -> R<i32> {
     let exe = std::env::current_exe()?;
     let mut cmd = if executor::e_root() {
@@ -500,6 +578,9 @@ fn reexecutar(args: &[&str]) -> R<i32> {
     )))
 }
 
+/// Última etapa do menu: valida o plano, mostra e pergunta o que fazer com ele
+/// (aplicar, simular, salvar ou voltar). Aplicar e simular salvam o plano e
+/// chamam `bora aplicar` com `sudo`, então a senha só é pedida nessa hora.
 fn menu_finalizar(mut cru: Value, c: &Catalogo, d: &Diag) -> R<()> {
     let v = match plano::validar(&cru, c, d) {
         Ok(v) => v,
@@ -553,6 +634,11 @@ fn menu_finalizar(mut cru: Value, c: &Catalogo, d: &Diag) -> R<()> {
     .map(|_| ())
 }
 
+/// O menu de rolês, que abre quando o `bora` roda sem comando.
+///
+/// As opções são os rolês do catálogo (os indisponíveis aparecem apagados, com
+/// o motivo) e mais cinco fixas no fim. Por isso o índice escolhido é comparado
+/// com `n_roles`: abaixo dele é um rolê, a partir dele é uma das fixas.
 fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
     let d = coletar_diag();
     println!(
@@ -685,6 +771,8 @@ fn cmd_menu(f: &fonte::Fonte) -> R<i32> {
 
 // Linha de comando -------------------------------------------------------
 
+/// Cria um subcomando com a ajuda em português (`-h`, `--help`).
+/// O `clap` traz a ajuda em inglês por padrão, então ela é desligada e refeita.
 fn sub(nome: &'static str, sobre: &'static str) -> Command {
     Command::new(nome).about(sobre).disable_help_flag(true).arg(
         Arg::new("help")
@@ -695,6 +783,8 @@ fn sub(nome: &'static str, sobre: &'static str) -> Command {
     )
 }
 
+/// Descreve toda a linha de comando do `bora`: subcomandos, opções e textos de ajuda.
+/// Para um comando novo, acrescente aqui e trate em `principal`.
 fn comando() -> Command {
     let modelo = "{about}\n\nUso: {usage}\n\n{all-args}{after-help}";
     Command::new("bora")
@@ -845,6 +935,7 @@ fn comando() -> Command {
         .subcommand(sub("versao", "mostra a versão"))
 }
 
+/// Traduz os erros do `clap` para mensagens curtas em português.
 fn traduzir_erro(e: &clap::Error) -> String {
     let contexto = |k| e.get(k).map(|v| v.to_string()).unwrap_or_default();
     use clap::error::ContextKind as C;
@@ -867,6 +958,8 @@ fn traduzir_erro(e: &clap::Error) -> String {
     }
 }
 
+/// Lê a linha de comando, abre o catálogo e chama o subcomando certo.
+/// Devolve o código de saída do processo.
 fn principal() -> R<i32> {
     let m = match comando().try_get_matches() {
         Ok(m) => m,
@@ -903,6 +996,8 @@ fn principal() -> R<i32> {
     }
 }
 
+/// Converte o resultado de `principal` em código de saída. Os erros que chegam
+/// aqui já foram explicados na tela, ou são mensagens que só faltava mostrar.
 fn main() {
     let codigo = match principal() {
         Ok(c) => c,

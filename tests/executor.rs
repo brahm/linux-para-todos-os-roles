@@ -1,4 +1,13 @@
 //! Testa o bora de ponta a ponta com um catálogo de mentira, sem precisar de root.
+//!
+//! Cada teste monta, numa pasta temporária, um catálogo com três receitas
+//! (`teste/um`, `teste/dois`, `teste/tres`) que só criam e apagam arquivos, e
+//! roda o binário de verdade (`CARGO_BIN_EXE_bora`) apontando para ele com
+//! `BORA_RAIZ`. As variáveis `BORA_DIR_ESTADO` e `BORA_DIR_LOG` tiram o estado de
+//! `/var`, e `BORA_OS_RELEASE` finge a distro. Nada fora da pasta temporária muda.
+//!
+//! Cada receita anota em `alvo/ordem` quando aplica e quando desfaz, e os
+//! testes conferem essa ordem.
 
 use std::fs;
 use std::io::Write;
@@ -6,6 +15,8 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output, Stdio};
 
+/// O `receita.yaml` das receitas de mentira; `{nome}` vira um, dois ou tres.
+/// O parâmetro `falhar` faz o `aplicar.sh` sair com erro, para testar falhas.
 const RECEITA_YAML: &str = r#"id: teste/{nome}
 nome: Receita {nome}
 descricao: Cria o arquivo {nome} na pasta de teste.
@@ -30,6 +41,8 @@ testes:
     resultado: ok
 "#;
 
+/// Os quatro scripts das receitas de mentira. O `aplicar.sh` que falha escreve
+/// um IP na saída, para conferir que ele some do `ultimo-erro.json`.
 const SCRIPTS: &[(&str, &str)] = &[
     (
         "verificar.sh",
@@ -71,6 +84,7 @@ rm -f -- "${BORA_ALVO:?}/{nome}"
     ),
 ];
 
+/// Um rolê com uma pergunta (`pasta`) que vira parâmetro das duas receitas.
 const ROLE: &str = r#"id: exemplo
 nome: Rolê de exemplo
 descricao: Aplica as receitas um e dois.
@@ -89,6 +103,8 @@ pronto_quando: Os dois arquivos existem.
 como_desfazer: Apaga os dois arquivos.
 "#;
 
+/// A pasta temporária de um teste: `catalogo/`, `alvo/` (onde as receitas
+/// escrevem), `estado/` e `log/`. É apagada quando o teste termina.
 struct Ambiente {
     base: PathBuf,
 }
@@ -99,11 +115,14 @@ impl Drop for Ambiente {
     }
 }
 
+/// A raiz do repositório, para copiar o `comum.sh` e os `os-release` de exemplo.
 fn raiz_do_projeto() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
 
 impl Ambiente {
+    /// Monta o catálogo de mentira. O `nome` e o PID entram no nome da pasta
+    /// para os testes, que rodam em paralelo, não pisarem um no outro.
     fn novo(nome: &str) -> Ambiente {
         let base = std::env::temp_dir().join(format!("bora-teste-{nome}-{}", std::process::id()));
         let _ = fs::remove_dir_all(&base);
@@ -148,6 +167,8 @@ impl Ambiente {
         self.base.join("estado")
     }
 
+    /// O `bora` com o ambiente de teste. `os_release` é um arquivo de
+    /// `testes/os-release`, para fingir a distro.
     fn comando(&self, args: &[&str], os_release: &str) -> Command {
         let mut c = Command::new(env!("CARGO_BIN_EXE_bora"));
         c.args(args)
@@ -164,6 +185,8 @@ impl Ambiente {
         c
     }
 
+    /// Roda o `bora` com `entrada` no teclado e confere o código de saída. Se
+    /// não bater, a mensagem do teste mostra a saída e os erros inteiros.
     fn rodar_com(&self, args: &[&str], entrada: &str, os_release: &str, esperado: i32) -> Output {
         let mut filho = self
             .comando(args, os_release)
@@ -189,14 +212,18 @@ impl Ambiente {
         saida
     }
 
+    /// Roda no Ubuntu 26.04 e espera sucesso.
     fn bora(&self, args: &[&str]) -> Output {
         self.rodar_com(args, "", "ubuntu-26.04", 0)
     }
 
+    /// Roda no Ubuntu 26.04 e espera o código dado.
     fn bora_falha(&self, args: &[&str], codigo: i32) -> Output {
         self.rodar_com(args, "", "ubuntu-26.04", codigo)
     }
 
+    /// Monta um plano de receitas avulsas com `bora plano`, apontando todas
+    /// para a pasta `alvo`. `falhar` escolhe uma receita para dar erro.
     fn plano(&self, receitas: &[&str], falhar: Option<&str>, nome: &str) -> String {
         let alvo = self.alvo().display().to_string();
         let lista = receitas.join(",");
@@ -220,12 +247,14 @@ impl Ambiente {
         self.base.join(nome).display().to_string()
     }
 
+    /// As linhas de `alvo/ordem`: o que foi aplicado e desfeito, na ordem.
     fn ordem(&self) -> Vec<String> {
         fs::read_to_string(self.alvo().join("ordem"))
             .map(|t| t.lines().map(str::to_string).collect())
             .unwrap_or_default()
     }
 
+    /// Os arquivos que existem em `alvo`, em ordem alfabética.
     fn arquivos(&self) -> Vec<String> {
         let mut v: Vec<String> = fs::read_dir(self.alvo())
             .unwrap()
@@ -237,22 +266,27 @@ impl Ambiente {
     }
 }
 
+/// A saída padrão de um comando, como texto.
 fn texto(o: &Output) -> String {
     String::from_utf8_lossy(&o.stdout).to_string()
 }
 
+/// A saída de erro de um comando, como texto.
 fn erros(o: &Output) -> String {
     String::from_utf8_lossy(&o.stderr).to_string()
 }
 
+/// Sem perguntas e sem snapshot: os testes não têm teclado nem Timeshift.
 const APLICAR: &[&str] = &["--sem-perguntar", "--sem-snapshot"];
 
+/// Aplica um plano com as opções de teste.
 fn aplicar(a: &Ambiente, plano: &str) -> Output {
     let mut args = vec!["aplicar", plano];
     args.extend_from_slice(APLICAR);
     a.bora(&args)
 }
 
+// O ciclo completo: aplica três receitas, aplica de novo (nada muda) e desfaz.
 #[test]
 fn aplicar_de_novo_e_desfazer() {
     let a = Ambiente::novo("ciclo");
@@ -287,6 +321,7 @@ fn aplicar_de_novo_e_desfazer() {
     assert!(texto(&a.bora(&["desfazer", "--sem-perguntar"])).contains("Não há nada para desfazer"));
 }
 
+// O que já existia antes do bora não é aplicado e, por isso, não é desfeito.
 #[test]
 fn pula_o_que_ja_estava_aplicado_e_nao_desfaz() {
     let a = Ambiente::novo("pula");
@@ -302,6 +337,8 @@ fn pula_o_que_ja_estava_aplicado_e_nao_desfaz() {
     assert_eq!(a.ordem(), ["aplicar um", "desfazer um"]);
 }
 
+// Quando a segunda receita falha: a terceira nem roda, o erro vai limpo para
+// o `bora ajuda`, e o desfazer volta a segunda e a primeira, nessa ordem.
 #[test]
 fn falha_no_meio_para_e_desfaz_o_que_mudou() {
     let a = Ambiente::novo("falha");
@@ -348,6 +385,8 @@ fn falha_no_meio_para_e_desfaz_o_que_mudou() {
     assert_eq!(a.arquivos(), ["ordem"]);
 }
 
+// Duas execuções: desfazer a mais antiga primeiro é recusado. O `sleep` de um
+// segundo garante ids diferentes, porque o id vem da hora.
 #[test]
 fn desfaz_da_mais_nova_para_a_mais_antiga() {
     let a = Ambiente::novo("ordem");
@@ -369,6 +408,7 @@ fn desfaz_da_mais_nova_para_a_mais_antiga() {
     assert!(a.alvo().join("um").exists());
 }
 
+// Estragar o `desfazer.sh` do catálogo não atrapalha: vale a cópia da execução.
 #[test]
 fn desfazer_usa_a_copia_da_receita() {
     let a = Ambiente::novo("copia");
@@ -384,6 +424,7 @@ fn desfazer_usa_a_copia_da_receita() {
     assert!(!a.alvo().join("um").exists());
 }
 
+// `bora plano` com rolê: a resposta vira parâmetro; sem resposta, erro.
 #[test]
 fn role_com_perguntas() {
     let a = Ambiente::novo("role");
@@ -395,6 +436,7 @@ fn role_com_perguntas() {
     assert!(erros(&r).contains("falta a resposta"));
 }
 
+/// Rolê com `quando:`: a receita dois só entra no perfil completo.
 const ROLE_PERFIS: &str = r#"id: perfis
 nome: Rolê com perfis
 descricao: A receita dois só entra no perfil completo.
@@ -421,6 +463,7 @@ pronto_quando: Os arquivos existem.
 como_desfazer: Apaga os arquivos.
 "#;
 
+// O perfil decide quais receitas entram, tanto no `bora plano` quanto no menu.
 #[test]
 fn role_com_perfis() {
     let a = Ambiente::novo("perfis");
@@ -473,6 +516,7 @@ fn role_com_perfis() {
     );
 }
 
+// `--simular` conta o que mudaria e não cria nenhum arquivo.
 #[test]
 fn simular_nao_muda_nada() {
     let a = Ambiente::novo("simular");
@@ -486,6 +530,7 @@ fn simular_nao_muda_nada() {
     assert!(a.arquivos().is_empty());
 }
 
+// O menu, digitando as respostas pela entrada padrão.
 #[test]
 fn menu_com_receitas_avulsas() {
     let a = Ambiente::novo("menu-avulsas");
@@ -495,6 +540,7 @@ fn menu_com_receitas_avulsas() {
     assert!(texto(&r).contains("Plano salvo em"), "{}", texto(&r));
 }
 
+// No menu: rolê 1, a pasta e 3 (salvar para depois). O plano salvo tem o rolê.
 #[test]
 fn menu_com_role() {
     let a = Ambiente::novo("menu-role");
@@ -515,6 +561,7 @@ fn menu_com_role() {
     );
 }
 
+// Plano com receita fora do catálogo: `bora validar` recusa com código 2.
 #[test]
 fn validar_recusa_plano_ruim() {
     let a = Ambiente::novo("ruim");
@@ -528,6 +575,7 @@ fn validar_recusa_plano_ruim() {
     assert!(erros(&r).contains("não existe no catálogo"));
 }
 
+// No MX Linux (sem systemd por padrão), o bora recusa e diz por quê.
 #[test]
 fn distro_fora_do_escopo() {
     let a = Ambiente::novo("mx");
@@ -547,6 +595,7 @@ fn catalogo_embutido() {
     assert!(String::from_utf8_lossy(&saida.stdout).contains("Catálogo em ordem"));
 }
 
+// A ajuda e os erros de linha de comando saem em português.
 #[test]
 fn ajuda_e_erros_em_portugues() {
     let a = Ambiente::novo("cli");

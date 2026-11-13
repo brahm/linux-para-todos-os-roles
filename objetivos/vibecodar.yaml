@@ -1,3 +1,5 @@
+# Rolê vibecodar: as perguntas que o menu faz e as receitas que entram no plano,
+# na ordem em que são aplicadas. O formato está em objetivos/README.md.
 id: vibecodar
 nome: Vibecodar
 descricao: Programar conversando com agentes de IA, com as chaves guardadas, cada commit conferido e os agentes numa caixa de areia.

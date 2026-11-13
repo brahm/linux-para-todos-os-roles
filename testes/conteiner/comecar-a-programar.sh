@@ -7,6 +7,8 @@ set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
 PERFIL="${PERFIL:-python}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
@@ -23,6 +25,7 @@ printf '[core]\n\teditor = nano\n' >/home/aluna/.gitconfig
 chown aluna:aluna /home/aluna/.gitconfig
 cp /home/aluna/.gitconfig /tmp/gitconfig-antes
 cp /etc/subuid /tmp/subuid-antes 2>/dev/null || : >/tmp/subuid-antes
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "O rolê monta o plano do perfil $PERFIL"
@@ -52,6 +55,7 @@ etapa "Aplicar"
 SUDO_USER=aluna bora aplicar /tmp/plano.yaml --sem-perguntar --sem-snapshot
 
 etapa "Conferir o que mudou"
+# Roda um comando como a aluna, com o PATH de uma sessão comum.
 como() { runuser -u aluna -- env HOME=/home/aluna PATH=/home/aluna/.local/bin:/usr/local/bin:/usr/bin:/bin "$@"; }
 [ "$(como git config --global user.name)" = "Ana Aluna" ] || falhou "o nome do Git não veio da conta"
 [ "$(como git config --global user.email)" = ana@exemplo.com.br ] || falhou "o e-mail do Git não ficou"
@@ -84,6 +88,8 @@ etapa "Desfazer"
 bora desfazer --sem-perguntar
 
 etapa "Conferir que voltou"
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;

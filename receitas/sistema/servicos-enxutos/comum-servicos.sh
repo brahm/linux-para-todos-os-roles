@@ -1,10 +1,13 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita sistema/servicos-enxutos.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 #
 # Cada serviço só é desligado quando o computador não tem o que ele serve.
 # A receita usa "systemctl disable", e não "mask": o serviço continua
 # instalado, e volta com um "systemctl enable --now" se um dia fizer falta.
 
+# A máquina não tem nenhum adaptador Bluetooth?
 sem_bluetooth() { [ -z "$(ls -A /sys/class/bluetooth 2>/dev/null)" ]; }
 
 # Modem de celular (3G, 4G, 5G): aparece como interface ww* ou como /dev/cdc-wdm*.

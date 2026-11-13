@@ -18,6 +18,13 @@ const RESERVA_DO_SISTEMA_GB: f64 = 3.0;
 /// Espaço livre no disco além do modelo.
 const FOLGA_NO_DISCO_GB: f64 = 5.0;
 
+/// Um modelo da lista. `ollama` é o nome para o `ollama pull`; `tamanho_gb`, o
+/// tamanho do download; `ativos_b`, quantos bilhões de parâmetros ele usa a cada
+/// palavra (nos modelos MoE é bem menos que o total); `agente` diz se ele dá conta
+/// de usar ferramentas, como os agentes de programação pedem.
+///
+/// O `deny_unknown_fields` faz um campo com erro de digitação virar erro, em
+/// vez de ser ignorado em silêncio.
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Modelo {
@@ -29,6 +36,8 @@ pub struct Modelo {
     pub nota: String,
 }
 
+/// O arquivo inteiro: a data da última conferência e os modelos, do menos
+/// capaz para o mais capaz. A ordem importa: `sugerir` lê de trás para a frente.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Lista {
@@ -55,19 +64,24 @@ pub enum Lugar {
     CpuDevagar,
     /// Cabe na RAM, mas lento demais para um agente.
     CpuLento,
+    /// Não cabe nem na placa nem na RAM.
     NaoCabe,
+    /// Não sobra disco para baixar e ainda deixar folga.
     FaltaDisco,
 }
 
 impl Lugar {
+    /// Rápido o bastante para um agente usar sem sofrimento.
     pub fn roda_bem(self) -> bool {
         matches!(self, Lugar::Placa | Lugar::CpuBom)
     }
 
+    /// Dá para usar, mesmo que devagar.
     pub fn usavel(self) -> bool {
         matches!(self, Lugar::Placa | Lugar::CpuBom | Lugar::CpuDevagar)
     }
 
+    /// A frase que aparece na tabela do `bora modelos`.
     pub fn descricao(self) -> &'static str {
         match self {
             Lugar::Placa => "cabe na placa de vídeo: rápido",
@@ -80,10 +94,12 @@ impl Lugar {
     }
 }
 
+/// Onde fica a lista de modelos dentro do catálogo.
 pub fn caminho(raiz: &Path) -> PathBuf {
     raiz.join("receitas/ia/ollama/modelos.yaml")
 }
 
+/// Lê e confere a lista de modelos. O erro já vem com o caminho do arquivo.
 pub fn carregar(raiz: &Path) -> Result<Lista, String> {
     let p = caminho(raiz);
     let texto = fs::read_to_string(&p)
@@ -94,6 +110,8 @@ pub fn carregar(raiz: &Path) -> Result<Lista, String> {
     Ok(lista)
 }
 
+// Nome no formato do Ollama: `modelo`, `usuario/modelo` e `:etiqueta` opcional.
+// Sem espaço, `;` ou barra extra, para o nome nunca virar comando no shell.
 static NOME_OLLAMA: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
     regex::Regex::new(r"^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)?(:[A-Za-z0-9._-]+)?$").unwrap()
 });
@@ -103,6 +121,8 @@ pub fn nome_valido(nome: &str) -> bool {
     nome.len() <= 120 && NOME_OLLAMA.is_match(nome)
 }
 
+/// Confere a lista: não vazia, nomes válidos e sem repetição, números positivos
+/// e nome e nota preenchidos. Roda no `bora conferir` e toda vez que a lista é lida.
 fn conferir(l: &Lista) -> Result<(), String> {
     if l.modelos.is_empty() {
         return Err("a lista de modelos está vazia".into());
@@ -137,6 +157,7 @@ pub struct Maquina {
     pub disco_livre_gb: Option<f64>,
 }
 
+// Pega do diagnóstico só o que entra na conta.
 impl Maquina {
     pub fn de(d: &Diag) -> Self {
         Maquina {
@@ -147,6 +168,13 @@ impl Maquina {
     }
 }
 
+/// Decide onde o modelo roda nesta máquina. A ordem dos testes importa:
+///
+/// 1. Sem disco para baixar, nem adianta seguir.
+/// 2. Se cabe inteiro na placa de vídeo, roda nela.
+/// 3. Senão, precisa caber na RAM, tirando a reserva do sistema.
+/// 4. Na RAM, a velocidade depende dos parâmetros ativos: até 6 bilhões anda bem,
+///    até 10 é devagar, e acima disso fica lento demais para um agente.
 pub fn avaliar(m: &Modelo, maq: &Maquina) -> Lugar {
     let precisa = m.memoria_gb();
     if let Some(livre) = maq.disco_livre_gb
@@ -170,6 +198,8 @@ pub fn avaliar(m: &Modelo, maq: &Maquina) -> Lugar {
     }
 }
 
+/// O modelo que o `bora` sugere, onde ele roda e a frase que explica a escolha.
+/// Sem modelo, a frase diz por quê.
 #[derive(Debug, Clone, Serialize)]
 pub struct Sugestao {
     pub modelo: Option<Modelo>,
@@ -231,6 +261,8 @@ pub fn sugerir(l: &Lista, maq: &Maquina) -> Sugestao {
     }
 }
 
+/// Número para mostrar em português: sem casas quando é inteiro e com vírgula
+/// quando não é ("4", "2,5").
 pub fn num(x: f64) -> String {
     if x.fract() == 0.0 {
         format!("{x:.0}")
@@ -301,10 +333,13 @@ pub fn formatar(l: &Lista, maq: &Maquina, video: &[String]) -> String {
 mod testes {
     use super::*;
 
+    // Os testes usam a lista de verdade do repositório. Se alguém mudar a lista,
+    // `sugestoes_por_maquina` avisa se as sugestões mudaram junto.
     fn lista() -> Lista {
         carregar(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("a lista de modelos do repositório")
     }
 
+    /// Uma máquina de mentira com 200 GB livres, para o disco não atrapalhar.
     fn maquina(ram: f64, vram: Option<f64>) -> Maquina {
         Maquina {
             ram_gb: Some(ram),
@@ -313,6 +348,7 @@ mod testes {
         }
     }
 
+    /// Atalho: o nome do modelo sugerido para essa RAM e essa placa.
     fn sugerido(ram: f64, vram: Option<f64>) -> Option<String> {
         sugerir(&lista(), &maquina(ram, vram))
             .modelo
@@ -351,6 +387,7 @@ mod testes {
         assert_eq!(sugerido(128.0, None).as_deref(), Some("gpt-oss:120b"));
     }
 
+    // Com o disco quase cheio, nenhum modelo, e a frase explica que é o disco.
     #[test]
     fn disco_cheio() {
         let maq = Maquina {
@@ -363,6 +400,7 @@ mod testes {
         assert!(s.motivo.contains("disco"));
     }
 
+    // Nomes que o `ollama pull` aceita, e os que poderiam virar comando.
     #[test]
     fn nomes() {
         assert!(nome_valido("qwen3:4b"));
@@ -374,6 +412,7 @@ mod testes {
         assert!(!nome_valido(""));
     }
 
+    // A tabela traz a sugestão, o comando e o aviso de placa NVIDIA sem driver.
     #[test]
     fn tabela() {
         let t = formatar(&lista(), &maquina(16.0, None), &["NVIDIA".into()]);

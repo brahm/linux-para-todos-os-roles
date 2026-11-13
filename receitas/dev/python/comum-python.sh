@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita dev/python.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # python3-venv: ambientes virtuais; python3-pip: o pip dentro deles;
 # python3-dev: os cabeçalhos para compilar pacotes com partes em C;

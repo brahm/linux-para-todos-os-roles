@@ -277,3 +277,11 @@ Brahm pediu que toda a documentação fosse reescrita com três regras de tom e 
 |---|---|
 | Para quem só quer configurar algo automaticamente, o site recomenda o Linux Toys como a ferramenta mais indicada. Decidido por Brahm | É o caso de uso do Linux Toys: instalar um programa, um driver ou um ajuste em um clique, em muitas distros. O `bora` serve a quem quer levar o computador até um objetivo, entender o que mudou e poder voltar atrás |
 | O README traz só o projeto, o status, como instalar, compilar e contribuir. A comparação com o Linux Toys sai do README e fica no site. Decidido por Brahm | O README é a porta de quem chega ao código. Comparações e recomendações mudam com o tempo e cabem melhor no site, junto de quem ainda está escolhendo |
+
+## 13 de novembro de 2026: código comentado e o desenho da arquitetura
+
+| Decisão | Por quê |
+|---|---|
+| Todo código do projeto sai comentado, com as mesmas regras de texto do site e do README. Decidido por Brahm | Quem baixa o projeto do GitHub para contribuir precisa entender o código sem perguntar. As regras estão no [guia de estilo](estilo.md#comentários-no-código) |
+| A arquitetura fica num desenho SVG em [`arquitetura.md`](arquitetura.md), e o README só tem o link. O desenho não vai para o site. Decidido por Brahm | O README fica curto, e o desenho é para quem vai mexer no código, não para quem está escolhendo um rolê |
+| Toda evolução do projeto atualiza o desenho no mesmo pull request. Decidido por Brahm | Um mapa desatualizado engana mais do que a falta de mapa |

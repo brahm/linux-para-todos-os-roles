@@ -1,5 +1,7 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita servicos/samba.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # A configuração da receita fica num arquivo só dela, que o smb.conf da
 # distro inclui na última linha. Assim, um Samba que já existia continua com
@@ -12,6 +14,8 @@ SENHAS=/var/lib/bora/pasta-compartilhada/senhas
 # Marca nas contas que a receita cria, só para entrar na pasta.
 MARCA="Pasta compartilhada da casa (bora)"
 
+# Os pacotes: o Samba, o cliente (para o testar) e, se a pasta aparece na
+# rede do Windows, o wsdd2.
 pacotes_da_receita() {
     printf '%s\n' samba smbclient
     if [ "${BORA_APARECER_NA_REDE:-sim}" = sim ]; then printf '%s\n' wsdd2; fi
@@ -43,6 +47,7 @@ pessoas_da_pasta() {
     done
 }
 
+# Para com erro se a lista de pessoas está vazia ou tem nome inválido.
 exigir_pessoas() {
     local lista
     lista=$(pessoas_da_pasta) || exit 1
@@ -86,6 +91,7 @@ if any(rede.subnet_of(r) for r in locais):
 PY
 }
 
+# A rede local, ou para com erro se não der para descobrir.
 exigir_rede() {
     local rede
     rede=$(descobrir_rede_local)
@@ -129,6 +135,7 @@ conteudo_config() {
 CONF
 }
 
+# O smb.conf já inclui o arquivo do bora?
 include_presente() { [ -f "$SMB_CONF" ] && grep -qxF "$INCLUDE" "$SMB_CONF"; }
 
 # O dono que a pasta tem (ou vai ter): numa pasta que já existe, quem já é dono.
@@ -136,7 +143,9 @@ dono_atual() { stat -c %U "$1" 2>/dev/null; }
 
 # Contas.
 conta_existe() { getent passwd "$1" >/dev/null; }
+# A conta foi criada por esta receita? (A marca fica no campo de comentário.)
 conta_da_receita() { [ "$(getent passwd "$1" | cut -d: -f5)" = "$MARCA" ]; }
+# É a conta de uma pessoa de verdade, com UID comum e shell de login?
 conta_de_pessoa() {
     local linha uid shell
     linha=$(getent passwd "$1") || return 1
@@ -144,6 +153,7 @@ conta_de_pessoa() {
     shell=$(cut -d: -f7 <<<"$linha")
     [ "$uid" -ge 1000 ] && [ "$uid" -lt 60000 ] && [[ "$shell" != *nologin ]] && [[ "$shell" != */false ]]
 }
+# A conta já tem senha no Samba?
 no_samba() { grep -qxF "$1" <<<"$(pdbedit -L 2>/dev/null | cut -d: -f1)"; }
 
 # Firewall.
@@ -162,6 +172,7 @@ regras_ufw() {
     fi
 }
 
+# A regra já está no ufw, igualzinha?
 regra_existe() {
     local regras
     regras=$(LC_ALL=C ufw show added 2>/dev/null)
@@ -177,6 +188,8 @@ a = "abcdefghjkmnpqrstuvwxyz23456789"
 print("-".join("".join(secrets.choice(a) for _ in range(4)) for _ in range(3)))'
 }
 
+# A senha gerada para uma pessoa, guardada no arquivo só do root.
 senha_de() { awk -v n="$1" '$1 == n {print $2; exit}' "$SENHAS" 2>/dev/null; }
 
+# O primeiro IPv4 da máquina na rede, para mostrar o endereço da pasta.
 endereco_ip() { ip -4 -o addr show scope global 2>/dev/null | awk '{sub(/\/.*/, "", $4); print $4; exit}'; }

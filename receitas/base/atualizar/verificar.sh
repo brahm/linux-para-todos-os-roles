@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Já está aplicada? 0 = sim, 1 = precisa aplicar.
 set -euo pipefail
+# verificar.sh da receita base/atualizar (Sistema atualizado).
+# Confere se a receita já está aplicada, sem mudar nada no sistema.
+# Sai com 0 se já está, e com 1 se precisa aplicar (a mensagem diz o que falta).
+# O bora roda este script antes de aplicar e no `bora aplicar --simular`.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-atualizar.sh

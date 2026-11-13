@@ -24,6 +24,7 @@ def etapas(lista):
     return '      <ol class="etapas">\n' + "\n".join(itens) + "\n      </ol>"
 
 
+# Os dois cartões lado a lado: o que a receita faz e o que ela não faz.
 def faz_nao(faz, nao, titulo_faz="O que faz", titulo_nao="O que não faz"):
     li = lambda xs: "\n".join(f"            <li>{x}</li>" for x in xs)
     return f'''      <div class="faz-nao">
@@ -42,6 +43,7 @@ def faz_nao(faz, nao, titulo_faz="O que faz", titulo_nao="O que não faz"):
       </div>'''
 
 
+# Os cartões de perguntas e respostas da seção "Por que".
 def porques(lista):
     return '      <div class="porques">\n' + "\n".join(
         f'''        <article class="cartao porque revelar"><h3>{q}</h3><p>{r}</p></article>''' for q, r in lista) + "\n      </div>"
@@ -64,6 +66,7 @@ def mudancas(lista):
     return f'      <ul class="caixa revelar">\n{itens}\n      </ul>'
 
 
+# A tabela de parâmetros da receita, lida do receita.yaml.
 def parametros(rid, r):
     if not r.get("parametros"):
         return f'''      <p class="nota revelar">Esta receita não tem parâmetros: ela faz sempre a mesma coisa, em qualquer máquina. No menu, o <code>bora</code> não pergunta nada; num script ou num agente, basta <code>bora plano --receitas {rid}</code>.</p>'''
@@ -95,6 +98,7 @@ def parametros(rid, r):
       <p class="nota">No menu, o <code>bora</code> pergunta o que precisa. Num script ou num agente, passe os parâmetros na linha de comando:<br><code>bora plano --receitas {rid} -p {rid}.{exemplo_nome}={valor}</code></p>'''
 
 
+# Os comandos para a pessoa conferir sozinha, cada um com a explicação.
 def comandos(lista):
     return '      <div class="comandos-conferir">\n' + "\n".join(
         f'        <div class="cartao comando revelar"><code>{c}</code><span>{d}</span></div>' for c, d in lista) + "\n      </div>"
@@ -144,18 +148,21 @@ def em_vm(r, familia):
                for t in r.get("testes") or [])
 
 
+# O texto do nível de teste numa família ("Testada em VM" quando passou numa VM).
 def nivel_texto(r, familia, nivel):
     if nivel == "testada" and em_vm(r, familia):
         return "Testada em VM"
     return NIVEL_TEXTO.get(nivel)
 
 
+# A etiqueta do topo: onde a receita foi testada.
 def ficha_testada(r):
     if em_vm(r, "ubuntu") and em_vm(r, "debian"):
         return "Testada em máquina virtual no Ubuntu e no Debian"
     return "Testada em contêiner no Ubuntu e no Debian"
 
 
+# A seção "Onde foi testada": um cartão por família e a lista de testes do receita.yaml.
 def onde_testada(r):
     fam = r.get("familias") or {}
     cartoes = "\n".join(
@@ -181,12 +188,14 @@ def onde_testada(r):
       </div>{capturas(r.get('id', ''))}'''
 
 
+# A lista de fontes, com link.
 def fontes(lista):
     return '      <ul class="caixa revelar">\n' + "\n".join(
         f'        <li><a class="linha" href="{u}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span class="txt"><strong>{t}</strong><span>{d}</span></span><svg class="ir" aria-hidden="true"><use href="#seta"/></svg></a></li>'
         for t, d, u in lista) + "\n      </ul>"
 
 
+# Os cartões dos rolês que usam esta receita.
 def roles_que_usam(rid):
     usos = [r for r in ROLES if any(x == rid for x, _ in r["receitas"])]
     itens = "\n".join(
@@ -199,6 +208,7 @@ def roles_que_usam(rid):
     return f'      <div class="grade">\n{itens}\n      </div>'
 
 
+# O topo da página: nome, ícone, risco, resumo e a ilustração animada.
 def abertura(rid, r, ilustracao, legenda):
     nome, icone, cor, _ = RECEITAS[rid]
     risco = r.get("risco", "baixo")
@@ -232,6 +242,7 @@ def abertura(rid, r, ilustracao, legenda):
     </div>'''
 
 
+# Uma seção da página, com âncora (id_) e cabeçalho.
 def secao(id_, sobre, titulo, texto, conteudo):
     return f'''    <section id="{id_}" class="largura">
 {cabeca(sobre, titulo, texto)}
@@ -265,6 +276,8 @@ ILUSTRA_ATUALIZAR = '''          <svg class="ilustra" viewBox="0 0 480 340" role
           </svg>'''
 
 
+# A página da receita base/atualizar no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_atualizar():
     rid = "base/atualizar"
     r = ler_receita(rid)
@@ -361,6 +374,7 @@ def pagina_atualizar():
 
 # ---------------------------------------------------------------- sistema/snapshot
 
+# Uma bolinha de snapshot na ilustração da linha do tempo.
 def _foto(x, y, r, i, vence, rotulo, cor="azul"):
     return f'''<g class="foto{' vence' if vence else ''}" style="--i:{i}">
               <circle cx="{x}" cy="{y}" r="{r}" class="{cor}"/>
@@ -390,6 +404,8 @@ ILUSTRA_SNAPSHOT = '''          <svg class="ilustra" viewBox="0 0 480 340" role=
           </svg>'''
 
 
+# A página da receita sistema/snapshot no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_snapshot():
     rid = "sistema/snapshot"
     r = ler_receita(rid)
@@ -484,6 +500,7 @@ def pagina_snapshot():
 
 # ---------------------------------------------------------------- seguranca/firewall
 
+# Um pacote de rede andando pelo caminho SVG da ilustração do firewall.
 def _pacote(caminho, cor, atraso, barrado=False, quando=None):
     q = f' data-quando="{quando}"' if quando else ""
     return f'''<g class="pacote-rede{' barrado' if barrado else ''}"{q} style="--d:{atraso}s"><circle r="6.5" class="{cor}" style="offset-path:path('{caminho}')"/></g>'''
@@ -519,6 +536,8 @@ ILUSTRA_FIREWALL = '''          <div class="alternar" role="group" aria-label="P
           </div>'''
 
 
+# A página da receita seguranca/firewall no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_firewall():
     rid = "seguranca/firewall"
     r = ler_receita(rid)
@@ -633,6 +652,7 @@ def pagina_firewall():
 
 # ---------------------------------------------------------------- desktop/codecs
 
+# Uma linha da ilustração de troca de pacotes, com a barra de progresso.
 def _linha_troca(i, nome, antes, depois, y0=44, passo=46):
     y = y0 + i * passo
     return f'''<g class="pacote" style="--i:{i}">
@@ -660,6 +680,8 @@ ILUSTRA_CODECS = '''          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>'''
 
 
+# A página da receita desktop/codecs no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_codecs():
     rid = "desktop/codecs"
     r = ler_receita(rid)
@@ -747,6 +769,8 @@ ILUSTRA_FLATPAK = '''          <svg class="ilustra" viewBox="0 0 480 340" role="
           </svg>'''
 
 
+# A página da receita desktop/flatpak no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_flatpak():
     rid = "desktop/flatpak"
     r = ler_receita(rid)
@@ -843,6 +867,8 @@ ILUSTRA_BACKUP = '''          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>'''
 
 
+# A página da receita sistema/backup-pessoal no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_backup():
     rid = "sistema/backup-pessoal"
     r = ler_receita(rid)
@@ -953,6 +979,8 @@ ILUSTRA_ZRAM = """          <svg class="ilustra" viewBox="0 0 480 340" role="img
           </svg>"""
 
 
+# A página da receita sistema/zram no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_zram():
     rid = "sistema/zram"
     r = ler_receita(rid)
@@ -1033,6 +1061,7 @@ def pagina_zram():
 
 # ---------------------------------------------------------------- desktop/ambiente-leve
 
+# Uma janela desenhada em SVG, para comparar o consumo de memória dos ambientes.
 def _janela_svg(x, nome, memoria, cor, barra_y):
     return f"""<g>
               <rect x="{x}" y="44" width="210" height="150" rx="12" class="caixa-svg"/>
@@ -1060,6 +1089,8 @@ ILUSTRA_AMBIENTE = """          <svg class="ilustra" viewBox="0 0 480 340" role=
           </svg>"""
 
 
+# A página da receita desktop/ambiente-leve no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_ambiente():
     rid = "desktop/ambiente-leve"
     r = ler_receita(rid)
@@ -1149,6 +1180,8 @@ ILUSTRA_NAVEGADOR = """          <svg class="ilustra" viewBox="0 0 480 340" role
           </svg>"""
 
 
+# A página da receita desktop/navegador-leve no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_navegador():
     rid = "desktop/navegador-leve"
     r = ler_receita(rid)
@@ -1236,6 +1269,8 @@ ILUSTRA_SERVICOS = """          <svg class="ilustra" viewBox="0 0 480 340" role=
           </svg>"""
 
 
+# A página da receita sistema/servicos-enxutos no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_servicos():
     rid = "sistema/servicos-enxutos"
     r = ler_receita(rid)
@@ -1332,6 +1367,7 @@ def _saida(titulo, linhas, final):
     return out
 
 
+# A seção "No terminal", com a janela de uma aplicação de verdade.
 def _no_terminal(texto, linhas, alt):
     return f'''    <section class="largura" aria-label="Uma aplicação de verdade">
 {cabeca("No terminal", "Uma aplicação de verdade", texto)}
@@ -1341,6 +1377,9 @@ def _no_terminal(texto, linhas, alt):
     </section>'''
 
 
+# Monta a página de uma receita no formato padrão: abertura, resumo, passo a
+# passo, terminal, porquês, o que muda, como conferir, onde foi testada e fontes.
+# As receitas mais novas usam só esta função.
 def _pagina(rid, ilustra, legenda, faz, nao, passos, terminal, porq, muda, conferir_, fontes_):
     r = ler_receita(rid)
     corpo = [abertura(rid, r, ilustra, legenda)]
@@ -1364,6 +1403,7 @@ def _pagina(rid, ilustra, legenda, faz, nao, passos, terminal, porq, muda, confe
     return "\n\n".join(corpo)
 
 
+# Uma bolinha de commit na ilustração do etckeeper.
 def _commit(x, y, i, texto, cor="laranja"):
     return f'''<g class="pacote" style="--i:{i}">
               <circle cx="{x}" cy="{y}" r="13" class="{cor}"/>
@@ -1389,6 +1429,8 @@ ILUSTRA_GIT = """          <svg class="ilustra" viewBox="0 0 480 340" role="img"
           </svg>"""
 
 
+# A página da receita dev/git no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_git():
     return _pagina(
         "dev/git", ILUSTRA_GIT, "Ilustração. O nome e o e-mail vão em cada commit; a chave é o seu crachá para o GitHub e o GitLab.",
@@ -1457,6 +1499,8 @@ ILUSTRA_COMPILACAO = """          <svg class="ilustra" viewBox="0 0 480 340" rol
           </svg>"""
 
 
+# A página da receita dev/compilacao no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_compilacao():
     return _pagina(
         "dev/compilacao", ILUSTRA_COMPILACAO, "Ilustração. A maioria dos pacotes vem pronta; os que não vêm são compilados na hora.",
@@ -1512,6 +1556,8 @@ ILUSTRA_PYTHON = """          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>"""
 
 
+# A página da receita dev/python no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_python():
     return _pagina(
         "dev/python", ILUSTRA_PYTHON, "Ilustração. Cada projeto tem o seu ambiente, e as versões das bibliotecas não brigam entre si.",
@@ -1584,6 +1630,8 @@ ILUSTRA_NODE = """          <svg class="ilustra" viewBox="0 0 480 340" role="img
           </svg>"""
 
 
+# A página da receita dev/node no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_node():
     return _pagina(
         "dev/node", ILUSTRA_NODE, "Ilustração. A versão e as somas ficam gravadas na receita, e sobem junto com o bora.",
@@ -1652,6 +1700,8 @@ ILUSTRA_PODMAN = """          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>"""
 
 
+# A página da receita containers/podman no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_podman():
     return _pagina(
         "containers/podman", ILUSTRA_PODMAN, "Ilustração. Os comandos são os mesmos do Docker; muda quem roda os contêineres.",
@@ -1718,6 +1768,8 @@ ILUSTRA_ETCKEEPER = """          <svg class="ilustra" viewBox="0 0 480 340" role
           </svg>"""
 
 
+# A página da receita sistema/etckeeper no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_etckeeper():
     return _pagina(
         "sistema/etckeeper", ILUSTRA_ETCKEEPER, "Ilustração. Cada instalação e cada dia viram um registro no histórico do /etc.",
@@ -1779,6 +1831,8 @@ ILUSTRA_SEM_SNAP = """          <svg class="ilustra" viewBox="0 0 480 340" role=
           </svg>"""
 
 
+# A página da receita desktop/sem-snap no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_sem_snap():
     return _pagina(
         "desktop/sem-snap", ILUSTRA_SEM_SNAP, "Ilustração. Os mesmos programas, de outra fonte, com os seus dados.",
@@ -1840,6 +1894,8 @@ ILUSTRA_SSH = """          <svg class="ilustra" viewBox="0 0 480 340" role="img"
           </svg>"""
 
 
+# A página da receita seguranca/ssh no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_ssh():
     return _pagina(
         "seguranca/ssh", ILUSTRA_SSH, "Ilustração. A máquina da casa atende pelo terminal de outro computador, só pela rede local.",
@@ -1898,6 +1954,8 @@ ILUSTRA_FERRAMENTAS = """          <svg class="ilustra" viewBox="0 0 480 340" ro
           </svg>"""
 
 
+# A página da receita dev/ferramentas no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_ferramentas():
     return _pagina(
         "dev/ferramentas", ILUSTRA_FERRAMENTAS, "Ilustração. Sem essas ferramentas, o agente gasta tempo e tokens procurando outro caminho.",
@@ -1956,6 +2014,8 @@ ILUSTRA_SEGREDOS = """          <svg class="ilustra" viewBox="0 0 480 340" role=
           </svg>"""
 
 
+# A página da receita seguranca/segredos no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_segredos():
     return _pagina(
         "seguranca/segredos", ILUSTRA_SEGREDOS, "Ilustração. Duas barreiras: o Git nem oferece o .env, e o gitleaks confere o resto.",
@@ -2013,6 +2073,8 @@ ILUSTRA_CHAVES = """          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>"""
 
 
+# A página da receita ia/chaves-de-api no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_chaves():
     return _pagina(
         "ia/chaves-de-api", ILUSTRA_CHAVES, "Ilustração. A chave fica num lugar só, longe dos projetos.",
@@ -2063,6 +2125,8 @@ ILUSTRA_AGENTES = """          <svg class="ilustra" viewBox="0 0 480 340" role="
           </svg>"""
 
 
+# A página da receita ia/agentes no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_agentes():
     return _pagina(
         "ia/agentes", ILUSTRA_AGENTES, "Ilustração. Cada agente funciona com um tipo de conta; o rolê não depende de nenhum fabricante.",
@@ -2126,6 +2190,8 @@ ILUSTRA_CAIXA = """          <svg class="ilustra" viewBox="0 0 480 340" role="im
           </svg>"""
 
 
+# A página da receita ia/caixa-de-areia no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_caixa():
     return _pagina(
         "ia/caixa-de-areia", ILUSTRA_CAIXA, "Ilustração. Um comando errado do agente estraga, no máximo, a pasta do projeto, que está no Git.",
@@ -2177,6 +2243,8 @@ ILUSTRA_EDITOR = """          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>"""
 
 
+# A página da receita dev/editor no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_editor():
     return _pagina(
         "dev/editor", ILUSTRA_EDITOR, "Ilustração. Dá para vibecodar só no terminal; o editor ajuda a ler o que o agente escreveu.",
@@ -2235,6 +2303,8 @@ ILUSTRA_OLLAMA = """          <svg class="ilustra" viewBox="0 0 480 340" role="i
           </svg>"""
 
 
+# A página da receita ia/ollama no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_ollama():
     return _pagina(
         "ia/ollama", ILUSTRA_OLLAMA, "Ilustração. A sugestão é o modelo mais capaz que roda bem nesta máquina e dá conta de ser agente.",
@@ -2294,6 +2364,8 @@ ILUSTRA_LM_STUDIO = """          <svg class="ilustra" viewBox="0 0 480 340" role
           </svg>"""
 
 
+# A página da receita ia/lm-studio no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_lm_studio():
     return _pagina(
         "ia/lm-studio", ILUSTRA_LM_STUDIO, "Ilustração. O bora diz qual modelo cabe; você procura o nome na aba Discover e baixa.",
@@ -2365,6 +2437,8 @@ ILUSTRA_SAMBA = """          <svg class="ilustra" viewBox="0 0 480 340" role="im
           </svg>"""
 
 
+# A página da receita servicos/samba no catálogo do site. O texto da página mora aqui.
+# O gerar.py chama esta função pelo dicionário PAGINAS.
 def pagina_samba():
     return _pagina(
         "servicos/samba", ILUSTRA_SAMBA, "Ilustração. Cada pessoa abre a pasta pela rede de casa com o próprio nome e uma senha que só serve para a pasta.",

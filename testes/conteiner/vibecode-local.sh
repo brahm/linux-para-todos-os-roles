@@ -12,12 +12,15 @@ cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
 # Um modelo pequeno, que responde rápido sem placa de vídeo.
 MODELO="${MODELO:-qwen3:0.6b}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {
     echo "FALHOU: $*"
     exit 1
 }
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "Preparar uma pessoa no computador"
@@ -29,6 +32,7 @@ bora modelos --json | python3 -c 'import json,sys; d=json.load(sys.stdin); asser
     falhou "o bora modelos --json não trouxe a lista e a sugestão"
 
 etapa "O rolê monta o plano de cada resposta"
+# Monta o plano do rolê Vibecodar com as respostas dadas.
 role() { bora plano vibecodar -p dev/git.email=dani@exemplo.com.br "$@"; }
 role -r local=ollama -o /tmp/plano-ollama.yaml
 grep -q 'receita: ia/ollama' /tmp/plano-ollama.yaml || falhou "o Ollama ficou fora do plano"
@@ -84,6 +88,8 @@ bora desfazer --sem-perguntar
 # Um pacote essencial ou importante do sistema que veio junto fica, de
 # propósito (veja remover_pacotes_instalados no comum.sh), como no Debian o
 # linux-sysctl-defaults, que chega com o procps.
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;

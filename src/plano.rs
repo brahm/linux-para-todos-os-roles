@@ -13,6 +13,16 @@
 //!     parametros:
 //!       perfil: desktop
 //! ```
+//!
+//! O caminho de um plano tem três etapas:
+//!
+//! 1. **Montar** (`montar_de_role`, `montar_de_receitas`): vira um YAML cru,
+//!    sem consultar a máquina. É o que o menu e o `bora plano` produzem.
+//! 2. **Validar** (`validar`): confere o YAML contra o catálogo e o diagnóstico.
+//!    Campo desconhecido, receita fora do catálogo ou família errada viram erro.
+//!    É a barreira que impede um plano escrito à mão (ou por uma IA) de rodar
+//!    algo que não seja receita do catálogo.
+//! 3. **Aplicar**: o `executor` recebe só o `PlanoValidado`.
 
 use crate::catalogo::{self as cat, Catalogo, Receita, Role, Valor, texto_de};
 use crate::diag::Diag;
@@ -21,14 +31,20 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
+/// Versão do formato do arquivo (`bora: 1`). Muda só se o formato quebrar a
+/// compatibilidade; aí planos antigos são recusados com uma mensagem clara.
 pub const FORMATO: u64 = 1;
 
+/// Um passo já conferido: a receita do catálogo e os parâmetros convertidos,
+/// na ordem em que a receita declara, com os padrões preenchidos.
 #[derive(Debug, Clone)]
 pub struct Passo {
     pub receita: Receita,
     pub parametros: Vec<(String, Valor)>,
 }
 
+/// O plano depois de `validar`: o que o `executor` aceita. Os avisos (receita
+/// só testada em contêiner, distro derivada...) são mostrados mas não impedem nada.
 #[derive(Debug, Clone)]
 pub struct PlanoValidado {
     pub objetivo: Option<String>,
@@ -37,10 +53,12 @@ pub struct PlanoValidado {
     pub avisos: Vec<String>,
 }
 
+/// Atalho para criar um texto YAML.
 fn s(t: &str) -> Value {
     Value::String(t.to_string())
 }
 
+/// Monta o mapa de cima do plano: formato, data, rolê, família e passos.
 fn cabecalho(objetivo: Option<&str>, familia: &str, passos: Vec<Value>) -> Value {
     let mut m = Mapping::new();
     m.insert(s("bora"), Value::Number(FORMATO.into()));
@@ -54,6 +72,7 @@ fn cabecalho(objetivo: Option<&str>, familia: &str, passos: Vec<Value>) -> Value
     Value::Mapping(m)
 }
 
+/// Um passo cru: a receita e, se houver, os parâmetros.
 fn passo(id: &str, parametros: Mapping) -> Value {
     let mut p = Mapping::new();
     p.insert(s("receita"), s(id));
@@ -69,6 +88,8 @@ pub fn montar_de_role(
     respostas: &BTreeMap<String, String>,
     familia: &str,
 ) -> Result<Value, String> {
+    // Junta as respostas dadas com os padrões das perguntas. Resposta fora das
+    // opções ou pergunta sem resposta nem padrão param tudo aqui.
     let mut completas = BTreeMap::new();
     for p in &role.perguntas {
         match respostas
@@ -94,6 +115,8 @@ pub fn montar_de_role(
             }
         }
     }
+    // Só entram as receitas cuja condição (`quando:` no YAML do rolê) bate com as
+    // respostas. Parâmetros com `{pergunta}` no texto recebem a resposta dela.
     let mut passos = Vec::new();
     for item in role.receitas.iter().filter(|i| i.entra(&completas)) {
         let mut params = Mapping::new();
@@ -159,16 +182,20 @@ pub fn acrescentar_parametros(plano: &mut Value, receita: &str, extra: &Mapping)
     }
 }
 
+/// Lê um plano do disco, sem validar.
 pub fn ler(caminho: &Path) -> Result<Value, String> {
     let texto = fs::read_to_string(caminho)
         .map_err(|e| format!("não consegui ler {}: {e}", caminho.display()))?;
     serde_norway::from_str(&texto).map_err(|e| format!("o plano não é um YAML válido: {e}"))
 }
 
+/// O plano em YAML, sem os comentários do cabeçalho.
 pub fn para_texto(plano: &Value) -> String {
     serde_norway::to_string(plano).unwrap_or_default()
 }
 
+/// Salva o plano com três linhas de comentário no topo, que lembram como
+/// conferir e aplicar quem abrir o arquivo depois.
 pub fn salvar(plano: &Value, caminho: &Path) -> std::io::Result<()> {
     let c = caminho.display();
     let texto = format!(
@@ -316,6 +343,8 @@ pub fn validar(plano: &Value, catalogo: &Catalogo, d: &Diag) -> Result<PlanoVali
         }
     };
 
+    // Cada passo é conferido sozinho, e os erros se acumulam: a pessoa vê todos
+    // os problemas de uma vez, em vez de consertar um por rodada.
     let mut passos = Vec::new();
     let mut vistos: Vec<String> = Vec::new();
     let (distro, base) = (&d.distro.id, d.distro.base.clone().unwrap_or_default());
@@ -346,6 +375,8 @@ pub fn validar(plano: &Value, catalogo: &Catalogo, d: &Diag) -> Result<PlanoVali
         }
         vistos.push(id.clone());
 
+        // O nível de teste da receita nesta família decide entre erro e aviso.
+        // "planejada" e "nao-se-aplica" barram; o resto avisa o quanto foi testado.
         match rec.nivel(&familia) {
             "planejada" => erros.push(format!("passo {n}: a receita {id} ainda não foi escrita para a família {familia}")),
             "nao-se-aplica" => erros.push(format!("passo {n}: a receita {id} não se aplica à família {familia}")),
@@ -395,6 +426,8 @@ pub fn validar(plano: &Value, catalogo: &Catalogo, d: &Diag) -> Result<PlanoVali
         if id == RECEITA_COM_MODELO {
             resolver_modelo(&mut params, catalogo, d, &mut avisos, &mut erros, n);
         }
+        // O LM Studio baixa o modelo pela própria interface, então o bora só
+        // avisa qual procurar.
         if id == "ia/lm-studio"
             && let Ok(l) = crate::modelos::carregar(&catalogo.raiz)
         {
@@ -432,6 +465,7 @@ mod testes {
     use crate::diag;
     use std::path::PathBuf;
 
+    // Catálogo de verdade do repositório e uma máquina de mentira com Ubuntu 26.04.
     fn base() -> (Catalogo, Diag) {
         let raiz = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         (
@@ -440,10 +474,12 @@ mod testes {
         )
     }
 
+    /// Lê um plano escrito no próprio teste.
     fn yaml(t: &str) -> Value {
         serde_norway::from_str(t).unwrap()
     }
 
+    // "sugerido" vira o modelo certo para a máquina e fica gravado no arquivo.
     #[test]
     fn modelo_sugerido_vira_o_da_maquina() {
         let (c, mut d) = base();
@@ -475,6 +511,7 @@ mod testes {
         );
     }
 
+    /// Plano só com o Ollama e o modelo dado.
     fn cru_com_modelo(modelo: &str) -> Value {
         let mut m = Mapping::new();
         m.insert(s("modelo"), s(modelo));
@@ -483,6 +520,7 @@ mod testes {
         montar_de_receitas(&["ia/ollama".into()], "ubuntu", &extra)
     }
 
+    // Um plano bom passa, com os padrões preenchidos, e sobrevive à ida e volta pelo YAML.
     #[test]
     fn plano_valido() {
         let (c, d) = base();
@@ -508,6 +546,8 @@ mod testes {
         assert!(validar(&lido, &c, &d).is_ok());
     }
 
+    // Cada caso é um plano ruim e um trecho que precisa aparecer na mensagem de erro.
+    // Os dois últimos garantem que ninguém enfia um comando livre no plano.
     #[test]
     fn erros() {
         let (c, d) = base();
@@ -555,6 +595,7 @@ mod testes {
         }
     }
 
+    // No Fedora, uma receita que só existe para Ubuntu e Debian é recusada.
     #[test]
     fn receita_planejada_na_familia_da_maquina() {
         let raiz = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

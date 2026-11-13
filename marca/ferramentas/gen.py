@@ -20,17 +20,21 @@ LIGHT1, LIGHT2, DARK3, DARK4, SYMB = '#ffffff', '#f6f5f4', '#3d3846', '#241f31',
 
 HEAD = '<?xml version="1.0" encoding="UTF-8"?>\n'
 
+# Grava um arquivo dentro da pasta de saída, criando as pastas.
 def write(name, content):
     path = os.path.join(OUT, name)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(content)
     print('escrito', path)
 
+# Número com no máximo duas casas, sem zeros sobrando, para o SVG ficar curto.
 def f(v):
     s = f"{v:.2f}".rstrip('0').rstrip('.')
     return '0' if s in ('-0', '') else s
 
 # ---------- Trilha de pegadas ----------
+# Ponto e direção (tangente) numa curva de Bézier quadrática, no instante t de 0 a 1.
+# A trilha de pegadas segue essa curva.
 def bezier_pt(p0, p1, p2, t):
     return ((1-t)**2*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0],
             (1-t)**2*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1])
@@ -69,6 +73,7 @@ def svg_icon(face=ORANGE3, side=ORANGE5, ink=LIGHT1):
 </svg>
 '''
 
+# O ícone simbólico de 16 px (uma pegada só, de uma cor), que o GNOME pinta conforme o tema.
 def svg_symbolic(fill=SYMB):
     fp = footprint()
     x0, y0, x1, y1 = bbox(fp)
@@ -90,6 +95,7 @@ def wordmark_runs(runs, size, x, y, font=F_BOLD, tracking=-0.01):
         cur += w
     return els, cur - x, m
 
+# O logotipo horizontal: o ícone à esquerda e o nome numa linha.
 def svg_logo_horizontal(ink=DARK4, accent=ORANGE4, mark=ORANGE3, pad=12, mono=False):
     size = 48
     els_text, tw, m = wordmark_runs([('Linux para todos os ', ink), ('rolês', accent)], size, 0, 0)
@@ -117,6 +123,7 @@ def svg_logo_horizontal(ink=DARK4, accent=ORANGE4, mark=ORANGE3, pad=12, mono=Fa
 </svg>
 '''
 
+# O logotipo vertical: o ícone em cima e o nome em duas linhas.
 def svg_logo_vertical(ink=DARK4, accent=ORANGE4, mark=ORANGE3, pad=16, mono=False):
     size = 44
     line_gap = size * 1.12
@@ -145,6 +152,7 @@ def svg_logo_vertical(ink=DARK4, accent=ORANGE4, mark=ORANGE3, pad=16, mono=Fals
 </svg>
 '''
 
+# O logotipo curto, só com a palavra bora, para o terminal e lugares pequenos.
 def svg_logo_bora(ink=DARK4, pad=12, mono=False, face=ORANGE3, side=ORANGE5):
     size = 56
     els, tw, m = wordmark_runs([('bora', ink)], size, 0, 0, tracking=-0.015)

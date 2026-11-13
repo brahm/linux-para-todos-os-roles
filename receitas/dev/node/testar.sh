@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita dev/node (Node.js).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
@@ -8,6 +11,8 @@ source ./comum-node.sh
 
 # O PATH de uma sessão comum, com /usr/local/bin antes de /usr/bin.
 caminho="$BIN_DA_PESSOA:/usr/local/bin:/usr/bin:/bin"
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 na_sessao() { como_pessoa "$PESSOA" env PATH="$caminho" "$@"; }
 versao_certa() { [ "$(na_sessao node --version)" = "v$NODE_VERSAO" ]; }
 roda_js() { [ "$(na_sessao node -e 'console.log(1 + 1)')" = 2 ]; }

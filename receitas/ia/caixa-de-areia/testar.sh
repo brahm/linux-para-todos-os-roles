@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita ia/caixa-de-areia (Caixa de areia para os agentes).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 exigir_apt
@@ -15,11 +18,15 @@ if [ ! -d "$CASA/.ssh" ]; then
     segredo_criado=pasta
 fi
 como_pessoa "$PESSOA" sh -c "echo segredo >'$CASA/.ssh/teste-da-caixa'"
+# Apaga o projeto e o segredo de teste quando o script termina, dê certo ou não.
 limpar() {
     rm -rf "${projeto:?}" "${fora:?}" "$CASA/.ssh/teste-da-caixa"
     if [ "$segredo_criado" = pasta ]; then rmdir "$CASA/.ssh" 2>/dev/null || true; fi
 }
 trap limpar EXIT
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. `na_caixa` roda um comando dentro da
+# caixa de areia, como a pessoa, a partir do projeto de teste.
 na_caixa() { como_pessoa "$PESSOA" sh -c "cd '$projeto' && caixa $*"; }
 
 escreve_no_projeto() { na_caixa "sh -c 'echo ok >arquivo'" && [ -f "$projeto/arquivo" ]; }

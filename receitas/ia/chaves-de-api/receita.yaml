@@ -1,3 +1,7 @@
+# Ficha da receita ia/chaves-de-api: o que ela é, os parâmetros que aceita, em que famílias
+# de distro funciona e onde já foi testada. O bora lê este arquivo; o formato
+# de cada campo está em receitas/README.md. O bloco testes: fica sempre por
+# último, porque o ferramentas/registros/registrar.py acrescenta registros nele.
 id: ia/chaves-de-api
 nome: Chaves de API guardadas
 descricao: Um arquivo para as chaves de API dos agentes de IA, fora de qualquer projeto e com permissão só do dono, carregado em cada terminal.

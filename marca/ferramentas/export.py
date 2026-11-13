@@ -4,10 +4,12 @@ B = sys.argv[1] if len(sys.argv) > 1 else 'marca'
 R = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'render.js')
 ID = os.environ.get('APP_ID', 'br.com.brahm.Bora')
 os.makedirs(f'{B}/png', exist_ok=True)
+# Largura e altura declaradas no SVG.
 def size_of(svg):
     s = open(svg).read()
     w = float(re.search(r'<svg[^>]*\swidth="([\d.]+)"', s).group(1)); h = float(re.search(r'<svg[^>]*\sheight="([\d.]+)"', s).group(1))
     return w, h
+# Desenha um SVG num PNG com o tamanho dado, pelo render.js.
 def render(svg, out, w, h=None):
     subprocess.run(['node', R, svg, out, str(int(round(w))), str(int(round(h if h else w)))], check=True)
     print('png', out)

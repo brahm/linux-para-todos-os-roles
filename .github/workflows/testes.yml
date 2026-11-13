@@ -1,4 +1,12 @@
 # Testa o bora e as receitas a cada push e pull request.
+#
+# Três etapas, cada uma só começa se a anterior passou:
+#   unidade   formatação, clippy, cargo test, bora conferir, shellcheck e as
+#             conferências de pipes e de estilo, em segundos;
+#   binario   compila o bora estático (musl), o mesmo que vai para as versões;
+#   receitas  aplica, aplica de novo e desfaz as receitas em contêineres com
+#             o binário acima, no Ubuntu 24.04, no 26.04 e no Debian 13.
+# Os detalhes de cada teste em contêiner estão em testes/conteiner/README.md.
 name: Testes
 
 on:
@@ -38,6 +46,7 @@ jobs:
       - name: Clichês que o guia de estilo proíbe
         run: ferramentas/estilo/conferir.sh
 
+  # Compila uma vez e passa o binário para os contêineres pelo artefato.
   binario:
     name: Binário estático
     needs: unidade
@@ -56,6 +65,8 @@ jobs:
           path: target/x86_64-unknown-linux-musl/release/bora
           retention-days: 7
 
+  # Um job por distro. O --privileged deixa o contêiner montar discos e mexer
+  # no firewall como numa máquina de verdade; o repositório entra em /bora.
   receitas:
     name: Receitas em ${{ matrix.imagem }}
     needs: binario

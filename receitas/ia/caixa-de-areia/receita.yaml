@@ -1,3 +1,7 @@
+# Ficha da receita ia/caixa-de-areia: o que ela é, os parâmetros que aceita, em que famílias
+# de distro funciona e onde já foi testada. O bora lê este arquivo; o formato
+# de cada campo está em receitas/README.md. O bloco testes: fica sempre por
+# último, porque o ferramentas/registros/registrar.py acrescenta registros nele.
 id: ia/caixa-de-areia
 nome: Caixa de areia para os agentes
 descricao: O comando caixa roda um agente de IA com o bubblewrap, escrevendo só na pasta do projeto, sem ver as suas chaves SSH e sem sudo, e liga a caixa de areia do próprio Claude Code.

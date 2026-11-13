@@ -1,11 +1,14 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita desktop/navegador-leve.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # O Firefox lê as políticas daqui em qualquer distro, inclusive o Snap do Ubuntu.
 POLITICAS=/etc/firefox/policies/policies.json
 UBLOCK=uBlock0@raymondhill.net
 UBLOCK_URL=https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi
 
+# Tem algum Firefox: o pacote, o ESR do Debian ou o Snap do Ubuntu?
 firefox_instalado() {
     command -v firefox >/dev/null || command -v firefox-esr >/dev/null || [ -x /snap/bin/firefox ]
 }

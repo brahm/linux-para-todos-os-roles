@@ -1,3 +1,7 @@
+# Ficha da receita dev/ferramentas: o que ela é, os parâmetros que aceita, em que famílias
+# de distro funciona e onde já foi testada. O bora lê este arquivo; o formato
+# de cada campo está em receitas/README.md. O bloco testes: fica sempre por
+# último, porque o ferramentas/registros/registrar.py acrescenta registros nele.
 id: dev/ferramentas
 nome: Ferramentas do terminal
 descricao: Instala o ripgrep, o fd, o jq e o GitHub CLI, que os agentes de IA e quem programa usam o tempo todo.

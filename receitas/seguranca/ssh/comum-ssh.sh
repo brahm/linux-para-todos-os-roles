@@ -1,11 +1,14 @@
 # shellcheck shell=bash disable=SC2034
-# Funções usadas pelos scripts desta receita.
+# Variáveis e funções comuns aos scripts da receita seguranca/ssh.
+# Não é executável: verificar, aplicar, testar e desfazer carregam com `source`,
+# depois do comum.sh do bora.
 
 # O arquivo da receita. Os arquivos de sshd_config.d são lidos em ordem
 # alfabética, e o sshd fica com o primeiro valor de cada opção: o 10 vem
 # antes do 50-cloud-init.conf e dos que as distros trazem.
 CONFIG=/etc/ssh/sshd_config.d/10-bora.conf
 
+# A configuração do servidor SSH que a receita escreve em sshd_config.d.
 conteudo_config() {
     local senha=yes
     [ "${BORA_SO_CHAVE:-nao}" = sim ] && senha=no
@@ -42,6 +45,7 @@ if any(rede.subnet_of(r) for r in locais):
 PY
 }
 
+# O ufw está instalado e ligado?
 ufw_ativo() { command -v ufw >/dev/null && grep -q '^Status: active' <<<"$(LC_ALL=C ufw status 2>/dev/null)"; }
 
 # O ufw guarda uma regra só por endereço, porta e protocolo: adicionar a mesma
@@ -51,6 +55,7 @@ ufw_ativo() { command -v ufw >/dev/null && grep -q '^Status: active' <<<"$(LC_AL
 # receita aceita a regra com qualquer comentário e só adiciona a sua quando não
 # há nenhuma.
 regra_base() { printf 'allow from %s to any port 22 proto tcp' "$1"; }
+# A regra completa do ufw para a rede $1, com o comentário desta receita.
 regra_ufw() { printf '%s comment bora-ssh\n' "$(regra_base "$1")"; }
 
 # O firewall já libera o SSH para a rede $1, com qualquer comentário?
@@ -62,6 +67,7 @@ ssh_liberado() {
     grep -qxF "$base" <<<"$regras" || grep -qF "$base comment " <<<"$regras"
 }
 
+# A regra já está no ufw, igualzinha? Compara com "ufw show added".
 regra_existe() {
     local regras
     regras=$(LC_ALL=C ufw show added 2>/dev/null)
@@ -71,8 +77,11 @@ regra_existe() {
 # O sshd aceita a configuração e aplica os valores da receita?
 # O sshd confere se a pasta /run/sshd existe, que o systemd cria ao ligar o serviço.
 pasta_do_sshd() { mkdir -p /run/sshd && chmod 755 /run/sshd; }
+# A configuração do sshd passa no teste dele (sshd -t)?
 config_valida() { pasta_do_sshd && sshd -t 2>/dev/null; }
 
+# O valor que o sshd usa de verdade para uma opção, depois de juntar todos
+# os arquivos de configuração.
 valor_efetivo() {
     pasta_do_sshd
     # -C simula uma conexão comum, para o Match não mudar o resultado.
@@ -84,6 +93,7 @@ unidade_ssh() {
     if systemctl is-enabled --quiet ssh.socket 2>/dev/null; then echo ssh.socket; else echo ssh.service; fi
 }
 
+# A pessoa já tem pelo menos uma chave pública autorizada?
 chave_da_pessoa() {
     local casa
     casa=$(pasta_pessoal "$1")

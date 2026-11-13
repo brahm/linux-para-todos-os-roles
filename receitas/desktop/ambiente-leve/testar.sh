@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita desktop/ambiente-leve (Ambiente gráfico leve).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-ambiente.sh
 source ./comum-ambiente.sh
 exigir_apt
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 na_tela_de_login() { [ -f "/usr/share/xsessions/$(sessao).desktop" ]; }
 tem_servidor_grafico() { command -v Xorg; }
 for p in $(pacotes_do_ambiente); do

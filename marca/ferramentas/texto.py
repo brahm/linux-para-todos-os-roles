@@ -7,6 +7,7 @@ from fontTools.pens.boundsPen import BoundsPen
 
 _cache = {}
 
+# Abre a fonte uma vez só e guarda no cache.
 def _load(font_path):
     if font_path not in _cache:
         data = open(font_path, 'rb').read()
@@ -16,6 +17,7 @@ def _load(font_path):
         _cache[font_path] = (face, font, tt, tt.getGlyphSet(), tt.getGlyphOrder())
     return _cache[font_path]
 
+# Número com no máximo duas casas, sem zeros sobrando, para o SVG ficar curto.
 def ntos(v):
     s = f"{v:.2f}".rstrip('0').rstrip('.')
     return '0' if s in ('-0', '') else s

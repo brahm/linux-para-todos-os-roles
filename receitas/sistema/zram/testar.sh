@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# testar.sh da receita sistema/zram (Memória comprimida (zram)).
+# Roda logo depois do aplicar e confere que a mudança funciona de verdade.
+# Cada `conferir` é um teste; `resultado_dos_testes` sai com erro se algum falhou.
 # shellcheck source=../../comum.sh
 source "$BORA_LIB"
 # shellcheck source=comum-zram.sh
@@ -14,6 +17,8 @@ if quem=$(outro_zram); then
     resultado_dos_testes
 fi
 
+# Ajudantes das conferências abaixo. Cada `conferir "descrição" função` diz,
+# em português, o que a função testa. Elas só leem o sistema ou usam pastas temporárias.
 conf_certa() { [ "$(cat "$CONF_ZRAM")" = "$(conf_esperada)" ]; }
 sysctl_certo() { [ "$(cat "$CONF_SYSCTL")" = "$(sysctl_esperado)" ]; }
 gerador() { [ -x /usr/lib/systemd/system-generators/zram-generator ]; }

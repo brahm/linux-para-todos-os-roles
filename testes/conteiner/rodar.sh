@@ -5,6 +5,8 @@
 set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
+# Atalhos: `bora` roda o binário em teste, e `etapa` imprime um título para
+# achar o passo no log do CI.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 
@@ -32,6 +34,7 @@ mkdir -p /home/aluno/Documentos
 echo "trabalho de história" >/home/aluno/Documentos/trabalho.txt
 chown -R aluno:aluno /home/aluno
 
+# Os pacotes instalados, um por linha. O teste compara o antes e o depois.
 pacotes() { dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' | awk '$1 == "ii" {print $2}' | sort; }
 
 etapa "Plano"
@@ -75,12 +78,15 @@ etapa "Conferir que voltou"
 # Pacotes essenciais ou de prioridade required/important nunca são removidos
 # (um desktop de verdade já os tem), nem as dependências deles; a comparação
 # ignora os que sobraram assim.
+# Pacote essencial ou protegido? O desfazer nunca tira esses (igual ao comum.sh),
+# então o teste também não cobra que eles saiam.
 do_sistema() {
     case "$(dpkg-query -W -f='${Essential} ${Protected} ${Priority}' "$1" 2>/dev/null)" in
         yes\ * | *\ yes\ * | *\ required | *\ important) return 0 ;;
     esac
     return 1
 }
+# Algum pacote do sistema depende deste? Se sim, é normal ele ficar depois do desfazer.
 sistema_depende() {
     local r
     while read -r r; do

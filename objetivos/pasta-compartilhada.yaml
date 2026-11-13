@@ -1,3 +1,5 @@
+# Rolê pasta-compartilhada: as perguntas que o menu faz e as receitas que entram no plano,
+# na ordem em que são aplicadas. O formato está em objetivos/README.md.
 id: pasta-compartilhada
 nome: Pasta compartilhada da casa
 descricao: Uma pasta neste computador que os outros computadores e celulares da casa conseguem abrir, só pela rede local.

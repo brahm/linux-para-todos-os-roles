@@ -57,8 +57,10 @@ regras_do_perfil() {
     fi
 }
 
+# O ufw está ligado?
 ufw_ativo() { grep -q '^Status: active' <<<"$(LC_ALL=C ufw status 2>/dev/null)"; }
 
+# Os padrões são os da receita: bloqueia o que chega, libera o que sai?
 padroes_certos() {
     grep -q '^Default: deny (incoming), allow (outgoing)' <<<"$(LC_ALL=C ufw status verbose 2>/dev/null)"
 }

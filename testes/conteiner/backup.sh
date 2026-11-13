@@ -5,6 +5,8 @@
 set -euo pipefail
 cd /bora
 BORA="${BORA:-/bora/target/x86_64-unknown-linux-musl/release/bora}"
+# Atalhos: `bora` roda o binário em teste, `etapa` imprime um título para
+# achar o passo no log do CI, e `falhou` para tudo com a mensagem.
 bora() { "$BORA" "$@"; }
 etapa() { printf '\n=== %s ===\n' "$*"; }
 falhou() {

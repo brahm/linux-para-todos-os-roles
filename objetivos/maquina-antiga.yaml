@@ -1,3 +1,5 @@
+# Rolê maquina-antiga: as perguntas que o menu faz e as receitas que entram no plano,
+# na ordem em que são aplicadas. O formato está em objetivos/README.md.
 id: maquina-antiga
 nome: Dar vida nova a uma máquina antiga
 descricao: Um computador de dez anos atrás voltando a abrir o navegador e os vídeos sem travar.

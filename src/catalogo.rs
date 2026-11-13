@@ -1,4 +1,15 @@
 //! Leitura e conferência do catálogo: receitas e rolês.
+//!
+//! - Uma **receita** é uma pasta em `receitas/<area>/<nome>/` com um
+//!   `receita.yaml` (o que é, parâmetros, famílias, testes), um `LEIAME.md` e
+//!   quatro scripts: `verificar.sh`, `aplicar.sh`, `testar.sh` e `desfazer.sh`.
+//!   O contrato completo está em `receitas/README.md`.
+//! - Um **rolê** é um arquivo em `objetivos/<id>.yaml`: perguntas para a pessoa
+//!   e a lista de receitas que entram, com parâmetros e condições.
+//!
+//! A leitura é tolerante: uma receita com erro fica de fora e o erro vai para
+//! `Catalogo::erros`, sem derrubar as outras. O `bora conferir` e o `cargo test`
+//! exigem a lista vazia.
 
 use crate::diag::Diag;
 use regex::Regex;
@@ -10,6 +21,10 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 
+// Os valores aceitos em cada campo do YAML. Para criar uma família, um nível
+// ou um tipo de parâmetro, comece por aqui e depois ensine o resto do código.
+
+/// As famílias de distro. `diag` decide a família da máquina a partir do `os-release`.
 pub const FAMILIAS: &[&str] = &[
     "ubuntu",
     "debian",
@@ -18,6 +33,7 @@ pub const FAMILIAS: &[&str] = &[
     "fedora-imutavel",
     "opensuse",
 ];
+/// Quanto uma receita foi testada numa família, do mais confiável ao que nem existe.
 pub const NIVEIS: &[&str] = &[
     "testada",
     "herdada",
@@ -25,6 +41,7 @@ pub const NIVEIS: &[&str] = &[
     "planejada",
     "nao-se-aplica",
 ];
+/// Os níveis em que o `bora` aceita aplicar a receita.
 pub const NIVEIS_APLICAVEIS: &[&str] = &["testada", "herdada", "comunidade"];
 const RISCOS: &[&str] = &["baixo", "medio", "alto"];
 const TIPOS: &[&str] = &[
@@ -32,7 +49,10 @@ const TIPOS: &[&str] = &[
 ];
 const PUBLICOS: &[&str] = &["curiosos", "estudantes", "entusiastas"];
 const STATUS_ROLE: &[&str] = &["planejado", "rascunho", "testado"];
+/// Os quatro scripts que toda receita precisa ter.
 const SCRIPTS: &[&str] = &["verificar", "aplicar", "testar", "desfazer"];
+/// As seções obrigatórias do `LEIAME.md` de cada receita. O teste
+/// `leiame_com_todas_as_secoes` confere todas; o `--passo-a-passo` mostra duas.
 #[cfg_attr(not(test), allow(dead_code))]
 pub const SECOES_LEIAME: &[&str] = &[
     "O que faz",
@@ -43,10 +63,12 @@ pub const SECOES_LEIAME: &[&str] = &[
     "Fontes",
 ];
 
+// Formatos de id: receita é `area/nome`, rolê é `nome`, parâmetro é `nome_com_sublinhado`.
 static ID_RECEITA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[a-z0-9-]+/[a-z0-9-]+$").unwrap());
 static ID_ROLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-z0-9-]+$").unwrap());
 static ID_PARAM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[a-z][a-z0-9_]*$").unwrap());
+// `{pergunta}` dentro de um parâmetro de rolê: vira a resposta da pergunta.
 pub static REFERENCIA: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\{([a-z_][a-z0-9_]*)\}").unwrap());
 
@@ -79,6 +101,7 @@ impl Valor {
         }
     }
 
+    /// Para o registro da execução, em JSON.
     pub fn para_json(&self) -> serde_json::Value {
         match self {
             Valor::Texto(s) => serde_json::Value::String(s.clone()),
@@ -87,6 +110,7 @@ impl Valor {
         }
     }
 
+    /// O caminho de volta, ao ler o registro de uma execução antiga.
     pub fn de_json(v: &serde_json::Value) -> Valor {
         match v {
             serde_json::Value::Bool(b) => Valor::Booleano(*b),
@@ -116,6 +140,7 @@ const REDES_LOCAIS: &[(&str, u8)] = &[
     ("fc00::", 7),
 ];
 
+/// O endereço como número, e quantos bits ele tem (32 no IPv4, 128 no IPv6).
 fn bits(ip: &IpAddr) -> (u128, u8) {
     match ip {
         IpAddr::V4(v) => (u32::from(*v) as u128, 32),
@@ -123,6 +148,9 @@ fn bits(ip: &IpAddr) -> (u128, u8) {
     }
 }
 
+/// A máscara de rede com `prefixo` bits ligados à esquerda. Exemplo: prefixo
+/// 24 em 32 bits dá 255.255.255.0. O prefixo 0 é tratado à parte porque o
+/// deslocamento de 32 ou 128 bits estoura.
 fn mascara(prefixo: u8, largura: u8) -> u128 {
     if prefixo == 0 {
         0
@@ -161,6 +189,9 @@ pub fn rede_local(texto: &str) -> Result<String, ()> {
     Ok(format!("{endereco}/{prefixo}"))
 }
 
+/// Um parâmetro de receita, como está no `receita.yaml`. O `tipo` diz como o
+/// valor é conferido em `converter`; `pergunta` é o que o menu pergunta (vazio
+/// quando o parâmetro não é perguntado) e `rotulos` explicam cada opção.
 #[derive(Debug, Clone)]
 pub struct Parametro {
     pub nome: String,
@@ -173,6 +204,7 @@ pub struct Parametro {
 }
 
 impl Parametro {
+    /// Um parâmetro vazio, só com nome e tipo. Usado na leitura e nos testes.
     pub fn novo(nome: &str, tipo: &str) -> Self {
         Parametro {
             nome: nome.into(),
@@ -185,6 +217,7 @@ impl Parametro {
         }
     }
 
+    /// A explicação de uma opção, ou texto vazio se não houver.
     pub fn rotulo(&self, opcao: &str) -> &str {
         self.rotulos
             .iter()
@@ -244,6 +277,8 @@ impl Parametro {
                 .parse::<i64>()
                 .map(Valor::Inteiro)
                 .map_err(|_| format!("{n} precisa ser um número inteiro")),
+            // Rede só local: o firewall usa esse valor, e uma rede pública aqui
+            // abriria a porta para a internet.
             "cidr" => {
                 let t = texto.trim();
                 if t == "auto" {
@@ -274,6 +309,8 @@ impl Parametro {
                     ))
                 }
             }
+            // Texto livre: sem quebra de linha nem byte nulo, porque o valor
+            // vira variável de ambiente e linha de arquivo de configuração.
             _ => {
                 if texto.contains('\n') || texto.contains('\0') {
                     Err(format!("{n} não pode ter quebra de linha"))
@@ -285,6 +322,8 @@ impl Parametro {
     }
 }
 
+/// Um registro de teste do `receita.yaml`: em que distro e versão, onde (`vm`,
+/// `conteiner` ou `maquina`) e o resultado.
 #[derive(Debug, Clone)]
 pub struct Teste {
     pub distro: String,
@@ -293,6 +332,8 @@ pub struct Teste {
     pub resultado: String,
 }
 
+/// Uma receita lida e conferida. `familias` guarda o nível de teste por família,
+/// e `pasta` é onde estão os scripts.
 #[derive(Debug, Clone)]
 pub struct Receita {
     pub id: String,
@@ -307,6 +348,7 @@ pub struct Receita {
 }
 
 impl Receita {
+    /// O nível da receita numa família. Família que não aparece no YAML é "planejada".
     pub fn nivel(&self, familia: &str) -> &str {
         self.familias
             .iter()
@@ -315,6 +357,7 @@ impl Receita {
             .unwrap_or("planejada")
     }
 
+    /// Se o `bora` aceita aplicar a receita nesta família.
     pub fn aplicavel(&self, familia: &str) -> bool {
         NIVEIS_APLICAVEIS.contains(&self.nivel(familia))
     }
@@ -329,6 +372,7 @@ impl Receita {
         }
     }
 
+    /// Acha um parâmetro pelo nome.
     pub fn parametro(&self, nome: &str) -> Option<&Parametro> {
         self.parametros.iter().find(|p| p.nome == nome)
     }
@@ -345,6 +389,8 @@ impl Receita {
             .or_else(|| self.testes.iter().find(passou))
     }
 
+    /// O texto de uma seção `## Título` do LEIAME, até a próxima seção.
+    /// O `--passo-a-passo` usa isso para explicar a receita antes de aplicar.
     pub fn secao_leiame(&self, titulo: &str) -> String {
         let texto = fs::read_to_string(self.pasta.join("LEIAME.md")).unwrap_or_default();
         let cabecalho = format!("## {titulo}");
@@ -366,6 +412,7 @@ impl Receita {
     }
 }
 
+/// Uma pergunta de rolê. O `id` é usado em `quando:` e em `{id}` nos parâmetros.
 #[derive(Debug, Clone)]
 pub struct Pergunta {
     pub id: String,
@@ -377,6 +424,7 @@ pub struct Pergunta {
 }
 
 impl Pergunta {
+    /// A explicação de uma opção, ou texto vazio se não houver.
     pub fn rotulo(&self, opcao: &str) -> &str {
         self.rotulos
             .iter()
@@ -386,6 +434,7 @@ impl Pergunta {
     }
 }
 
+/// Uma receita dentro de um rolê, com os parâmetros que o rolê fixa.
 #[derive(Debug, Clone)]
 pub struct ItemRole {
     pub id: String,
@@ -395,6 +444,7 @@ pub struct ItemRole {
 }
 
 impl ItemRole {
+    /// Se a receita entra no plano, dadas as respostas.
     pub fn entra(&self, respostas: &std::collections::BTreeMap<String, String>) -> bool {
         self.quando
             .iter()
@@ -402,6 +452,7 @@ impl ItemRole {
     }
 }
 
+/// Um rolê lido e conferido. `ram_gb` e `disco_livre_gb` vêm de `hardware_minimo`.
 #[derive(Debug, Clone)]
 pub struct Role {
     pub id: String,
@@ -417,6 +468,8 @@ pub struct Role {
     pub como_desfazer: String,
 }
 
+/// Ajudante para ler um mapa YAML acumulando erros com a origem (o arquivo)
+/// na frente, em vez de parar no primeiro.
 struct Leitor<'a> {
     mapa: &'a Mapping,
     origem: String,
@@ -452,6 +505,7 @@ impl<'a> Leitor<'a> {
     }
 }
 
+/// Lê um arquivo YAML que precisa ser um mapa.
 fn ler_yaml(arquivo: &Path, origem: &str) -> Result<Mapping, String> {
     let texto = fs::read_to_string(arquivo).map_err(|e| format!("{origem}: {e}"))?;
     match serde_norway::from_str::<Value>(&texto) {
@@ -461,12 +515,15 @@ fn ler_yaml(arquivo: &Path, origem: &str) -> Result<Mapping, String> {
     }
 }
 
+/// As entradas de um mapa YAML com a chave como texto.
 fn chaves_texto(m: &Mapping) -> Vec<(String, &Value)> {
     m.iter()
         .filter_map(|(k, v)| texto_de(k).map(|k| (k, v)))
         .collect()
 }
 
+/// Lê e confere uma receita. Devolve todos os erros de uma vez, cada um com o
+/// caminho do `receita.yaml` na frente.
 pub fn ler_receita(pasta: &Path, raiz_receitas: &Path) -> Result<Receita, Vec<String>> {
     let relativo = pasta
         .strip_prefix(raiz_receitas)
@@ -598,6 +655,8 @@ pub fn ler_receita(pasta: &Path, raiz_receitas: &Path) -> Result<Receita, Vec<St
         Some(_) => l.erro("testes precisa ser uma lista"),
     }
 
+    // Cada um dos quatro scripts precisa existir, na versão comum (`aplicar.sh`)
+    // ou numa versão por família (`aplicar.fedora.sh`), e ser executável.
     for script in SCRIPTS {
         let comum = pasta.join(format!("{script}.sh"));
         let mut arquivos = vec![];
@@ -642,6 +701,8 @@ pub fn ler_receita(pasta: &Path, raiz_receitas: &Path) -> Result<Receita, Vec<St
     })
 }
 
+/// Lê e confere um rolê. Precisa da lista de receitas para conferir se os
+/// parâmetros que o rolê fixa existem mesmo na receita.
 pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String>> {
     let nome_arquivo = arquivo
         .file_name()
@@ -737,6 +798,8 @@ pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String
             });
         }
     }
+    // Cada item: `id` da receita, `quando` (condição) e, no resto das chaves,
+    // os parâmetros que o rolê fixa, que podem usar `{pergunta}`.
     let mut itens = Vec::new();
     match l.valor("receitas") {
         Some(Value::Sequence(s)) => {
@@ -822,6 +885,7 @@ pub fn ler_role(arquivo: &Path, receitas: &[Receita]) -> Result<Role, Vec<String
     })
 }
 
+/// O catálogo inteiro: de onde veio, as receitas, os rolês e os erros de leitura.
 pub struct Catalogo {
     pub raiz: PathBuf,
     pub receitas: Vec<Receita>,
@@ -829,6 +893,8 @@ pub struct Catalogo {
     pub erros: Vec<String>,
 }
 
+/// O conteúdo de uma pasta em ordem alfabética, para a ordem do catálogo não
+/// depender do sistema de arquivos.
 fn listar(pasta: &Path) -> Vec<PathBuf> {
     let mut v: Vec<PathBuf> = fs::read_dir(pasta)
         .map(|r| r.flatten().map(|e| e.path()).collect())
@@ -838,6 +904,8 @@ fn listar(pasta: &Path) -> Vec<PathBuf> {
 }
 
 impl Catalogo {
+    /// Lê todas as receitas (`receitas/*/*/receita.yaml`) e depois os rolês
+    /// (`objetivos/*.yaml`). Nunca falha: o que der errado vai para `erros`.
     pub fn carregar(raiz: &Path) -> Catalogo {
         let mut c = Catalogo {
             raiz: raiz.to_path_buf(),
@@ -916,14 +984,17 @@ impl Catalogo {
         problemas
     }
 
+    /// O `receitas/comum.sh`, com as funções que todos os scripts usam.
     pub fn lib(&self) -> PathBuf {
         self.raiz.join("receitas").join("comum.sh")
     }
 
+    /// Acha uma receita pelo id (`area/nome`).
     pub fn receita(&self, id: &str) -> Option<&Receita> {
         self.receitas.iter().find(|r| r.id == id)
     }
 
+    /// Acha um rolê pelo id.
     pub fn role(&self, id: &str) -> Option<&Role> {
         self.roles.iter().find(|r| r.id == id)
     }
@@ -934,6 +1005,8 @@ impl Catalogo {
         if !role.familias.contains(&fam) {
             return Err(format!("ainda não funciona na família {fam}"));
         }
+        // Folga de 10% na RAM: uma máquina "de 4 GB" mostra uns 3,8 GB livres
+        // para o sistema, e não seria justo recusar por isso.
         if let (Some(min), Some(ram)) = (role.ram_gb, d.hardware.ram_gb)
             && ram < min * 0.9
         {
@@ -976,6 +1049,7 @@ mod testes {
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
     }
 
+    // O catálogo do repositório lê sem nenhum erro.
     #[test]
     fn catalogo_real_sem_erros() {
         let c = Catalogo::carregar(&raiz());
@@ -983,12 +1057,14 @@ mod testes {
         assert!(c.receitas.len() >= 3);
     }
 
+    // O status de cada rolê (rascunho, testado) bate com os testes registrados.
     #[test]
     fn status_dos_roles_segue_a_regra() {
         let c = Catalogo::carregar(&raiz());
         assert_eq!(c.status_fora_da_regra(), Vec::<String>::new());
     }
 
+    // Com teste em contêiner e em VM na mesma versão, vale o da VM.
     #[test]
     fn testada_em_prefere_a_maquina_virtual() {
         let c = Catalogo::carregar(&raiz());
@@ -1006,6 +1082,7 @@ mod testes {
         assert!(r.testada_em("debian", "13").is_none());
     }
 
+    // Todo LEIAME tem as seis seções, e nenhuma vazia.
     #[test]
     fn leiame_com_todas_as_secoes() {
         let c = Catalogo::carregar(&raiz());
@@ -1020,6 +1097,8 @@ mod testes {
         }
     }
 
+    // Todo script executável começa com o shebang do bash e liga o modo estrito
+    // (`set -euo pipefail`) nas primeiras linhas.
     #[test]
     fn scripts_seguem_o_contrato() {
         let c = Catalogo::carregar(&raiz());
@@ -1051,6 +1130,7 @@ mod testes {
         }
     }
 
+    // Nenhum arquivo de receita tem `curl ... | sh` nem `wget ... | bash`.
     #[test]
     fn receitas_nao_baixam_e_executam() {
         let proibido = Regex::new(r"(curl|wget)[^|\n]*\|\s*(sudo\s+)?(ba)?sh").unwrap();
@@ -1063,6 +1143,8 @@ mod testes {
         }
     }
 
+    // Redes locais passam e saem normalizadas; internet, CGNAT, rede de
+    // documentação e lixo são recusados.
     #[test]
     fn cidr() {
         let p = Parametro::novo("rede", "cidr");
@@ -1090,6 +1172,7 @@ mod testes {
         }
     }
 
+    // As conversões dos outros tipos, com os casos que devem falhar.
     #[test]
     fn booleano_escolha_caminho() {
         let b = Parametro::novo("x", "booleano");
