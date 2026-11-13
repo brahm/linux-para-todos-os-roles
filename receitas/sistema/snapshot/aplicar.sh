@@ -97,8 +97,10 @@ habilitar_unidade "$UNIDADE.timer"
 if [ "${BORA_CRIAR_AGORA:-sim}" = sim ] && [ -z "$(listar_snapshots)" ]; then
     msg "Criando o primeiro snapshot. Na primeira vez, o Timeshift copia o sistema inteiro e pode levar de 5 a 30 minutos."
     antes=$(listar_snapshots | sort)
-    # O Timeshift às vezes cai com segfault logo no começo, antes de copiar
-    # qualquer coisa (issue #16). Se nenhum snapshot apareceu, tenta mais uma vez.
+    # Até a versão 26.11.0, o Timeshift às vezes cai com segfault logo no
+    # começo, antes de copiar qualquer coisa (issue #16). A causa é uma corrida
+    # entre duas threads dele, corrigida em linuxmint/timeshift#552. Enquanto as
+    # distros trazem versões antigas, se nenhum snapshot apareceu, tenta mais uma vez.
     for tentativa in 1 2; do
         timeshift --create --scripted --comments "bora: primeiro snapshot" | tr '\r' '\n' | grep -v '% complete' || true
         [ -n "$(listar_snapshots)" ] && break

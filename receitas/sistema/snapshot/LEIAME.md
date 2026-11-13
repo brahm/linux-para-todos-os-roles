@@ -22,6 +22,7 @@ O Timeshift guarda o sistema, não os seus arquivos pessoais. As pastas em `/hom
   - `/root/**` e `/home/*/**` na lista do que fica de fora.
 - Cria o `bora-snapshot.service` e o `bora-snapshot.timer` em `/etc/systemd/system`. De hora em hora, o timer roda `timeshift --check`, que só cria um snapshot quando um deles vence. O Timeshift costuma agendar pelo cron, mas só quando é configurado pelo aplicativo; como aqui a configuração vai direto no arquivo, o agendamento fica com o systemd.
 - Com `criar_agora: sim` (o padrão), cria o primeiro snapshot. Na primeira vez, o Timeshift copia o sistema inteiro, o que leva de 5 a 30 minutos. Os seguintes copiam só o que mudou.
+- Se o Timeshift cair nesse primeiro snapshot, a receita tenta mais uma vez. Até a versão 26.11.0, ele às vezes cai com falha de segmentação logo no começo da cópia. A versão do Ubuntu 24.04 é a 24.01.1.
 
 A receita para antes de mudar qualquer coisa se:
 
@@ -49,5 +50,6 @@ Snapshots criados depois, pelo `bora` ou pelo agendamento, continuam guardados. 
 ## Fontes
 
 - [Timeshift, no repositório do Linux Mint](https://github.com/linuxmint/timeshift)
+- [Correção da falha de segmentação no Timeshift 26.11.0](https://github.com/linuxmint/timeshift/pull/552)
 - [Manual do systemd.timer](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html)
 - O arquivo `/etc/timeshift/default.json`, instalado pelo pacote, como referência dos campos da configuração
