@@ -112,7 +112,7 @@ ROLES = [
             "Não abre nenhuma porta para a internet.",
         ],
         "porques": [
-            ("Por que começar pela atualização?", "Um computador recém-instalado costuma estar semanas atrás, porque a imagem de instalação foi gerada antes. Atualizar primeiro evita correr atrás de defeitos que já foram corrigidos."),
+            ("Por que começar pela atualização?", "Um computador recém-instalado costuma estar semanas atrás, porque a imagem de instalação foi gerada antes. Atualizar primeiro evita caçar um bug que alguém já consertou."),
             ("Por que snapshot e backup, os dois?", "O snapshot guarda o sistema e volta o computador a como estava ontem. O backup guarda os seus arquivos num outro disco, para o dia em que o disco do computador morrer. Um não substitui o outro."),
             ("Por que firewall num notebook de casa?", "Porque o notebook não fica só em casa. Numa rede de café, de faculdade ou de aeroporto, qualquer pessoa conectada pode tentar falar com as portas que os programas abrem sem avisar."),
             ("Por que Flatpak?", "Os aplicativos do Flathub chegam na versão mais nova sem esperar a próxima versão da distro, e rodam isolados do sistema. Os pacotes da distro continuam lá."),
@@ -147,7 +147,7 @@ ROLES = [
         ],
         "porques": [
             ("Por que zram, e não mais swap no disco?", "Num disco rígido antigo, usar o disco como memória deixa tudo travando. O zram guarda a memória comprimida na própria memória, o que é muito mais rápido. A swap no disco continua lá, como reserva."),
-            ("Por que o ambiente leve fica ao lado do atual?", "Para você testar sem perder nada. Se não gostar, escolhe o antigo na tela de login, ou desfaz o rolê."),
+            ("Por que o ambiente leve fica ao lado do atual?", "Para você testar sem perder nada. Não gostou? Escolha o antigo na tela de login, ou desfaça o rolê."),
             ("Por que mexer no navegador, e não trocar de navegador?", "Numa máquina antiga, o navegador é o programa que mais gasta memória, e boa parte do peso de uma página são anúncios. O Firefox já vem nas distros da onda 1 e é dos poucos em que o uBlock Origin completo ainda funciona."),
             ("E o SSD?", "Trocar um disco rígido por um SSD, mesmo o mais barato, é o que mais deixa uma máquina antiga rápida: o boot cai de minutos para segundos. O <code>bora diag</code> mostra que tipo de disco a máquina tem."),
         ],
@@ -173,7 +173,7 @@ ROLES = [
         ],
         "nao_faz": [
             "Não escolhe um editor por você. Use o que quiser; o rolê Vibecodar pergunta qual instalar.",
-            "Não usa sudo com pip ou npm, que é a origem de muitos sistemas quebrados.",
+            "Não usa sudo com pip ou npm, a receita clássica de sistema quebrado.",
             "Não troca o Python do sistema por outra versão.",
             "Não cria contas no GitHub ou no GitLab por você.",
         ],

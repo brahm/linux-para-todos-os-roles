@@ -126,7 +126,7 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Em resumo</p>
         <h2>O que faz e o que não faz</h2>
-        <p>Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. Toda semana, cada receita é aplicada, conferida e desfeita em máquinas virtuais de verdade, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, inclusive com a tela de login e o navegador; o registro de testes de cada receita mostra a última vez. Cada receita sabe se desfazer e, com o snapshot do sistema configurado, o <code>bora</code> tira um antes de aplicar.</p>
+        <p>Testado e no menu do <code>bora</code>. Toda semana, cada receita é aplicada, conferida e desfeita em máquinas virtuais de verdade, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, inclusive com a tela de login e o navegador. O registro de testes de cada receita mostra a última vez. Mudou de ideia? Cada receita sabe se desfazer, e o <code>bora</code> tira um snapshot antes de aplicar.</p>
       </div>
       <div class="faz-nao">
         <div class="cartao faz revelar">
@@ -191,7 +191,7 @@
           <span class="marco" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5l1 1 2-2M4.5 12l1 1 2-2M4.5 17.5l1 1 2-2"/></svg></span>
           <div class="corpo">
             <h3>Uma receita de cada vez <small>verificar, aplicar, testar</small></h3>
-            <p>Cada receita primeiro verifica se já está aplicada, e pula se estiver. Depois aplica e testa. Se uma falhar, o <code>bora</code> para ali, diz o que aconteceu e como voltar. As 7 receitas deste rolê estão logo abaixo.</p>
+            <p>Cada receita primeiro verifica se já está aplicada, e pula se estiver. Depois aplica e testa. Se uma falhar, o <code>bora</code> para ali, diz o que aconteceu e como voltar, em vez de seguir em frente torcendo. As 7 receitas deste rolê estão logo abaixo.</p>
           </div>
         </li>
         <li class="etapa verde revelar">
@@ -278,7 +278,7 @@
       </div>
       <div class="porques">
         <article class="cartao porque revelar"><h3>Por que zram, e não mais swap no disco?</h3><p>Num disco rígido antigo, usar o disco como memória deixa tudo travando. O zram guarda a memória comprimida na própria memória, o que é muito mais rápido. A swap no disco continua lá, como reserva.</p></article>
-        <article class="cartao porque revelar"><h3>Por que o ambiente leve fica ao lado do atual?</h3><p>Para você testar sem perder nada. Se não gostar, escolhe o antigo na tela de login, ou desfaz o rolê.</p></article>
+        <article class="cartao porque revelar"><h3>Por que o ambiente leve fica ao lado do atual?</h3><p>Para você testar sem perder nada. Não gostou? Escolha o antigo na tela de login, ou desfaça o rolê.</p></article>
         <article class="cartao porque revelar"><h3>Por que mexer no navegador, e não trocar de navegador?</h3><p>Numa máquina antiga, o navegador é o programa que mais gasta memória, e boa parte do peso de uma página são anúncios. O Firefox já vem nas distros da onda 1 e é dos poucos em que o uBlock Origin completo ainda funciona.</p></article>
         <article class="cartao porque revelar"><h3>E o SSD?</h3><p>Trocar um disco rígido por um SSD, mesmo o mais barato, é o que mais deixa uma máquina antiga rápida: o boot cai de minutos para segundos. O <code>bora diag</code> mostra que tipo de disco a máquina tem.</p></article>
       </div>

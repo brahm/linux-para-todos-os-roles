@@ -1,10 +1,11 @@
 # docs
 
-Esta pasta guarda a documentação do projeto e o site publicado no GitHub Pages, em <https://brahm.github.io/linux-para-todos-os-roles/>.
+O site do projeto, publicado em <https://brahm.github.io/linux-para-todos-os-roles/>, e os documentos que explicam como o projeto pensa e escreve.
 
 | Arquivo | O que é |
 |---|---|
 | [`decisoes.md`](decisoes.md) | As decisões que definem o projeto, com o porquê de cada uma |
+| [`estilo.md`](estilo.md) | O guia de estilo: como escrever qualquer texto do projeto |
 | `index.html`, `estilo.css` e `site.js` | A página inicial do site |
 | `404.html` | A página de "não encontrado" |
 | `distro/` | Escolher e instalar a distro: o questionário, as distros recomendadas e o caminho do pendrive até o `bora diag`, com `distro.css` e `distro.js` |
@@ -18,15 +19,17 @@ O workflow [`site.yml`](../.github/workflows/site.yml) publica a pasta no GitHub
 
 ## Como ver localmente
 
-O site é HTML, CSS e um pouco de JavaScript, sem etapa de build:
+O site é HTML, CSS e um pouco de JavaScript. Sem etapa de build, sem `node_modules` do tamanho de um sistema operacional:
 
 ```sh
 python3 -m http.server -d docs 8000
 ```
 
-e abra <http://localhost:8000>. A lista de últimas mudanças vem da API pública do GitHub; se ela falhar, a página mostra o link para o histórico.
+Abra <http://localhost:8000>. A lista de últimas mudanças vem da API pública do GitHub; se ela falhar, a página mostra o link para o histórico.
 
 ## Como manter
+
+Todo texto novo segue o [guia de estilo](estilo.md). Rode `ferramentas/estilo/conferir.sh` antes do pull request.
 
 - **Status de um rolê:** quando um rolê mudar de `planejado` para `rascunho` ou `testado` em [`objetivos/`](../objetivos/README.md), troque a ficha dele no `index.html` (classe `ficha`).
 - **Versão e instalação:** quando sair uma versão nova, troque o selo da abertura no `index.html` (classe `selo`) e confira as transcrições do `bora` em `ferramentas/catalogo/roles.py`. Os comandos de instalação ficam em `ferramentas/catalogo/distro.py` e no README; mantenha os dois iguais.
@@ -36,7 +39,16 @@ e abra <http://localhost:8000>. A lista de últimas mudanças vem da API públic
 
 ## O catálogo
 
-As páginas em `catalogo/` são geradas por [`ferramentas/catalogo/gerar.py`](../ferramentas/catalogo/gerar.py), que lê os `receita.yaml` (parâmetros, famílias e registro de testes) e os textos em `ferramentas/catalogo/dados.py` (rolês e receitas planejadas) e `receitas.py` (o passo a passo e as ilustrações de cada receita pronta). Depois de mudar uma receita ou um rolê, gere de novo e confira:
+As páginas em `catalogo/` são geradas. Não edite o HTML: ele é sobrescrito na próxima geração.
+
+O gerador, [`ferramentas/catalogo/gerar.py`](../ferramentas/catalogo/gerar.py), lê:
+
+- os `receita.yaml`: parâmetros, famílias e registro de testes;
+- `ferramentas/catalogo/dados.py`: rolês e receitas planejadas;
+- `ferramentas/catalogo/roles.py`: as páginas dos rolês e a do catálogo;
+- `ferramentas/catalogo/receitas.py`: o passo a passo e as ilustrações de cada receita pronta.
+
+Depois de mudar uma receita ou um rolê, gere de novo e confira:
 
 ```sh
 python3 ferramentas/catalogo/gerar.py      # precisa do PyYAML (pacote python3-yaml)

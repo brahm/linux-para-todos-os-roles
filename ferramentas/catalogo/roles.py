@@ -136,13 +136,13 @@ def pagina_role(r):
         aviso = ("Este rolê ainda está no papel. As receitas tracejadas não existem, e os detalhes podem mudar."
                  + (f" As receitas prontas ({', '.join(RECEITAS[x][0] for x in prontas)}) já funcionam hoje, como receitas avulsas no menu do <code>bora</code>." if prontas else ""))
     elif len(prontas) == len(r["receitas"]) and r["status"] == "testado":
-        aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
+        aviso = ("Testado e no menu do <code>bora</code>. "
                  "Toda semana, cada receita é aplicada, conferida e desfeita em máquinas virtuais de verdade, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, "
-                 "inclusive com a tela de login e o navegador; o registro de testes de cada receita mostra a última vez. "
-                 "Cada receita sabe se desfazer e, com o snapshot do sistema configurado, o <code>bora</code> tira um antes de aplicar.")
+                 "inclusive com a tela de login e o navegador. O registro de testes de cada receita mostra a última vez. "
+                 "Mudou de ideia? Cada receita sabe se desfazer, e o <code>bora</code> tira um snapshot antes de aplicar.")
     elif len(prontas) == len(r["receitas"]):
-        aviso = ("Todas as receitas deste rolê existem, e ele já aparece no menu do <code>bora</code>. "
-                 "Elas passam nos testes automáticos em contêiner e, na parte que não depende de tela, numa máquina virtual de verdade, toda semana. "
+        aviso = ("Em teste, mas já no menu do <code>bora</code>. "
+                 "As receitas passam nos testes automáticos em contêiner e, na parte que não depende de tela, numa máquina virtual de verdade, toda semana. "
                  "O que só se confere olhando, como a tela de login, o vídeo tocando e o navegador, ainda espera o <a href=\"https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md\">roteiro de teste em máquina virtual</a>. Até ele passar, use numa máquina que possa ser formatada sem dor.")
     else:
         aviso = (f"Faltam {len(r['receitas']) - len(prontas)} receitas para este rolê aparecer completo no menu. "
@@ -156,7 +156,7 @@ def pagina_role(r):
     if r["perguntas"]:
         perguntas = "<p>Para este rolê, o <code>bora</code> pergunta:</p><ul>" + "".join(f"<li>{q}</li>" for q in r["perguntas"]) + "</ul>"
     else:
-        perguntas = "<p>Este rolê não faz perguntas além das que cada receita precisa, e todas têm um padrão pensado para quem está começando.</p>"
+        perguntas = "<p>Este rolê não faz perguntas além das que cada receita precisa. Todas têm um padrão pensado para quem está começando: na dúvida, Enter.</p>"
     lista = [
         ("menu", "azul", "Escolha o rolê", "no menu",
          "<p>Rode <code>sudo bora</code> no terminal. O menu mostra só os rolês que cabem na sua máquina e na sua distro, e você escolhe pelo número. Ainda não tem o <code>bora</code>? <a href=\"../../distro/#bora\">Veja como instalar</a>.</p>"),
@@ -166,7 +166,7 @@ def pagina_role(r):
         ("foto", "", "Snapshot antes de mudar", "o ponto de volta",
          "<p>Se o snapshot do sistema já estiver configurado, o <code>bora</code> tira uma foto do sistema antes da primeira mudança. Se o próprio rolê configura o snapshot, as próximas mudanças já ganham o ponto de volta.</p>"),
         ("receitas", "", "Uma receita de cada vez", "verificar, aplicar, testar",
-         f"<p>Cada receita primeiro verifica se já está aplicada, e pula se estiver. Depois aplica e testa. Se uma falhar, o <code>bora</code> para ali, diz o que aconteceu e como voltar. As {len(r['receitas'])} receitas deste rolê estão logo abaixo.</p>"),
+         f"<p>Cada receita primeiro verifica se já está aplicada, e pula se estiver. Depois aplica e testa. Se uma falhar, o <code>bora</code> para ali, diz o que aconteceu e como voltar, em vez de seguir em frente torcendo. As {len(r['receitas'])} receitas deste rolê estão logo abaixo.</p>"),
         ("pronto", "verde", "Pronto quando", "o teste que qualquer pessoa faz", f"<p>{r['pronto_quando']}</p>"),
         ("desfazer", "cinza", "Para voltar atrás", "sudo bora desfazer", f"<p>{r['como_desfazer']}</p>"),
     ]
@@ -367,7 +367,7 @@ def pagina_catalogo():
       </div>
     </div>''']
     corpo.append(f'''    <section id="roles" class="largura">
-{cabeca("Rolês", "Sete rolês para começar", "Cada página mostra o que o rolê faz e o que ele não faz, as receitas, o passo a passo e os porquês. Os testados já estão no menu do <code>sudo bora</code>, que mostra só os rolês que cabem na sua máquina. Ainda não tem o <code>bora</code>? <a href=\"../distro/#bora\">Veja como instalar</a>.")}
+{cabeca("Rolês", "Sete rolês para começar", "Escolha pelo que você quer que o computador faça. Os testados já estão no menu do <code>sudo bora</code>, que mostra só os rolês que cabem na sua máquina. Ainda não tem o <code>bora</code>? <a href=\"../distro/#bora\">Veja como instalar</a>.")}
       <div class="grade">
 {chr(10).join(cartao_role(r) for r in ROLES)}
       </div>

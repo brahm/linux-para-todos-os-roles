@@ -1,8 +1,15 @@
 # Receitas
 
-Uma receita é a menor unidade de mudança que o `bora` aplica: instalar e configurar o firewall, ativar o Flatpak, criar um compartilhamento Samba. Os rolês são feitos de receitas.
+Uma receita é a menor mudança que o `bora` aplica: ligar o firewall, ativar o Flatpak, criar um compartilhamento Samba. Os rolês são feitos de receitas.
 
-Toda receita sabe fazer quatro coisas: **verificar** se já está aplicada, **aplicar**, **testar** se funcionou e **desfazer**.
+Toda receita sabe fazer quatro coisas:
+
+1. **verificar** se já está aplicada;
+2. **aplicar**;
+3. **testar** se funcionou;
+4. **desfazer**.
+
+Se falta uma das quatro, é um script solto, e script solto a internet já tem de sobra.
 
 ## Estrutura
 
@@ -86,11 +93,13 @@ Os tipos de parâmetro são `escolha` (com `opcoes` e, se quiser, `rotulos` que 
 
 ## `LEIAME.md`
 
-Use estas seções:
+O LEIAME é para quem quer entender o que a receita fez no computador. Escreva para um estudante: o que faz primeiro, o porquê depois, comandos copiáveis. O tom está no [guia de estilo](../docs/estilo.md).
 
-1. **O que faz:** uma ou duas frases.
+Use estas seções, com estes títulos (o `cargo test` confere):
+
+1. **O que faz:** uma ou duas frases. O `bora --passo-a-passo` mostra esta seção no terminal.
 2. **Por que:** o motivo, para quem quer aprender.
-3. **O que muda no sistema:** pacotes, arquivos e serviços.
+3. **O que muda no sistema:** pacotes, arquivos e serviços, em lista. Também aparece no `--passo-a-passo`.
 4. **Como conferir:** os comandos que o `testar.sh` roda, explicados.
 5. **Como desfazer:** o que o `desfazer.sh` faz.
 6. **Fontes:** documentação oficial consultada.

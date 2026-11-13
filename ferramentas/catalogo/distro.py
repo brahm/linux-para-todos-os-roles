@@ -314,7 +314,7 @@ def corpo():
     </section>
 
     <section id="instalar" class="largura">
-{cabeca("Passos 2 e 3", "Do pendrive ao primeiro boot", "O caminho é o mesmo em todas as distros da lista. Os detalhes de cada tela estão no guia oficial de cada uma; aqui fica o mapa e o que costuma dar errado.")}
+{cabeca("Passos 2 e 3", "Do pendrive ao primeiro boot", "O caminho é o mesmo em todas as distros da lista. Aqui fica o mapa e o que costuma dar errado; os detalhes de cada tela estão no guia oficial de cada uma.")}
       <ol class="etapas">
         <li class="etapa">
           <span class="marco" aria-hidden="true">1</span>
@@ -322,7 +322,7 @@ def corpo():
             <h3>Guarde o que importa <small>antes de tudo</small></h3>
             <p>A instalação limpa <strong>apaga o disco inteiro</strong>, com o Windows e os arquivos. Copie fotos, documentos e senhas salvas no navegador para um disco externo ou para a nuvem, e confira se a cópia abre.</p>
             <ul>
-              <li>Instalar ao lado do Windows (dual boot) fica para a versão 2 do projeto: BitLocker, Secure Boot e partições variam demais, e o erro custa dados.</li>
+              <li>Instalar ao lado do Windows (dual boot) fica para depois: BitLocker, Secure Boot e partições variam demais de máquina para máquina, e o erro custa dados.</li>
               <li>Confira se o computador é de 64 bits. No Windows: Configurações › Sistema › Sobre, em “Tipo de sistema”.</li>
             </ul>
           </div>
@@ -391,7 +391,7 @@ def corpo():
           <span class="marco" aria-hidden="true">7</span>
           <div class="corpo">
             <h3>Primeiro boot</h3>
-            <p>Tire o pendrive quando o instalador pedir e reinicie. Não precisa sair instalando atualizações e programas: o próximo passo é conseguir internet e deixar o <code>bora</code> arrumar a casa.</p>
+            <p>Tire o pendrive quando o instalador pedir e reinicie. Não precisa sair instalando atualizações e programas: o próximo passo é conseguir internet e deixar o <code>bora</code> arrumar a casa. Pode pegar um café.</p>
           </div>
         </li>
       </ol>
@@ -402,7 +402,7 @@ def corpo():
       <div class="porques">
         <article class="cartao porque"><h3>O computador ignora o pendrive</h3><p>Grave de novo com outro programa, tente outra porta USB (as de trás, no desktop) e desligue o “Fast Boot” no setup. Ubuntu, Mint, Debian e Fedora dão boot com o Secure Boot ligado; as outras podem pedir para desligá-lo, e o guia oficial diz se é o caso.</p></article>
         <article class="cartao porque"><h3>O instalador não acha o disco</h3><p>Muitos notebooks com Intel saem de fábrica com o disco em modo RST ou VMD. No setup, troque o modo do disco para AHCI, ou desligue o VMD. Numa instalação limpa isso não estraga nada.</p></article>
-        <article class="cartao porque"><h3>Tela preta ou travada no boot</h3><p>É quase sempre a placa de vídeo, em geral NVIDIA. No menu do pendrive, escolha “modo de compatibilidade” (Mint) ou “Safe graphics” (Ubuntu). Depois de instalar, o gerenciador de drivers resolve. O Pop!_OS tem uma imagem com o driver já dentro.</p></article>
+        <article class="cartao porque"><h3>Tela preta ou travada no boot</h3><p>É quase sempre a placa de vídeo, em geral NVIDIA, para surpresa de ninguém. No menu do pendrive, escolha “modo de compatibilidade” (Mint) ou “Safe graphics” (Ubuntu). Depois de instalar, o gerenciador de drivers resolve. O Pop!_OS tem uma imagem com o driver já dentro.</p></article>
         <article class="cartao porque"><h3>Sem Wi-Fi</h3><p>Algumas placas Broadcom e Realtek precisam de um driver que só vem pela internet. Ligue por cabo ou pelo celular (veja abaixo) e abra o “Gerenciador de drivers” no Mint ou “Drivers adicionais” no Ubuntu.</p></article>
         <article class="cartao porque"><h3>O teclado não faz ç nem acento</h3><p>O layout errado foi escolhido na instalação. Em Configurações › Teclado, troque para “Português (Brasil)” se houver a tecla <kbd>Ç</kbd>, ou “Inglês (EUA, internacional com teclas mortas)” se não houver.</p></article>
         <article class="cartao porque"><h3>Computador muito velho</h3><p>Se ele for de 32 bits, de antes de 2008 mais ou menos, nenhuma distro desta página instala nele, e o projeto deixou esse caso de fora. Com 64 bits e 2 GB de memória, o Mint Xfce e o Debian com LXQt ainda dão conta.</p></article>
@@ -428,7 +428,7 @@ def corpo():
     </section>
 
     <section id="bora" class="largura">
-{cabeca("Passo 4", "Instalar o <code>bora</code> e rodar <code>bora diag</code>", "O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e instale em <code>/usr/local/bin</code>, para ele ficar à mão como <code>bora</code> sempre que você precisar. O <code>diag</code> não muda nada: só mostra o que encontrou.")}
+{cabeca("Passo 4", "Instalar o <code>bora</code> e rodar <code>bora diag</code>", "O <code>bora</code> é um arquivo só. Abra o Terminal (no Mint e no Ubuntu, <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>), baixe, confira e instale em <code>/usr/local/bin</code>. O <code>bora diag</code> não muda nada: só mostra o que encontrou.")}
       <div class="bora-grade">
         <figure style="margin:0">
 {terminal}

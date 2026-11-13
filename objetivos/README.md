@@ -1,8 +1,10 @@
 # Rolês (objetivos)
 
-Um rolê é o que a pessoa quer fazer com o computador, dito em linguagem de gente. O `bora` mostra no menu só os rolês que cabem na máquina e na família da distro.
+Um rolê é o que você quer fazer com o computador, dito em linguagem de gente: "pasta compartilhada da casa", e não "configurar SMB3 com ACL".
 
-Cada rolê é um arquivo `objetivos/<id>.yaml`.
+- Cada rolê é um arquivo `objetivos/<id>.yaml`.
+- O `bora` mostra no menu só os rolês que cabem na máquina e na família da distro.
+- Um rolê não tem código: ele junta receitas, faz as perguntas e diz como saber que deu certo.
 
 ## Formato
 
@@ -72,7 +74,11 @@ Na linha de comando, a resposta vai com `-r`: `bora plano comecar-a-programar -r
 
 ## Quando um rolê vira `testado`
 
-Um rolê passa de `rascunho` para `testado` quando cada receita dele tem o teste registrado com `onde: vm` (ou `maquina`) e `resultado: ok` no **Ubuntu 24.04** e no **Debian 13**. Quem grava esse registro são as duas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci), a sem tela e a [com tela](../testes/vm/README.md#a-máquina-com-tela), que aplicam, conferem e desfazem cada receita toda semana; um teste numa máquina de verdade também conta. O Ubuntu 26.04 roda nas mesmas máquinas, mas não segura a mudança de status: um problema nele vira uma issue, e o rolê segue `testado`. Os [roteiros manuais](../testes/vm/README.md) continuam como complemento, para o que só o olho confere (se o vídeo toca, se a loja abre, se os favoritos vieram) e para o Linux Mint, que não tem imagem para as máquinas do CI. Um problema achado neles vira uma issue, e o rolê volta para `rascunho` só se o problema impedir o uso. Escolhido por Brahm em 8/11/2026.
+Quando cada receita dele tem o teste registrado com `onde: vm` (ou `maquina`) e `resultado: ok` no **Ubuntu 24.04** e no **Debian 13**. Escolhido por Brahm em 8/11/2026.
+
+- **Quem grava o registro:** as duas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci), a sem tela e a [com tela](../testes/vm/README.md#a-máquina-com-tela), que aplicam, conferem e desfazem cada receita toda semana. Um teste numa máquina de verdade também conta.
+- **Ubuntu 26.04:** roda nas mesmas máquinas, mas não segura a mudança de status. Um problema nele vira uma issue, e o rolê segue `testado`.
+- **Roteiros manuais:** os [roteiros em VM](../testes/vm/README.md) cobrem o que só o olho confere (se o vídeo toca, se a loja abre, se os favoritos vieram) e o Linux Mint, que não tem imagem para as máquinas do CI. Um problema achado neles vira uma issue. O rolê só volta para `rascunho` se o problema impedir o uso.
 
 ## Rolês da primeira versão
 
@@ -109,13 +115,18 @@ O que é instalado e configurado:
 - o editor escolhido (`dev/editor`), com o Flatpak quando ele vem do Flathub;
 - quando escolhido, o vibecode local: o Ollama (`ia/ollama`), baixado do GitHub e conferido por SHA256, como um serviço que só este computador acessa, e o LM Studio (`ia/lm-studio`), com janela.
 
-No vibecode local, o `bora` mede a máquina antes (a RAM, a memória da placa de vídeo e o disco) e confere cada modelo da lista [`receitas/ia/ollama/modelos.yaml`](../receitas/ia/ollama/modelos.yaml). O `bora modelos` mostra a conta. A sugestão é o modelo mais capaz que roda bem e serve para agente; numa máquina sem memória para isso, um modelo só de conversa, ou nenhum. No plano, `modelo: sugerido` vira o nome do modelo, com o tamanho do download, antes de a pessoa aceitar. No Ollama, o `bora` baixa o modelo; no LM Studio, a pessoa baixa na aba Discover, com o nome que o `bora` mostrou. Escolhido por Brahm em 9/11/2026.
+No vibecode local, o `bora` mede a máquina antes de sugerir um modelo. Escolhido por Brahm em 9/11/2026.
+
+- Mede a RAM, a memória da placa de vídeo e o disco, e confere cada modelo da lista [`receitas/ia/ollama/modelos.yaml`](../receitas/ia/ollama/modelos.yaml). O `bora modelos` mostra a conta.
+- Sugere o modelo mais capaz que roda bem e serve para agente. Numa máquina sem memória para isso, um modelo só de conversa, ou nenhum. Melhor nenhum do que um que responde uma palavra por minuto.
+- No plano, `modelo: sugerido` vira o nome do modelo, com o tamanho do download, antes de a pessoa aceitar.
+- No Ollama, o `bora` baixa o modelo. No LM Studio, a pessoa baixa na aba Discover, com o nome que o `bora` mostrou.
 
 Ficou para depois o Antigravity CLI, que só tem instalador do tipo `curl | sh`.
 
 Pronto quando: cada agente responde no terminal, e um projeto de exemplo é criado, versionado e tem o commit barrado pelo gitleaks quando leva uma chave.
 
-É o rolê que mais vai quebrar, porque os agentes mudam de versão, de instalador e de plano o tempo todo. A máquina virtual do CI aplica os cinco agentes toda semana.
+É o rolê que mais vai quebrar: os agentes mudam de versão, de instalador e de plano mais rápido do que a gente toma um café. Por isso a máquina virtual do CI aplica os cinco agentes toda semana.
 
 ### O rolê "Pasta compartilhada da casa"
 
