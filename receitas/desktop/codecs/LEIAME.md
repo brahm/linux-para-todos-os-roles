@@ -6,7 +6,7 @@ Instala os plugins do GStreamer que tocam os formatos mais comuns de áudio e v�
 
 ## Por que
 
-O Ubuntu e o Debian não instalam esses codecs por padrão. Alguns formatos são cobertos por patentes em certos países, e as distros deixam a escolha para você. Sem eles, o player de vídeo abre o arquivo e mostra só um erro, ou toca o áudio sem a imagem.
+O Ubuntu e o Debian não instalam esses codecs por padrão. Alguns formatos são cobertos por patentes em certos países, e as distros deixam a escolha para você. Sem eles, o player de vídeo abre o arquivo e mostra só um erro, ou toca o áudio sem a imagem, e o filme vira podcast.
 
 Os players que vêm com os ambientes gráficos (o Vídeos e o Showtime do GNOME, o Parole do Xfce, o Dragon Player e o Haruna do KDE) e muitos outros programas usam o GStreamer, então um conjunto de plugins resolve todos eles de uma vez.
 

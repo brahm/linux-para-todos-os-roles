@@ -11,8 +11,10 @@ URL_CHAVE_MOZILLA=https://packages.mozilla.org/apt/repo-signing-key.gpg
 DIGITAL_MOZILLA=35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3
 
 # Snaps que vêm com o Ubuntu e saem sem perguntar: bases, temas, a loja e o
-# atualizador de firmware, que têm equivalentes em pacote.
-SNAPS_DO_SISTEMA='^(bare|core[0-9]*|snapd|gtk-common-themes|gtk2-common-themes|gnome-[0-9].*|mesa-.*|kf[56]-.*|snap-store|snapd-desktop-integration|firmware-updater|desktop-security-center|prompting-client)$'
+# atualizador de firmware, que têm equivalentes em pacote. As plataformas do
+# GNOME mudam de nome com a base (gnome-46-2404, gnome-core26), e as duas
+# formas entram aqui.
+SNAPS_DO_SISTEMA='^(bare|core[0-9]*|snapd|gtk-common-themes|gtk2-common-themes|gnome-[0-9].*|gnome-core[0-9]*|mesa-.*|kf[56]-.*|snap-store|snapd-desktop-integration|firmware-updater|desktop-security-center|prompting-client)$'
 # Snaps que a receita troca por outra versão do mesmo programa.
 SNAPS_TROCADOS='^(firefox|thunderbird)$'
 # Pacotes que o apt pode remover junto com o snapd: os pacotes de transição

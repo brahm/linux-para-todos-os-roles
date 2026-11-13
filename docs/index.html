@@ -118,14 +118,14 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>O que é</p>
         <h2>Você acabou de instalar o Linux. E agora?</h2>
-        <p>Linux para todos os rolês é duas coisas, feitas para andar juntas.</p>
+        <p>Você diz o que quer do computador. O <code>bora</code> faz o resto, e sabe voltar atrás se você mudar de ideia.</p>
       </div>
       <div class="duas">
         <article class="cartao">
           <span class="ladrilho l-laranja" style="--c1:#ffa348;--c2:#ff7800" aria-hidden="true"><svg viewBox="0 0 16 16" style="fill:currentColor;stroke:none;transform:rotate(-14deg)"><use href="#pegada"/></svg></span>
           <h3>Um catálogo de rolês</h3>
           <p>Um rolê é um objetivo concreto para o computador, dito em linguagem de gente: “pronto para estudar e trabalhar”, “dar vida nova a uma máquina antiga”, “pasta compartilhada da casa”.</p>
-          <p>Cada rolê diz para quem serve, em que máquina cabe, o que pergunta, que receitas usa, como saber que deu certo e como desfazer.</p>
+          <p>Cada rolê diz para quem serve, em que máquina cabe, o que pergunta, que receitas usa, como saber que deu certo e como desfazer. Sem letra miúda.</p>
         </article>
         <article class="cartao">
           <img src="imagens/icone.svg" alt="" width="64" height="64">
@@ -153,7 +153,7 @@
         </article>
         <article class="cartao porta">
           <div class="rotulo"><span class="n">2</span><h3>Instale o <code>bora</code></h3></div>
-          <p>É um arquivo só. No terminal, baixe, confira com o <code>sha256sum</code> e coloque em <code>/usr/local/bin</code>, para ele ficar à mão sempre que você precisar. O <code>bora diag</code> mostra o que ele encontrou, sem mudar nada.</p>
+          <p>É um arquivo só. Baixe, confira com o <code>sha256sum</code> e coloque em <code>/usr/local/bin</code>. Depois, <code>bora diag</code> mostra o que ele encontrou, sem mudar nada.</p>
           <p class="precisa"><a href="distro/#bora">Ver os comandos</a></p>
         </article>
         <article class="cartao porta">
@@ -281,7 +281,7 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Status do desenvolvimento</p>
         <h2>Onde a gente está na trilha</h2>
-        <p>O projeto recomeçou do zero em novembro de 2026. Os formatos, a marca, o <code>bora</code> e os quatro primeiros rolês já saíram; agora falta fechar a primeira versão útil. Nada aqui tem data marcada: cada passo sai quando estiver testado.</p>
+        <p>Quatro rolês testados, o quinto em teste. Nada aqui tem data marcada: cada passo sai quando estiver testado, e não quando o calendário manda.</p>
       </div>
       <div class="status-grade">
         <ol class="passos">
@@ -310,8 +310,14 @@
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
               <h3>Testes automáticos em contêiner e em máquina virtual <span class="ficha feito">Feito</span></h3>
-              <p>A cada pull request, o GitHub Actions aplica, confere e desfaz cada receita em contêiner no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Todo domingo, e quando uma receita muda, uma máquina virtual de verdade nessas três distros aplica a parte dos rolês que não depende de tela, reinicia, confere que tudo voltou sozinho e desfaz. Outra máquina, com tela de login, aplica o ambiente leve, o navegador enxuto e o Sem Snap, entra no ambiente leve, abre o Firefox e tira uma captura da tela a cada passo; ela roda nas mesmas três distros com o GNOME e também no Debian 13 com o LightDM e o Xfce, o jeito mais comum de uma máquina antiga com Debian. Quando passa, o resultado entra no registro de testes de cada receita; quando falha, vira uma issue.</p>
-              <p>Também rodam sozinhos a conferência mensal dos links deste site e a semanal da versão do Node.js.</p>
+              <p>Os robôs trabalham enquanto a gente toma café, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13:</p>
+              <ul>
+                <li><strong>A cada pull request:</strong> cada receita é aplicada, conferida e desfeita em contêiner.</li>
+                <li><strong>Todo domingo, e quando uma receita muda:</strong> uma máquina virtual de verdade aplica a parte dos rolês que não depende de tela, reinicia, confere que tudo voltou sozinho e desfaz.</li>
+                <li><strong>Com tela de login:</strong> outra máquina aplica o ambiente leve, o navegador enxuto e o Sem Snap, entra no ambiente leve, abre o Firefox e tira uma captura a cada passo. Também roda no Debian 13 com o LightDM e o Xfce, o jeito mais comum de uma máquina antiga com Debian.</li>
+                <li><strong>Todo mês e toda semana:</strong> a conferência dos links deste site e a da versão do Node.js.</li>
+              </ul>
+              <p>Passou, o resultado entra no registro de testes de cada receita. Falhou, vira uma issue.</p>
             </div>
           </li>
           <li class="passo agora">
@@ -319,8 +325,14 @@
             <div class="corpo">
               <h3>Primeira versão útil <span class="voce-esta-aqui">Próximo passo</span></h3>
               <p>Rolês 1 a 4 no Ubuntu e no Debian, testados numa máquina virtual, e conferidos no Linux Mint, a derivada mais usada (o Pop!_OS e o Zorin OS usam as receitas do Ubuntu). A pergunta pronta, o modo passo a passo, o <a href="distro/">roteiro para escolher e instalar a distro</a>, e o site gerado a partir das receitas.</p>
-              <p>Já saíram a pergunta pronta, o modo passo a passo, as páginas das receitas, o roteiro da distro e os rolês 1 a 4: <a href="catalogo/roles/pronto-para-estudar.html">Pronto para estudar e trabalhar</a>, com codecs, Flatpak e backup da pasta pessoal, <a href="catalogo/roles/maquina-antiga.html">Dar vida nova a uma máquina antiga</a>, com zram, ambiente leve, navegador enxuto e serviços enxutos, <a href="catalogo/roles/comecar-a-programar.html">Começar a programar</a>, com Git, Python ou Node.js e contêineres com Podman, e <a href="catalogo/roles/vibecodar.html">Vibecodar</a>, com os agentes de IA e a skill do <code>bora</code> para eles, as chaves de API, o gitleaks, a caixa de areia, o editor e os modelos locais com o Ollama ou o LM Studio. O rolê 1 também guarda o <a href="catalogo/receitas/sistema-etckeeper.html">histórico do /etc</a> e, se você pedir, <a href="catalogo/receitas/desktop-sem-snap.html">tira o Snap</a>; o rolê 2, se você pedir, liga o <a href="catalogo/receitas/seguranca-ssh.html">acesso por SSH</a> na rede de casa.</p>
-              <p>Os quatro rolês já estão testados: cada receita passa toda semana nas máquinas virtuais do CI, no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13, inclusive a parte com tela de login. Falta o <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md">roteiro manual</a> no Linux Mint, que não tem imagem para o CI.</p>
+              <p>Já saíram a pergunta pronta, o modo passo a passo, as páginas das receitas, o roteiro da distro e os quatro rolês, todos testados toda semana nas máquinas virtuais do CI, inclusive com tela de login:</p>
+              <ul>
+                <li><a href="catalogo/roles/pronto-para-estudar.html">Pronto para estudar e trabalhar</a>: codecs, Flatpak, backup da pasta pessoal, <a href="catalogo/receitas/sistema-etckeeper.html">histórico do /etc</a> e, se você pedir, <a href="catalogo/receitas/desktop-sem-snap.html">sem Snap</a>.</li>
+                <li><a href="catalogo/roles/maquina-antiga.html">Dar vida nova a uma máquina antiga</a>: zram, ambiente leve, navegador enxuto, serviços enxutos e, se você pedir, <a href="catalogo/receitas/seguranca-ssh.html">SSH</a> na rede de casa.</li>
+                <li><a href="catalogo/roles/comecar-a-programar.html">Começar a programar</a>: Git, Python ou Node.js e contêineres com Podman.</li>
+                <li><a href="catalogo/roles/vibecodar.html">Vibecodar</a>: agentes de IA com a skill do <code>bora</code>, chaves de API, gitleaks, caixa de areia, editor e modelos locais com o Ollama ou o LM Studio.</li>
+              </ul>
+              <p>Falta o <a href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/testes/vm/README.md">roteiro manual</a> no Linux Mint, que não tem imagem para o CI.</p>
             </div>
           </li>
           <li class="passo">
@@ -342,7 +354,7 @@
             <span class="marco" aria-hidden="true"><svg><use href="#pegada"/></svg></span>
             <div class="corpo">
               <h3>Agentes que aplicam e rolês de jogos</h3>
-              <p>O agente que você já tem, de terminal ou de desktop, pede ao <code>bora</code> para aplicar o plano, sem nunca receber a sua senha. Um caminho de um clique, com a explicação de cada mudança disponível depois. Uma receita de driver de vídeo, testada em máquina de verdade, e os rolês de jogos: console, emulação, realidade virtual e outros.</p>
+              <p>O agente que você já tem, de terminal ou de desktop, pede ao <code>bora</code> para aplicar o plano, sem nunca receber a sua senha. Um caminho direto, no terminal, que aplica tudo de uma vez e deixa a explicação de cada mudança para depois. Uma receita de driver de vídeo, testada em máquina de verdade, e os rolês de jogos: console, emulação, realidade virtual e outros.</p>
             </div>
           </li>
           <li class="passo">
@@ -379,7 +391,7 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Parecido, mas diferente</p>
         <h2>Conheça também o Linux Toys</h2>
-        <p>O <a href="https://linux.toys">Linux Toys</a> é um projeto vizinho que vale conhecer. Os dois facilitam a vida depois da instalação, mas por caminhos diferentes.</p>
+        <p>O <a href="https://linux.toys">Linux Toys</a> é um projeto vizinho, e dos bons. Os dois facilitam a vida depois da instalação, por caminhos diferentes.</p>
       </div>
       <div class="duas">
         <article class="cartao">
@@ -417,7 +429,7 @@
         <h2>O que não muda</h2>
       </div>
       <div class="principios">
-        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.3c3.2 2.3 7.8 2.3 11 0v-4.3"/></svg><div><strong>Aprender é opcional, mas está à mão.</strong><span>Resolva em um clique e entenda depois, ou vá no passo a passo.</span></div></div>
+        <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.3c3.2 2.3 7.8 2.3 11 0v-4.3"/></svg><div><strong>Aprender é opcional, mas está à mão.</strong><span>Aplique tudo de uma vez e entenda depois, ou vá no passo a passo.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v8"/><path d="M6.6 7a7.5 7.5 0 1 0 10.8 0"/></svg><div><strong>Funciona sem IA.</strong><span>A IA acelera, mas nunca é requisito.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg><div><strong>A IA não roda comando solto como administrador.</strong><span>Ela monta o plano e, se você deixar, pede ao <code>bora</code> para aplicar. A senha é sempre você que digita.</span></div></div>
         <div class="cartao principio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></svg><div><strong>Só receitas do catálogo.</strong><span>O <code>bora</code> não roda comando livre.</span></div></div>
@@ -432,7 +444,7 @@
       <div class="cabeca">
         <p class="sobretitulo"><svg aria-hidden="true"><use href="#pegada"/></svg>Bora junto</p>
         <h2>Como ajudar</h2>
-        <p>Contribuições são bem-vindas, inclusive de quem começou ontem. Muitas vezes, quem acabou de passar por um problema é quem melhor explica a solução.</p>
+        <p>Chegou ontem no Linux? Ótimo. Quem acabou de tropeçar num problema costuma explicar a solução melhor do que quem já esqueceu que ele existia.</p>
       </div>
       <div class="convites">
         <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/issues/new?template=3-novo-role.yml&amp;title=Rol%C3%AA%3A%20">
@@ -450,7 +462,7 @@
         <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">
           <span class="bolha" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20.5h7M12 16.5v4M9 10.3l2 2 4-4"/></svg></span>
           <h3>Testar numa distro</h3>
-          <p>Rodar uma receita numa distro em que ela ainda não foi testada, e registrar o resultado, é das ajudas mais valiosas.</p>
+          <p>Rode uma receita numa distro em que ela ainda não foi testada e conte como foi. É a ajuda que mais faz falta.</p>
           <span class="seta">Ver como testar</span>
         </a>
         <a class="cartao convite" href="https://github.com/brahm/linux-para-todos-os-roles">
@@ -504,8 +516,8 @@
       </svg>
       <div class="largura">
         <div>
-          <h2>O melhor rolê é o que a gente faz junto.</h2>
-          <p>O projeto está no começo, que é a melhor hora para chegar: dá para testar os quatro primeiros rolês e opinar nos próximos antes de virarem código.</p>
+          <h2>Teste um rolê e conte como foi.</h2>
+          <p>Quatro rolês já dá para testar hoje, numa máquina virtual. Os próximos ainda estão no papel, então dá para opinar antes de virarem código (e antes de virarem bug).</p>
         </div>
         <a class="botao escuro" href="https://github.com/brahm/linux-para-todos-os-roles">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>Bora pro GitHub

@@ -1,5 +1,7 @@
 # Workflows do GitHub Actions
 
+O que roda sozinho no repositório, quando roda e o que faz. Resumo: os testes rodam a cada pull request; as máquinas virtuais, todo domingo; o resto, quando alguma coisa muda.
+
 | Workflow | Arquivo | Quando roda | O que faz |
 |---|---|---|---|
 | Testes | [`testes.yml`](testes.yml) | a cada push na `main` e a cada pull request | Testes do `bora`, shellcheck, binário estático e as receitas em contêiner no Ubuntu 24.04, no Ubuntu 26.04 e no Debian 13. Na `main`, grava nas receitas o registro com `onde: conteiner` de cada distro que passou |
@@ -15,9 +17,12 @@ Todos também rodam à mão, em Actions, escolhendo o workflow e "Run workflow".
 
 ## Atenção: os agendados param depois de 60 dias sem commits
 
-Num repositório público, o GitHub **desliga sozinho os workflows agendados** (Links, Node.js e as duas máquinas virtuais) quando o repositório passa 60 dias sem nenhum commit. Ele manda um e-mail avisando antes, e o workflow aparece como desativado na aba Actions.
+Num repositório público, o GitHub **desliga sozinho os workflows agendados** (Links, Node.js e as duas máquinas virtuais) depois de 60 dias sem nenhum commit. Para ele, projeto quieto é projeto abandonado. Antes, chega um e-mail, e o workflow aparece como desativado na aba Actions.
 
-Para religar: em Actions, escolha o workflow e clique em "Enable workflow". Qualquer commit novo na `main` também zera a contagem. Se o projeto ficar parado por muito tempo, vale olhar a aba Actions de vez em quando, porque um aviso de segurança do Node.js pode passar despercebido.
+- **Para religar:** em Actions, escolha o workflow e clique em "Enable workflow".
+- **Para não desligar:** qualquer commit novo na `main` zera a contagem.
+
+Se o projeto ficar parado por muito tempo, olhe a aba Actions de vez em quando. Um aviso de segurança do Node.js não deveria passar despercebido.
 
 ## Permissões
 

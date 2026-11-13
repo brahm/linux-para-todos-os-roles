@@ -177,7 +177,7 @@ def onde_testada(r):
             <tbody>{testes}</tbody>
           </table>
         </div>
-        <p class="nota"><strong>Testada em contêiner</strong> quer dizer que a receita passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM</strong> quer dizer que, além disso, ela foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana; o registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
+        <p class="nota"><strong>Testada em contêiner:</strong> passou nos testes automáticos dessa família, que rodam num contêiner a cada pull request, sem kernel, disco nem tela de login de verdade. <strong>Testada em VM:</strong> além disso, foi aplicada, conferida e desfeita numa máquina virtual (VM) de verdade, o que o CI faz toda semana. O registro acima mostra a última vez de cada distro. Enquanto uma receita só tem o teste em contêiner, o <code>bora</code> avisa quando monta o plano. <a href="{REPO}/blob/main/CONTRIBUTING.md#antes-de-abrir-um-pull-request">Testar numa máquina sua</a> é uma das ajudas mais valiosas.</p>
       </div>{capturas(r.get('id', ''))}'''
 
 
@@ -896,7 +896,7 @@ def pagina_backup():
         ("Por que backup, se já tem snapshot?", "O snapshot fica no mesmo disco do computador e deixa as pastas pessoais de fora de propósito. Se o disco morrer, o notebook for roubado ou um arquivo for apagado sem querer, só uma cópia em outro disco salva o trabalho."),
         ("Por que uma pasta comum, e não um arquivo de backup?", "Para recuperar um arquivo sem aprender programa nenhum: conecte o disco, abra a pasta da data e copie. E a cópia abre em qualquer computador com Linux, mesmo sem o <code>bora</code>."),
         ("Por que exigir ext4?", "As versões compartilham os arquivos que não mudaram por hardlinks, e guardam o dono e as permissões de cada arquivo. exFAT, NTFS e FAT não guardam isso, e sete versões ocupariam sete vezes o espaço. Formatar apagaria o que está no disco, então o <code>bora</code> nunca faz isso por você."),
-        ("Por que rodar ao conectar o disco?", "Num notebook, o disco externo quase nunca está conectado na hora marcada. Rodando ao conectar, basta plugar o disco de vez em quando para a cópia acontecer."),
+        ("Por que rodar ao conectar o disco?", "Num notebook, o disco externo quase nunca está conectado na hora marcada. Rodando ao conectar, basta plugar o disco de vez em quando para a cópia acontecer, sem precisar lembrar de nada."),
     ])))
     corpo.append(secao("o-que-muda", "Como", "O que muda no sistema", "", mudancas([
         ("pacote", "rsync", "Instalado se ainda não estiver. É ele que copia só o que mudou."),
@@ -1612,7 +1612,7 @@ def pagina_node():
             "Terminal mostrando o bora aplicar a receita Node.js: baixa o Node.js 26.13.0, confere a soma SHA256, instala, configura o npm e confere seis testes."),
         [("Por que não o Node.js da distro?", "No Ubuntu 24.04 e nas derivadas, como o Linux Mint 22, o Pop!_OS e o Zorin OS, ele é a versão 18, que saiu de suporte em 2025. As ferramentas de hoje, como o Vite, pedem uma versão mais nova, e o primeiro tutorial já quebraria."),
          ("É seguro baixar de fora da distro?", "O arquivo vem de nodejs.org, do próprio projeto, e a receita traz a soma SHA256 do arquivo que foi testado. Se o que chegar não bater, nada é instalado. É a regra do projeto para instaladores oficiais."),
-         ("Por que o npm sem sudo?", "Com <code>sudo npm install -g</code>, os arquivos ficam do root, e o próximo <code>npm</code> sem sudo falha com <code>EACCES</code>. Com o <code>prefix</code> em <code>~/.local</code>, cada pessoa instala na própria pasta."),
+         ("Por que o npm sem sudo?", "Com <code>sudo npm install -g</code>, os arquivos ficam do root, e o próximo <code>npm</code> sem sudo falha com <code>EACCES</code>. Daí para o <code>chmod 777</code> é um passo, e ninguém quer dar esse passo. Com o <code>prefix</code> em <code>~/.local</code>, cada pessoa instala na própria pasta."),
          ("Como atualizar?", "Quando sair um <code>bora</code> com uma versão nova do Node.js, aplique a receita de novo. Ela instala a nova ao lado e troca os links.")],
         [("pacote", "curl, xz-utils e ca-certificates", "Para baixar e abrir o arquivo, se faltarem."),
          ("arquivo", "/usr/local/lib/nodejs/node-v26.13.0-linux-x64", "O Node.js, com o npm e o npx, e o <code>etc/npmrc</code> com o <code>prefix</code>."),
@@ -1980,7 +1980,7 @@ def pagina_segredos():
             "Terminal mostrando o bora aplicar a receita Verificação de segredos: instala o gitleaks, configura o Git e confere cinco testes, um deles barrando um commit com um token."),
         [("Por que não basta apagar o arquivo depois?", "A chave continua no histórico do Git, e num repositório público robôs acham em minutos. O único conserto é trocar a chave no site do provedor. Por isso o melhor é não deixar entrar."),
          ("Por que nos ganchos da conta, e não em cada projeto?", "Assim vale para todo projeto, inclusive os que você clonar amanhã, sem lembrar de instalar nada. O gancho do bora chama o <code>.git/hooks</code> de cada projeto depois, para não quebrar o que já existia."),
-         ("E se o gitleaks errar?", "Ele às vezes acha que um texto de exemplo é uma chave. Confira o que ele apontou e, se for alarme falso, faça o commit com <code>git commit --no-verify</code>.")],
+         ("E se o gitleaks errar?", "Ele às vezes acha que um texto de exemplo é uma chave. Melhor um alarme falso do que uma chave de verdade no GitHub. Confira o que ele apontou e, se for alarme falso, faça o commit com <code>git commit --no-verify</code>.")],
         [("pacote", "git e gitleaks", "Dos repositórios da distro."),
          ("arquivo", "~/.config/git/ignore", "Um bloco do bora com <code>.env</code>, <code>*.pem</code>, <code>*.key</code> e as chaves SSH."),
          ("arquivo", "~/.config/git/ganchos-bora", "O gancho e os links; o <code>core.hooksPath</code> aponta para cá.")],

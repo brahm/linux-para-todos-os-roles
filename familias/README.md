@@ -1,6 +1,6 @@
 # Famílias de distro
 
-O `bora` agrupa as distros pela base de onde vieram. Uma receita é escrita uma vez e, só onde o comportamento muda de verdade, ganha um script próprio para a família.
+O `bora` agrupa as distros pela base de onde vieram. Uma receita é escrita uma vez e serve para a família inteira: a do Ubuntu roda no Mint sem ninguém copiar e colar o mesmo script cinco vezes. Só onde o comportamento muda de verdade ela ganha um script próprio para a família.
 
 ## Famílias e ondas
 
@@ -26,11 +26,11 @@ O `bora` agrupa as distros pela base de onde vieram. Uma receita é escrita uma 
 
 ## Como o `bora` reconhece a família
 
-O `bora diag` lê o `/etc/os-release` (campos `ID`, `ID_LIKE`, `VERSION_ID` e `UBUNTU_CODENAME`) e confere o processo de init. Derivadas herdam a família da base, pelo `UBUNTU_CODENAME`, e as diferenças conhecidas de cada uma ficam na seção abaixo.
+O `bora diag` lê o `/etc/os-release` (campos `ID`, `ID_LIKE`, `VERSION_ID` e `UBUNTU_CODENAME`) e confere o processo de init. Derivadas herdam a família da base pelo `UBUNTU_CODENAME`. As diferenças conhecidas de cada uma estão logo abaixo.
 
 ## Derivadas da família `ubuntu`
 
-O `bora` aceita a derivada quando a base dela é uma das que ele testa (Ubuntu 24.04 ou 26.04). Das três, só o Linux Mint entra nos [roteiros de teste em VM](../testes/vm/README.md); o Pop!_OS e o Zorin OS seguem como "herdada", com estas diferenças já conhecidas:
+O `bora` aceita a derivada quando a base dela é uma das que ele testa (Ubuntu 24.04 ou 26.04). Das três, só o Linux Mint entra nos [roteiros de teste em VM](../testes/vm/README.md). O Pop!_OS e o Zorin OS seguem como "herdada", com estas diferenças já conhecidas:
 
 | Derivada | Base | O que muda para as receitas |
 |---|---|---|
@@ -42,7 +42,9 @@ Uma diferença nova entra aqui quando aparecer num relato de teste. Se ela exigi
 
 ## Níveis de suporte
 
-- **testada:** a receita passa nos testes automáticos dessa família a cada mudança. No site, aparece como "testada em contêiner" enquanto o registro de testes da receita (`testes` no `receita.yaml`) só tiver testes em contêiner. Ela só é recomendada sem ressalva depois de passar numa máquina virtual ou num computador de verdade, pelas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci) ou por um roteiro manual; até lá, o `bora` avisa quando monta o plano.
+- **testada:** a receita passa nos testes automáticos dessa família a cada mudança.
+  - Enquanto o registro de testes (`testes` no `receita.yaml`) só tiver contêiner, o site mostra "testada em contêiner".
+  - Ela só é recomendada sem ressalva depois de passar numa máquina virtual ou num computador de verdade, pelas [máquinas virtuais do CI](../testes/vm/README.md#a-parte-automática-no-ci) ou por um roteiro manual. Até lá, o `bora` avisa quando monta o plano.
 - **herdada:** a derivada usa a receita da base, e o `bora` avisa quando aquela derivada ainda não foi testada.
 - **comunidade:** receitas aceitas com relato de teste, sem garantia do projeto.
 - **nao-se-aplica:** aparece no menu como indisponível, com o motivo.

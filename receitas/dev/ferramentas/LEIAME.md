@@ -6,7 +6,14 @@ Instala o `ripgrep` (o comando `rg`), o `fd`, o `jq` e o GitHub CLI (`gh`), todo
 
 ## Por que
 
-São as ferramentas que os agentes de IA mais usam para entender um projeto: o `rg` procura um texto em todos os arquivos, muito mais rápido que o `grep -r`, e respeita o `.gitignore`; o `fd` acha arquivos pelo nome; o `jq` lê e filtra JSON, que é a língua das APIs; e o `gh` clona repositórios, abre pull requests e entra no GitHub sem senha. Quando elas faltam, o agente gasta tempo e tokens tentando outro caminho, ou pede para instalar.
+São as ferramentas que os agentes de IA mais usam para entender um projeto:
+
+- `rg` procura um texto em todos os arquivos, muito mais rápido que o `grep -r`, e respeita o `.gitignore`;
+- `fd` acha arquivos pelo nome;
+- `jq` lê e filtra JSON, que é a língua das APIs;
+- `gh` clona repositórios, abre pull requests e entra no GitHub sem senha.
+
+Quando elas faltam, o agente gasta tempo e tokens tentando outro caminho, ou pede para instalar. São tokens que você paga.
 
 No Debian e no Ubuntu, o `fd` se chama `fdfind`, porque já existia outro programa com o nome `fd`. A receita cria o comando `fd`, que é o nome que os tutoriais e os agentes usam.
 

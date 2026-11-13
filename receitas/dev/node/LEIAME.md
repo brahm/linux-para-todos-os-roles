@@ -10,7 +10,7 @@ O Node.js roda JavaScript fora do navegador. É o que os tutoriais de web pedem 
 
 A receita não usa o Node.js da distro porque, no Ubuntu 24.04 e nas derivadas (Linux Mint 22, Pop!_OS, Zorin OS), ele é a versão 18, que já saiu de suporte, e as ferramentas de hoje, como o Vite, pedem uma versão mais nova. Em vez disso, ela instala a versão LTS (de suporte longo) que o projeto testou, igual em todas as distros. Ela segue a regra dos instaladores oficiais: o arquivo vem de nodejs.org, e a receita confere a soma SHA256 antes de instalar. Se o arquivo baixado não for exatamente o que foi testado, nada é instalado.
 
-O `sudo npm install -g` é a origem de muitos problemas: os arquivos ficam do root, e o próximo `npm` sem `sudo` falha com `EACCES`. Com o `prefix` em `~/.local`, cada pessoa instala os seus programas na própria pasta, e eles aparecem em `~/.local/bin`.
+O `sudo npm install -g` é a origem de muita dor de cabeça: os arquivos ficam do root, e o próximo `npm` sem `sudo` falha com `EACCES`. Com o `prefix` em `~/.local`, cada pessoa instala os seus programas na própria pasta, e eles aparecem em `~/.local/bin`.
 
 A versão instalada não se atualiza sozinha pelo `apt`. Quando o `bora` trouxer uma versão nova, aplique a receita de novo para atualizar.
 

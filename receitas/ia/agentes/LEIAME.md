@@ -16,7 +16,7 @@ Um agente de programação conversa com você no terminal, lê o projeto, escrev
 | OpenCode | `opencode` | modelos gratuitos do próprio OpenCode, ou a chave de qualquer provedor, como OpenRouter e DeepSeek |
 | Mistral Vibe | `vibe` | chave de API da Mistral |
 
-Os planos e os limites mudam o tempo todo; confira na página de cada fabricante antes de assinar.
+Os planos e os limites mudam mais que previsão do tempo. Confira na página de cada fabricante antes de assinar.
 
 **De onde eles vêm.** Os quatro primeiros vêm dos pacotes oficiais de cada fabricante no npm, e o Mistral Vibe, do PyPI, com o `pipx`. O npm e o pip conferem a soma de cada arquivo com a que o registro publica. Os instaladores que se baixam e rodam com um script ficam de fora, porque o `bora` não tem como conferir um script que muda a cada versão. Por isso o Antigravity CLI, do Google, que só tem esse instalador, ainda não entra.
 

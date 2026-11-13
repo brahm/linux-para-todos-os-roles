@@ -242,3 +242,23 @@ Depois da [análise do Linux Toys](https://github.com/psygreg/linuxtoys), Brahm 
 | Mesmo quando o agente pede, quem executa é o `bora`: só receitas do catálogo, com snapshot antes, verificar, testar e desfazer. O agente nunca recebe a senha, que a pessoa digita na própria tela, numa janela do sistema que mostra o plano. O agente recebe o resultado do teste e pode pedir o desfazer | É o que separa delegar de entregar o root: o agente escolhe o que fazer dentro do catálogo, mas não roda comando solto como administrador, e a pessoa vê e aprova cada plano |
 | A delegação é desenhada e testada primeiro com o Claude Desktop e o ChatGPT Desktop, na máquina de testes de Brahm. Os aplicativos de desktop não leem as pastas de skills dos agentes de terminal, onde o rolê "Vibecodar" põe a do `bora`, então o caminho provável é um servidor MCP local do próprio `bora`, que antes tinha ficado de fora "até haver demanda" | A demanda apareceu. Até a delegação existir, a skill instalada pelo rolê "Vibecodar" continua dizendo que o agente só monta e valida o plano |
 
+
+## 13 de novembro de 2026: guia de estilo
+
+Brahm pediu que toda a documentação fosse reescrita com três regras de tom e com as técnicas do *HBR Guide to Persuasive Presentations*, e que isso valesse daqui pra frente.
+
+| Decisão | Por quê |
+|---|---|
+| O jeito de escrever fica em [`docs/estilo.md`](estilo.md), com o resumo no `CLAUDE.md` (e no `AGENTS.md`, que aponta para ele) | Um lugar só para gente e para agentes de IA, que hoje escrevem boa parte do texto do projeto |
+| Três regras de tom, de Brahm: direto e claro; zero clichê de IA, com uma lista de palavras proibidas; leve e bem-humorado, sem perder a precisão | O texto tem que soar como gente explicando para gente, e não como folheto gerado por IA |
+| Das técnicas do guia: o leitor é o protagonista e o `bora` é o mentor; cada texto escolhe um leitor principal entre curiosos, estudantes e entusiastas; resumo primeiro e detalhe depois; toda página termina com o próximo passo | Quem chega à documentação quer resolver um problema. O começo do texto precisa bastar para quem tem pressa |
+| O `ferramentas/estilo/conferir.sh` barra as palavras proibidas, e roda no CI junto com os outros testes | Regra de estilo que ninguém confere vira sugestão |
+| As decisões antigas deste arquivo e os registros de teste não são reescritos | São histórico: dizem o que foi decidido, com as palavras da época |
+
+## 13 de novembro de 2026: sem versão gráfica por enquanto
+
+| Decisão | Por quê |
+|---|---|
+| O `bora` continua só no terminal, com menus. Uma versão gráfica só entra quando Brahm decidir que há um caso de uso que exija uma. Nenhum texto do projeto promete ou planeja uma janela até lá | Os menus em texto já funcionam em qualquer terminal, por SSH e com leitor de tela, e os agentes de IA conversam com o `bora` pelo terminal. Uma interface gráfica seria mais uma peça para manter, sem um problema que só ela resolva |
+| O "resolver em um clique" da decisão anterior quer dizer o caminho direto do `bora`, no terminal: aplicar o plano de uma vez e deixar a explicação para depois. Não é um botão numa janela | É a leitura que cabe com a decisão acima |
+| A marca continua com o identificador `br.com.brahm.Bora`, o `.desktop` e o metainfo, para o empacotamento | Pacotes e Flatpak pedem esses arquivos mesmo para um programa de terminal |
