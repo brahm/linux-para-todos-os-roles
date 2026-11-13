@@ -34,8 +34,10 @@ pub fn criar(descricao: &str) -> Result<String, String> {
                     .args(["--create", "--scripted", "--comments", descricao])
                     .output()
             };
-            // O Timeshift às vezes cai com segfault logo no começo, antes de
-            // copiar qualquer coisa (issue #16). Uma segunda tentativa resolve.
+            // Até a versão 26.11.0, o Timeshift às vezes cai com segfault logo
+            // no começo, antes de copiar qualquer coisa (issue #16). A causa é
+            // uma corrida entre duas threads dele, corrigida em linuxmint/timeshift#552.
+            // Enquanto as distros trazem versões antigas, uma segunda tentativa resolve.
             match rodar() {
                 Ok(s) if s.status.signal().is_some() => rodar(),
                 outro => outro,
