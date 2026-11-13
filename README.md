@@ -111,7 +111,8 @@ Ficam de fora: máquinas de 32 bits, distros sem systemd por padrão (MX Linux, 
 ## Princípios
 
 - **Funciona sem IA.** A IA acelera, mas nunca é requisito.
-- **Aprender é opcional, mas está sempre à mão.** Resolva em um clique e entenda depois, ou vá no passo a passo, com o porquê de cada etapa.
+- **Aprender é opcional, mas está sempre à mão.** Aplique tudo de uma vez e entenda depois, ou vá no passo a passo, com o porquê de cada etapa.
+- **Terminal, com menus.** Sem versão gráfica até haver um caso de uso que exija uma.
 - **A IA não roda comando solto como administrador.** Ela monta o plano e, se você deixar, pede ao `bora` para aplicar. Quem executa é o `bora`, e a senha é você que digita.
 - **Só receitas do catálogo.** O `bora` não roda comando livre.
 - **Toda mudança tem volta.** Snapshot antes de aplicar, e cada receita sabe se desfazer.

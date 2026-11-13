@@ -254,3 +254,11 @@ Brahm pediu que toda a documentação fosse reescrita com três regras de tom e 
 | Das técnicas do guia: o leitor é o protagonista e o `bora` é o mentor; cada texto escolhe um leitor principal entre curiosos, estudantes e entusiastas; resumo primeiro e detalhe depois; toda página termina com o próximo passo | Quem chega à documentação quer resolver um problema. O começo do texto precisa bastar para quem tem pressa |
 | O `ferramentas/estilo/conferir.sh` barra as palavras proibidas, e roda no CI junto com os outros testes | Regra de estilo que ninguém confere vira sugestão |
 | As decisões antigas deste arquivo e os registros de teste não são reescritos | São histórico: dizem o que foi decidido, com as palavras da época |
+
+## 13 de novembro de 2026: sem versão gráfica por enquanto
+
+| Decisão | Por quê |
+|---|---|
+| O `bora` continua só no terminal, com menus. Uma versão gráfica só entra quando Brahm decidir que há um caso de uso que exija uma. Nenhum texto do projeto promete ou planeja uma janela até lá | Os menus em texto já funcionam em qualquer terminal, por SSH e com leitor de tela, e os agentes de IA conversam com o `bora` pelo terminal. Uma interface gráfica seria mais uma peça para manter, sem um problema que só ela resolva |
+| O "resolver em um clique" da decisão anterior quer dizer o caminho direto do `bora`, no terminal: aplicar o plano de uma vez e deixar a explicação para depois. Não é um botão numa janela | É a leitura que cabe com a decisão acima |
+| A marca continua com o identificador `br.com.brahm.Bora`, o `.desktop` e o metainfo, para o empacotamento | Pacotes e Flatpak pedem esses arquivos mesmo para um programa de terminal |

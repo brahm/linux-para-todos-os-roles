@@ -17,6 +17,7 @@ Antes de terminar, rode `ferramentas/estilo/conferir.sh`.
 ## Regras do projeto que não se negociam
 
 - **Versão:** o projeto segue em 0.x. Nunca suba para fora da 0.x nem sugira isso; quem decide é o Brahm.
+- **Interface:** o `bora` é de terminal, com menus. Não construa nem prometa uma versão gráfica; ela só entra quando o Brahm decidir que há um caso de uso que exija.
 - **Site:** as páginas em `docs/catalogo/` e `docs/distro/` são geradas. Mude o texto em `ferramentas/catalogo/*.py` e rode `python3 ferramentas/catalogo/gerar.py`. A `docs/index.html` é escrita à mão.
 - **LEIAMEs:** mantenha as seis seções (`O que faz`, `Por que`, `O que muda no sistema`, `Como conferir`, `Como desfazer`, `Fontes`). O `cargo test` confere, e o `bora --passo-a-passo` mostra duas delas no terminal.
 - **Receitas:** só repositórios da distro e Flathub, nada de AUR, nada de porta aberta para a internet, nada de segredo no repositório. As regras completas estão em [`receitas/README.md`](receitas/README.md).

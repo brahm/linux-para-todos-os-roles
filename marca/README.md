@@ -1,6 +1,8 @@
 # Marca: logotipo e ícone
 
-Identidade visual do projeto **Linux para todos os rolês** e do aplicativo **`bora`**, pronta para o README, o site, a interface gráfica de desktop e a distribuição como Flatpak ou pacote nativo da distro.
+Identidade visual do projeto **Linux para todos os rolês** e do aplicativo **`bora`**, pronta para o README, o site e a distribuição como pacote nativo da distro ou Flatpak.
+
+O `bora` é um programa de terminal, e continua assim: uma versão gráfica só entra quando o Brahm decidir que há um caso de uso que exija. As seções sobre `.desktop`, metainfo e AppStream abaixo servem para o empacotamento, não anunciam uma janela.
 
 ![Prévia da marca em vários tamanhos e fundos](png/previa.png)
 
@@ -23,7 +25,7 @@ Não há mascote de propósito. As diretrizes de ícones do GNOME desaconselham 
 | `logotipo/logotipo-horizontal-escuro.svg` | O mesmo, com cores para fundos escuros. |
 | `logotipo/logotipo-horizontal-mono.svg` | Uma cor só (`currentColor`), para impressão, bordado ou fundos onde as cores não funcionam. |
 | `logotipo/logotipo-vertical.svg`, `-escuro.svg`, `-mono.svg` | Versão empilhada, para avatares, capas e espaços quadrados. |
-| `logotipo/bora-horizontal.svg`, `-escuro.svg` | Ícone do aplicativo ao lado do nome `bora`, para a janela "Sobre", o site e a documentação. |
+| `logotipo/bora-horizontal.svg`, `-escuro.svg` | Ícone do aplicativo ao lado do nome `bora`, para o site e a documentação. |
 | `png/` | Exportações prontas: ícone de 32 a 512 px, ícone simbólico e logotipos em alta resolução. |
 | `ferramentas/` | Os scripts que geram tudo isso. |
 
