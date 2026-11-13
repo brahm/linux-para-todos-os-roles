@@ -63,12 +63,26 @@ bora plano --receitas sistema/zram,desktop/ambiente-leve,desktop/navegador-leve,
     -o /tmp/plano.yaml
 cat /tmp/plano.yaml
 
+# O contêiner vê o /proc/swaps da máquina do CI. Alguns runners do GitHub
+# (os de kernel -aws) já vêm com zram ligado, e aí a receita, de propósito,
+# não mexe nele. Anota isso antes, para cobrar o comportamento certo depois.
+zram_do_runner=nao
+if grep -q '^/dev/zram' /proc/swaps 2>/dev/null; then zram_do_runner=sim; fi
+
 etapa "Aplicar"
-bora aplicar /tmp/plano.yaml --sem-perguntar --sem-snapshot
+saida=$(bora aplicar /tmp/plano.yaml --sem-perguntar --sem-snapshot)
+printf '%s\n' "$saida"
 
 etapa "Conferir o que mudou"
-grep -q "zram-size = min(ram \* 50 / 100, 8192)" /etc/systemd/zram-generator.conf || falhou "o zram não foi configurado"
-grep -q "vm.swappiness = 180" /etc/sysctl.d/99-bora-zram.conf || falhou "faltam os ajustes do kernel"
+if [ "$zram_do_runner" = sim ]; then
+    # A máquina do CI já tem zram: a receita só confere e não escreve nada.
+    grep -q "Memória comprimida (zram): já estava aplicada" <<<"$saida" || falhou "a receita mexeu no zram que a máquina do CI já tinha"
+    [ ! -e /etc/systemd/zram-generator.conf ] || falhou "a receita escreveu a configuração por cima do zram da máquina do CI"
+    echo "ok: a máquina do CI já tem zram, e a receita não mexeu nele"
+else
+    grep -q "zram-size = min(ram \* 50 / 100, 8192)" /etc/systemd/zram-generator.conf || falhou "o zram não foi configurado"
+    grep -q "vm.swappiness = 180" /etc/sysctl.d/99-bora-zram.conf || falhou "faltam os ajustes do kernel"
+fi
 grep -qx "Session=$AMBIENTE" /var/lib/AccountsService/users/aluno || falhou "aluno não entra no $AMBIENTE por padrão"
 grep -qx "Language=pt_BR.UTF-8" /var/lib/AccountsService/users/aluno || falhou "o resto da conta do aluno sumiu"
 python3 - <<'PY' || falhou "as políticas do Firefox não ficaram certas"
