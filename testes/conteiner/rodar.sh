@@ -104,7 +104,10 @@ fi
 [ ! -e /etc/timeshift/timeshift.json ] || { echo "FALHOU: a configuração do Timeshift ficou"; exit 1; }
 [ ! -e /etc/systemd/system/bora-backup-pessoal.timer ] || { echo "FALHOU: o timer do backup ficou"; exit 1; }
 [ ! -e /usr/local/lib/bora/backup-pessoal ] || { echo "FALHOU: o programa do backup ficou"; exit 1; }
-if command -v flatpak >/dev/null; then echo "FALHOU: o Flatpak continuou instalado"; exit 1; fi
+# O Linux Mint já vem com o Flatpak e o Flathub: aí eles precisam continuar.
+if grep -qxF flatpak /tmp/pacotes-antes; then
+    flatpak remotes --system --columns=name | grep -qx flathub || { echo "FALHOU: o desfazer tirou o Flathub que já existia"; exit 1; }
+elif command -v flatpak >/dev/null; then echo "FALHOU: o Flatpak continuou instalado"; exit 1; fi
 mount "$DISCO_BACKUP" /mnt
 ls /mnt/bora-backup/*/aluno/ultimo/Documentos/trabalho.txt >/dev/null 2>&1 || { echo "FALHOU: o desfazer apagou as cópias do disco externo"; exit 1; }
 umount /mnt

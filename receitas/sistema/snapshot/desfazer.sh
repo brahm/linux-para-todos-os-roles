@@ -18,6 +18,10 @@ if [ -s "$BORA_ESTADO/snapshots-criados" ] && command -v timeshift >/dev/null; t
     rm -f "$BORA_ESTADO/snapshots-criados"
 fi
 
+# A configuração do Timeshift não existia antes do bora?
+config_nova=nao
+if grep -qxF "$CONFIG" "$BORA_ESTADO/arquivos-novos" 2>/dev/null; then config_nova=sim; fi
+
 restaurar_arquivos
 if systemd_rodando; then
     systemctl daemon-reload
@@ -29,4 +33,8 @@ if command -v timeshift >/dev/null && [ -n "$(listar_snapshots 2>/dev/null || tr
 elif [ -d /timeshift/snapshots ] && [ -n "$(ls -A /timeshift/snapshots 2>/dev/null)" ]; then
     msg "Ficaram snapshots antigos em /timeshift/snapshots. Eles ocupam espaço e podem ser apagados à mão."
 fi
+# O "timeshift --list" acima grava um timeshift.json quando ele não existe.
+# Num Timeshift que já estava instalado (como no Linux Mint), esse arquivo
+# ficaria para trás; ele sai de novo, como antes do bora.
+if [ "$config_nova" = sim ]; then rm -f "$CONFIG"; fi
 msg "O Timeshift voltou a ser como era antes."

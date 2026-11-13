@@ -83,7 +83,7 @@ Cada roteiro roda nas quatro distros abaixo.
 | Ubuntu 24.04 LTS | [ubuntu.com/download/desktop](https://ubuntu.com/download/desktop) | a base da maior parte das derivadas |
 | Ubuntu 26.04 LTS | [ubuntu.com/download/desktop](https://ubuntu.com/download/desktop) | |
 | Debian 13 | [debian.org/download](https://www.debian.org/download) | instale com o GNOME para os rolês 1 e 3, e com o Xfce ou o LXQt para o rolê 2 |
-| Linux Mint 22 | [linuxmint.com/download.php](https://linuxmint.com/download.php) | Cinnamon para os rolês 1 e 3, Xfce para o rolê 2. Já vem sem Snap e com o Flathub ligado. Só é conferido aqui, porque não tem imagem de nuvem para as máquinas do CI |
+| Linux Mint 22 | [linuxmint.com/download.php](https://linuxmint.com/download.php) | Cinnamon para os rolês 1 e 3, Xfce para o rolê 2. Já vem sem Snap e com o Flathub ligado. Não tem imagem de nuvem para as máquinas do CI. Os testes em contêiner rodam nele à mão ([como](../conteiner/README.md#no-linux-mint)) |
 
 ## Preparar a máquina virtual
 

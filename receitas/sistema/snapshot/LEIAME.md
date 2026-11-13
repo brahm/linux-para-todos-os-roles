@@ -45,6 +45,8 @@ Para ver os snapshots: `sudo timeshift --list`. Para voltar o sistema: `sudo tim
 
 O `desfazer.sh` desliga e remove o timer, apaga o snapshot que esta receita criou, volta o `timeshift.json` ao que era e remove o Timeshift, se ele foi instalado pela receita.
 
+Se o Timeshift já vinha instalado, como no Linux Mint, ele fica, e o `timeshift.json` volta a não existir. Assim, na primeira vez que você abrir o Timeshift, o assistente de configuração aparece, como antes do `bora`.
+
 Snapshots criados depois, pelo `bora` ou pelo agendamento, continuam guardados. A receita avisa onde eles estão, para você decidir se apaga.
 
 ## Fontes
