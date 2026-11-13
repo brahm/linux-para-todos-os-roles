@@ -30,6 +30,23 @@ Os scripts usam o binário estático em `target/x86_64-unknown-linux-musl/releas
 
 O `--privileged` é necessário para o firewall mexer no netfilter do contêiner e para o teste criar discos virtuais para os snapshots e para o backup. O contêiner tem a própria rede, então o firewall não afeta a máquina que roda o teste.
 
+## No Linux Mint
+
+O CI não roda no Mint, mas dá para rodar à mão, com a imagem `linuxmintd/mint22.2-amd64`. Ela vem com o `os-release` do Ubuntu; troque pelo do Mint e ponha o bloqueio do Snap que o Mint instalado tem:
+
+```sh
+docker build -t bora-mint --build-arg IMAGEM=linuxmintd/mint22.2-amd64 testes/conteiner
+docker run --name mint --privileged -v "$PWD":/bora bora-mint bash -c '
+    cp testes/os-release/linuxmint-22.2 /usr/lib/os-release
+    printf "Package: snapd\nPin: release a=*\nPin-Priority: -10\n" >/etc/apt/preferences.d/nosnap.pref'
+docker commit mint bora-mint && docker rm mint
+docker run --rm --privileged -v "$PWD":/bora bora-mint ./testes/conteiner/rodar.sh
+```
+
+Para conferir o caminho de "só confere", instale antes o `flatpak` e o `timeshift` e ligue o Flathub, como o Mint vem de fábrica. Em 13/11/2026, rodaram assim todas as suítes menos `vibecodar.sh` e `vibecode-local.sh`, que precisam de endereços que a máquina do teste não alcançava, e todas passaram. A rodada pegou um `timeshift.json` que o desfazer do snapshot deixava quando o Timeshift já existia, e dois testes que supunham coisas do Ubuntu (o `tree` não instalado e o `snapd` disponível no apt).
+
+O que esta imagem não confere: os pacotes do repositório do Mint (como o Firefox `.deb` dele), o Cinnamon e a tela. Isso fica para os [roteiros em VM](../vm/README.md).
+
 ## O que um contêiner não testa
 
 Um contêiner não é um computador: não há systemd rodando, nem udev, nem uma partição própria. Por isso:

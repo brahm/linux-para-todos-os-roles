@@ -66,10 +66,13 @@ bora plano --receitas sistema/etckeeper -o /tmp/etc.yaml
 aplicar_duas_vezes /tmp/etc.yaml
 git -C /etc log --oneline -n 5
 echo "teste do bora" >/etc/bora-teste.conf
-DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends tree >/dev/null
+# Um pacote que a imagem ainda não tem: o Linux Mint já vem com o tree.
+EXTRA=$(for p in tree sl figlet; do dpkg -s "$p" >/dev/null 2>&1 || { echo "$p"; break; }; done)
+[ -n "$EXTRA" ] || falhou "a imagem já tem todos os pacotes de teste do etckeeper"
+DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends "$EXTRA" >/dev/null
 [ -n "$(git -C /etc log --oneline)" ] || falhou "o histórico do /etc está vazio"
 grep -q bora-teste.conf <<<"$(git -C /etc log --stat -3)" || falhou "o apt não registrou a mudança no /etc"
-DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq tree >/dev/null
+DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq "$EXTRA" >/dev/null
 rm -f /etc/bora-teste.conf
 bora desfazer --sem-perguntar
 [ ! -e /etc/.git ] || falhou "o histórico do /etc ficou"
@@ -121,6 +124,17 @@ aplicar_duas_vezes /tmp/snap.yaml
 grep -q 'Candidate: (none)' <<<"$(apt-cache policy snapd)" || falhou "o apt ainda instalaria o snapd"
 bora desfazer --sem-perguntar
 [ ! -e /etc/apt/preferences.d/bora-sem-snap.pref ] || falhou "o bloqueio do snapd ficou"
+
+# O Linux Mint já bloqueia o snapd com o próprio nosnap.pref: o desfazer
+# não pode tirar esse bloqueio, e não há snapd para instalar no resto do teste.
+if [ -e /etc/apt/preferences.d/nosnap.pref ]; then
+    grep -q 'Candidate: (none)' <<<"$(apt-cache policy snapd)" || falhou "o desfazer tirou o bloqueio do snapd da distro"
+    mesmos_pacotes /tmp/antes-snap sem-snap
+    echo "ok: a distro já bloqueia o Snap; o Sem Snap só conferiu e o bloqueio dela ficou"
+    echo
+    echo "Tudo certo: as três receitas aplicaram, não mudaram nada na segunda vez e desfizeram."
+    exit 0
+fi
 
 etapa "Sem Snap recusa um snap que não sabe trocar"
 DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends snapd >/dev/null
