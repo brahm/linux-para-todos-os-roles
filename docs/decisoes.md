@@ -262,3 +262,11 @@ Brahm pediu que toda a documentação fosse reescrita com três regras de tom e 
 | O `bora` continua só no terminal, com menus. Uma versão gráfica só entra quando Brahm decidir que há um caso de uso que exija uma. Nenhum texto do projeto promete ou planeja uma janela até lá | Os menus em texto já funcionam em qualquer terminal, por SSH e com leitor de tela, e os agentes de IA conversam com o `bora` pelo terminal. Uma interface gráfica seria mais uma peça para manter, sem um problema que só ela resolva |
 | O "resolver em um clique" da decisão anterior quer dizer o caminho direto do `bora`, no terminal: aplicar o plano de uma vez e deixar a explicação para depois. Não é um botão numa janela | É a leitura que cabe com a decisão acima |
 | A marca continua com o identificador `br.com.brahm.Bora`, o `.desktop` e o metainfo, para o empacotamento | Pacotes e Flatpak pedem esses arquivos mesmo para um programa de terminal |
+
+## 13 de novembro de 2026: a causa do segfault do Timeshift
+
+| Decisão | Por quê |
+|---|---|
+| A issue #16 é fechada. A causa do segfault é uma corrida no próprio Timeshift: as duas threads que leem a saída do rsync podiam encerrar a tarefa juntas e soltar o mesmo objeto duas vezes. A correção saiu no Timeshift 26.11.0 ([linuxmint/timeshift#552](https://github.com/linuxmint/timeshift/pull/552)) | É o mesmo sintoma do nosso log: `g_object_unref` e a queda logo depois de "Syncing files with rsync". Com a causa achada e corrigida, não há mais o que esperar |
+| A segunda tentativa da receita do snapshot e do `bora` continua | O Ubuntu 24.04 traz o Timeshift 24.01.1, que ainda tem a corrida |
+| A conferência da issue #16 marcada para 1/2/2027 não é mais necessária | Ela esperava uma recorrência para decidir. A causa já está explicada |
