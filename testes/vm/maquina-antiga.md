@@ -19,7 +19,7 @@ systemctl is-enabled bluetooth.service ModemManager.service NetworkManager-wait-
 sudo bora
 ```
 
-Escolha "Dar vida nova a uma máquina antiga". Na primeira rodada, responda **não** para o SSH, Xfce como ambiente e **sim** para entrar nele por padrão. Repita a partir do `limpa` com o LXQt e com **sim** para o SSH.
+Escolha "Dar vida nova a uma máquina antiga". No Mint Xfce, o Xfce já é o ambiente do sistema, então a rodada com Xfce confere só os extras, e a com LXQt é a que instala um ambiente novo. Na primeira rodada, responda **não** para o SSH, Xfce como ambiente e **sim** para entrar nele por padrão. Repita a partir do `limpa` com o LXQt e com **sim** para o SSH.
 
 - [ ] O plano termina com "cada receita passou no teste".
 - [ ] `sudo bora aplicar` de novo, com o mesmo plano, diz "Tudo já estava aplicado".
@@ -69,7 +69,7 @@ sudo bora desfazer
 O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
 
 - [ ] Depois de reiniciar, `swapon --show` não mostra mais o zram, e a tela de login abre o ambiente de antes.
-- [ ] O Firefox abre sem o uBlock Origin (se não estava antes) e com os favoritos.
+- [ ] O Firefox abre com os favoritos, e `about:policies` não mostra mais as políticas do `bora`. O uBlock Origin, se já tinha sido baixado, fica como uma extensão comum, que dá para remover em `about:addons` (como diz o LEIAME da receita).
 - [ ] Os serviços desligados voltam a estar ligados, iguais ao passo 1.
 - [ ] Na rodada com SSH, `ssh` não conecta mais.
 

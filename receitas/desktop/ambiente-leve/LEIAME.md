@@ -34,7 +34,7 @@ Para ver você mesmo: saia da sessão, e na tela de login procure a escolha de s
 
 ## Como desfazer
 
-O `desfazer.sh` volta os arquivos do AccountsService ao que eram e remove os pacotes que a receita instalou, com as dependências que vieram junto. Se alguém estiver usando o ambiente leve na hora, ele para e pede para sair dessa sessão primeiro, para não derrubá-la. O ambiente antigo nunca saiu do computador.
+O `desfazer.sh` volta os arquivos do AccountsService ao que eram e remove os pacotes que a receita instalou, com as dependências que vieram junto. Se a receita instalou a sessão do ambiente e alguém estiver usando ela na hora, ele para e pede para sair dessa sessão primeiro, para não derrubá-la. Quando o ambiente já era o do sistema (um Mint Xfce ou um Xubuntu, por exemplo), a receita só trouxe extras, e o desfazer tira esses extras mesmo com a sessão aberta. O ambiente antigo nunca saiu do computador.
 
 ## Fontes
 
