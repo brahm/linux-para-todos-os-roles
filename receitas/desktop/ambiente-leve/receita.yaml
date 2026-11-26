@@ -64,3 +64,9 @@ testes:
     por: testes-automaticos
     onde: vm
     resultado: ok
+  - distro: linuxmint
+    versao: "22.3"
+    data: 2026-11-26
+    por: brahm
+    onde: vm
+    resultado: ok
