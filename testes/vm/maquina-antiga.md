@@ -66,6 +66,8 @@ Escolha "Dar vida nova a uma máquina antiga". Na primeira rodada, responda **n�
 sudo bora desfazer
 ```
 
+O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
+
 - [ ] Depois de reiniciar, `swapon --show` não mostra mais o zram, e a tela de login abre o ambiente de antes.
 - [ ] O Firefox abre sem o uBlock Origin (se não estava antes) e com os favoritos.
 - [ ] Os serviços desligados voltam a estar ligados, iguais ao passo 1.

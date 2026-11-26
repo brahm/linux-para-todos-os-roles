@@ -38,8 +38,8 @@ Feche e abra o terminal antes, para o `PATH` novo valer.
 **Node.js (`dev/node`), no perfil web**
 
 - [ ] `node --version` mostra a versão da receita, e não a da distro.
-- [ ] `npm install -g cowsay` funciona sem `sudo`, e `cowsay oi` responde.
-- [ ] `npm create vite@latest teste -- --template vanilla && cd teste && npm install && npm run dev` sobe o servidor, e o navegador abre a página.
+- [ ] `npm install -g http-server` funciona sem `sudo`, e `http-server --version` responde. (Não use o `cowsay` aqui: no Vibecodar, que tem Python e Node.js juntos, o do `pipx` já ocupa `~/.local/bin/cowsay`, e o `npm` recusa sobrescrever.)
+- [ ] `npm create vite@latest teste -- --template vanilla && cd teste && npm install && npm run dev` sobe o servidor, e o navegador abre a página. O `create-vite` faz duas perguntas; responda "No" às duas, para o resto da linha seguir.
 
 **Contêineres (`containers/podman`)**
 
@@ -52,6 +52,8 @@ Feche e abra o terminal antes, para o `PATH` novo valer.
 ```sh
 sudo bora desfazer
 ```
+
+O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
 
 - [ ] `git config --global --list` volta ao que era (vazio, numa VM limpa).
 - [ ] `node`, `pipx` e `podman` não estão mais instalados; a chave SSH e os projetos continuam na pasta pessoal.

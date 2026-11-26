@@ -66,6 +66,8 @@ Repita a aplicação, a partir do `limpa`, numa VM com pelo menos 16 GB de memó
 sudo bora desfazer
 ```
 
+O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
+
 - [ ] `opencode`, `codex` e `caixa` não existem mais; `ls ~/.config/opencode` ainda mostra o login.
 - [ ] O arquivo de chaves, com a chave colada, continua em `~/.config/chaves-de-api`.
 - [ ] `git config --global core.hooksPath` não mostra nada.

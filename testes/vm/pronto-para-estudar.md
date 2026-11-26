@@ -68,6 +68,8 @@ Escolha "Pronto para estudar e trabalhar", responda **não** para tirar o Snap e
 sudo bora desfazer
 ```
 
+O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
+
 - [ ] O firewall volta a estar desligado (como era), `timeshift`, `etckeeper` e `flatpak` não estão mais instalados, e o `/etc/.git` saiu (com uma cópia em `/var/backups`).
 - [ ] As cópias do backup continuam no disco externo.
 - [ ] Depois de reiniciar, o sistema sobe normalmente.
