@@ -4,11 +4,13 @@ Comece do snapshot `limpa` da VM, com o segundo disco virtual conectado. Rode na
 
 ## 1. Preparar o disco do backup
 
-O `bora` nunca formata disco. No terminal da VM, ache o segundo disco com `lsblk` (normalmente `/dev/vdb` ou `/dev/sdb`) e formate em ext4:
+O `bora` nunca formata disco. No terminal da VM, ache o disco USB com `lsblk -o NAME,TRAN,SIZE` (o que tem `usb` na coluna TRAN, normalmente `/dev/sda` numa VM com disco VirtIO, ou `/dev/sdb`) e formate em ext4, trocando `sdX` pela letra dele:
 
 ```sh
-sudo mkfs.ext4 -L backup /dev/vdb
+sudo mkfs.ext4 -L backup /dev/sdX
 ```
+
+Depois, desconecte e conecte o disco (ou reinicie a VM) para o sistema montá-lo, como faria com um pen drive.
 
 ## 2. Aplicar o rolê
 
@@ -57,7 +59,7 @@ Escolha "Pronto para estudar e trabalhar", responda **não** para tirar o Snap e
 **Backup da pasta pessoal (`sistema/backup-pessoal`)**
 
 - [ ] O disco de backup tem `bora-backup/<máquina>/<conta>/ultimo/` com os seus arquivos.
-- [ ] Desconecte o disco virtual, crie um arquivo na pasta pessoal, conecte de novo: em alguns minutos aparece uma cópia nova, com o arquivo.
+- [ ] Desconecte o disco virtual, crie um arquivo na pasta pessoal, conecte de novo: em alguns minutos aparece uma cópia nova, com o arquivo. O backup ao conectar só copia se a última cópia tiver mais de 20 horas, então, para não esperar até amanhã, antes de desconectar envelheça a marca da última cópia: `sudo touch -d "-21 hours" /media/$USER/<disco>/bora-backup/*/$USER/.bora-ultimo`. Sem isso, o `journalctl -u bora-backup-pessoal-conectar` diz "a última cópia tem menos de 20 horas", e está certo.
 - [ ] Recupere um arquivo abrindo a pasta da data no gerenciador de arquivos e copiando.
 
 ## 4. Desfazer
@@ -65,6 +67,8 @@ Escolha "Pronto para estudar e trabalhar", responda **não** para tirar o Snap e
 ```sh
 sudo bora desfazer
 ```
+
+O `bora desfazer` desfaz a execução mais recente que mudou alguma coisa. Se a segunda rodada do passo 1 aplicou algo de novo (o Sistema atualizado, por exemplo, quando saíram atualizações no meio do teste), ela é a mais recente, e o desfazer só volta essa parte. Confira com `sudo bora historico` e, nesse caso, desfaça também a primeira: `sudo bora desfazer <id da execução>`.
 
 - [ ] O firewall volta a estar desligado (como era), `timeshift`, `etckeeper` e `flatpak` não estão mais instalados, e o `/etc/.git` saiu (com uma cópia em `/var/backups`).
 - [ ] As cópias do backup continuam no disco externo.
