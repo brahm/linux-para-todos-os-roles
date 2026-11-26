@@ -37,10 +37,17 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
 /// Variáveis de quem chamou que passam para as receitas.
+///
+/// O `LANGUAGE` fica de fora de propósito. As receitas leem a saída de alguns
+/// comandos em inglês, com `LC_ALL=C` (o `ufw status`, por exemplo). O
+/// gettext do C respeita o `LC_ALL=C`, mas o do Python, usado pelo `ufw`,
+/// olha o `LANGUAGE` antes. Num Mint ou Ubuntu instalado em português, o
+/// `LANGUAGE=pt_BR:` vinha junto, o `ufw` respondia "Estado: ativo" e o teste
+/// do firewall reprovava. Sem ele, as mensagens continuam em português pelo
+/// `LANG`, e o `LC_ALL=C` volta a valer para todo mundo.
 const HERDADAS: &[&str] = &[
     "PATH",
     "LANG",
-    "LANGUAGE",
     "LC_ALL",
     "LC_MESSAGES",
     "TERM",

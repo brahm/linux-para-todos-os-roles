@@ -96,7 +96,7 @@ Qualquer programa de VM serve. Os mais simples:
 Configuração da VM:
 
 - 2 processadores, 4 GB de memória e 40 GB de disco. Para o rolê 2, 2 GB de memória, para parecer uma máquina antiga.
-- Um segundo disco virtual de 10 GB, para o backup da pasta pessoal do rolê 1 (no GNOME Boxes, em Propriedades, Dispositivos).
+- Um segundo disco virtual de 10 GB, para o backup da pasta pessoal do rolê 1, **ligado como disco USB**. A receita só aceita disco externo (USB ou removível); um disco virtual comum (VirtIO ou SATA) parece interno, e o `bora` responde "não encontrei nenhum disco externo conectado". No virt-manager, escolha o barramento USB ao adicionar o disco; no QEMU puro, `-device usb-storage,drive=...,removable=on`.
 - Rede no modo padrão (NAT). Para o SSH do rolê 2, use a rede em ponte ou a rede do virt-manager, para outro computador alcançar a VM.
 
 Instale a distro com as opções padrão e crie uma conta comum. Antes de qualquer teste, **tire um snapshot da VM** com o nome `limpa`. Cada roteiro começa dessa foto, para um teste não contaminar o outro (e para você não precisar instalar o Ubuntu cinco vezes numa tarde).
